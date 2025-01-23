@@ -24,8 +24,12 @@ mixin _$SubsonicResponse {
   SubsonicResponseClass? get subsonicResponse =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this SubsonicResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SubsonicResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SubsonicResponseCopyWith<SubsonicResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,6 +57,8 @@ class _$SubsonicResponseCopyWithImpl<$Res, $Val extends SubsonicResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SubsonicResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -66,6 +72,8 @@ class _$SubsonicResponseCopyWithImpl<$Res, $Val extends SubsonicResponse>
     ) as $Val);
   }
 
+  /// Create a copy of SubsonicResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $SubsonicResponseClassCopyWith<$Res>? get subsonicResponse {
@@ -104,6 +112,8 @@ class __$$SubsonicResponseImplCopyWithImpl<$Res>
       $Res Function(_$SubsonicResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SubsonicResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,11 +155,13 @@ class _$SubsonicResponseImpl implements _SubsonicResponse {
                 other.subsonicResponse == subsonicResponse));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, subsonicResponse);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SubsonicResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SubsonicResponseImplCopyWith<_$SubsonicResponseImpl> get copyWith =>
@@ -175,8 +187,11 @@ abstract class _SubsonicResponse implements SubsonicResponse {
   @override
   @JsonKey(name: "subsonic-response")
   SubsonicResponseClass? get subsonicResponse;
+
+  /// Create a copy of SubsonicResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SubsonicResponseImplCopyWith<_$SubsonicResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -207,8 +222,12 @@ mixin _$SubsonicResponseClass {
   ArtistEntity? get artist => throw _privateConstructorUsedError;
   ErrorEntity? get error => throw _privateConstructorUsedError;
 
+  /// Serializes this SubsonicResponseClass to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SubsonicResponseClassCopyWith<SubsonicResponseClass> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -265,6 +284,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -363,6 +384,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AlbumEntityCopyWith<$Res>? get album {
@@ -375,6 +398,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AlbumListEntityCopyWith<$Res>? get albumList {
@@ -387,6 +412,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $SearchResult3EntityCopyWith<$Res>? get searchResult3 {
@@ -399,6 +426,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RandomSongsEntityCopyWith<$Res>? get randomSongs {
@@ -411,6 +440,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $SongEntityCopyWith<$Res>? get song {
@@ -423,6 +454,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PlaylistEntityCopyWith<$Res>? get playlist {
@@ -435,6 +468,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PlaylistsEntityCopyWith<$Res>? get playlists {
@@ -447,6 +482,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PlayQueueEntityCopyWith<$Res>? get playQueue {
@@ -459,6 +496,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LyricsListEntityCopyWith<$Res>? get lyricsList {
@@ -471,6 +510,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ScanStatusEntityCopyWith<$Res>? get scanStatus {
@@ -483,6 +524,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StarredEntityCopyWith<$Res>? get starred {
@@ -495,6 +538,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ArtistEntityCopyWith<$Res>? get artist {
@@ -507,6 +552,8 @@ class _$SubsonicResponseClassCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ErrorEntityCopyWith<$Res>? get error {
@@ -586,6 +633,8 @@ class __$$SubsonicResponseClassImplCopyWithImpl<$Res>
       $Res Function(_$SubsonicResponseClassImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -788,7 +837,7 @@ class _$SubsonicResponseClassImpl implements _SubsonicResponseClass {
             (identical(other.error, error) || other.error == error));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -811,7 +860,9 @@ class _$SubsonicResponseClassImpl implements _SubsonicResponseClass {
       artist,
       error);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SubsonicResponseClassImplCopyWith<_$SubsonicResponseClassImpl>
@@ -886,8 +937,11 @@ abstract class _SubsonicResponseClass implements SubsonicResponseClass {
   ArtistEntity? get artist;
   @override
   ErrorEntity? get error;
+
+  /// Create a copy of SubsonicResponseClass
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SubsonicResponseClassImplCopyWith<_$SubsonicResponseClassImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

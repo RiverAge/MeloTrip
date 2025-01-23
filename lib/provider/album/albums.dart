@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,7 +8,7 @@ part 'albums.g.dart';
 enum AlumsType { random, newest }
 
 @riverpod
-Future<SubsonicResponse?> albums(AlbumsRef ref, AlumsType type) async {
+Future<SubsonicResponse?> albums(Ref ref, AlumsType type) async {
   final res = await Http.get<Map<String, dynamic>>('/rest/getAlbumList',
       queryParameters: {'type': type.name});
 

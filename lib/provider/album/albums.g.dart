@@ -6,7 +6,7 @@ part of 'albums.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumsHash() => r'f1bdd7a62fa8a35599e93f311da1936892a44b7e';
+String _$albumsHash() => r'9ea20ab2911d9154270e92aec1cd5db46af0575c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -141,6 +141,8 @@ class AlbumsProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin AlbumsRef on AutoDisposeFutureProviderRef<SubsonicResponse?> {
   /// The parameter `type` of this provider.
   AlumsType get type;
@@ -154,4 +156,4 @@ class _AlbumsProviderElement
   AlumsType get type => (origin as AlbumsProvider).type;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

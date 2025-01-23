@@ -6,7 +6,7 @@ part of 'lyrics.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lyricsHash() => r'b0839317a38ebc8277251fb9e530dd768f17d124';
+String _$lyricsHash() => r'16e2f89cae582a9dff9f0f10d22f7484c3f89c54';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -141,6 +141,8 @@ class LyricsProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LyricsRef on AutoDisposeFutureProviderRef<SubsonicResponse?> {
   /// The parameter `songId` of this provider.
   String? get songId;
@@ -154,7 +156,7 @@ class _LyricsProviderElement
   String? get songId => (origin as LyricsProvider).songId;
 }
 
-String _$lyricsOfLineHash() => r'4b480ca81a9c74568a5fe48b47fdbc6ba0f21eee';
+String _$lyricsOfLineHash() => r'2a90b03372f696a04f2e6f0c007e4de9c4592765';
 
 /// See also [lyricsOfLine].
 @ProviderFor(lyricsOfLine)
@@ -281,6 +283,8 @@ class LyricsOfLineProvider extends AutoDisposeProvider<String> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin LyricsOfLineRef on AutoDisposeProviderRef<String> {
   /// The parameter `lyrics` of this provider.
   SubsonicResponse get lyrics;
@@ -299,4 +303,4 @@ class _LyricsOfLineProviderElement extends AutoDisposeProviderElement<String>
   Duration get position => (origin as LyricsOfLineProvider).position;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

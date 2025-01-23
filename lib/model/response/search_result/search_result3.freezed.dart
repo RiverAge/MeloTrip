@@ -24,8 +24,12 @@ mixin _$SearchResult3Entity {
   List<SongEntity>? get song => throw _privateConstructorUsedError;
   List<ArtistEntity>? get artist => throw _privateConstructorUsedError;
 
+  /// Serializes this SearchResult3Entity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchResult3Entity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SearchResult3EntityCopyWith<SearchResult3Entity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,6 +56,8 @@ class _$SearchResult3EntityCopyWithImpl<$Res, $Val extends SearchResult3Entity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SearchResult3Entity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,6 +104,8 @@ class __$$SearchResult3EntityImplCopyWithImpl<$Res>
       $Res Function(_$SearchResult3EntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchResult3Entity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -181,7 +189,7 @@ class _$SearchResult3EntityImpl implements _SearchResult3Entity {
             const DeepCollectionEquality().equals(other._artist, _artist));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -189,7 +197,9 @@ class _$SearchResult3EntityImpl implements _SearchResult3Entity {
       const DeepCollectionEquality().hash(_song),
       const DeepCollectionEquality().hash(_artist));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchResult3Entity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchResult3EntityImplCopyWith<_$SearchResult3EntityImpl> get copyWith =>
@@ -219,8 +229,11 @@ abstract class _SearchResult3Entity implements SearchResult3Entity {
   List<SongEntity>? get song;
   @override
   List<ArtistEntity>? get artist;
+
+  /// Create a copy of SearchResult3Entity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchResult3EntityImplCopyWith<_$SearchResult3EntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

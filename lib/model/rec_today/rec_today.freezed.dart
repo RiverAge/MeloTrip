@@ -23,8 +23,12 @@ mixin _$RecTodayEntity {
   DateTime? get update => throw _privateConstructorUsedError;
   List<SongEntity>? get songs => throw _privateConstructorUsedError;
 
+  /// Serializes this RecTodayEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RecTodayEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RecTodayEntityCopyWith<RecTodayEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$RecTodayEntityCopyWithImpl<$Res, $Val extends RecTodayEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RecTodayEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$RecTodayEntityImplCopyWithImpl<$Res>
       _$RecTodayEntityImpl _value, $Res Function(_$RecTodayEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RecTodayEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,12 +148,14 @@ class _$RecTodayEntityImpl implements _RecTodayEntity {
             const DeepCollectionEquality().equals(other._songs, _songs));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, update, const DeepCollectionEquality().hash(_songs));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RecTodayEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RecTodayEntityImplCopyWith<_$RecTodayEntityImpl> get copyWith =>
@@ -172,8 +182,11 @@ abstract class _RecTodayEntity implements RecTodayEntity {
   DateTime? get update;
   @override
   List<SongEntity>? get songs;
+
+  /// Create a copy of RecTodayEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RecTodayEntityImplCopyWith<_$RecTodayEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

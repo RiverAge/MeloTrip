@@ -1,15 +1,14 @@
 import 'dart:io';
 
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
-// ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'cached_data.g.dart';
 
 @riverpod
-Future<double> imageCache(ImageCacheRef ref) async {
+Future<double> imageCache(Ref ref) async {
   final sp = p.join((await getTemporaryDirectory()).path);
   final dir = Directory(sp);
   double size = 0;
@@ -22,7 +21,7 @@ Future<double> imageCache(ImageCacheRef ref) async {
 }
 
 @riverpod
-Future<double> streamCache(StreamCacheRef ref) async {
+Future<double> streamCache(Ref ref) async {
   final sp = p.join((await getTemporaryDirectory()).path);
   final dir = Directory(sp);
   double size = 0;

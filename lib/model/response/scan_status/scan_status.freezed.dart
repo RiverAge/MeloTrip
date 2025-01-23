@@ -25,8 +25,12 @@ mixin _$ScanStatusEntity {
   int? get folderCount => throw _privateConstructorUsedError;
   DateTime? get lastScan => throw _privateConstructorUsedError;
 
+  /// Serializes this ScanStatusEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ScanStatusEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ScanStatusEntityCopyWith<ScanStatusEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,6 +54,8 @@ class _$ScanStatusEntityCopyWithImpl<$Res, $Val extends ScanStatusEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ScanStatusEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,6 +104,8 @@ class __$$ScanStatusEntityImplCopyWithImpl<$Res>
       $Res Function(_$ScanStatusEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ScanStatusEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -164,12 +172,14 @@ class _$ScanStatusEntityImpl implements _ScanStatusEntity {
                 other.lastScan == lastScan));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, scanning, count, folderCount, lastScan);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ScanStatusEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ScanStatusEntityImplCopyWith<_$ScanStatusEntityImpl> get copyWith =>
@@ -202,8 +212,11 @@ abstract class _ScanStatusEntity implements ScanStatusEntity {
   int? get folderCount;
   @override
   DateTime? get lastScan;
+
+  /// Create a copy of ScanStatusEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ScanStatusEntityImplCopyWith<_$ScanStatusEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

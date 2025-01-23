@@ -6,7 +6,7 @@ part of 'artwork_image.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$artworkUrlHash() => r'435d5e277cadcf8d7db7cb7b673ebcf2ea8ab782';
+String _$artworkUrlHash() => r'd086e35be82a3069fc4107641f714fc327bfc41e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -142,6 +142,8 @@ class ArtworkUrlProvider extends AutoDisposeFutureProvider<String> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ArtworkUrlRef on AutoDisposeFutureProviderRef<String> {
   /// The parameter `id` of this provider.
   String get id;
@@ -155,4 +157,4 @@ class _ArtworkUrlProviderElement
   String get id => (origin as ArtworkUrlProvider).id;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

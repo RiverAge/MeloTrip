@@ -54,8 +54,12 @@ mixin _$SongEntity {
   String? get genre => throw _privateConstructorUsedError;
   int? get samplingRate => throw _privateConstructorUsedError;
 
+  /// Serializes this SongEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SongEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SongEntityCopyWith<SongEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -114,6 +118,8 @@ class _$SongEntityCopyWithImpl<$Res, $Val extends SongEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SongEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -287,6 +293,8 @@ class _$SongEntityCopyWithImpl<$Res, $Val extends SongEntity>
     ) as $Val);
   }
 
+  /// Create a copy of SongEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ReplayGainCopyWith<$Res>? get replayGain {
@@ -355,6 +363,8 @@ class __$$SongEntityImplCopyWithImpl<$Res>
       _$SongEntityImpl _value, $Res Function(_$SongEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SongEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -703,7 +713,7 @@ class _$SongEntityImpl implements _SongEntity {
                 other.samplingRate == samplingRate));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -742,7 +752,9 @@ class _$SongEntityImpl implements _SongEntity {
         samplingRate
       ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SongEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SongEntityImplCopyWith<_$SongEntityImpl> get copyWith =>
@@ -861,8 +873,11 @@ abstract class _SongEntity implements SongEntity {
   String? get genre;
   @override
   int? get samplingRate;
+
+  /// Create a copy of SongEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SongEntityImplCopyWith<_$SongEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -875,8 +890,12 @@ GenreElement _$GenreElementFromJson(Map<String, dynamic> json) {
 mixin _$GenreElement {
   String? get name => throw _privateConstructorUsedError;
 
+  /// Serializes this GenreElement to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of GenreElement
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $GenreElementCopyWith<GenreElement> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -900,6 +919,8 @@ class _$GenreElementCopyWithImpl<$Res, $Val extends GenreElement>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of GenreElement
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -933,6 +954,8 @@ class __$$GenreElementImplCopyWithImpl<$Res>
       _$GenreElementImpl _value, $Res Function(_$GenreElementImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of GenreElement
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -971,11 +994,13 @@ class _$GenreElementImpl implements _GenreElement {
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of GenreElement
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$GenreElementImplCopyWith<_$GenreElementImpl> get copyWith =>
@@ -997,8 +1022,11 @@ abstract class _GenreElement implements GenreElement {
 
   @override
   String? get name;
+
+  /// Create a copy of GenreElement
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GenreElementImplCopyWith<_$GenreElementImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1012,8 +1040,12 @@ mixin _$ReplayGain {
   int? get trackPeak => throw _privateConstructorUsedError;
   int? get albumPeak => throw _privateConstructorUsedError;
 
+  /// Serializes this ReplayGain to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ReplayGain
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ReplayGainCopyWith<ReplayGain> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1037,6 +1069,8 @@ class _$ReplayGainCopyWithImpl<$Res, $Val extends ReplayGain>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ReplayGain
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1075,6 +1109,8 @@ class __$$ReplayGainImplCopyWithImpl<$Res>
       _$ReplayGainImpl _value, $Res Function(_$ReplayGainImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ReplayGain
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1123,11 +1159,13 @@ class _$ReplayGainImpl implements _ReplayGain {
                 other.albumPeak == albumPeak));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, trackPeak, albumPeak);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ReplayGain
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ReplayGainImplCopyWith<_$ReplayGainImpl> get copyWith =>
@@ -1152,8 +1190,11 @@ abstract class _ReplayGain implements ReplayGain {
   int? get trackPeak;
   @override
   int? get albumPeak;
+
+  /// Create a copy of ReplayGain
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ReplayGainImplCopyWith<_$ReplayGainImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

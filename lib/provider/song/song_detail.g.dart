@@ -6,7 +6,7 @@ part of 'song_detail.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$songDetailHash() => r'28e2f384ef4ddb3985b30e69d023eb0c69f32ea0';
+String _$songDetailHash() => r'6692854a1a0ae32884d699756121f1ebeb57eacf';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -142,6 +142,8 @@ class SongDetailProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SongDetailRef on AutoDisposeFutureProviderRef<SubsonicResponse?> {
   /// The parameter `songId` of this provider.
   String? get songId;
@@ -187,4 +189,4 @@ final songRatingProvider =
 
 typedef _$SongRating = AutoDisposeAsyncNotifier<SubsonicResponse?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

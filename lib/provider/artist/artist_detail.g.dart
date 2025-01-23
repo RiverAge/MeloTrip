@@ -6,7 +6,7 @@ part of 'artist_detail.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$artistDetailHash() => r'0d3654be377e837f74f949f238005b1b2e77bea7';
+String _$artistDetailHash() => r'd72211eaf0c724d6073dbd02ef46b77e6d56c819';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -143,6 +143,8 @@ class ArtistDetailProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ArtistDetailRef on AutoDisposeFutureProviderRef<SubsonicResponse?> {
   /// The parameter `artistId` of this provider.
   String? get artistId;
@@ -157,4 +159,4 @@ class _ArtistDetailProviderElement
   String? get artistId => (origin as ArtistDetailProvider).artistId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

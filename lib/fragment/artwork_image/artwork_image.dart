@@ -50,7 +50,7 @@ class ArtworkImage extends ConsumerWidget {
 }
 
 @riverpod
-Future<String> artworkUrl(ArtworkUrlRef ref, String id) async {
+Future<String> artworkUrl(Ref ref, String id) async {
   final url =
       await buildSubsonicUrl('/rest/getCoverArt?id=$id', withHost: true);
   return url;

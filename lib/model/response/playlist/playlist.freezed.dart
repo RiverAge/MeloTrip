@@ -32,8 +32,12 @@ mixin _$PlaylistEntity {
   String? get coverArt => throw _privateConstructorUsedError;
   List<SongEntity>? get entry => throw _privateConstructorUsedError;
 
+  /// Serializes this PlaylistEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PlaylistEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PlaylistEntityCopyWith<PlaylistEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -68,6 +72,8 @@ class _$PlaylistEntityCopyWithImpl<$Res, $Val extends PlaylistEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PlaylistEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -162,6 +168,8 @@ class __$$PlaylistEntityImplCopyWithImpl<$Res>
       _$PlaylistEntityImpl _value, $Res Function(_$PlaylistEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PlaylistEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -302,7 +310,7 @@ class _$PlaylistEntityImpl implements _PlaylistEntity {
             const DeepCollectionEquality().equals(other._entry, _entry));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -318,7 +326,9 @@ class _$PlaylistEntityImpl implements _PlaylistEntity {
       coverArt,
       const DeepCollectionEquality().hash(_entry));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PlaylistEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PlaylistEntityImplCopyWith<_$PlaylistEntityImpl> get copyWith =>
@@ -372,8 +382,11 @@ abstract class _PlaylistEntity implements PlaylistEntity {
   String? get coverArt;
   @override
   List<SongEntity>? get entry;
+
+  /// Create a copy of PlaylistEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlaylistEntityImplCopyWith<_$PlaylistEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -386,8 +399,12 @@ PlaylistsEntity _$PlaylistsEntityFromJson(Map<String, dynamic> json) {
 mixin _$PlaylistsEntity {
   List<PlaylistEntity>? get playlist => throw _privateConstructorUsedError;
 
+  /// Serializes this PlaylistsEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PlaylistsEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PlaylistsEntityCopyWith<PlaylistsEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -411,6 +428,8 @@ class _$PlaylistsEntityCopyWithImpl<$Res, $Val extends PlaylistsEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PlaylistsEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -444,6 +463,8 @@ class __$$PlaylistsEntityImplCopyWithImpl<$Res>
       _$PlaylistsEntityImpl _value, $Res Function(_$PlaylistsEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PlaylistsEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -490,12 +511,14 @@ class _$PlaylistsEntityImpl implements _PlaylistsEntity {
             const DeepCollectionEquality().equals(other._playlist, _playlist));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_playlist));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PlaylistsEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PlaylistsEntityImplCopyWith<_$PlaylistsEntityImpl> get copyWith =>
@@ -519,8 +542,11 @@ abstract class _PlaylistsEntity implements PlaylistsEntity {
 
   @override
   List<PlaylistEntity>? get playlist;
+
+  /// Create a copy of PlaylistsEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlaylistsEntityImplCopyWith<_$PlaylistsEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

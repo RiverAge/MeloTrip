@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/search/search_history.dart';
 import 'package:melo_trip/svc/http.dart';
@@ -6,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'search.g.dart';
 
 @riverpod
-Future<SubsonicResponse?> search(SearchRef ref, String query) async {
+Future<SubsonicResponse?> search(Ref ref, String query) async {
   if (query == '') {
     return null;
   }

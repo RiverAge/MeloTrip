@@ -1,16 +1,17 @@
 part of 'music_bar.dart';
 
 class _BottomSheetItem extends StatelessWidget {
-  const _BottomSheetItem(
-      {required this.songs,
-      required this.currentPlayingIndex,
-      required this.index,
-      this.onRemove});
+  const _BottomSheetItem({
+    required this.songs,
+    required this.currentPlayingIndex,
+    required this.index,
+    // this.onRemove
+  });
 
   final List<SongEntity?> songs;
   final int currentPlayingIndex;
   final int index;
-  final void Function(int index)? onRemove;
+  // final void Function(int index)? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +105,9 @@ class _BottomSheetItem extends StatelessWidget {
                     final handler = await AppPlayerHandler.instance;
                     final player = handler.player;
                     player.removeQueueItemAt(index);
-                    if (onRemove != null) {
-                      onRemove!(index);
-                    }
+                    // if (onRemove != null) {
+                    //   onRemove!(index);
+                    // }
                   })
             ],
           ),

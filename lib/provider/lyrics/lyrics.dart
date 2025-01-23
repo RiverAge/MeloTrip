@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -5,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'lyrics.g.dart';
 
 @riverpod
-Future<SubsonicResponse?> lyrics(LyricsRef ref, String? songId) async {
+Future<SubsonicResponse?> lyrics(Ref ref, String? songId) async {
   if (songId == null) return null;
   final res = await Http.get<Map<String, dynamic>>('/rest/getLyricsBySongId',
       queryParameters: {'id': songId});
@@ -15,8 +16,7 @@ Future<SubsonicResponse?> lyrics(LyricsRef ref, String? songId) async {
 }
 
 @riverpod
-String lyricsOfLine(
-    LyricsOfLineRef ref, SubsonicResponse lyrics, Duration position) {
+String lyricsOfLine(Ref ref, SubsonicResponse lyrics, Duration position) {
   final structuredLyrics =
       lyrics.subsonicResponse?.lyricsList?.structuredLyrics;
   if (structuredLyrics == null || structuredLyrics.isEmpty) {

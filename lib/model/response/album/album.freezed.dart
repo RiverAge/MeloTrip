@@ -41,8 +41,12 @@ mixin _$AlbumEntity {
   ReleaseDate? get releaseDate => throw _privateConstructorUsedError;
   List<SongEntity>? get song => throw _privateConstructorUsedError;
 
+  /// Serializes this AlbumEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AlbumEntityCopyWith<AlbumEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -89,6 +93,8 @@ class _$AlbumEntityCopyWithImpl<$Res, $Val extends AlbumEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -197,6 +203,8 @@ class _$AlbumEntityCopyWithImpl<$Res, $Val extends AlbumEntity>
     ) as $Val);
   }
 
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ReleaseDateCopyWith<$Res>? get originalReleaseDate {
@@ -209,6 +217,8 @@ class _$AlbumEntityCopyWithImpl<$Res, $Val extends AlbumEntity>
     });
   }
 
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ReleaseDateCopyWith<$Res>? get releaseDate {
@@ -266,6 +276,8 @@ class __$$AlbumEntityImplCopyWithImpl<$Res>
       _$AlbumEntityImpl _value, $Res Function(_$AlbumEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -513,7 +525,7 @@ class _$AlbumEntityImpl implements _AlbumEntity {
             const DeepCollectionEquality().equals(other._song, _song));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -539,7 +551,9 @@ class _$AlbumEntityImpl implements _AlbumEntity {
         const DeepCollectionEquality().hash(_song)
       ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AlbumEntityImplCopyWith<_$AlbumEntityImpl> get copyWith =>
@@ -619,8 +633,11 @@ abstract class _AlbumEntity implements AlbumEntity {
   ReleaseDate? get releaseDate;
   @override
   List<SongEntity>? get song;
+
+  /// Create a copy of AlbumEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AlbumEntityImplCopyWith<_$AlbumEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -634,8 +651,12 @@ mixin _$DiscTitle {
   int? get disc => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
 
+  /// Serializes this DiscTitle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DiscTitle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DiscTitleCopyWith<DiscTitle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -658,6 +679,8 @@ class _$DiscTitleCopyWithImpl<$Res, $Val extends DiscTitle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DiscTitle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -696,6 +719,8 @@ class __$$DiscTitleImplCopyWithImpl<$Res>
       _$DiscTitleImpl _value, $Res Function(_$DiscTitleImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DiscTitle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -742,11 +767,13 @@ class _$DiscTitleImpl implements _DiscTitle {
             (identical(other.title, title) || other.title == title));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, disc, title);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DiscTitle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DiscTitleImplCopyWith<_$DiscTitleImpl> get copyWith =>
@@ -771,8 +798,11 @@ abstract class _DiscTitle implements DiscTitle {
   int? get disc;
   @override
   String? get title;
+
+  /// Create a copy of DiscTitle
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DiscTitleImplCopyWith<_$DiscTitleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -783,6 +813,7 @@ ReleaseDate _$ReleaseDateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ReleaseDate {
+  /// Serializes this ReleaseDate to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
@@ -802,6 +833,9 @@ class _$ReleaseDateCopyWithImpl<$Res, $Val extends ReleaseDate>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of ReleaseDate
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -818,6 +852,9 @@ class __$$ReleaseDateImplCopyWithImpl<$Res>
   __$$ReleaseDateImplCopyWithImpl(
       _$ReleaseDateImpl _value, $Res Function(_$ReleaseDateImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of ReleaseDate
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -839,7 +876,7 @@ class _$ReleaseDateImpl implements _ReleaseDate {
         (other.runtimeType == runtimeType && other is _$ReleaseDateImpl);
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -866,8 +903,12 @@ AlbumListEntity _$AlbumListEntityFromJson(Map<String, dynamic> json) {
 mixin _$AlbumListEntity {
   List<AlbumEntity>? get album => throw _privateConstructorUsedError;
 
+  /// Serializes this AlbumListEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AlbumListEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AlbumListEntityCopyWith<AlbumListEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -891,6 +932,8 @@ class _$AlbumListEntityCopyWithImpl<$Res, $Val extends AlbumListEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AlbumListEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -924,6 +967,8 @@ class __$$AlbumListEntityImplCopyWithImpl<$Res>
       _$AlbumListEntityImpl _value, $Res Function(_$AlbumListEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AlbumListEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -970,12 +1015,14 @@ class _$AlbumListEntityImpl implements _AlbumListEntity {
             const DeepCollectionEquality().equals(other._album, _album));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_album));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AlbumListEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AlbumListEntityImplCopyWith<_$AlbumListEntityImpl> get copyWith =>
@@ -999,8 +1046,11 @@ abstract class _AlbumListEntity implements AlbumListEntity {
 
   @override
   List<AlbumEntity>? get album;
+
+  /// Create a copy of AlbumListEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AlbumListEntityImplCopyWith<_$AlbumListEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

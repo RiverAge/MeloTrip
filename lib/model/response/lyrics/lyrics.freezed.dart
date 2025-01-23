@@ -23,8 +23,12 @@ mixin _$LyricsListEntity {
   List<StructuredLyric>? get structuredLyrics =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this LyricsListEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LyricsListEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LyricsListEntityCopyWith<LyricsListEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$LyricsListEntityCopyWithImpl<$Res, $Val extends LyricsListEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LyricsListEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,6 +87,8 @@ class __$$LyricsListEntityImplCopyWithImpl<$Res>
       $Res Function(_$LyricsListEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LyricsListEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -129,12 +137,14 @@ class _$LyricsListEntityImpl implements _LyricsListEntity {
                 .equals(other._structuredLyrics, _structuredLyrics));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_structuredLyrics));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LyricsListEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LyricsListEntityImplCopyWith<_$LyricsListEntityImpl> get copyWith =>
@@ -158,8 +168,11 @@ abstract class _LyricsListEntity implements LyricsListEntity {
 
   @override
   List<StructuredLyric>? get structuredLyrics;
+
+  /// Create a copy of LyricsListEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LyricsListEntityImplCopyWith<_$LyricsListEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -177,8 +190,12 @@ mixin _$StructuredLyric {
   int? get offset => throw _privateConstructorUsedError;
   bool? get synced => throw _privateConstructorUsedError;
 
+  /// Serializes this StructuredLyric to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StructuredLyric
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StructuredLyricCopyWith<StructuredLyric> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -208,6 +225,8 @@ class _$StructuredLyricCopyWithImpl<$Res, $Val extends StructuredLyric>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StructuredLyric
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -272,6 +291,8 @@ class __$$StructuredLyricImplCopyWithImpl<$Res>
       _$StructuredLyricImpl _value, $Res Function(_$StructuredLyricImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StructuredLyric
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -367,12 +388,14 @@ class _$StructuredLyricImpl implements _StructuredLyric {
             (identical(other.synced, synced) || other.synced == synced));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, displayArtist, displayTitle,
       lang, const DeepCollectionEquality().hash(_line), offset, synced);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StructuredLyric
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StructuredLyricImplCopyWith<_$StructuredLyricImpl> get copyWith =>
@@ -411,8 +434,11 @@ abstract class _StructuredLyric implements StructuredLyric {
   int? get offset;
   @override
   bool? get synced;
+
+  /// Create a copy of StructuredLyric
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StructuredLyricImplCopyWith<_$StructuredLyricImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -426,8 +452,12 @@ mixin _$Line {
   int? get start => throw _privateConstructorUsedError;
   String? get value => throw _privateConstructorUsedError;
 
+  /// Serializes this Line to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Line
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LineCopyWith<Line> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -449,6 +479,8 @@ class _$LineCopyWithImpl<$Res, $Val extends Line>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Line
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -485,6 +517,8 @@ class __$$LineImplCopyWithImpl<$Res>
   __$$LineImplCopyWithImpl(_$LineImpl _value, $Res Function(_$LineImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Line
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -531,11 +565,13 @@ class _$LineImpl implements _Line {
             (identical(other.value, value) || other.value == value));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, start, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Line
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LineImplCopyWith<_$LineImpl> get copyWith =>
@@ -558,8 +594,11 @@ abstract class _Line implements Line {
   int? get start;
   @override
   String? get value;
+
+  /// Create a copy of Line
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LineImplCopyWith<_$LineImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

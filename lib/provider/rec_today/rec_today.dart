@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/rec_today/rec_today.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,7 +9,7 @@ import 'package:melo_trip/svc/user.dart';
 part 'rec_today.g.dart';
 
 @riverpod
-Future<List<SongEntity>?> recToday(RecTodayRef ref) async {
+Future<List<SongEntity>?> recToday(Ref ref) async {
   final u = await User.instance;
   final recToday = u.recToday;
   final now = DateTime.now();

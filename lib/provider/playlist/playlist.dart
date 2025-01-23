@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -38,8 +39,7 @@ class Playlists extends _$Playlists {
 }
 
 @riverpod
-Future<SubsonicResponse?> playlistDetail(
-    PlaylistDetailRef ref, String? playlistId) async {
+Future<SubsonicResponse?> playlistDetail(Ref ref, String? playlistId) async {
   if (playlistId == null) return null;
 
   final res = await Http.get<Map<String, dynamic>>('/rest/getPlaylist',

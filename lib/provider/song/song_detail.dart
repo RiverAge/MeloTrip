@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -5,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'song_detail.g.dart';
 
 @riverpod
-Future<SubsonicResponse?> songDetail(SongDetailRef ref, String? songId) async {
+Future<SubsonicResponse?> songDetail(Ref ref, String? songId) async {
   final id = songId;
   if (id == null) {
     return null;

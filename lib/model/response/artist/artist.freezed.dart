@@ -27,8 +27,12 @@ mixin _$ArtistEntity {
   String? get artistImageUrl => throw _privateConstructorUsedError;
   List<AlbumEntity>? get album => throw _privateConstructorUsedError;
 
+  /// Serializes this ArtistEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ArtistEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ArtistEntityCopyWith<ArtistEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +62,8 @@ class _$ArtistEntityCopyWithImpl<$Res, $Val extends ArtistEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ArtistEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -122,6 +128,8 @@ class __$$ArtistEntityImplCopyWithImpl<$Res>
       _$ArtistEntityImpl _value, $Res Function(_$ArtistEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ArtistEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -217,12 +225,14 @@ class _$ArtistEntityImpl implements _ArtistEntity {
             const DeepCollectionEquality().equals(other._album, _album));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, coverArt, albumCount,
       artistImageUrl, const DeepCollectionEquality().hash(_album));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ArtistEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ArtistEntityImplCopyWith<_$ArtistEntityImpl> get copyWith =>
@@ -260,8 +270,11 @@ abstract class _ArtistEntity implements ArtistEntity {
   String? get artistImageUrl;
   @override
   List<AlbumEntity>? get album;
+
+  /// Create a copy of ArtistEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ArtistEntityImplCopyWith<_$ArtistEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

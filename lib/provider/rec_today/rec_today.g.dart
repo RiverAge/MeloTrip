@@ -6,7 +6,7 @@ part of 'rec_today.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$recTodayHash() => r'4574cbfa784e108fff336eda691435aa8bce4c62';
+String _$recTodayHash() => r'6daa60d883892845c24f7fbf17a6062e88388987';
 
 /// See also [recToday].
 @ProviderFor(recToday)
@@ -19,6 +19,8 @@ final recTodayProvider = AutoDisposeFutureProvider<List<SongEntity>?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef RecTodayRef = AutoDisposeFutureProviderRef<List<SongEntity>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

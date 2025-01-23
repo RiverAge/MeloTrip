@@ -23,8 +23,12 @@ mixin _$StarredEntity {
   List<SongEntity>? get song => throw _privateConstructorUsedError;
   List<AlbumEntity>? get album => throw _privateConstructorUsedError;
 
+  /// Serializes this StarredEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StarredEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StarredEntityCopyWith<StarredEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$StarredEntityCopyWithImpl<$Res, $Val extends StarredEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StarredEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$StarredEntityImplCopyWithImpl<$Res>
       _$StarredEntityImpl _value, $Res Function(_$StarredEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StarredEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -150,14 +158,16 @@ class _$StarredEntityImpl implements _StarredEntity {
             const DeepCollectionEquality().equals(other._album, _album));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_song),
       const DeepCollectionEquality().hash(_album));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StarredEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StarredEntityImplCopyWith<_$StarredEntityImpl> get copyWith =>
@@ -183,8 +193,11 @@ abstract class _StarredEntity implements StarredEntity {
   List<SongEntity>? get song;
   @override
   List<AlbumEntity>? get album;
+
+  /// Create a copy of StarredEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StarredEntityImplCopyWith<_$StarredEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

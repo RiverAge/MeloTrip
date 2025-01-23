@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:melo_trip/fragment/artwork_image/artwork_image.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/rec_today/rec_today.dart';
+import 'package:melo_trip/mixin/song_control/song_control.dart';
 import 'package:melo_trip/svc/app_player_handler.dart';
 
 import 'package:melo_trip/widget/provider_value_builder.dart';

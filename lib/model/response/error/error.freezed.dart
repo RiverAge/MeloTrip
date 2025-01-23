@@ -23,8 +23,12 @@ mixin _$ErrorEntity {
   int? get code => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
 
+  /// Serializes this ErrorEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ErrorEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ErrorEntityCopyWith<ErrorEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$ErrorEntityCopyWithImpl<$Res, $Val extends ErrorEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ErrorEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$ErrorEntityImplCopyWithImpl<$Res>
       _$ErrorEntityImpl _value, $Res Function(_$ErrorEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ErrorEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -132,11 +140,13 @@ class _$ErrorEntityImpl implements _ErrorEntity {
             (identical(other.message, message) || other.message == message));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ErrorEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorEntityImplCopyWith<_$ErrorEntityImpl> get copyWith =>
@@ -161,8 +171,11 @@ abstract class _ErrorEntity implements ErrorEntity {
   int? get code;
   @override
   String? get message;
+
+  /// Create a copy of ErrorEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorEntityImplCopyWith<_$ErrorEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

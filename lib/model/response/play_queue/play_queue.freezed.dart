@@ -27,8 +27,12 @@ mixin _$PlayQueueEntity {
   DateTime? get changed => throw _privateConstructorUsedError;
   String? get changedBy => throw _privateConstructorUsedError;
 
+  /// Serializes this PlayQueueEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PlayQueueEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PlayQueueEntityCopyWith<PlayQueueEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +62,8 @@ class _$PlayQueueEntityCopyWithImpl<$Res, $Val extends PlayQueueEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PlayQueueEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -122,6 +128,8 @@ class __$$PlayQueueEntityClassImplCopyWithImpl<$Res>
       $Res Function(_$PlayQueueEntityClassImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PlayQueueEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -218,7 +226,7 @@ class _$PlayQueueEntityClassImpl implements _PlayQueueEntityClass {
                 other.changedBy == changedBy));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -229,7 +237,9 @@ class _$PlayQueueEntityClassImpl implements _PlayQueueEntityClass {
       changed,
       changedBy);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PlayQueueEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PlayQueueEntityClassImplCopyWith<_$PlayQueueEntityClassImpl>
@@ -269,8 +279,11 @@ abstract class _PlayQueueEntityClass implements PlayQueueEntity {
   DateTime? get changed;
   @override
   String? get changedBy;
+
+  /// Create a copy of PlayQueueEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlayQueueEntityClassImplCopyWith<_$PlayQueueEntityClassImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
