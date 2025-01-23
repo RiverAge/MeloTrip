@@ -24,7 +24,18 @@ class _AlbumInfo extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text('${album.artist} ${album.songCount}首 ${album.year}'),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            album.artist ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text('${album.songCount}首 ${album.year}'),
                     Rating(
                       rating: album.userRating,
                       onRating: onUpdateRating,
