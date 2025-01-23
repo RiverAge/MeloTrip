@@ -11,7 +11,10 @@ class _BlurredFilter extends StatelessWidget {
             child: Container(
                 padding: const EdgeInsets.only(bottom: 25, left: 50),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surface
+                      .withValues(alpha: .1),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,

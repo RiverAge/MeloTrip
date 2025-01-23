@@ -56,7 +56,10 @@ class _SliverAppBar extends StatelessWidget {
               ArtworkImage(id: playlist.coverArt, fit: BoxFit.cover),
               Positioned.fill(
                   child: Container(
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surface
+                    .withValues(alpha: 0.8),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
@@ -66,7 +69,7 @@ class _SliverAppBar extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurfaceVariant
-                              .withOpacity(0.5)),
+                              .withValues(alpha: 0.5)),
                     ),
                     // child: Text(playlist.comment ?? ''),
                   ),

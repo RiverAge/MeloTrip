@@ -48,7 +48,7 @@ class _SearchHistory extends StatelessWidget {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onSurface
-                                          .withOpacity(0.1),
+                                          .withValues(alpha: 0.1),
                                       child: Text(
                                         e,
                                         style: TextStyle(

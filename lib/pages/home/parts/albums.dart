@@ -65,14 +65,18 @@ class _Albums extends StatelessWidget {
   }
 
   _positioned(BuildContext context, AlbumEntity? album) {
-    final color = Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(1);
+    final color =
+        Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 1);
     return Positioned(
         bottom: 0,
         left: 0,
         right: 0,
         child: Container(
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.5)),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surface
+                    .withValues(alpha: 0.5)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
               child: Column(

@@ -29,7 +29,7 @@ class _AlbumsBuilder extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurfaceVariant
-                            .withOpacity(0.5),
+                            .withValues(alpha: .5),
                         fontSize: 12)),
                 leading: Container(
                     width: 50,
