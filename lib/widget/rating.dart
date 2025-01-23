@@ -57,7 +57,7 @@ class _RatingState extends State<Rating> {
             color: Theme.of(context)
                 .colorScheme
                 .primary
-                .withOpacity(_isDraging ? 0.5 : 1),
+                .withValues(alpha: _isDraging ? 0.5 : 1),
             size: 15,
           );
         }),

@@ -6,7 +6,7 @@ class EndofData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color =
-        Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5);
+        Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: .5);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
