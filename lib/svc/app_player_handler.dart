@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
@@ -41,6 +42,7 @@ class AppPlayerHandler {
 
 class AppPlayer extends BaseAudioHandler {
   final _player = AudioPlayer();
+  static const _positionStreamPeriod = 10;
 
   Future<bool> _isCurrentStarred() async {
     final song = _currentSong;
@@ -133,7 +135,6 @@ class AppPlayer extends BaseAudioHandler {
 
     final ids = songs.map((e) => 'id=${e.id}').join('&');
     Http.get('/rest/savePlayQueue?$ids&current=${item.id}');
-    // _updateScroll();
   }
 
   _playerStateStream(PlayerState state) {
@@ -162,20 +163,40 @@ class AppPlayer extends BaseAudioHandler {
     return false;
   }
 
-  // Future<void> _updateScroll() async {
-  //   if (!_player.playing) return;
-  //   final songs = playlist;
-  //   final index = currentIndex;
-  //   if (index == null || songs == null || index >= songs.length) return;
-  //   final song = songs[index];
-  //   final id = song.id;
-  //   if (id == null) return;
-  //   Http.get('/rest/scrobble', queryParameters: {
-  //     'id': id,
-  //     'time': DateTime.now().millisecondsSinceEpoch,
-  //     'submission': false
-  //   });
-  // }
+  bool _nowPlayTrigged = false;
+  bool _playCountTrigged = false;
+  Future<void> _updateScroll(Duration position) async {
+    final duration = _player.duration;
+    if (_player.playing &&
+        duration != null &&
+        duration > Duration.zero &&
+        _currentSong != null) {
+      if (position < Duration(seconds: _positionStreamPeriod)) {
+        _nowPlayTrigged = false;
+        _playCountTrigged = false;
+      }
+      if (position >= Duration(seconds: _positionStreamPeriod) &&
+          !_nowPlayTrigged) {
+        _nowPlayTrigged = true;
+        Http.get(
+          '/rest/scrobble',
+          queryParameters: {'id': _currentSong?.id, 'submission': false},
+        );
+      }
+      if (position >= (duration - Duration(seconds: _positionStreamPeriod)) &&
+          !_playCountTrigged) {
+        _playCountTrigged = true;
+        Http.get(
+          '/rest/scrobble',
+          queryParameters: {
+            'id': _currentSong?.id,
+            'time': DateTime.now().millisecondsSinceEpoch,
+            'submission': true,
+          },
+        );
+      }
+    }
+  }
 
   AppPlayer() {
     _player.playbackEventStream.listen(_playbackEventStreamListener);
@@ -186,7 +207,13 @@ class AppPlayer extends BaseAudioHandler {
 
     _player.setLoopMode(LoopMode.all);
     _player.setShuffleModeEnabled(false);
-    // _player.playingStream.listen((playing) => _updateScroll());
+    _player
+        .createPositionStream(
+          steps: 3,
+          minPeriod: Duration(seconds: _positionStreamPeriod),
+          maxPeriod: Duration(seconds: _positionStreamPeriod),
+        )
+        .listen(_updateScroll);
   }
 
   List<SongEntity>? get playlist {
