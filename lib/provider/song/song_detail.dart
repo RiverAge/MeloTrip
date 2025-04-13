@@ -12,8 +12,10 @@ Future<SubsonicResponse?> songDetail(Ref ref, String? songId) async {
     return null;
   }
 
-  final res = await Http.get<Map<String, dynamic>>('/rest/getSong',
-      queryParameters: {'id': songId});
+  final res = await Http.get<Map<String, dynamic>>(
+    '/rest/getSong',
+    queryParameters: {'id': songId},
+  );
 
   final data = res?.data;
   if (data != null) {
@@ -38,8 +40,9 @@ class SongFavorite extends _$SongFavorite {
     final starred = res?.subsonicResponse?.song?.starred;
 
     final ret = await Http.get<Map<String, dynamic>>(
-        '/rest/${starred != null ? 'un' : ''}star',
-        queryParameters: {'id': songId});
+      '/rest/${starred != null ? 'un' : ''}star',
+      queryParameters: {'id': songId},
+    );
 
     final data = ret?.data;
     if (data == null) return null;
@@ -63,8 +66,10 @@ class SongRating extends _$SongRating {
       return null;
     }
 
-    final ret = await Http.get<Map<String, dynamic>>('/rest/setRating',
-        queryParameters: {'id': songId, 'rating': rating});
+    final ret = await Http.get<Map<String, dynamic>>(
+      '/rest/setRating',
+      queryParameters: {'id': songId, 'rating': rating},
+    );
 
     final data = ret?.data;
     if (data == null) return null;
