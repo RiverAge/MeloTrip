@@ -21,7 +21,10 @@ class ArtworkImage extends ConsumerWidget {
     }
     final AsyncValue<String> url = ref.watch(ArtworkUrlProvider(artworkId));
     return switch (url) {
-      AsyncData(:final value) => Image.network('$value&size=${size ?? 100}'),
+      AsyncData(:final value) => Image.network(
+        '$value&size=${size ?? 100}',
+        fit: fit,
+      ),
       AsyncError() => const Icon(Icons.error),
       _ => const FixedCenterCircular(strokeWidth: 1.5),
     };
