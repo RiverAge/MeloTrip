@@ -66,74 +66,77 @@ class _SearchPageState extends State<SearchPage> {
                 )
                 : _query == ''
                 ? const SizedBox.shrink()
-                : AsyncValueBuilder(
-                  provider: searchProvider(_query),
-                  builder: (context, value, _) {
-                    final songs =
-                        value.subsonicResponse?.searchResult3?.song ?? [];
-                    final albums =
-                        value.subsonicResponse?.searchResult3?.album ?? [];
-                    final artists =
-                        value.subsonicResponse?.searchResult3?.artist ?? [];
-                    if (songs.isEmpty && albums.isEmpty && artists.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: NoData(),
-                      );
-                    }
-                    return Column(
-                      children: [
-                        const TabBar(
-                          tabs: [
-                            Tab(text: '歌曲'),
-                            Tab(text: '专辑'),
-                            Tab(text: '艺术家'),
-                          ],
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              ListView.separated(
-                                itemBuilder:
-                                    (_, index) => _SongItem(song: songs[index]),
-                                separatorBuilder:
-                                    (_, index) => const Divider(
-                                      indent: 0,
-                                      endIndent: 0,
-                                      height: 0,
-                                    ),
-                                itemCount: songs.length,
-                              ),
-                              ListView.separated(
-                                itemBuilder:
-                                    (_, index) =>
-                                        _AlbumItem(album: albums[index]),
-                                separatorBuilder:
-                                    (_, index) => const Divider(
-                                      indent: 0,
-                                      endIndent: 0,
-                                      height: 0,
-                                    ),
-                                itemCount: albums.length,
-                              ),
-                              ListView.separated(
-                                itemBuilder:
-                                    (_, index) =>
-                                        _ArtistItem(artist: artists[index]),
-                                separatorBuilder:
-                                    (_, index) => const Divider(
-                                      indent: 0,
-                                      endIndent: 0,
-                                      height: 0,
-                                    ),
-                                itemCount: artists.length,
-                              ),
+                : SafeArea(
+                  child: AsyncValueBuilder(
+                    provider: searchProvider(_query),
+                    builder: (context, value, _) {
+                      final songs =
+                          value.subsonicResponse?.searchResult3?.song ?? [];
+                      final albums =
+                          value.subsonicResponse?.searchResult3?.album ?? [];
+                      final artists =
+                          value.subsonicResponse?.searchResult3?.artist ?? [];
+                      if (songs.isEmpty && albums.isEmpty && artists.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: NoData(),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          const TabBar(
+                            tabs: [
+                              Tab(text: '歌曲'),
+                              Tab(text: '专辑'),
+                              Tab(text: '艺术家'),
                             ],
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                ListView.separated(
+                                  itemBuilder:
+                                      (_, index) =>
+                                          _SongItem(song: songs[index]),
+                                  separatorBuilder:
+                                      (_, index) => const Divider(
+                                        indent: 0,
+                                        endIndent: 0,
+                                        height: 0,
+                                      ),
+                                  itemCount: songs.length,
+                                ),
+                                ListView.separated(
+                                  itemBuilder:
+                                      (_, index) =>
+                                          _AlbumItem(album: albums[index]),
+                                  separatorBuilder:
+                                      (_, index) => const Divider(
+                                        indent: 0,
+                                        endIndent: 0,
+                                        height: 0,
+                                      ),
+                                  itemCount: albums.length,
+                                ),
+                                ListView.separated(
+                                  itemBuilder:
+                                      (_, index) =>
+                                          _ArtistItem(artist: artists[index]),
+                                  separatorBuilder:
+                                      (_, index) => const Divider(
+                                        indent: 0,
+                                        endIndent: 0,
+                                        height: 0,
+                                      ),
+                                  itemCount: artists.length,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
       ),
     );
