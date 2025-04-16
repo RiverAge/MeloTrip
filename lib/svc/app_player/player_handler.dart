@@ -5,7 +5,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:melo_trip/svc/user.dart';
 import 'package:rxdart/rxdart.dart';
