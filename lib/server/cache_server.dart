@@ -56,12 +56,26 @@ String _buildSubsonicStreamDigest(HttpRequest request) {
       .toString();
 }
 
+Future<bool> _isPortAvailable(int port) async {
+  try {
+    final server = await ServerSocket.bind(InternetAddress.anyIPv4, port);
+    await server.close();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 int length = 0;
 void runHttpServer(Map<String, dynamic> args) async {
   final String? dirPath = args['dirPath'];
   final String? host = args['host'];
 
   if (dirPath == null || host == null) {
+    return;
+  }
+
+  if (!await _isPortAvailable(cacheServerPort)) {
     return;
   }
 
