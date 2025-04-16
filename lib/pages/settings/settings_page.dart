@@ -5,6 +5,7 @@ import 'package:melo_trip/pages/playlist/playlist_page.dart';
 import 'package:melo_trip/pages/settings/music_quality_page.dart';
 import 'package:melo_trip/provider/app_theme_mode/app_theme_mode.dart';
 import 'package:melo_trip/provider/cached_data/cached_data.dart';
+import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/svc/user.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
@@ -96,6 +97,9 @@ class _SettingsPageState extends State<SettingsPage>
 
   _onLogout() async {
     final navigator = Navigator.of(context);
+    final playerHandler = await AppPlayerHandler.instance;
+    final player = playerHandler.player;
+    await player.stop();
     final user = await User.instance;
     user.clear();
     navigator.pushAndRemoveUntil(
