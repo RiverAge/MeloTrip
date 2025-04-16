@@ -1,32 +1,32 @@
 part of '../player_handler.dart';
 
 extension PlayerMediaItem on AppPlayer {
-  Future<bool> _isCurrentStarred() async {
-    final song =
-        playQueue.songs.isEmpty ? null : playQueue.songs[playQueue.index];
-    if (song == null) return false;
-    final res = await Http.get<Map<String, dynamic>>(
-      '/rest/getSong',
-      queryParameters: {'id': song.id},
-    );
-    final data = res?.data;
-    if (data == null) return false;
-    return SubsonicResponse.fromJson(data).subsonicResponse?.song?.starred !=
-        null;
-  }
+  // Future<bool> _isCurrentStarred() async {
+  //   final song =
+  //       playQueue.songs.isEmpty ? null : playQueue.songs[playQueue.index];
+  //   if (song == null) return false;
+  //   final res = await Http.get<Map<String, dynamic>>(
+  //     '/rest/getSong',
+  //     queryParameters: {'id': song.id},
+  //   );
+  //   final data = res?.data;
+  //   if (data == null) return false;
+  //   return SubsonicResponse.fromJson(data).subsonicResponse?.song?.starred !=
+  //       null;
+  // }
 
   Future<void> _updateCurrentMediaItemButton() async {
-    final starred = await _isCurrentStarred();
+    // final starred = await _isCurrentStarred();
     playbackState.add(
       playbackState.value.copyWith(
         controls: [
-          MediaControl.custom(
-            androidIcon:
-                'drawable/media_contrl_favorite${starred ? '_fill' : ''}',
-            label: 'favorite',
-            name: 'favorite',
-            extras: <String, dynamic>{'starred': starred},
-          ),
+          // MediaControl.custom(
+          //   androidIcon:
+          //       'drawable/media_contrl_favorite${starred ? '_fill' : ''}',
+          //   label: 'favorite',
+          //   name: 'favorite',
+          //   extras: <String, dynamic>{'starred': starred},
+          // ),
           MediaControl.skipToPrevious,
           if (playing) MediaControl.pause else MediaControl.play,
           // MediaControl.stop,
