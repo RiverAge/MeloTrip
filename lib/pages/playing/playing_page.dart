@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:melo_trip/fragment/artwork_image/artwork_image.dart';
-import 'package:melo_trip/fragment/current_song_builder/current_song_builder.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/mixin/song_control/song_control.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
@@ -11,7 +9,9 @@ import 'package:melo_trip/pages/playlist/add_to_playlist_page.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
-import 'package:melo_trip/svc/app_player_handler.dart';
+import 'package:melo_trip/svc/app_player/player_handler.dart';
+import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'parts/rotate_cover.dart';

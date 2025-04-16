@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/auth/auth.dart';
 import 'package:melo_trip/model/rec_today/rec_today.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,11 +46,22 @@ class User {
     _prefs?.setString('__u__', jsonEncode(toJson()));
   }
 
+  PlaylistMode _playlistMode = PlaylistMode.loop;
+  PlaylistMode get playlistMode {
+    return _playlistMode;
+  }
+
+  set playlistMode(PlaylistMode playlistMode) {
+    _playlistMode = playlistMode;
+    _prefs?.setString('__u__', jsonEncode(toJson()));
+  }
+
   Map<String, dynamic> toJson() => {
     'auth': _auth?.toJson(),
     'recToday': _recToday?.toJson(),
     'searchHistory': _searchHistory,
     'maxRate': _maxRate,
+    'playlistMode': _playlistMode.toJson(),
   };
 
   SharedPreferences? _prefs;
@@ -89,6 +101,11 @@ class User {
           instance._searchHistory =
               searchHistory.map((e) => e as String).toList();
         }
+        if (ret['playlistMode'] != null) {
+          final playlistMode = ret['playlistMode'] as String;
+          instance._playlistMode = PlaylistModeExtension.fromJson(playlistMode);
+        }
+
         final maxRate = ret['maxRate'] ?? '32';
         instance._maxRate = maxRate;
       } else {
@@ -98,5 +115,33 @@ class User {
       completer.complete(instance);
     }
     return _completer!.future;
+  }
+}
+
+extension PlaylistModeExtension on PlaylistMode {
+  /// Convert the enum to a string for JSON serialization
+  String toJson() {
+    switch (this) {
+      case PlaylistMode.none:
+        return 'none';
+      case PlaylistMode.single:
+        return 'single';
+      case PlaylistMode.loop:
+        return 'loop';
+    }
+  }
+
+  /// Convert a string from JSON back to an enum
+  static PlaylistMode fromJson(String json) {
+    switch (json) {
+      case 'none':
+        return PlaylistMode.none;
+      case 'single':
+        return PlaylistMode.single;
+      case 'loop':
+        return PlaylistMode.loop;
+      default:
+        return PlaylistMode.loop;
+    }
   }
 }

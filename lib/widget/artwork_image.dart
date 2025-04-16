@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/helper/index.dart';
+import 'package:melo_trip/provider/artwork_url/artwork_url.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'artwork_image.g.dart';
 
 class ArtworkImage extends ConsumerWidget {
   const ArtworkImage({super.key, required this.id, this.fit, this.size});
@@ -29,10 +26,4 @@ class ArtworkImage extends ConsumerWidget {
       _ => const FixedCenterCircular(strokeWidth: 1.5),
     };
   }
-}
-
-@riverpod
-Future<String> artworkUrl(Ref ref, String id) async {
-  final url = await buildSubsonicUrl('/rest/getCoverArt?id=$id', proxy: true);
-  return url;
 }

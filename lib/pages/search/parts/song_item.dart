@@ -11,7 +11,7 @@ class _SongItem extends StatelessWidget with SongControl {
       final navigator = Navigator.of(context);
       final handler = await AppPlayerHandler.instance;
       final player = handler.player;
-      await player.addSongToPlaylist(song, needPlay: true);
+      await player.insertAndPlay(song);
       navigator.pop();
     },
     leading: Container(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:melo_trip/fragment/artwork_image/artwork_image.dart';
 import 'package:melo_trip/mixin/song_control/song_control.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -8,7 +7,8 @@ import 'package:melo_trip/pages/recommend_today/recommend_today_page.dart';
 import 'package:melo_trip/pages/search/search_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/rec_today/rec_today.dart';
-import 'package:melo_trip/svc/app_player_handler.dart';
+import 'package:melo_trip/svc/app_player/player_handler.dart';
+import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/endof_data.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -34,10 +34,7 @@ class _HomePageStage extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const _TopSeachBar(),
-      ),
+      appBar: AppBar(centerTitle: true, title: const _TopSeachBar()),
       body: const SingleChildScrollView(
         child: Column(
           children: [
@@ -45,7 +42,7 @@ class _HomePageStage extends State<HomePage>
             _RecToday(),
             _Albums(type: AlumsType.random),
             EndofData(),
-            SizedBox(height: 100)
+            SizedBox(height: 100),
           ],
         ),
       ),

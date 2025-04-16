@@ -56,6 +56,7 @@ String _buildSubsonicStreamDigest(HttpRequest request) {
       .toString();
 }
 
+int length = 0;
 void runHttpServer(Map<String, dynamic> args) async {
   final String? dirPath = args['dirPath'];
   final String? host = args['host'];
@@ -73,9 +74,6 @@ void runHttpServer(Map<String, dynamic> args) async {
   final locks = <String, Lock>{};
   // 异步处理请求，非阻塞
   server.listen((HttpRequest request) async {
-    if (request.uri.path == '/rest/stream') {
-      log('码率 maxBitRate=${request.uri.queryParameters['maxBitRate']}');
-    }
     final digest =
         md5
             .convert(
@@ -134,8 +132,8 @@ void runHttpServer(Map<String, dynamic> args) async {
           ? '${hostHeader.host}:${hostHeader.port}'
           : hostHeader.host,
     );
-
     final HttpClientResponse proxyResponse = await proxyRequest.close();
+
     proxyResponse.headers.forEach((key, values) {
       for (var value in values) {
         request.response.headers.add(key, value);
@@ -148,7 +146,7 @@ void runHttpServer(Map<String, dynamic> args) async {
       int filePointer = 0;
       try {
         final contentLength = _getContentLength(request.response);
-        if (contentLength != 0) {
+        if (contentLength != 0 && request.response.statusCode < 300) {
           raf = await file.open(mode: FileMode.append);
           filePointer = file.existsSync() ? file.lengthSync() : 0;
         }
@@ -157,7 +155,6 @@ void runHttpServer(Map<String, dynamic> args) async {
       }
       int streamPointer = _getResponseStartBytes(request.response);
 
-      int length = 0;
       await for (var data in proxyResponse) {
         if (streamPointer >= filePointer) {
           await raf?.setPosition(streamPointer);

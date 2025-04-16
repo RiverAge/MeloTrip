@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:melo_trip/fragment/artwork_image/artwork_image.dart';
-import 'package:melo_trip/fragment/current_song_builder/current_song_builder.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/playing/playing_page.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
-import 'package:melo_trip/svc/app_player_handler.dart';
+import 'package:melo_trip/svc/app_player/player_handler.dart';
+import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/widget/no_data.dart';
+import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'bottom_sheet_playlist.dart';
@@ -90,106 +91,85 @@ class _MusicBarState extends State<MusicBar> {
           right: 0,
           child: _ColoredContainer(),
         ),
-        CurrentSongBuilder(
-          builder: (_, current, songs, index, ref) {
+        PlayQueueBuilder(
+          builder: (_, playQueue, ref) {
+            if (playQueue.index >= playQueue.songs.length) {
+              return ListTile(
+                leading: SizedBox(
+                  width: 50,
+                  child: Image.asset('images/navidrome.png'),
+                ),
+                title: const Text('MeloTrip'),
+                subtitle: const Text('Elevate with the Symphony'),
+              );
+            }
+            final current = playQueue.songs[playQueue.index];
             return ListTile(
-              onTap: () => current == null ? null : _onOpenPlaying(context),
+              onTap: () => _onOpenPlaying(context),
               leading: SizedBox(
                 width: 50,
-                child:
-                    current == null
-                        ? Image.asset('images/navidrome.png')
-                        : ArtworkImage(
-                          fit: BoxFit.contain,
-                          id: songs[index]?.id,
-                        ),
+                child: ArtworkImage(fit: BoxFit.contain, id: current.id),
               ),
-              title:
-                  current == null
-                      ? const Text('MeloTrip')
-                      : Text(
-                        '${songs[index]?.title} - ${songs[index]?.artist}',
+              title: Text(
+                '${current.title} - ${current.artist}',
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: AsyncValueBuilder(
+                provider: lyricsProvider(current.id),
+                loading: (_, __) => const SizedBox.shrink(),
+                builder: (_, lyrics, __) {
+                  return AsyncStreamBuilder(
+                    loading: (p0, _) => const SizedBox.shrink(),
+                    provider: positionStreamProvider,
+                    builder: (_, position, ref) {
+                      return Text(
+                        ref.watch(lyricsOfLineProvider(lyrics, position)),
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-              subtitle:
-                  current == null
-                      ? const Text('Elevate with the Symphony')
-                      : AsyncValueBuilder(
-                        provider: lyricsProvider(songs[index]?.id),
-                        loading: (_, __) => const SizedBox.shrink(),
-                        builder: (_, lyrics, __) {
-                          return AsyncStreamBuilder(
-                            loading: (p0, _) => const SizedBox.shrink(),
-                            provider: positionStreamProvider,
-                            builder: (_, position, ref) {
-                              return Text(
-                                ref.watch(
-                                  lyricsOfLineProvider(lyrics, position),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 12),
-                              );
-                            },
-                          );
+                        style: const TextStyle(fontSize: 12),
+                      );
+                    },
+                  );
+                },
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AsyncStreamBuilder(
+                    provider: playingStreamProvider,
+                    loading: (_, __) => const SizedBox.shrink(),
+                    builder: (context, data, ref) {
+                      return IconButton(
+                        style: IconButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.all(0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () async {
+                          final handler = await AppPlayerHandler.instance;
+                          final player = handler.player;
+                          player.playOrPause();
                         },
-                      ),
-              trailing:
-                  current == null
-                      ? null
-                      : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AsyncStreamBuilder(
-                            provider: playerStateStreamProvider,
-                            loading: (_, __) => const SizedBox.shrink(),
-                            builder: (context, data, ref) {
-                              return IconButton(
-                                style: IconButton.styleFrom(
-                                  minimumSize: Size.zero,
-                                  padding: const EdgeInsets.all(0),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed:
-                                    data.processingState !=
-                                                ProcessingState.ready &&
-                                            data.processingState !=
-                                                ProcessingState.completed
-                                        ? null
-                                        : () async {
-                                          final handler =
-                                              await AppPlayerHandler.instance;
-                                          final player = handler.player;
-                                          if (player.playerState.playing) {
-                                            player.pause();
-                                          } else {
-                                            player.play();
-                                          }
-                                        },
-                                icon: Icon(
-                                  data.playing
-                                      ? Icons.pause_circle_outline
-                                      : Icons.play_circle_outlined,
-                                  size: 35,
-                                ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            style: IconButton.styleFrom(
-                              minimumSize: Size.zero,
-                              padding: const EdgeInsets.all(0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () => _onOpenPlaylist(context),
-                            icon: const Icon(
-                              Icons.playlist_play_sharp,
-                              size: 35,
-                            ),
-                          ),
-                        ],
-                      ),
+                        icon: Icon(
+                          data
+                              ? Icons.pause_circle_outline
+                              : Icons.play_circle_outlined,
+                          size: 35,
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    style: IconButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: const EdgeInsets.all(0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () => _onOpenPlaylist(context),
+                    icon: const Icon(Icons.playlist_play_sharp, size: 35),
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -206,9 +186,12 @@ class _MusicBarState extends State<MusicBar> {
 
   _durationBulder() {
     // 这里just_audio偶尔无法获取duration，这里使用后端返回的数据
-    return CurrentSongBuilder(
-      builder: (context, current, sequence, index, ref) {
-        if (current == null) return const SizedBox.shrink();
+    return PlayQueueBuilder(
+      builder: (context, playQueue, ref) {
+        if (playQueue.index >= playQueue.songs.length) {
+          return const SizedBox.shrink();
+        }
+        final current = playQueue.songs[playQueue.index];
         final serverDuration = Duration(seconds: current.duration ?? 0);
 
         return AsyncStreamBuilder(

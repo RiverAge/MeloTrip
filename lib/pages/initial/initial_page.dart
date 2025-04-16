@@ -7,7 +7,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/login/login_page.dart';
 import 'package:melo_trip/pages/tab/tab_page.dart';
 import 'package:melo_trip/server/cache_server.dart';
-import 'package:melo_trip/svc/app_player_handler.dart';
+import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:melo_trip/svc/user.dart';
 

@@ -4,9 +4,13 @@ class _CoverBackground extends StatelessWidget {
   const _CoverBackground();
   @override
   Widget build(BuildContext context) => Positioned.fill(
-    child: CurrentSongBuilder(
-      builder: (context, current, songs, index, ref) {
-        return ArtworkImage(fit: BoxFit.cover, id: 'mf-${current?.id}');
+    child: PlayQueueBuilder(
+      builder: (context, playQueue, ref) {
+        if (playQueue.index >= playQueue.songs.length) {
+          return SizedBox.shrink();
+        }
+        final current = playQueue.songs[playQueue.index];
+        return ArtworkImage(fit: BoxFit.cover, id: 'mf-${current.id}');
       },
     ),
   );
