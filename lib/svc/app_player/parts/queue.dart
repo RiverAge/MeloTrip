@@ -7,33 +7,17 @@ extension PlayerQueue on AppPlayer {
   }) async {
     final filterdSongs =
         songs.where((e) => e.id != '' && e.id != null).toList();
-    if (filterdSongs.isEmpty) return;
     final initialIndex = filterdSongs.indexWhere((e) => e.id == initialId);
-
-    // 是否同一播放列表
-    if (filterdSongs.length == _player.state.playlist.medias.length &&
-        List.generate(filterdSongs.length, (idx) => idx).every(
-          (idx) =>
-              filterdSongs[idx].id ==
-              (_player.state.playlist.medias[idx].extras?['song']
-                      as SongEntity?)
-                  ?.id,
-        )) {
-      await skipToQueueItem(0);
-    } else {
-      final streamUrl = await buildSubsonicUrl('/rest/stream', proxy: true);
-      final playable =
-          filterdSongs
-              .map((e) => Media('$streamUrl&id=${e.id}', extras: {'song': e}))
-              .toList();
-      final effectiveInitialIndex =
-          playable.isNotEmpty && initialIndex == -1 ? 0 : initialIndex;
-
-      await _player.open(
-        Playlist(playable, index: effectiveInitialIndex),
-        play: false,
-      );
-    }
+    final streamUrl = await buildSubsonicUrl('/rest/stream', proxy: true);
+    final playable =
+        filterdSongs
+            .map((e) => Media('$streamUrl&id=${e.id}', extras: {'song': e}))
+            .toList();
+    final effectiveInitialIndex = initialIndex == -1 ? 0 : initialIndex;
+    await _player.open(
+      Playlist(playable, index: effectiveInitialIndex),
+      play: false,
+    );
   }
 
   Future<int> insertToNext(SongEntity song) async {
