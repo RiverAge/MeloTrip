@@ -8,8 +8,7 @@ class _BottomSheetPlaylist extends StatefulWidget {
 }
 
 class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
-  late final ScrollController _scrollController;
-  final GlobalKey<AnimatedListState> animatedListStateKey = GlobalKey();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -21,7 +20,14 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
     final hanlder = await AppPlayerHandler.instance;
     final player = hanlder.player;
     final index = player.playQueue.index;
-    _scrollController = ScrollController(initialScrollOffset: 64.3 * index);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        64.3 * index,
+        duration: Duration(seconds: 1),
+        curve: Curves.bounceIn,
+      );
+    });
   }
 
   @override
