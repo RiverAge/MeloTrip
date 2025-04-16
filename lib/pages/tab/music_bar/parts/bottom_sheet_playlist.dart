@@ -25,7 +25,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
       _scrollController.animateTo(
         64.3 * index,
         duration: Duration(seconds: 1),
-        curve: Curves.bounceIn,
+        curve: Curves.linear,
       );
     });
   }
