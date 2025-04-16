@@ -6,22 +6,6 @@ part of 'app_player.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appPlayerHash() => r'513e45302b9d8f86a3f77b498beaeb53f3f0b58d';
-
-/// See also [appPlayer].
-@ProviderFor(appPlayer)
-final appPlayerProvider = AutoDisposeFutureProvider<AppPlayer>.internal(
-  appPlayer,
-  name: r'appPlayerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appPlayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AppPlayerRef = AutoDisposeFutureProviderRef<AppPlayer>;
 String _$positionStreamHash() => r'04c7310bef6cac2b81c3b7920f81500e2ad65cf7';
 
 /// See also [positionStream].
@@ -82,86 +66,27 @@ final bufferedPositionStreamProvider =
 // ignore: unused_element
 typedef BufferedPositionStreamRef =
     AutoDisposeFutureProviderRef<Raw<Stream<Duration>>>;
-String _$playerStateStreamHash() => r'c194915f74a90f03f6db356e8801b9e682ca5218';
+String _$playlistModeStreamHash() =>
+    r'a4e0043092f0ece9dba7186b1f254fa200e4a6e0';
 
-/// See also [playerStateStream].
-@ProviderFor(playerStateStream)
-final playerStateStreamProvider =
-    AutoDisposeFutureProvider<Raw<Stream<PlayerState>>>.internal(
-      playerStateStream,
-      name: r'playerStateStreamProvider',
+/// See also [playlistModeStream].
+@ProviderFor(playlistModeStream)
+final playlistModeStreamProvider =
+    AutoDisposeFutureProvider<Raw<Stream<PlaylistMode>>>.internal(
+      playlistModeStream,
+      name: r'playlistModeStreamProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$playerStateStreamHash,
+              : _$playlistModeStreamHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef PlayerStateStreamRef =
-    AutoDisposeFutureProviderRef<Raw<Stream<PlayerState>>>;
-String _$shuffleModeEnabledStreamHash() =>
-    r'cee8864ec6ce1ad28c238da411466da0803cadaf';
-
-/// See also [shuffleModeEnabledStream].
-@ProviderFor(shuffleModeEnabledStream)
-final shuffleModeEnabledStreamProvider =
-    AutoDisposeFutureProvider<Raw<Stream<bool>>>.internal(
-      shuffleModeEnabledStream,
-      name: r'shuffleModeEnabledStreamProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$shuffleModeEnabledStreamHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ShuffleModeEnabledStreamRef =
-    AutoDisposeFutureProviderRef<Raw<Stream<bool>>>;
-String _$loopModeStreamHash() => r'b924d32f75ac077687a7421ef3e9d069d868d6d6';
-
-/// See also [loopModeStream].
-@ProviderFor(loopModeStream)
-final loopModeStreamProvider =
-    AutoDisposeFutureProvider<Raw<Stream<LoopMode>>>.internal(
-      loopModeStream,
-      name: r'loopModeStreamProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$loopModeStreamHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LoopModeStreamRef = AutoDisposeFutureProviderRef<Raw<Stream<LoopMode>>>;
-String _$currentIndexStreamHash() =>
-    r'75792f91b7e4eb71c424c0c56160172aaad0a73d';
-
-/// See also [currentIndexStream].
-@ProviderFor(currentIndexStream)
-final currentIndexStreamProvider =
-    AutoDisposeFutureProvider<Raw<Stream<int?>>>.internal(
-      currentIndexStream,
-      name: r'currentIndexStreamProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$currentIndexStreamHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CurrentIndexStreamRef = AutoDisposeFutureProviderRef<Raw<Stream<int?>>>;
+typedef PlaylistModeStreamRef =
+    AutoDisposeFutureProviderRef<Raw<Stream<PlaylistMode>>>;
 String _$playingStreamHash() => r'c2fad3d766b203dcc4a2e2b21d96424972e3521b';
 
 /// See also [playingStream].
@@ -181,25 +106,25 @@ final playingStreamProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PlayingStreamRef = AutoDisposeFutureProviderRef<Raw<Stream<bool>>>;
-String _$sequenceStreamHash() => r'7732ed3204310382aaf336d32b1a2b221a43f913';
+String _$playQueueStreamHash() => r'2270929364168a63d714c67642ef6304ac9a66bf';
 
-/// See also [sequenceStream].
-@ProviderFor(sequenceStream)
-final sequenceStreamProvider =
-    AutoDisposeFutureProvider<Raw<Stream<List<SongEntity?>?>>>.internal(
-      sequenceStream,
-      name: r'sequenceStreamProvider',
+/// See also [playQueueStream].
+@ProviderFor(playQueueStream)
+final playQueueStreamProvider =
+    AutoDisposeFutureProvider<Raw<Stream<PlayQueue>>>.internal(
+      playQueueStream,
+      name: r'playQueueStreamProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$sequenceStreamHash,
+              : _$playQueueStreamHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef SequenceStreamRef =
-    AutoDisposeFutureProviderRef<Raw<Stream<List<SongEntity?>?>>>;
+typedef PlayQueueStreamRef =
+    AutoDisposeFutureProviderRef<Raw<Stream<PlayQueue>>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

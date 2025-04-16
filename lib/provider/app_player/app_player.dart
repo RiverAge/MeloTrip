@@ -1,24 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/svc/app_player_handler.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/model/player/play_queue.dart';
+import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_player.g.dart';
-
-@riverpod
-Future<AppPlayer> appPlayer(Ref ref) async {
-  final handler = await AppPlayerHandler.instance;
-  return handler.player;
-}
-
-class PlaylistState {
-  PlaylistState(
-      {required this.songs, required this.index, required this.playing});
-  List<SongEntity>? songs;
-  int? index;
-  bool? playing;
-}
 
 @riverpod
 Future<Raw<Stream<Duration>>> positionStream(Ref ref) async {
@@ -41,32 +27,18 @@ Future<Raw<Stream<Duration>>> bufferedPositionStream(Ref ref) async {
   return player.bufferedPositionStream;
 }
 
-@riverpod
-Future<Raw<Stream<PlayerState>>> playerStateStream(Ref ref) async {
-  final handler = await AppPlayerHandler.instance;
-  final player = handler.player;
-  return player.playerStateStream;
-}
+// @riverpod
+// Future<Raw<Stream<bool>>> shuffleModeEnabledStream(Ref ref) async {
+//   final handler = await AppPlayerHandler.instance;
+//   final player = handler.player;
+//   return player.shuffleModeEnabledStream;
+// }
 
 @riverpod
-Future<Raw<Stream<bool>>> shuffleModeEnabledStream(Ref ref) async {
+Future<Raw<Stream<PlaylistMode>>> playlistModeStream(Ref ref) async {
   final handler = await AppPlayerHandler.instance;
   final player = handler.player;
-  return player.shuffleModeEnabledStream;
-}
-
-@riverpod
-Future<Raw<Stream<LoopMode>>> loopModeStream(Ref ref) async {
-  final handler = await AppPlayerHandler.instance;
-  final player = handler.player;
-  return player.loopModeStream;
-}
-
-@riverpod
-Future<Raw<Stream<int?>>> currentIndexStream(Ref ref) async {
-  final handler = await AppPlayerHandler.instance;
-  final player = handler.player;
-  return player.currentIndexStream;
+  return player.playlistModeStream;
 }
 
 @riverpod
@@ -77,8 +49,8 @@ Future<Raw<Stream<bool>>> playingStream(Ref ref) async {
 }
 
 @riverpod
-Future<Raw<Stream<List<SongEntity?>?>>> sequenceStream(Ref ref) async {
+Future<Raw<Stream<PlayQueue>>> playQueueStream(Ref ref) async {
   final handler = await AppPlayerHandler.instance;
   final player = handler.player;
-  return player.sequenceStream;
+  return player.playQueueStream;
 }

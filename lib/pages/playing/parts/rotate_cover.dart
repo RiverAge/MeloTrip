@@ -48,11 +48,16 @@ class _RotateCoverState extends State<_RotateCover>
     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
     child: RotationTransition(
       turns: _controller,
-      child: CurrentSongBuilder(
-        builder: (context, current, songs, index, ref) {
+      child: PlayQueueBuilder(
+        builder: (context, playQueue, ref) {
+          if (playQueue.index >= playQueue.songs.length) {
+            return SizedBox.shrink();
+          }
+
+          final current = playQueue.songs[playQueue.index];
           return ClipOval(
             child: ArtworkImage(
-              id: 'mf-${current?.id}',
+              id: 'mf-${current.id}',
               fit: BoxFit.fill,
               size: 300,
             ),

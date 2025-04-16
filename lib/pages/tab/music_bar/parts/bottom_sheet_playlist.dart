@@ -20,7 +20,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
   _setPosition() async {
     final hanlder = await AppPlayerHandler.instance;
     final player = hanlder.player;
-    final index = player.currentIndex ?? 0;
+    final index = player.playQueue.index;
     _scrollController = ScrollController(initialScrollOffset: 64.3 * index);
   }
 
@@ -44,17 +44,20 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
         ),
         const Divider(height: 0),
         Expanded(
-          child: CurrentSongBuilder(
-            builder: (_, current, songs, index, __) {
+          child: PlayQueueBuilder(
+            builder: (_, playQueue, __) {
+              if (playQueue.songs.isEmpty) {
+                return NoData();
+              }
               return ListView.separated(
-                itemCount: songs.length,
+                itemCount: playQueue.songs.length,
                 controller: _scrollController,
                 padding: const EdgeInsets.all(8.0),
                 separatorBuilder: (context, index) => const Divider(height: 0),
                 itemBuilder: (context, idx) {
                   return _BottomSheetItem(
-                    songs: songs,
-                    currentPlayingIndex: index,
+                    songs: playQueue.songs,
+                    currentPlayingIndex: playQueue.index,
                     index: idx,
                   );
                 },

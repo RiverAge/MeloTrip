@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/pages/initial/initial_page.dart';
 import 'package:melo_trip/provider/app_theme_mode/app_theme_mode.dart';
 import 'package:melo_trip/svc/http.dart';
@@ -12,6 +13,8 @@ import 'package:melo_trip/widget/fixed_center_circular.dart';
 // import 'package:flutter/scheduler.dart' show timeDilation;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   runApp(const ProviderScope(child: MyApp()));
 }
 

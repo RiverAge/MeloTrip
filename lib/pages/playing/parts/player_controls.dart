@@ -39,62 +39,49 @@ class _PlayerControls extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-            onPressed: () async {
-              final handler = await AppPlayerHandler.instance;
-              final player = handler.player;
-              player.skipToPrevious();
-            },
-            icon: const Icon(
-              Icons.skip_previous_outlined,
-              size: 40,
-            )),
+          onPressed: () async {
+            final handler = await AppPlayerHandler.instance;
+            final player = handler.player;
+            player.skipToPrevious();
+          },
+          icon: const Icon(Icons.skip_previous_outlined, size: 40),
+        ),
         IconButton(
-            onPressed: () {
-              _seekReplay(const Duration(seconds: 30));
-            },
-            icon: const Icon(
-              Icons.replay_30_outlined,
-            )),
+          onPressed: () {
+            _seekReplay(const Duration(seconds: 30));
+          },
+          icon: const Icon(Icons.replay_30_outlined),
+        ),
         AsyncStreamBuilder(
-            provider: playerStateStreamProvider,
-            builder: (context, data, ref) {
-              return IconButton(
-                  onPressed: data.processingState != ProcessingState.ready &&
-                          data.processingState != ProcessingState.completed
-                      ? null
-                      : () async {
-                          final handler = await AppPlayerHandler.instance;
-                          final player = handler.player;
-                          if (player.playing) {
-                            player.pause();
-                          } else {
-                            player.play();
-                          }
-                        },
-                  icon: Icon(
-                    data.playing
-                        ? Icons.pause_circle_outline
-                        : Icons.play_circle_outlined,
-                    size: 60,
-                  ));
-            }),
+          provider: playingStreamProvider,
+          builder: (context, data, ref) {
+            return IconButton(
+              onPressed: () async {
+                final handler = await AppPlayerHandler.instance;
+                final player = handler.player;
+                player.playOrPause();
+              },
+              icon: Icon(
+                data ? Icons.pause_circle_outline : Icons.play_circle_outlined,
+                size: 60,
+              ),
+            );
+          },
+        ),
         IconButton(
-            onPressed: () {
-              _seekForward(const Duration(seconds: 30));
-            },
-            icon: const Icon(
-              Icons.forward_30_outlined,
-            )),
+          onPressed: () {
+            _seekForward(const Duration(seconds: 30));
+          },
+          icon: const Icon(Icons.forward_30_outlined),
+        ),
         IconButton(
-            onPressed: () async {
-              final handler = await AppPlayerHandler.instance;
-              final player = handler.player;
-              player.skipToNext();
-            },
-            icon: const Icon(
-              Icons.skip_next_outlined,
-              size: 40,
-            )),
+          onPressed: () async {
+            final handler = await AppPlayerHandler.instance;
+            final player = handler.player;
+            player.skipToNext();
+          },
+          icon: const Icon(Icons.skip_next_outlined, size: 40),
+        ),
       ],
     );
   }

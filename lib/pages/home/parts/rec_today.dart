@@ -51,7 +51,7 @@ class _RecToday extends StatelessWidget with SongControl {
                           onTap: () async {
                             final handler = await AppPlayerHandler.instance;
                             final player = handler.player;
-                            player.addSongToPlaylist(e, needPlay: true);
+                            await player.insertAndPlay(e);
                           },
                           title: Text(
                             e.title ?? '',

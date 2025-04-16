@@ -6,35 +6,47 @@ class _SongTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child:
-            CurrentSongBuilder(builder: (context, current, songs, index, ref) {
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: PlayQueueBuilder(
+        builder: (context, playQueue, ref) {
+          if (playQueue.index >= playQueue.songs.length) {
+            return SizedBox.shrink();
+          }
+          final current = playQueue.songs[playQueue.index];
           return AsyncStreamBuilder(
-              provider: playingStreamProvider,
-              builder: (_, playing, __) {
-                final isCurrent = current?.id == song.id;
-                final isCurrentPlaying = playing && isCurrent;
-                return Row(children: [
+            provider: playingStreamProvider,
+            builder: (_, playing, __) {
+              final isCurrent = current.id == song.id;
+              final isCurrentPlaying = playing && isCurrent;
+              return Row(
+                children: [
                   Container(
-                      width: 35,
-                      margin: const EdgeInsets.only(right: 10),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: ArtworkImage(id: song.id)),
+                    width: 35,
+                    margin: const EdgeInsets.only(right: 10),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    child: ArtworkImage(id: song.id),
+                  ),
                   if (isCurrentPlaying)
                     SizedBox(
-                        width: 30,
-                        child: Image.asset('images/playing.gif',
-                            color: Theme.of(context).colorScheme.primary)),
+                      width: 30,
+                      child: Image.asset(
+                        'images/playing.gif',
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   Expanded(
                     child: Text(
                       song.title ?? '',
                       style: TextStyle(
-                          fontSize: 18,
-                          color: isCurrent
-                              ? Theme.of(context).colorScheme.primary
-                              : null),
+                        fontSize: 18,
+                        color:
+                            isCurrent
+                                ? Theme.of(context).colorScheme.primary
+                                : null,
+                      ),
                     ),
                   ),
                   Consumer(
@@ -49,8 +61,12 @@ class _SongTitle extends StatelessWidget {
                       );
                     },
                   ),
-                ]);
-              });
-        }));
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
