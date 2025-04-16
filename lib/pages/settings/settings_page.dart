@@ -99,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage>
     final navigator = Navigator.of(context);
     final playerHandler = await AppPlayerHandler.instance;
     final player = playerHandler.player;
-    await player.stop();
+    await player.pause();
     final user = await User.instance;
     user.clear();
     navigator.pushAndRemoveUntil(

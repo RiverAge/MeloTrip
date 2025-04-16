@@ -53,7 +53,10 @@ class _InitState extends State<InitialPage> {
       final playQueue = await _getPlayQueue();
       final songs = playQueue?.entry;
 
-      player.setPlaylist(songs: songs ?? [], initialId: playQueue?.current);
+      await player.setPlaylist(
+        songs: songs ?? [],
+        initialId: playQueue?.current,
+      );
 
       navigator.pushAndRemoveUntil(
         PageRouteBuilder(

@@ -9,14 +9,14 @@ class _SongTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: PlayQueueBuilder(
         builder: (context, playQueue, ref) {
-          if (playQueue.index >= playQueue.songs.length) {
-            return SizedBox.shrink();
-          }
-          final current = playQueue.songs[playQueue.index];
+          final current =
+              playQueue.index >= playQueue.songs.length
+                  ? null
+                  : playQueue.songs[playQueue.index];
           return AsyncStreamBuilder(
             provider: playingStreamProvider,
             builder: (_, playing, __) {
-              final isCurrent = current.id == song.id;
+              final isCurrent = current?.id == song.id;
               final isCurrentPlaying = playing && isCurrent;
               return Row(
                 children: [
