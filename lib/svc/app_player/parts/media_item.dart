@@ -56,7 +56,7 @@ extension PlayerMediaItem on AppPlayer {
   // 播放列表或者当前的播放项目变化时
   // 同步后台播放队列
   // 同步App播放通知
-  Future<void> _changeMediaItem() async {
+  Future<void> _updateMediaItem() async {
     if (playQueue.index >= playQueue.songs.length) {
       const item = MediaItem(
         id: '-1',

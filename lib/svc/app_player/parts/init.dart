@@ -7,7 +7,6 @@ extension PlayerInit on AppPlayer {
     _player.stream.completed.listen((_) => _updateCurrentMediaItemButton());
     _player.stream.rate.listen((_) => _updateCurrentMediaItemButton());
     _player.stream.buffer.listen((_) => _updateCurrentMediaItemButton());
-    _player.stream.playlist.listen((_) => _changeMediaItem());
     // 光年之外的 pos 是负数
     _player.stream.position.listen((pos) {
       _updateScrolling(pos);
@@ -24,6 +23,7 @@ extension PlayerInit on AppPlayer {
       _playlistModeSubject.add(data);
     });
     _player.stream.playlist.listen((e) {
+      _updateMediaItem();
       _playQueueSubject.add(
         PlayQueue(
           songs:
