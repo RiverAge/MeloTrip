@@ -23,7 +23,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
-        64.3 * index,
+        64.07 * index,
         duration: Duration(seconds: 1),
         curve: Curves.linear,
       );
