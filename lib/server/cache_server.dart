@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
@@ -83,8 +82,6 @@ void runHttpServer(Map<String, dynamic> args) async {
     InternetAddress.anyIPv4,
     cacheServerPort,
   );
-  log('server started on port $cacheServerPort', level: 0);
-
   final locks = <String, Lock>{};
   // 异步处理请求，非阻塞
   server.listen((HttpRequest request) async {
@@ -114,7 +111,6 @@ void runHttpServer(Map<String, dynamic> args) async {
     }
 
     if (endByte < cacheSize && cacheSize > 0 && startByte < cacheSize) {
-      log('数据在缓存中，直接返回 ${request.uri.toString()}', level: 0);
       final stream = file.openRead(startByte, endByte + 1);
       request.response
         ..statusCode =
@@ -128,7 +124,6 @@ void runHttpServer(Map<String, dynamic> args) async {
       await stream.pipe(request.response);
       return;
     }
-    log('数据不在缓存中，从代理服务器获取 ${request.uri.toString()}', level: 0);
 
     final httpClient = HttpClient();
     final HttpClientRequest proxyRequest = await httpClient.getUrl(
@@ -179,10 +174,6 @@ void runHttpServer(Map<String, dynamic> args) async {
         length += data.length;
       }
       await raf?.close();
-      log(
-        '下载数据流量 ${request.uri.toString()}  ${(length / 1024 / 1024).toStringAsFixed(2)}MB',
-        level: 0,
-      );
     });
     if (locks[digest]?.locked == false) {
       locks.remove(digest);
