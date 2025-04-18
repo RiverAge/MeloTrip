@@ -31,10 +31,12 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   bool _displayHistory = true;
   final TextEditingController _controller = TextEditingController();
+  final _focusNode = FocusNode();
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -46,6 +48,7 @@ class _SearchPageState extends State<SearchPage> {
         appBar: AppBar(
           title: _Searchbar(
             controller: _controller,
+            focusNode: _focusNode,
             onReFocused: () {
               setState(() {
                 _displayHistory = true;
@@ -62,6 +65,7 @@ class _SearchPageState extends State<SearchPage> {
                 ? _SearchHistory(
                   onTap: (value) {
                     _controller.text = value;
+                    _focusNode.unfocus();
                     setState(() {
                       _displayHistory = false;
                     });
