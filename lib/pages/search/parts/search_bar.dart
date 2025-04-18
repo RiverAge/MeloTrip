@@ -68,7 +68,8 @@ class _SearchbarState extends State<_Searchbar> {
           ),
           IconButton(
             constraints: BoxConstraints(),
-            padding: EdgeInsets.all(2),
+            padding: EdgeInsets.zero,
+            style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
             onPressed: () {
               widget.controller.text = '';
               _focusNode.requestFocus();
