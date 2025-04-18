@@ -29,8 +29,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String _query = '';
-  bool _isFoucs = false;
+  bool _displayHistory = true;
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -47,28 +46,32 @@ class _SearchPageState extends State<SearchPage> {
         appBar: AppBar(
           title: _Searchbar(
             controller: _controller,
-            onFocusChange:
-                (hasFocus) => setState(() {
-                  _isFoucs = hasFocus;
-                }),
+            onReFocused: () {
+              setState(() {
+                _displayHistory = true;
+              });
+            },
             onSubmitted:
                 (value) => setState(() {
-                  _query = value;
+                  _displayHistory = false;
                 }),
           ),
         ),
         body:
-            _isFoucs
+            _displayHistory
                 ? _SearchHistory(
                   onTap: (value) {
                     _controller.text = value;
+                    setState(() {
+                      _displayHistory = false;
+                    });
                   },
                 )
-                : _query == ''
+                : _controller.text == ''
                 ? const SizedBox.shrink()
                 : SafeArea(
                   child: AsyncValueBuilder(
-                    provider: searchProvider(_query),
+                    provider: searchProvider(_controller.text),
                     builder: (context, value, _) {
                       final songs =
                           value.subsonicResponse?.searchResult3?.song ?? [];
