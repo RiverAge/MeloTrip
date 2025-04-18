@@ -4,32 +4,25 @@ class _Searchbar extends StatefulWidget {
   const _Searchbar({
     required this.onSubmitted,
     required this.controller,
+    required this.focusNode,
     required this.onReFocused,
   });
   final void Function(String) onSubmitted;
   final void Function() onReFocused;
   final TextEditingController controller;
+  final FocusNode focusNode;
 
   @override
   State<StatefulWidget> createState() => _SearchbarState();
 }
 
 class _SearchbarState extends State<_Searchbar> {
-  final FocusNode _focusNode = FocusNode();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _focusNode.requestFocus();
+      widget.focusNode.requestFocus();
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -52,10 +45,10 @@ class _SearchbarState extends State<_Searchbar> {
               controller: widget.controller,
               style: TextStyle(fontSize: 13),
               onSubmitted: (val) {
-                _focusNode.unfocus();
+                widget.focusNode.unfocus();
                 widget.onSubmitted(val);
               },
-              focusNode: _focusNode,
+              focusNode: widget.focusNode,
               cursorHeight: 17,
               textInputAction: TextInputAction.search,
               decoration: const InputDecoration(
@@ -72,7 +65,7 @@ class _SearchbarState extends State<_Searchbar> {
             style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
             onPressed: () {
               widget.controller.text = '';
-              _focusNode.requestFocus();
+              widget.focusNode.requestFocus();
               widget.onReFocused();
             },
             icon: Icon(Icons.clear, size: 19),
