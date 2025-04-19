@@ -44,7 +44,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
         title: _BottomSheetTitle(),
         actions: [_BottomSheetActionsMode()],
         centerTitle: false,
-        elevation: 0.3, // 控制投影效果的高度
+        elevation: 0.2, // 控制投影效果的高度
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
