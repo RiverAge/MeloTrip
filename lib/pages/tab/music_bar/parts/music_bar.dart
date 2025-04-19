@@ -13,10 +13,11 @@ import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'bottom_sheet_playlist.dart';
-part 'bottom_sheet_controls.dart';
+part 'bottom_sheet_actions_shuffle.dart';
 part 'bottom_sheet_item.dart';
 part 'bottom_sheet_title.dart';
 part 'colored_container.dart';
+part 'bottom_sheet_actions_mode.dart';
 
 class MusicBar extends StatefulWidget {
   const MusicBar({super.key});
