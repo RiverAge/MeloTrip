@@ -23,7 +23,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
-        64.07 * index,
+        72.00 * index,
         duration: Duration(seconds: 1),
         curve: Curves.linear,
       );
@@ -58,7 +58,11 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
               return ListView.separated(
                 itemCount: playQueue.songs.length,
                 controller: _scrollController,
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(
+                  left: 8.0,
+                  right: 8.0,
+                  bottom: 8.0,
+                ),
                 separatorBuilder: (context, index) => const Divider(height: 0),
                 itemBuilder: (context, idx) {
                   return _BottomSheetItem(

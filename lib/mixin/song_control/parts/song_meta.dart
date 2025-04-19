@@ -11,6 +11,7 @@ class _SongMeta extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: (DividerTheme.of(context).space ?? 16) / 2),
             ListTile(
               onTap: () {
                 Navigator.of(context).push(
