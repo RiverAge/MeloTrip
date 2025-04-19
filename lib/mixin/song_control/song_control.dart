@@ -53,7 +53,6 @@ class _SongControls extends StatelessWidget {
             return Column(
               children: [
                 _SongTitle(song: song),
-                const Divider(),
                 _SongActions(
                   song: song,
                   onToggleFavorite:
@@ -61,8 +60,6 @@ class _SongControls extends StatelessWidget {
                           .read(songFavoriteProvider.notifier)
                           .toggleFavorite(song.id),
                 ),
-                const SizedBox(height: 10),
-                const Divider(),
                 _SongMeta(song: song),
               ],
             );
