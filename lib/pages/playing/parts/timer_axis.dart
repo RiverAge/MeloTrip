@@ -11,6 +11,7 @@ class _TimerAxis extends StatelessWidget {
     final sCurrent = position?.inSeconds ?? 0;
     final sTotal = duration?.inSeconds ?? 0;
     final sBuffer = bufferedPosition?.inSeconds ?? 0;
+    final sBufferPercent = sBuffer / sTotal;
     final double value = sTotal == 0 ? 0 : sCurrent / sTotal;
     return Column(
       children: [
@@ -19,7 +20,12 @@ class _TimerAxis extends StatelessWidget {
             final handler = await AppPlayerHandler.instance;
             handler.player.seek(Duration(seconds: (sTotal * value).toInt()));
           },
-          secondaryTrackValue: sTotal == 0 ? 0 : sBuffer / sTotal,
+          secondaryTrackValue:
+              sTotal == 0
+                  ? 0
+                  : sBufferPercent > 1
+                  ? 1
+                  : sBufferPercent,
           // 20240829会有超过1的情况
           value: value > 1 ? 1 : value,
         ),
