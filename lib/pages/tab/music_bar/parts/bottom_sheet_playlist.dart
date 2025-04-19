@@ -44,11 +44,11 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
         title: _BottomSheetTitle(),
         actions: [_BottomSheetActionsMode()],
         centerTitle: false,
-        elevation: 0.2, // 控制投影效果的高度
+        elevation: 1.2, // 控制投影效果的高度
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
-        shadowColor: Theme.of(context).colorScheme.surfaceTint,
+        shadowColor: Theme.of(context).colorScheme.outlineVariant,
         automaticallyImplyLeading: false,
       ),
       body: PlayQueueBuilder(
