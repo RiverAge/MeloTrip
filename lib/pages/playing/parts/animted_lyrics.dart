@@ -111,7 +111,7 @@ class _AnimtedLyricsState extends State<_AnimtedLyrics> {
             color:
                 _currentIndex == idx
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.secondary,
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
             fontWeight:
                 _currentIndex == idx ? FontWeight.bold : FontWeight.normal,
           ),
