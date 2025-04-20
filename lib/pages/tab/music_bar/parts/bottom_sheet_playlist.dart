@@ -42,7 +42,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
       children: [
         GestureHint(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 2),
           child: Row(
             children: [
               Expanded(child: _BottomSheetTitle()),
