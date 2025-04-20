@@ -9,6 +9,7 @@ import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/widget/guesture_hint.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -27,6 +28,9 @@ mixin SongControl {
     if (effectiveSongId == null) return null;
     return showModalBottomSheet<T>(
       isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      ),
       context: context,
       builder: (context) {
         return _SongControls(songId: effectiveSongId);
@@ -43,25 +47,27 @@ class _SongControls extends StatelessWidget {
     return FractionallySizedBox(
       heightFactor: 0.7,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: AsyncValueBuilder(
           provider: songDetailProvider(songId),
           builder: (ctx, data, ref) {
             final song = data.subsonicResponse?.song;
             if (song == null) return const Center(child: NoData());
-
-            return Column(
-              children: [
-                _SongTitle(song: song),
-                _SongActions(
-                  song: song,
-                  onToggleFavorite:
-                      () => ref
-                          .read(songFavoriteProvider.notifier)
-                          .toggleFavorite(song.id),
-                ),
-                _SongMeta(song: song),
-              ],
+            return SafeArea(
+              child: Column(
+                children: [
+                  GestureHint(),
+                  _SongTitle(song: song),
+                  _SongActions(
+                    song: song,
+                    onToggleFavorite:
+                        () => ref
+                            .read(songFavoriteProvider.notifier)
+                            .toggleFavorite(song.id),
+                  ),
+                  _SongMeta(song: song),
+                ],
+              ),
             );
           },
         ),

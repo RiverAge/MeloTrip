@@ -38,38 +38,40 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
 
   @override
   Widget build(BuildContext context) => SafeArea(
-    child: Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: _BottomSheetTitle(),
-        actions: [_BottomSheetActionsMode()],
-        centerTitle: false,
-        elevation: 1.2, // 控制投影效果的高度
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    child: Column(
+      children: [
+        GestureHint(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+          child: Row(
+            children: [
+              Expanded(child: _BottomSheetTitle()),
+              _BottomSheetActionsMode(),
+            ],
+          ),
         ),
-        shadowColor: Theme.of(context).colorScheme.outlineVariant,
-        automaticallyImplyLeading: false,
-      ),
-      body: PlayQueueBuilder(
-        builder: (_, playQueue, __) {
-          if (playQueue.songs.isEmpty) {
-            return NoData();
-          }
-          return ListView.separated(
-            controller: _scrollController,
-            itemCount: playQueue.songs.length,
-            separatorBuilder: (context, index) => const Divider(height: 0),
-            itemBuilder: (context, idx) {
-              return _BottomSheetItem(
-                songs: playQueue.songs,
-                currentPlayingIndex: playQueue.index,
-                index: idx,
+        Expanded(
+          child: PlayQueueBuilder(
+            builder: (_, playQueue, __) {
+              if (playQueue.songs.isEmpty) {
+                return NoData();
+              }
+              return ListView.separated(
+                controller: _scrollController,
+                itemCount: playQueue.songs.length,
+                separatorBuilder: (context, index) => const Divider(height: 0),
+                itemBuilder: (context, idx) {
+                  return _BottomSheetItem(
+                    songs: playQueue.songs,
+                    currentPlayingIndex: playQueue.index,
+                    index: idx,
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     ),
   );
 }

@@ -16,7 +16,6 @@ class _BottomSheetItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 8),
       onTap: () async {
         final handler = await AppPlayerHandler.instance;
         final player = handler.player;
