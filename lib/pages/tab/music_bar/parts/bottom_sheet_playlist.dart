@@ -41,8 +41,16 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
     child: Column(
       children: [
         GestureHint(),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 2),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                width: 1,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 0),
           child: Row(
             children: [
               Expanded(child: _BottomSheetTitle()),
@@ -57,6 +65,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
                 return NoData();
               }
               return ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 controller: _scrollController,
                 itemCount: playQueue.songs.length,
                 separatorBuilder: (context, index) => const Divider(height: 0),

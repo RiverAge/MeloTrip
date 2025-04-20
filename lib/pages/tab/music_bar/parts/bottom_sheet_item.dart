@@ -25,6 +25,7 @@ class _BottomSheetItem extends StatelessWidget {
           await player.skipToQueueItem(index);
         }
       },
+      contentPadding: EdgeInsets.symmetric(horizontal: 8),
       leading: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

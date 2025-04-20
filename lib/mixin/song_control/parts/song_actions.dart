@@ -23,15 +23,14 @@ class _SongActions extends StatelessWidget {
 
         final indexOfSong = songs.indexWhere((e) => e.id == song.id);
 
-        final borderColor =
-            DividerTheme.of(context).color ??
-            Theme.of(context).colorScheme.outlineVariant;
-
         return Container(
           padding: EdgeInsets.only(bottom: 11),
           decoration: BoxDecoration(
             border: Border.symmetric(
-              horizontal: BorderSide(width: 1, color: borderColor),
+              horizontal: BorderSide(
+                width: 1,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
             ),
           ),
           child: Row(
