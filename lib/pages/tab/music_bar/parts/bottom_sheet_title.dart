@@ -9,7 +9,7 @@ class _BottomSheetTitle extends StatelessWidget {
           (context, playQueue, _) => Text.rich(
             TextSpan(
               text: '播放列表',
-              style: const TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 17),
               children: [
                 TextSpan(
                   text: '（${playQueue.songs.length}）',

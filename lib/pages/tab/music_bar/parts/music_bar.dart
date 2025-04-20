@@ -8,6 +8,7 @@ import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/widget/guesture_hint.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -36,6 +37,9 @@ class _MusicBarState extends State<MusicBar> {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      ),
       builder:
           (context) => const FractionallySizedBox(
             heightFactor: 0.6,
