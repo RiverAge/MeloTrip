@@ -1,20 +1,16 @@
 part of '../album_detail_page.dart';
 
 class _BlurredFilter extends StatelessWidget {
-  const _BlurredFilter({required this.children});
-  final List<Widget> children;
+  const _BlurredFilter();
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.surface;
     return Positioned.fill(
       child: Container(
-        padding: const EdgeInsets.only(bottom: 25, left: 50),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withValues(alpha: .35),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: children,
+        color: color.withValues(alpha: .35),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
+          child: Container(),
         ),
       ),
     );
