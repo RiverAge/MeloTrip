@@ -34,11 +34,20 @@ class _SliverAppBar extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             ArtworkImage(id: album.id, fit: BoxFit.cover),
-            _BlurredFilter(
-              children: [
-                _AlbumCover(album: album),
-                _AlbumInfo(album: album, onUpdateRating: onUpdateRating),
-              ],
+            _BlurredFilter(),
+            Container(
+              padding: const EdgeInsets.only(bottom: 25.0, left: 50.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface.withAlpha(35),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _AlbumCover(album: album),
+                  _AlbumInfo(album: album, onUpdateRating: onUpdateRating),
+                ],
+              ),
             ),
             _AlbumPlayAll(songs: album.song),
           ],
