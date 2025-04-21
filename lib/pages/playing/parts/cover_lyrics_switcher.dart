@@ -11,18 +11,15 @@ class _CoverLyricsSwitcherState extends State<_CoverLyricsSwitcher> {
   bool _isFront = true;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _isFront = !_isFront;
-          });
-        },
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 650),
-          child: _isFront ? const _RotateCover() : const _AnimtedLyrics(),
-        ),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isFront = !_isFront;
+        });
+      },
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 650),
+        child: _isFront ? const _RotateCover() : const _AnimtedLyrics(),
       ),
     );
   }
