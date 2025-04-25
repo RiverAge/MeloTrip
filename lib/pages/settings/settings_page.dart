@@ -106,20 +106,39 @@ class _SettingsPageState extends State<SettingsPage>
   @override
   bool get wantKeepAlive => true;
 
-  _onLogout() async {
-    final navigator = Navigator.of(context);
-    final playerHandler = await AppPlayerHandler.instance;
-    final player = playerHandler.player;
-    await player.pause();
-    final user = await User.instance;
-    user.clear();
-    navigator.pushAndRemoveUntil(
-      PageRouteBuilder(
-        pageBuilder: (context, _, __) => const InitialPage(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      ),
-      (route) => false,
+  _onLogout() {
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: Text("退出登录"),
+            content: Text("确认退出登录吗?"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("取消"),
+                onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+              ),
+              TextButton(
+                child: Text("确认"),
+                onPressed: () async {
+                  final navigator = Navigator.of(context);
+                  final playerHandler = await AppPlayerHandler.instance;
+                  final player = playerHandler.player;
+                  await player.pause();
+                  final user = await User.instance;
+                  user.clear();
+                  navigator.pushAndRemoveUntil(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => const InitialPage(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                    (route) => false,
+                  );
+                },
+              ),
+            ],
+          ),
     );
   }
 }
