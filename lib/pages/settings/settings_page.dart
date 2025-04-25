@@ -27,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('设置')),
+      appBar: AppBar(title: const Text('设置'), elevation: 3.0),
       body: ListView(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 80.0),
         children: [
@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage>
               ],
             ),
           ),
-          ElevatedButton.icon(
+          OutlinedButton.icon(
             icon: const Icon(Icons.logout),
             onPressed: _onLogout,
             label: const Text('退出登录'),
