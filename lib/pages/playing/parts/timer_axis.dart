@@ -15,19 +15,25 @@ class _TimerAxis extends StatelessWidget {
     final double value = sTotal == 0 ? 0 : sCurrent / sTotal;
     return Column(
       children: [
-        Slider(
-          onChanged: (value) async {
-            final handler = await AppPlayerHandler.instance;
-            handler.player.seek(Duration(seconds: (sTotal * value).toInt()));
-          },
-          secondaryTrackValue:
-              sTotal == 0
-                  ? 0
-                  : sBufferPercent > 1
-                  ? 1
-                  : sBufferPercent,
-          // 20240829会有超过1的情况
-          value: value > 1 ? 1 : value,
+        SliderTheme(
+          data: SliderThemeData(
+            trackHeight: 2,
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+          ),
+          child: Slider(
+            onChanged: (value) async {
+              final handler = await AppPlayerHandler.instance;
+              handler.player.seek(Duration(seconds: (sTotal * value).toInt()));
+            },
+            secondaryTrackValue:
+                sTotal == 0
+                    ? 0
+                    : sBufferPercent > 1
+                    ? 1
+                    : sBufferPercent,
+            // 20240829会有超过1的情况
+            value: value > 1 ? 1 : value,
+          ),
         ),
         // Padding(
         //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
