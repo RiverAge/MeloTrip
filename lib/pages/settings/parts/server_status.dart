@@ -20,9 +20,22 @@ class _ServerStatus extends StatelessWidget {
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  child: Text(
-                    '状态',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 8),
+                        child: Image.asset('images/navidrome.png'),
+                      ),
+                      Text(
+                        'Navidrome',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Divider(),
@@ -35,14 +48,14 @@ class _ServerStatus extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: Icon(Icons.cloud),
-                      title: Text('服务器状态'),
+                      title: Text('状态'),
                       subtitle: Text(
                         data.subsonicResponse?.status == 'ok' ? '在线' : '离线',
                       ),
                     ),
                     ListTile(
                       leading: Icon(Icons.commit),
-                      title: Text('服务器版本'),
+                      title: Text('版本'),
                       subtitle: Text(data.subsonicResponse?.version ?? ''),
                     ),
                     ListTile(
