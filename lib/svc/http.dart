@@ -5,8 +5,8 @@ import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/svc/user.dart';
 import 'package:uuid/v4.dart';
 
-typedef MessageCallback = void Function(
-    {required String errorMsg, int? statusCode});
+typedef MessageCallback =
+    void Function({required String errorMsg, int? statusCode});
 
 class Http {
   final _dio = Dio();
@@ -43,36 +43,44 @@ class Http {
     return _completer!.future;
   }
 
-  static Future<Response<T>?> get<T>(String url,
-          {Map<String, dynamic>? queryParameters,
-          CancelToken? cancelToken,
-          ResponseType? responseType}) async =>
-      _fetch(
-          RequestOptions(
-              path: url,
-              method: 'GET',
-              queryParameters: queryParameters,
-              responseType: responseType,
-              cancelToken: cancelToken),
-          url.startsWith('/rest'));
+  static Future<Response<T>?> get<T>(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    ResponseType? responseType,
+  }) async => _fetch(
+    RequestOptions(
+      path: url,
+      method: 'GET',
+      queryParameters: queryParameters,
+      responseType: responseType,
+      cancelToken: cancelToken,
+    ),
+    url.startsWith('/rest'),
+  );
 
-  static Future<Response<T>?> post<T>(String url,
-          {Map<String, dynamic>? queryParameters,
-          CancelToken? cancelToken,
-          dynamic data,
-          ResponseType? responseType}) async =>
-      _fetch(
-          RequestOptions(
-              path: url,
-              method: 'POST',
-              data: data,
-              queryParameters: queryParameters,
-              responseType: responseType,
-              cancelToken: cancelToken),
-          url.startsWith('/rest'));
+  static Future<Response<T>?> post<T>(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    dynamic data,
+    ResponseType? responseType,
+  }) async => _fetch(
+    RequestOptions(
+      path: url,
+      method: 'POST',
+      data: data,
+      queryParameters: queryParameters,
+      responseType: responseType,
+      cancelToken: cancelToken,
+    ),
+    url.startsWith('/rest'),
+  );
 
   static Future<Response<T>?> _fetch<T>(
-      RequestOptions requestOptions, bool withSubsonicParams) async {
+    RequestOptions requestOptions,
+    bool withSubsonicParams,
+  ) async {
     final ins = await Http.instance;
     final auth = ins._user?.auth;
     if (auth?.host != null) {
@@ -112,8 +120,10 @@ class Http {
       String msg = '';
       if (e.response?.data != null) {
         msg = e.response?.data["error"];
-      } else if (e.message != null) {
+      } else if (e.message != null && e.message != '') {
         msg = e.message!;
+      } else {
+        msg = '未知错误';
       }
       for (final l in ins._errorListeners) {
         l(errorMsg: msg, statusCode: e.response?.statusCode);
