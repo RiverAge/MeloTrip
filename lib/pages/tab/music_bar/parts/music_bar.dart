@@ -111,6 +111,7 @@ class _MusicBarState extends State<MusicBar> {
             final current = playQueue.songs[playQueue.index];
             return ListTile(
               onTap: () => _onOpenPlaying(context),
+              contentPadding: EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
               leading: SizedBox(
                 width: 50,
                 child: ArtworkImage(fit: BoxFit.contain, id: current.id),
@@ -137,43 +138,48 @@ class _MusicBarState extends State<MusicBar> {
                   );
                 },
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AsyncStreamBuilder(
-                    provider: playingStreamProvider,
-                    loading: (_, __) => const SizedBox.shrink(),
-                    builder: (context, data, ref) {
-                      return IconButton(
-                        style: IconButton.styleFrom(
-                          minimumSize: Size.zero,
-                          padding: const EdgeInsets.all(0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: () async {
-                          final handler = await AppPlayerHandler.instance;
-                          final player = handler.player;
-                          player.playOrPause();
+              trailing: LayoutBuilder(
+                builder: (context, dimens) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AsyncStreamBuilder(
+                        provider: playingStreamProvider,
+                        loading: (_, __) => const SizedBox.shrink(),
+                        builder: (context, data, ref) {
+                          return IconButton(
+                            style: IconButton.styleFrom(
+                              // minimumSize: Size.zero,
+                              // padding: const EdgeInsets.all(0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () async {
+                              final handler = await AppPlayerHandler.instance;
+                              final player = handler.player;
+                              player.playOrPause();
+                            },
+                            icon: Icon(
+                              data
+                                  ? Icons.pause_circle_outline
+                                  : Icons.play_circle_outlined,
+                              size: 35,
+                            ),
+                          );
                         },
-                        icon: Icon(
-                          data
-                              ? Icons.pause_circle_outline
-                              : Icons.play_circle_outlined,
-                          size: 35,
+                      ),
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          // minimumSize: Size.zero,
+                          // padding: const EdgeInsets.all(0),
+                          // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    style: IconButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: const EdgeInsets.all(0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: () => _onOpenPlaylist(context),
-                    icon: const Icon(Icons.playlist_play_sharp, size: 35),
-                  ),
-                ],
+                        onPressed: () => _onOpenPlaylist(context),
+                        icon: const Icon(Icons.playlist_play_sharp, size: 35),
+                      ),
+                      if (dimens.maxWidth >= 600) _volumeBuilder(),
+                    ],
+                  );
+                },
               ),
             );
           },
@@ -228,6 +234,39 @@ class _MusicBarState extends State<MusicBar> {
 
     return LinearProgressIndicator(
       value: effectiveDuration == 0 ? 0 : effectivePosition / effectiveDuration,
+    );
+  }
+
+  _volumeBuilder() {
+    return AsyncStreamBuilder(
+      loading: (context, _) => const SizedBox.shrink(),
+      provider: volumeStreamProvider,
+      builder: (context, data, ref) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 10),
+            Icon(Icons.volume_up, size: 25),
+            SliderTheme(
+              data: SliderThemeData(
+                trackHeight: 2,
+                overlayShape: SliderComponentShape.noOverlay,
+                thumbShape: SliderComponentShape.noOverlay,
+              ),
+              child: Slider(
+                value: data,
+                min: 0.0,
+                max: 100.0,
+                onChanged: (value) async {
+                  final handler = await AppPlayerHandler.instance;
+                  final player = handler.player;
+                  await player.setVolume(value);
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -16,6 +16,7 @@ part 'parts/media_item.dart';
 part 'parts/state.dart';
 part 'parts/stream.dart';
 part 'parts/now_playing.dart';
+part 'parts/controls.dart';
 
 class AppPlayerHandler {
   static Completer<AppPlayerHandler>? _completer;

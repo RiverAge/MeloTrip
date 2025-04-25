@@ -8,9 +8,5 @@ extension PlayerStream on AppPlayer {
   Stream<bool> get playingStream => _playingSubject.stream;
   Stream<PlaylistMode> get playlistModeStream => _playlistModeSubject.stream;
   Stream<PlayQueue> get playQueueStream => _playQueueSubject.stream;
-
-  Future<void> setShuffleModeEnabled(bool enabled) async =>
-      _player.setShuffle(enabled);
-  Future<void> setLoopMode(PlaylistMode loopMode) async =>
-      _player.setPlaylistMode(loopMode);
+  Stream<double> get volumeStream => _volumeSubject.stream;
 }

@@ -87,6 +87,25 @@ final playlistModeStreamProvider =
 // ignore: unused_element
 typedef PlaylistModeStreamRef =
     AutoDisposeFutureProviderRef<Raw<Stream<PlaylistMode>>>;
+String _$volumeStreamHash() => r'd1cc88859ef928d591128b0d075d95a6ccba5892';
+
+/// See also [volumeStream].
+@ProviderFor(volumeStream)
+final volumeStreamProvider =
+    AutoDisposeFutureProvider<Raw<Stream<double>>>.internal(
+      volumeStream,
+      name: r'volumeStreamProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$volumeStreamHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef VolumeStreamRef = AutoDisposeFutureProviderRef<Raw<Stream<double>>>;
 String _$playingStreamHash() => r'c2fad3d766b203dcc4a2e2b21d96424972e3521b';
 
 /// See also [playingStream].

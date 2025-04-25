@@ -13,6 +13,7 @@ class _Albums extends StatelessWidget {
           Text(switch (type) {
             AlumsType.newest => '近期添加',
             AlumsType.random => '随机专辑',
+            AlumsType.recent => '最近播放',
           }, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           AsyncValueBuilder(

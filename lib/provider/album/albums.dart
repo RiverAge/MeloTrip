@@ -5,12 +5,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'albums.g.dart';
 
-enum AlumsType { random, newest }
+enum AlumsType { random, newest, recent }
 
 @riverpod
 Future<SubsonicResponse?> albums(Ref ref, AlumsType type) async {
-  final res = await Http.get<Map<String, dynamic>>('/rest/getAlbumList',
-      queryParameters: {'type': type.name});
+  final res = await Http.get<Map<String, dynamic>>(
+    '/rest/getAlbumList',
+    queryParameters: {'type': type.name},
+  );
 
   final data = res?.data;
   if (data != null) {

@@ -42,6 +42,13 @@ Future<Raw<Stream<PlaylistMode>>> playlistModeStream(Ref ref) async {
 }
 
 @riverpod
+Future<Raw<Stream<double>>> volumeStream(Ref ref) async {
+  final handler = await AppPlayerHandler.instance;
+  final player = handler.player;
+  return player.volumeStream;
+}
+
+@riverpod
 Future<Raw<Stream<bool>>> playingStream(Ref ref) async {
   final handler = await AppPlayerHandler.instance;
   final player = handler.player;

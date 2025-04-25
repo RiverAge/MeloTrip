@@ -15,7 +15,7 @@ class _MusicControls extends StatelessWidget {
             final hanlder = await AppPlayerHandler.instance;
             final player = hanlder.player;
             if (player.playlistMode == PlaylistMode.loop) {
-              player.setLoopMode(PlaylistMode.none);
+              player.setPlaylistMode(PlaylistMode.none);
               messenger.clearSnackBars();
               messenger.showSnackBar(
                 SnackBar(
@@ -29,7 +29,7 @@ class _MusicControls extends StatelessWidget {
                 ),
               );
             } else if (player.playlistMode == PlaylistMode.none) {
-              player.setLoopMode(PlaylistMode.single);
+              player.setPlaylistMode(PlaylistMode.single);
               messenger.clearSnackBars();
               messenger.showSnackBar(
                 SnackBar(
@@ -43,7 +43,7 @@ class _MusicControls extends StatelessWidget {
                 ),
               );
             } else if (player.playlistMode == PlaylistMode.single) {
-              player.setLoopMode(PlaylistMode.loop);
+              player.setPlaylistMode(PlaylistMode.loop);
               messenger.clearSnackBars();
               messenger.showSnackBar(
                 SnackBar(
