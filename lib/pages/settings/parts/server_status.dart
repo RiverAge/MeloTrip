@@ -4,42 +4,36 @@ class _ServerStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(bottom: 16),
-      child: AsyncValueBuilder(
-        provider: scanStatusProvider,
-        builder: (context, data, ref) {
-          final scanStatus = data.subsonicResponse?.scanStatus;
-          final lastScan = scanStatus?.lastScan;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+      margin: EdgeInsets.symmetric(vertical: 16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    margin: EdgeInsets.only(right: 8),
+                    child: Image.asset('images/navidrome.png'),
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 30,
-                        height: 30,
-                        margin: EdgeInsets.only(right: 8),
-                        child: Image.asset('images/navidrome.png'),
-                      ),
-                      Text(
-                        'Navidrome',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Navidrome',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Divider(),
-                GridView.count(
+                ],
+              ),
+            ),
+            Divider(),
+            AsyncValueBuilder(
+              provider: scanStatusProvider,
+              builder: (context, data, ref) {
+                final scanStatus = data.subsonicResponse?.scanStatus;
+                final lastScan = scanStatus?.lastScan;
+                return GridView.count(
                   primary: false,
                   // padding: const EdgeInsets.all(20),
                   crossAxisCount: 2,
@@ -82,11 +76,11 @@ class _ServerStatus extends StatelessWidget {
                       subtitle: Row(children: [_CacheFile()]),
                     ),
                   ],
-                ),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
