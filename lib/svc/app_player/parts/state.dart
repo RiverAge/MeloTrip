@@ -8,8 +8,8 @@ extension PlayerState on AppPlayer {
   Duration get buffer => _player.state.buffer;
   double get rate => _player.state.rate;
   PlaylistMode get playlistMode => _player.state.playlistMode;
+  double get volume => _player.state.volume;
 
-  PlaylistMode get loopMode => _player.state.playlistMode;
   PlayQueue get playQueue => PlayQueue(
     songs:
         _player.state.playlist.medias

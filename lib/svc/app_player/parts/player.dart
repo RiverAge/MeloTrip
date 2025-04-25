@@ -7,6 +7,7 @@ class AppPlayer extends BaseAudioHandler {
   final _bufferedPositionSubject = BehaviorSubject<Duration>();
   final _playingSubject = BehaviorSubject<bool>.seeded(false);
   final _playlistModeSubject = BehaviorSubject<PlaylistMode>();
+  final _volumeSubject = BehaviorSubject<double>.seeded(100.0);
   final _playQueueSubject = BehaviorSubject<PlayQueue>.seeded(
     PlayQueue(songs: [], index: 0),
   );
@@ -56,24 +57,6 @@ class AppPlayer extends BaseAudioHandler {
 
   @override
   Future<void> skipToQueueItem(int index) => _player.jump(index);
-  // @override
-  // Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
-  //   if (name == 'favorite') {
-  //     final song =
-  //         playQueue.songs.isEmpty ? null : playQueue.songs[playQueue.index];
-  //     final songId = song?.id;
-  //     final starred = extras?['starred'];
-  //     if (songId == null) return;
-
-  //     await Http.get(
-  //       '/rest/${starred == "true" ? 'unstar' : 'star'}',
-  //       queryParameters: {'id': songId},
-  //     );
-  //     // _playbackEventStreamListener(_player.playbackEvent);
-  //     _updateCurrentMediaItemButton();
-  //   }
-  //   return super.customAction(name, extras);
-  // }
 
   dispose() {
     _postionSubject.close();
@@ -81,6 +64,7 @@ class AppPlayer extends BaseAudioHandler {
     _bufferedPositionSubject.close();
     _playingSubject.close();
     _playlistModeSubject.close();
+    _volumeSubject.close();
     _playQueueSubject.close();
 
     _player.dispose();
