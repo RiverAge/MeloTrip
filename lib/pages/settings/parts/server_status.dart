@@ -20,10 +20,7 @@ class _ServerStatus extends StatelessWidget {
                     margin: EdgeInsets.only(right: 8),
                     child: Image.asset('images/navidrome.png'),
                   ),
-                  Text(
-                    'Navidrome',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text('Navidrome', style: TextStyle(fontSize: 18)),
                 ],
               ),
             ),
