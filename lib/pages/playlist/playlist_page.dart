@@ -59,7 +59,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
         provider: playlistsProvider,
         builder: (p0, data, ref) {
           final playlist = data.subsonicResponse?.playlists?.playlist;
-          if (playlist == null || playlist.isEmpty) return const NoData();
+          if (playlist == null || playlist.isEmpty) {
+            return const Center(child: NoData());
+          }
           return ListView.separated(
             itemBuilder: (_, index) {
               final item = playlist[index];
