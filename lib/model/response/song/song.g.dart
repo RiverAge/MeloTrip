@@ -52,6 +52,24 @@ _SongEntity _$SongEntityFromJson(Map<String, dynamic> json) => _SongEntity(
   channelCount: (json['channelCount'] as num?)?.toInt(),
   genre: json['genre'] as String?,
   samplingRate: (json['samplingRate'] as num?)?.toInt(),
+  bitDepth: (json['bitDepth'] as num?)?.toInt(),
+  moods: (json['moods'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  artists:
+      (json['artists'] as List<dynamic>?)
+          ?.map((e) => ParticipateEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
+  displayArtist: json['displayArtist'] as String?,
+  albumArtists:
+      (json['albumArtists'] as List<dynamic>?)
+          ?.map((e) => ParticipateEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
+  displayAlbumArtist: json['displayAlbumArtist'] as String?,
+  contributors:
+      (json['contributors'] as List<dynamic>?)
+          ?.map((e) => ContributorEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
+  displayComposer: json['displayComposer'] as String?,
+  explicitStatus: json['explicitStatus'] as String?,
 );
 
 Map<String, dynamic> _$SongEntityToJson(_SongEntity instance) =>
@@ -89,7 +107,34 @@ Map<String, dynamic> _$SongEntityToJson(_SongEntity instance) =>
       'channelCount': instance.channelCount,
       'genre': instance.genre,
       'samplingRate': instance.samplingRate,
+      'bitDepth': instance.bitDepth,
+      'moods': instance.moods,
+      'artists': instance.artists,
+      'displayArtist': instance.displayArtist,
+      'albumArtists': instance.albumArtists,
+      'displayAlbumArtist': instance.displayAlbumArtist,
+      'contributors': instance.contributors,
+      'displayComposer': instance.displayComposer,
+      'explicitStatus': instance.explicitStatus,
     };
+
+_ParticipateEntity _$ParticipateEntityFromJson(Map<String, dynamic> json) =>
+    _ParticipateEntity(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$ParticipateEntityToJson(_ParticipateEntity instance) =>
+    <String, dynamic>{'id': instance.id, 'name': instance.name};
+
+_ContributorEntity _$ContributorEntityFromJson(Map<String, dynamic> json) =>
+    _ContributorEntity(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$ContributorEntityToJson(_ContributorEntity instance) =>
+    <String, dynamic>{'id': instance.id, 'name': instance.name};
 
 _GenreElement _$GenreElementFromJson(Map<String, dynamic> json) =>
     _GenreElement(name: json['name'] as String?);

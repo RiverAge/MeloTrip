@@ -24,7 +24,7 @@ class _SongActions extends StatelessWidget {
         final indexOfSong = songs.indexWhere((e) => e.id == song.id);
 
         return Container(
-          padding: EdgeInsets.only(bottom: 11),
+          padding: EdgeInsets.only(top: 4, bottom: 11),
           decoration: BoxDecoration(
             border: Border.symmetric(
               horizontal: BorderSide(

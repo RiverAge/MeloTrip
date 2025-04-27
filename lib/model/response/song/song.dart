@@ -39,10 +39,36 @@ abstract class SongEntity with _$SongEntity {
     int? channelCount,
     String? genre,
     int? samplingRate,
+    int? bitDepth,
+    List<String>? moods,
+    List<ParticipateEntity>? artists,
+    String? displayArtist,
+    List<ParticipateEntity>? albumArtists,
+    String? displayAlbumArtist,
+    List<ContributorEntity>? contributors,
+    String? displayComposer,
+    String? explicitStatus,
   }) = _SongEntity;
 
   factory SongEntity.fromJson(Map<String, Object?> json) =>
       _$SongEntityFromJson(json);
+}
+
+@freezed
+abstract class ParticipateEntity with _$ParticipateEntity {
+  const factory ParticipateEntity({String? id, String? name}) =
+      _ParticipateEntity;
+
+  factory ParticipateEntity.fromJson(Map<String, Object?> json) =>
+      _$ParticipateEntityFromJson(json);
+}
+
+@freezed
+abstract class ContributorEntity with _$ContributorEntity {
+  const factory ContributorEntity({String? id, String? name}) =
+      _ContributorEntity;
+  factory ContributorEntity.fromJson(Map<String, Object?> json) =>
+      _$ContributorEntityFromJson(json);
 }
 
 @freezed
