@@ -33,6 +33,7 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
                   if (effictiveArtist.length > 2)
                     Row(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           '${effictiveArtist[0].name} • ${effictiveArtist[1].name}',
