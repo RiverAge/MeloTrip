@@ -6,36 +6,41 @@ class _ListItem extends StatelessWidget with SongControl {
   final int index;
   @override
   Widget build(BuildContext context) => ListTile(
-        minTileHeight: 1,
-        dense: false,
-        minVerticalPadding: 0,
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              (index + 1).toString(),
-              style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 17),
-            ),
-            Container(
-              width: 45,
-              height: 45,
-              margin: const EdgeInsets.only(left: 15),
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              child: ArtworkImage(
-                id: song.id,
-              ),
-            ),
-          ],
+    onTap: () async {
+      final handler = await AppPlayerHandler.instance;
+      final player = handler.player;
+      await player.insertAndPlay(song);
+    },
+    minTileHeight: 1,
+    dense: false,
+    minVerticalPadding: 0,
+    leading: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          (index + 1).toString(),
+          style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 17),
         ),
-        title: Text(song.title ?? ''),
-        subtitle: Text(
-          '${song.album} - ${song.artist}',
-          style: const TextStyle(fontSize: 12),
+        Container(
+          width: 45,
+          height: 45,
+          margin: const EdgeInsets.only(left: 15),
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
+          child: ArtworkImage(id: song.id),
         ),
-        trailing: IconButton(
-            onPressed: () => showSongControlSheet(context, song.id),
-            icon: const Icon(Icons.more_horiz_rounded)),
-      );
+      ],
+    ),
+    title: Text(song.title ?? ''),
+    subtitle: Text(
+      '${song.album} - ${song.artist}',
+      style: const TextStyle(fontSize: 12),
+    ),
+    trailing: IconButton(
+      onPressed: () => showSongControlSheet(context, song.id),
+      icon: const Icon(Icons.more_horiz_rounded),
+    ),
+  );
 }
