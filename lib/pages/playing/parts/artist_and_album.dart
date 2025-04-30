@@ -36,8 +36,8 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '${effictiveArtist[0].name} • ${effictiveArtist[1].name}',
-                          style: const TextStyle(fontSize: 17),
+                          '${effictiveArtist[0].name} ${effictiveArtist[1].name}',
+                          style: const TextStyle(fontSize: 15),
                         ),
 
                         Text(
@@ -53,7 +53,7 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
                     ),
                   Text(
                     ' - ',
-                    style: const TextStyle(fontSize: 17),
+                    style: const TextStyle(fontSize: 16),
                     textAlign: TextAlign.left,
                   ),
                   Text(
