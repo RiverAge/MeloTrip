@@ -102,10 +102,7 @@
     "description": "number of albums of artist"
   },
 
-
-
-
-  "manyArtists": "... and ${artistCount} artists",
+  "manyArtists": "... and {artistCount} artists",
   "@manyArtists": {
     "description": "Plural form for many artists",
     "placeholders": {

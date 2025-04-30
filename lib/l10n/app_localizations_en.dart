@@ -79,7 +79,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String manyArtists(num artistCount) {
-    return '... and \$$artistCount artists';
+    return '... and $artistCount artists';
   }
 
   @override

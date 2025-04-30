@@ -237,7 +237,7 @@ abstract class AppLocalizations {
   /// Plural form for many artists
   ///
   /// In en, this message translates to:
-  /// **'... and \${artistCount} artists'**
+  /// **'... and {artistCount} artists'**
   String manyArtists(num artistCount);
 
   /// Default title when no title available in notification title
