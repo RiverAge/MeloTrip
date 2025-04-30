@@ -9,7 +9,10 @@ class LanguagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.language)),
+      appBar: AppBar(
+        elevation: 3,
+        title: Text(AppLocalizations.of(context)!.language),
+      ),
       body: AsyncValueBuilder(
         provider: appLocaleProvider,
         nullableBuilder: (context, locale, ref) {
