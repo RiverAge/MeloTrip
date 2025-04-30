@@ -8,7 +8,7 @@ class _BottomSheetTitle extends StatelessWidget {
       builder:
           (context, playQueue, _) => Text.rich(
             TextSpan(
-              text: '播放列表',
+              text: AppLocalizations.of(context)!.playQueue,
               style: const TextStyle(fontSize: 17),
               children: [
                 TextSpan(

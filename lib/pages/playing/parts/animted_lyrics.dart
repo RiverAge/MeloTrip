@@ -59,7 +59,9 @@ class _AnimtedLyricsState extends State<_AnimtedLyrics> {
         return PlayQueueBuilder(
           builder: (context, playQueue, ref) {
             if (playQueue.index >= playQueue.songs.length) {
-              return const Center(child: Text('无歌词'));
+              return Center(
+                child: Text(AppLocalizations.of(context)!.noLyricsFound),
+              );
             }
 
             final current = playQueue.songs[playQueue.index];
@@ -76,7 +78,9 @@ class _AnimtedLyricsState extends State<_AnimtedLyrics> {
                 if (lyric == null ||
                     lyricLine == null ||
                     lyricLine.isEmpty == true) {
-                  return const Center(child: Text('无歌词'));
+                  return Center(
+                    child: Text(AppLocalizations.of(context)!.noLyricsFound),
+                  );
                 }
                 _lyric = lyricLine;
                 return SingleChildScrollView(

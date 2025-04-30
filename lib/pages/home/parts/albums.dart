@@ -11,9 +11,9 @@ class _Albums extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(switch (type) {
-            AlumsType.newest => '近期添加',
-            AlumsType.random => '随机专辑',
-            AlumsType.recent => '最近播放',
+            AlumsType.newest => AppLocalizations.of(context)!.recentAdded,
+            AlumsType.random => AppLocalizations.of(context)!.randomAlbum,
+            AlumsType.recent => AppLocalizations.of(context)!.rencentPlayed,
           }, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           AsyncValueBuilder(
@@ -105,7 +105,7 @@ class _Albums extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${album?.songCount}首',
+                    '${album?.songCount}${AppLocalizations.of(context)!.songCountUnit}',
                     style: TextStyle(fontSize: 10, color: color),
                   ),
                 ],

@@ -11,6 +11,10 @@ class _MusicControls extends StatelessWidget {
         IconButton(
           onPressed: () async {
             final messenger = ScaffoldMessenger.of(context);
+            final playModeNoneText = AppLocalizations.of(context)!.playModeNone;
+            final playModeLoopText = AppLocalizations.of(context)!.playModeLoop;
+            final playModeSingleText =
+                AppLocalizations.of(context)!.playModeSingle;
             final height = MediaQuery.of(context).size.height;
             final hanlder = await AppPlayerHandler.instance;
             final player = hanlder.player;
@@ -19,7 +23,7 @@ class _MusicControls extends StatelessWidget {
               messenger.clearSnackBars();
               messenger.showSnackBar(
                 SnackBar(
-                  content: const Text('顺序播放'),
+                  content: Text(playModeNoneText),
                   behavior: SnackBarBehavior.floating,
                   margin: EdgeInsets.only(
                     bottom: height - 150,
@@ -33,7 +37,7 @@ class _MusicControls extends StatelessWidget {
               messenger.clearSnackBars();
               messenger.showSnackBar(
                 SnackBar(
-                  content: const Text('单曲循环'),
+                  content: Text(playModeSingleText),
                   behavior: SnackBarBehavior.floating,
                   margin: EdgeInsets.only(
                     bottom: height - 150,
@@ -47,7 +51,7 @@ class _MusicControls extends StatelessWidget {
               messenger.clearSnackBars();
               messenger.showSnackBar(
                 SnackBar(
-                  content: const Text('列表循环'),
+                  content: Text(playModeLoopText),
                   behavior: SnackBarBehavior.floating,
                   margin: EdgeInsets.only(
                     bottom: height - 150,

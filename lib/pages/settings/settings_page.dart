@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/favorite/favorite_page.dart';
 import 'package:melo_trip/pages/initial/initial_page.dart';
 import 'package:melo_trip/pages/playlist/playlist_page.dart';
@@ -27,7 +28,10 @@ class _SettingsPageState extends State<SettingsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('设置'), elevation: 3.0),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.settings),
+        elevation: 3.0,
+      ),
       body: ListView(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 80.0),
         children: [
@@ -43,12 +47,12 @@ class _SettingsPageState extends State<SettingsPage>
                     ).push(MaterialPageRoute(builder: (_) => AppThemePage()));
                   },
                   leading: Icon(Icons.contrast),
-                  title: Text('主题'),
+                  title: Text(AppLocalizations.of(context)!.theme),
                   trailing: const Icon(Icons.arrow_forward),
                 ),
                 ListTile(
                   leading: const Icon(Icons.high_quality),
-                  title: const Text('音质'),
+                  title: Text(AppLocalizations.of(context)!.musicQuality),
                   onTap:
                       () => Navigator.of(context).push(
                         MaterialPageRoute(
@@ -60,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage>
 
                 ListTile(
                   leading: const Icon(Icons.featured_play_list_outlined),
-                  title: const Text('我的歌单'),
+                  title: Text(AppLocalizations.of(context)!.myPlaylist),
                   onTap:
                       () => Navigator.of(context).push(
                         MaterialPageRoute(
@@ -72,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage>
 
                 ListTile(
                   leading: const Icon(Icons.favorite_border_outlined),
-                  title: const Text('我的收藏'),
+                  title: Text(AppLocalizations.of(context)!.myFavorites),
                   onTap:
                       () => Navigator.of(context).push(
                         MaterialPageRoute(
@@ -87,17 +91,8 @@ class _SettingsPageState extends State<SettingsPage>
           OutlinedButton.icon(
             icon: const Icon(Icons.logout),
             onPressed: _onLogout,
-            label: const Text('退出登录'),
+            label: Text(AppLocalizations.of(context)!.logout),
           ),
-          // ElevatedButton(onPressed: onPressed, child: child)
-          // Card(
-          //   child: ListTile(
-          //     leading: const Icon(Icons.logout),
-          //     title: const Text('退出登录'),
-          //     onTap: _onLogout,
-          //     trailing: const Icon(Icons.arrow_forward),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -111,15 +106,15 @@ class _SettingsPageState extends State<SettingsPage>
       context: context,
       builder:
           (_) => AlertDialog(
-            title: Text("退出登录"),
-            content: Text("确认退出登录吗?"),
+            title: Text(AppLocalizations.of(context)!.logout),
+            content: Text(AppLocalizations.of(context)!.logoutDialogConfirm),
             actions: <Widget>[
               TextButton(
-                child: Text("取消"),
-                onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+                child: Text(AppLocalizations.of(context)!.cancel),
+                onPressed: () => Navigator.of(context).pop(),
               ),
               TextButton(
-                child: Text("确认"),
+                child: Text(AppLocalizations.of(context)!.confirm),
                 onPressed: () async {
                   final navigator = Navigator.of(context);
                   final playerHandler = await AppPlayerHandler.instance;

@@ -56,38 +56,38 @@ extension PlayerMediaItem on AppPlayer {
   // 播放列表或者当前的播放项目变化时
   // 同步后台播放队列
   // 同步App播放通知
-  Future<void> _updateMediaItem() async {
-    if (playQueue.index >= playQueue.songs.length) {
-      const item = MediaItem(
-        id: '-1',
-        album: 'MeloTrip',
-        title: 'MeloTrip',
-        artist: 'MeloTrip',
-        duration: Duration.zero,
-        playable: false,
-      );
-      mediaItem.add(item);
-      Http.get('/rest/savePlayQueue?id=');
-      return;
-    }
-    final song = playQueue.songs[playQueue.index];
-    final url = await buildSubsonicUrl(
-      '/rest/getCoverArt?id=${song.id}',
-      proxy: true,
-    );
-    final duartion = song.duration;
-    final item = MediaItem(
-      id: song.id ?? '-1',
-      album: song.album,
-      title: song.title ?? '没有标题',
-      artist: song.artist,
-      duration: duartion != null ? Duration(seconds: duartion) : Duration.zero,
-      artUri: Uri.parse(url),
-    );
+  //   Future<void> _updateMediaItem() async {
+  //     if (playQueue.index >= playQueue.songs.length) {
+  //       const item = MediaItem(
+  //         id: '-1',
+  //         album: 'MeloTrip',
+  //         title: 'MeloTrip',
+  //         artist: 'MeloTrip',
+  //         duration: Duration.zero,
+  //         playable: false,
+  //       );
+  //       mediaItem.add(item);
+  //       Http.get('/rest/savePlayQueue?id=');
+  //       return;
+  //     }
+  //     final song = playQueue.songs[playQueue.index];
+  //     final url = await buildSubsonicUrl(
+  //       '/rest/getCoverArt?id=${song.id}',
+  //       proxy: true,
+  //     );
+  //     final duartion = song.duration;
+  //     final item = MediaItem(
+  //       id: song.id ?? '-1',
+  //       album: song.album,
+  //       title: song.title ?? '没有标题',
+  //       artist: song.artist,
+  //       duration: duartion != null ? Duration(seconds: duartion) : Duration.zero,
+  //       artUri: Uri.parse(url),
+  //     );
 
-    mediaItem.add(item);
+  //     mediaItem.add(item);
 
-    final ids = playQueue.songs.map((e) => e.id).join(',');
-    Http.get('/rest/savePlayQueue?id=$ids&current=${item.id}');
-  }
+  //     final ids = playQueue.songs.map((e) => e.id).join(',');
+  //     Http.get('/rest/savePlayQueue?id=$ids&current=${item.id}');
+  //   }
 }

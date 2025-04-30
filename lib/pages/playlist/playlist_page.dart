@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/pages/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
@@ -38,12 +39,16 @@ class _PlaylistPageState extends State<PlaylistPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('删除'),
-          content: Text('确定要删除歌单 ${playlist.name ?? ''} '),
+          title: Text(AppLocalizations.of(context)!.delete),
+          content: Text(
+            AppLocalizations.of(
+              context,
+            )!.playlistDeleteConfirmation(playlist.name ?? ''),
+          ),
           actions: [
             TextButton(
               onPressed: () => _deletePlaylist(playlist.id, ref),
-              child: const Text('确定'),
+              child: Text(AppLocalizations.of(context)!.confirm),
             ),
           ],
         );
@@ -54,7 +59,10 @@ class _PlaylistPageState extends State<PlaylistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 3, title: const Text('歌单')),
+      appBar: AppBar(
+        elevation: 3,
+        title: Text(AppLocalizations.of(context)!.myPlaylist),
+      ),
       body: AsyncValueBuilder(
         provider: playlistsProvider,
         builder: (p0, data, ref) {
@@ -82,7 +90,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 ),
                 title: Text(item.name ?? '', overflow: TextOverflow.clip),
                 subtitle: Text(
-                  '${item.songCount}首 ${item.public == true ? '公开' : ''} ${item.comment ?? ''}',
+                  '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.public == true ? AppLocalizations.of(context)!.playlistIsPublic : ''} ${item.comment ?? ''}',
                   overflow: TextOverflow.clip,
                 ),
                 trailing: IconButton(

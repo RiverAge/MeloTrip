@@ -14,8 +14,8 @@ class _RecToday extends StatelessWidget with SongControl {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                '今日推荐',
+              Text(
+                AppLocalizations.of(context)!.recommendedToday,
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
               TextButton(
@@ -30,7 +30,10 @@ class _RecToday extends StatelessWidget with SongControl {
                         builder: (_) => const RecommendTodayPage(),
                       ),
                     ),
-                child: const Text('查看全部', style: TextStyle(fontSize: 12)),
+                child: Text(
+                  AppLocalizations.of(context)!.viewAll,
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
             ],
           ),

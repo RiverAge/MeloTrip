@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/provider/app_theme_mode/app_theme_mode.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
@@ -9,7 +10,10 @@ class AppThemePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('主题设置'), elevation: 3.0),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.theme),
+        elevation: 3.0,
+      ),
       body: AsyncValueBuilder(
         provider: appThemeModeProvider,
         builder: (context, data, ref) {
@@ -22,7 +26,7 @@ class AppThemePage extends StatelessWidget {
                       ? Icons.dark_mode
                       : Icons.dark_mode_outlined,
                 ),
-                title: Text('深色'),
+                title: Text(AppLocalizations.of(context)!.themeDark),
                 trailing:
                     data == ThemeMode.dark ? const Icon(Icons.check) : null,
               ),
@@ -34,7 +38,7 @@ class AppThemePage extends StatelessWidget {
                       ? Icons.light_mode
                       : Icons.light_mode_outlined,
                 ),
-                title: Text('浅色'),
+                title: Text(AppLocalizations.of(context)!.themeLight),
                 trailing:
                     data == ThemeMode.light ? const Icon(Icons.check) : null,
               ),
@@ -46,7 +50,7 @@ class AppThemePage extends StatelessWidget {
                       ? Icons.auto_mode
                       : Icons.auto_mode_outlined,
                 ),
-                title: Text('跟随系统'),
+                title: Text(AppLocalizations.of(context)!.themeSystemDefault),
                 trailing:
                     data == ThemeMode.system ? const Icon(Icons.check) : null,
               ),

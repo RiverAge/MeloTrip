@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 import 'package:melo_trip/widget/no_data.dart';
 
@@ -47,8 +48,11 @@ class AsyncValueBuilder<T> extends StatelessWidget {
 class _Error extends StatelessWidget {
   const _Error();
   @override
-  Widget build(BuildContext context) => const Center(
-    child: Padding(padding: EdgeInsets.all(8.0), child: Text('遇到未知错误')),
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(AppLocalizations.of(context)!.encounterUnknownError),
+    ),
   );
 }
 

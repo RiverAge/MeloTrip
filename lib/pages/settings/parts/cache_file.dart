@@ -10,7 +10,7 @@ class _CacheFileState extends State<_CacheFile> {
   @override
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
-      loading: (_, __) => Text('计算中...'),
+      loading: (_, __) => Text(AppLocalizations.of(context)!.calculating),
       provider: cachedFileSizeProvider,
       builder: (_, data, ref) {
         return Row(

@@ -41,7 +41,9 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
                         ),
 
                         Text(
-                          '...等${effictiveArtist.length}位艺术家',
+                          AppLocalizations.of(
+                            context,
+                          )!.manyArtists(effictiveArtist.length),
                           style: TextStyle(
                             fontSize: 13,
                             color: Theme.of(

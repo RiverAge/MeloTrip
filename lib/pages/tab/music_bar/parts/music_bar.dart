@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/playing/playing_page.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
@@ -130,7 +131,8 @@ class _MusicBarState extends State<MusicBar> {
                     provider: positionStreamProvider,
                     builder: (_, position, ref) {
                       return Text(
-                        ref.watch(lyricsOfLineProvider(lyrics, position)),
+                        ref.watch(lyricsOfLineProvider(lyrics, position)) ??
+                            AppLocalizations.of(context)!.noLyricsFound,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontSize: 12),
                       );

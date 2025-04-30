@@ -42,7 +42,7 @@ class _AlbumInfo extends StatelessWidget {
                 ],
               ),
               Text(
-                '${album.songCount}首 ${album.year}',
+                '${album.songCount}${AppLocalizations.of(context)!.songCountUnit} ${album.year}',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),

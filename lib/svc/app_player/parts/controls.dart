@@ -7,4 +7,8 @@ extension PlayerControls on AppPlayer {
       _player.setPlaylistMode(loopMode);
 
   Future<void> setVolume(double volume) async => _player.setVolume(volume);
+
+   Future<void> addMediaItem(MediaItem? item) async {
+      mediaItem.add(item);
+  }
 }

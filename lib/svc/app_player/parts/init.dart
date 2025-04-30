@@ -24,7 +24,6 @@ extension PlayerInit on AppPlayer {
     });
     _player.stream.volume.listen(_volumeSubject.add);
     _player.stream.playlist.listen((e) {
-      _updateMediaItem();
       _playQueueSubject.add(
         PlayQueue(
           songs:
