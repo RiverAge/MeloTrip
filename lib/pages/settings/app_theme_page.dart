@@ -20,15 +20,15 @@ class AppThemePage extends StatelessWidget {
           return ListView(
             children: [
               ListTile(
-                onTap: () => _onTap(ref, ThemeMode.dark),
+                onTap: () => _onTap(ref, ThemeMode.system),
                 leading: Icon(
-                  data == ThemeMode.dark
-                      ? Icons.dark_mode
-                      : Icons.dark_mode_outlined,
+                  data == ThemeMode.system
+                      ? Icons.auto_mode
+                      : Icons.auto_mode_outlined,
                 ),
-                title: Text(AppLocalizations.of(context)!.themeDark),
+                title: Text(AppLocalizations.of(context)!.systemDefault),
                 trailing:
-                    data == ThemeMode.dark ? const Icon(Icons.check) : null,
+                    data == ThemeMode.system ? const Icon(Icons.check) : null,
               ),
               Divider(),
               ListTile(
@@ -44,15 +44,15 @@ class AppThemePage extends StatelessWidget {
               ),
               Divider(),
               ListTile(
-                onTap: () => _onTap(ref, ThemeMode.system),
+                onTap: () => _onTap(ref, ThemeMode.dark),
                 leading: Icon(
-                  data == ThemeMode.system
-                      ? Icons.auto_mode
-                      : Icons.auto_mode_outlined,
+                  data == ThemeMode.dark
+                      ? Icons.dark_mode
+                      : Icons.dark_mode_outlined,
                 ),
-                title: Text(AppLocalizations.of(context)!.systemDefault),
+                title: Text(AppLocalizations.of(context)!.themeDark),
                 trailing:
-                    data == ThemeMode.system ? const Icon(Icons.check) : null,
+                    data == ThemeMode.dark ? const Icon(Icons.check) : null,
               ),
             ],
           );
