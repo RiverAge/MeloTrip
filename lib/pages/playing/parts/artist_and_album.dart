@@ -13,14 +13,57 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
                 ? null
                 : playQueue.songs[playQueue.index];
 
+        final effictiveArtist = current?.artists ?? [];
+        final effectiveDisplayArtist =
+            effictiveArtist.length > 1
+                ? '${effictiveArtist[0].name}'
+                : current?.displayArtist;
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
-                '${current?.artist} - ${current?.album ?? ''}',
-                style: const TextStyle(fontSize: 17),
-                textAlign: TextAlign.left,
+              child: Wrap(
+                children: [
+                  if (effictiveArtist.length <= 2)
+                    Text(
+                      '$effectiveDisplayArtist',
+                      style: const TextStyle(fontSize: 17),
+                      textAlign: TextAlign.left,
+                    ),
+                  if (effictiveArtist.length > 2)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${effictiveArtist[0].name} • ${effictiveArtist[1].name}',
+                          style: const TextStyle(fontSize: 17),
+                        ),
+
+                        Text(
+                          '...等${effictiveArtist.length}位艺术家',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(100),
+                          ),
+                        ),
+                      ],
+                    ),
+                  Text(
+                    ' - ',
+                    style: const TextStyle(fontSize: 17),
+                    textAlign: TextAlign.left,
+                  ),
+                  Text(
+                    ' ${current?.album ?? ''}',
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ],
               ),
             ),
             Row(
