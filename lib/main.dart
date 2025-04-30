@@ -9,7 +9,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/initial/initial_page.dart';
-import 'package:melo_trip/provider/app_theme_mode/app_theme_mode.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/svc/http.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -118,24 +118,29 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
       provider: appThemeModeProvider,
-      builder: (context, data, ref) {
-        return MaterialApp(
-          scaffoldMessengerKey: _scaffoldMessengerKey,
-          title: 'MeloTrip',
-          themeMode: data,
-          darkTheme: ThemeData.dark(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: FutureBuilder(
-            future: _addListner(),
-            builder:
-                (context, snapshot) =>
-                    snapshot.connectionState == ConnectionState.waiting
-                        ? const FixedCenterCircular()
-                        : const InitialPage(),
+      nullableBuilder:
+          (context, themeMode, ref) => AsyncValueBuilder(
+            provider: appLocaleProvider,
+            nullableBuilder:
+                (context, locale, ref) => MaterialApp(
+                  scaffoldMessengerKey: _scaffoldMessengerKey,
+                  title: 'MeloTrip',
+                  themeMode: themeMode,
+                  locale: locale,
+                  darkTheme: ThemeData.dark(),
+                  localizationsDelegates:
+                      AppLocalizations.localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  home: FutureBuilder(
+                    future: _addListner(),
+                    builder:
+                        (context, snapshot) =>
+                            snapshot.connectionState == ConnectionState.waiting
+                                ? const FixedCenterCircular()
+                                : const InitialPage(),
+                  ),
+                ),
           ),
-        );
-      },
     );
   }
 }

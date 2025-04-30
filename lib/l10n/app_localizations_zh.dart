@@ -30,6 +30,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get comment => 'Comment';
 
   @override
+  String get language => 'Language';
+
+  @override
   String get loginInputHostHint => 'Please Input Host Address';
 
   @override
@@ -78,6 +81,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get albumCount => 'Album Count';
 
   @override
+  String get systemDefault => 'System Default';
+
+  @override
   String manyArtists(num artistCount) {
     return '... and $artistCount artists';
   }
@@ -89,7 +95,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get endOfData => 'End Of Data';
 
   @override
-  String get noDataFound => 'No Data Found';
+  String get noDataFound => 'No Data';
 
   @override
   String get serverOnline => 'Online';
@@ -144,9 +150,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get themeLight => 'Light';
-
-  @override
-  String get themeSystemDefault => 'System Default';
 
   @override
   String get songMetaDuration => 'Duration';
@@ -231,21 +234,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get playModeNone => 'No Repeat';
-
-  @override
-  String get playModeLoop => 'Repeat All';
-
-  @override
-  String get playModeSingle => 'Single Play';
-
-  @override
-  String get shuffleOn => 'Shuffle On';
-
-  @override
-  String get shuffleOff => 'Shuffle Off';
-
-  @override
   String get musicQuality => 'Music Quality';
 
   @override
@@ -262,6 +250,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get musicQualityLossless => 'Lossless';
+
+  @override
+  String get playModeNone => 'No Repeat';
+
+  @override
+  String get playModeLoop => 'Repeat All';
+
+  @override
+  String get playModeSingle => 'Single Play';
+
+  @override
+  String get shuffleOn => 'Shuffle On';
+
+  @override
+  String get shuffleOff => 'Shuffle Off';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get simpleChinese => 'Simple Chinese';
+
+  @override
+  String get us => 'United States';
+
+  @override
+  String get cn => 'China';
 
   @override
   String get noLyricsFound => 'No Lyrics Found';
@@ -297,6 +312,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get comment => '备注';
+
+  @override
+  String get language => '语言';
 
   @override
   String get loginInputHostHint => '请输入服务器地址';
@@ -345,6 +363,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get albumCount => '专辑数';
+
+  @override
+  String get systemDefault => '跟随系统';
 
   @override
   String manyArtists(num artistCount) {
@@ -413,9 +434,6 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get themeLight => '浅色';
-
-  @override
-  String get themeSystemDefault => '跟随系统';
 
   @override
   String get songMetaDuration => '时长';
@@ -500,21 +518,6 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   }
 
   @override
-  String get playModeNone => '顺序播放';
-
-  @override
-  String get playModeLoop => '列表循环';
-
-  @override
-  String get playModeSingle => '单曲循环';
-
-  @override
-  String get shuffleOn => '随机播放开启';
-
-  @override
-  String get shuffleOff => '随机播放关闭';
-
-  @override
   String get musicQuality => '音质';
 
   @override
@@ -531,6 +534,33 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get musicQualityLossless => '无损';
+
+  @override
+  String get playModeNone => '顺序播放';
+
+  @override
+  String get playModeLoop => '列表循环';
+
+  @override
+  String get playModeSingle => '单曲循环';
+
+  @override
+  String get shuffleOn => '随机播放开启';
+
+  @override
+  String get shuffleOff => '随机播放关闭';
+
+  @override
+  String get english => '英语';
+
+  @override
+  String get simpleChinese => '简体中文';
+
+  @override
+  String get us => '美国';
+
+  @override
+  String get cn => '中国';
 
   @override
   String get noLyricsFound => '无歌词';
