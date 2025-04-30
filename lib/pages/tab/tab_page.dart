@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/tab/music_bar/parts/music_bar.dart';
 import 'package:melo_trip/pages/home/home_page.dart';
 import 'package:melo_trip/pages/settings/settings_page.dart';
@@ -45,8 +46,66 @@ class _TablePageState extends State<TabPage>
     _controller.animateTo(index);
   }
 
+  int _selectedIndex = 0;
+
   @override
-  Widget build(BuildContext context) => DefaultTabController(
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, dimens) {
+      if (dimens.maxWidth >= 600) {
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    NavigationRail(
+                      leading: Text(
+                        'MeloTrip',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      elevation: 3.0,
+                      extended: dimens.maxWidth >= 800,
+                      minExtendedWidth: 180,
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(Icons.home),
+                          selectedIcon: Icon(Icons.home_filled),
+                          label: Text('Home'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.star),
+                          selectedIcon: Icon(Icons.star_border),
+                          label: Text('Favorites'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.settings),
+                          selectedIcon: Icon(Icons.settings),
+                          label: Text('Settings'),
+                        ),
+                      ],
+                      selectedIndex: _selectedIndex,
+                      onDestinationSelected: (int index) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                    ),
+                    // Expanded(
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       border: Border.all(width: 0, color: Colors.yellow),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+              MusicBar(),
+            ],
+          ),
+        );
+      }
+      return DefaultTabController(
         length: 2,
         child: Scaffold(
           bottomSheet: const MusicBar(),
@@ -55,10 +114,15 @@ class _TablePageState extends State<TabPage>
             onTap: _setTab,
             showSelectedLabels: true,
             showUnselectedLabels: false,
-            items: const [
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.music_note),
+                label: 'MeloTrip',
+              ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.music_note), label: 'MeloTrip'),
-              BottomNavigationBarItem(icon: Icon(Icons.settings), label: '设置')
+                icon: const Icon(Icons.settings),
+                label: AppLocalizations.of(context)!.settings,
+              ),
             ],
           ),
           body: TabBarView(
@@ -67,4 +131,6 @@ class _TablePageState extends State<TabPage>
           ),
         ),
       );
+    },
+  );
 }

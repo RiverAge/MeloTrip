@@ -17,7 +17,9 @@ class _ArtistItem extends StatelessWidget {
       child: ArtworkImage(id: artist.coverArt, fit: BoxFit.cover),
     ),
     title: Text(artist.name ?? ''),
-    subtitle: Text('专辑数量 ${artist.albumCount}'),
+    subtitle: Text(
+      '${AppLocalizations.of(context)!.albumCount} ${artist.albumCount}',
+    ),
     onTap: () {
       Navigator.of(context).push(
         MaterialPageRoute(

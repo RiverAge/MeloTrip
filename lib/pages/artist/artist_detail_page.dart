@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
 import 'package:melo_trip/provider/artist/artist_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
@@ -17,7 +18,7 @@ class ArtistDetailPage extends StatelessWidget {
         final artist = data.subsonicResponse?.artist;
         if (artist == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('艺术家')),
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.artist)),
             body: const Center(child: NoData()),
           );
         }
@@ -26,7 +27,9 @@ class ArtistDetailPage extends StatelessWidget {
           appBar: AppBar(elevation: 3, title: Text(artist.name ?? '')),
           body:
               albums == null || albums.isEmpty
-                  ? const Center(child: Text('暂无专辑'))
+                  ? Center(
+                    child: Text(AppLocalizations.of(context)!.noDataFound),
+                  )
                   : GridView.builder(
                     padding: const EdgeInsets.symmetric(
                       vertical: 15,
@@ -81,7 +84,7 @@ class ArtistDetailPage extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '${item.songCount}首${item.year != null ? ' ${item.year}' : ''}',
+                                    '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(fontSize: 10),
                                   ),

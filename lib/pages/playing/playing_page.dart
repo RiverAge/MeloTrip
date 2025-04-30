@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/helper/index.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/mixin/song_control/song_control.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/pages/playlist/add_to_playlist_page.dart';

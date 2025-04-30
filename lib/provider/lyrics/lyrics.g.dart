@@ -143,14 +143,14 @@ class _LyricsProviderElement
   String? get songId => (origin as LyricsProvider).songId;
 }
 
-String _$lyricsOfLineHash() => r'2a90b03372f696a04f2e6f0c007e4de9c4592765';
+String _$lyricsOfLineHash() => r'f55bb26fbf95f871619d13405f2c1ca7a8aa255a';
 
 /// See also [lyricsOfLine].
 @ProviderFor(lyricsOfLine)
 const lyricsOfLineProvider = LyricsOfLineFamily();
 
 /// See also [lyricsOfLine].
-class LyricsOfLineFamily extends Family<String> {
+class LyricsOfLineFamily extends Family<String?> {
   /// See also [lyricsOfLine].
   const LyricsOfLineFamily();
 
@@ -182,7 +182,7 @@ class LyricsOfLineFamily extends Family<String> {
 }
 
 /// See also [lyricsOfLine].
-class LyricsOfLineProvider extends AutoDisposeProvider<String> {
+class LyricsOfLineProvider extends AutoDisposeProvider<String?> {
   /// See also [lyricsOfLine].
   LyricsOfLineProvider(SubsonicResponse lyrics, Duration position)
     : this._internal(
@@ -215,7 +215,7 @@ class LyricsOfLineProvider extends AutoDisposeProvider<String> {
   final Duration position;
 
   @override
-  Override overrideWith(String Function(LyricsOfLineRef provider) create) {
+  Override overrideWith(String? Function(LyricsOfLineRef provider) create) {
     return ProviderOverride(
       origin: this,
       override: LyricsOfLineProvider._internal(
@@ -232,7 +232,7 @@ class LyricsOfLineProvider extends AutoDisposeProvider<String> {
   }
 
   @override
-  AutoDisposeProviderElement<String> createElement() {
+  AutoDisposeProviderElement<String?> createElement() {
     return _LyricsOfLineProviderElement(this);
   }
 
@@ -255,7 +255,7 @@ class LyricsOfLineProvider extends AutoDisposeProvider<String> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin LyricsOfLineRef on AutoDisposeProviderRef<String> {
+mixin LyricsOfLineRef on AutoDisposeProviderRef<String?> {
   /// The parameter `lyrics` of this provider.
   SubsonicResponse get lyrics;
 
@@ -263,7 +263,7 @@ mixin LyricsOfLineRef on AutoDisposeProviderRef<String> {
   Duration get position;
 }
 
-class _LyricsOfLineProviderElement extends AutoDisposeProviderElement<String>
+class _LyricsOfLineProviderElement extends AutoDisposeProviderElement<String?>
     with LyricsOfLineRef {
   _LyricsOfLineProviderElement(super.provider);
 

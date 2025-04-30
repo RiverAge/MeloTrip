@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melo_trip/helper/index.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
@@ -63,7 +64,7 @@ class _FavoritePageState extends State<FavoritePage>
               songs != null && songs.isNotEmpty && _currentIndex == 1;
           return Scaffold(
             appBar: AppBar(
-              title: const Text('我的收藏'),
+              title: Text(AppLocalizations.of(context)!.myFavorites),
               elevation: 3,
               actions: [
                 AnimatedSwitcher(
@@ -76,7 +77,10 @@ class _FavoritePageState extends State<FavoritePage>
               ],
               bottom: TabBar(
                 controller: _controller,
-                tabs: const [Tab(text: '专辑'), Tab(text: '歌曲')],
+                tabs: [
+                  Tab(text: AppLocalizations.of(context)!.album),
+                  Tab(text: AppLocalizations.of(context)!.song),
+                ],
               ),
             ),
             body: TabBarView(

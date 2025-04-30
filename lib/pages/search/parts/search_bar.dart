@@ -51,10 +51,10 @@ class _SearchbarState extends State<_Searchbar> {
               focusNode: widget.focusNode,
               cursorHeight: 17,
               textInputAction: TextInputAction.search,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 isDense: true,
                 // icon: Icon(Icons.search),
-                hintText: '搜索专辑、艺术家、歌曲',
+                hintText: AppLocalizations.of(context)!.searchHint,
                 border: InputBorder.none,
               ),
             ),
@@ -74,29 +74,4 @@ class _SearchbarState extends State<_Searchbar> {
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) => Container(
-  //       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-  //       decoration: BoxDecoration(
-  //           border: Border.all(
-  //               width: 1, color: Theme.of(context).colorScheme.primary),
-  //           borderRadius: BorderRadius.circular(8)),
-  //       child: Row(children: [
-  //         const Icon(Icons.search, size: 20),
-  //         const SizedBox(width: 5),
-  //         Expanded(
-  //             child: TextField(
-  //                 onSubmitted: onSubmitted,
-  //                 autofocus: true,
-  //                 textAlignVertical: TextAlignVertical.center,
-  //                 textInputAction: TextInputAction.search,
-  //                 decoration: const InputDecoration(
-  //                     isDense: true,
-  //                     contentPadding: EdgeInsets.zero,
-  //                     hintText: '搜索专辑、艺术家、歌曲',
-  //                     hintStyle: TextStyle(fontSize: 12),
-  //                     border: InputBorder.none)))
-  //       ]),
-  //     );
 }

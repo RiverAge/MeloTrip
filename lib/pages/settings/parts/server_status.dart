@@ -34,43 +34,53 @@ class _ServerStatus extends StatelessWidget {
                   primary: false,
                   // padding: const EdgeInsets.all(20),
                   crossAxisCount: 2,
-                  childAspectRatio: 3.0, // 宽
+                  childAspectRatio: 3.0,
                   shrinkWrap: true,
                   children: [
                     ListTile(
                       leading: Icon(Icons.cloud),
-                      title: Text('状态'),
+                      title: Text(AppLocalizations.of(context)!.serverStatus),
                       subtitle: Text(
-                        data.subsonicResponse?.status == 'ok' ? '在线' : '离线',
+                        data.subsonicResponse?.status == 'ok'
+                            ? AppLocalizations.of(context)!.serverOnline
+                            : AppLocalizations.of(context)!.serverOffline,
                       ),
                     ),
                     ListTile(
                       leading: Icon(Icons.commit),
-                      title: Text('版本'),
+                      title: Text(AppLocalizations.of(context)!.version),
                       subtitle: Text(data.subsonicResponse?.version ?? ''),
                     ),
                     ListTile(
                       leading: Icon(Icons.music_note),
-                      title: Text('歌曲数量'),
-                      subtitle: Text('${scanStatus?.count}首'),
+                      title: Text(
+                        AppLocalizations.of(context)!.serverSongCount,
+                      ),
+                      subtitle: Text('${scanStatus?.count}'),
                     ),
                     ListTile(
                       leading: Icon(Icons.scanner),
-                      title: Text('正在扫描'),
-                      subtitle: Text(scanStatus?.scanning == true ? '是' : '否'),
+                      title: Text(AppLocalizations.of(context)!.serverScaning),
+                      subtitle: Text(
+                        scanStatus?.scanning == true
+                            ? AppLocalizations.of(context)!.yes
+                            : AppLocalizations.of(context)!.no,
+                      ),
                     ),
                     if (lastScan != null)
                       ListTile(
-                        leading: Icon(Icons.update),
-                        title: Text('上次扫描'),
+                        leading: const Icon(Icons.update),
+                        title: Text(
+                          AppLocalizations.of(context)!.serverLastScanTime,
+                        ),
                         subtitle: Text(
                           DateFormat('yyyy-MM-dd').format(lastScan),
                         ),
                       ),
-                    const ListTile(
-                      leading: Icon(Icons.art_track),
-                      title: Text('已缓存'),
-                      subtitle: Row(children: [_CacheFile()]),
+                    ListTile(
+                      leading: const Icon(Icons.art_track),
+                      title: Text(AppLocalizations.of(context)!.cachedSize),
+                      subtitle: const Row(children: [_CacheFile()]),
                     ),
                   ],
                 );

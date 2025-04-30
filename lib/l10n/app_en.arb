@@ -1,0 +1,407 @@
+{
+  "@@locale": "en",
+
+  "settings": "Settings",
+  "@settings": {
+     "description": "Tabbar Settings text"
+  },
+
+  "confirm": "Confirm",
+  "@confirm": {
+     "description": "Text for confirm button"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+     "description": "Text for cancel button"
+  },
+  
+  "delete": "Delete",
+  "@delete": {
+    "description": "Text for delete "
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Text for save button"
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Text for name field"
+  },
+  "comment": "Comment",
+  "@comment": {
+    "description": "Text for comment field"
+  },
+
+  "loginInputHostHint": "Please Input Host Address",
+  "@loginInputHostHint": {
+    "description": "Hint text for host address input field of login page"
+  },
+  "loginInputUserHint": "Please Input Username",
+  "@loginInputUserHint": {
+    "description": "Hint text for username input field of login page"
+  },
+  "loginInputPasswordHint": "Please Input Password",
+  "@loginInputPasswordHint": {
+    "description": "Hint text for password input field of login page"
+  },
+  "login": "Login",
+  "@login": {
+     "description": "Button text for login action"
+  },
+  "logout": "Logout",
+  "@logout": {
+     "description": "Button text for logout action"
+  },
+  "logoutDialogConfirm": "Confirm Logout?",
+   "@logoutDialogConfirm": {
+     "description": "Text for logout dialog confirm message"
+  },
+
+
+  "play": "Play",
+  "@play": {
+     "description": "Button text for play action"
+  },
+  "pause": "Pause",
+  "@pause": {
+     "description": "Button text for pause action"
+  },
+
+  "yes": "Yes",
+  "@yes": {
+     "description": "Text for yes"
+  },
+  "no": "No",
+  "@no": {
+     "description": "Text for no"
+  },
+  "version": "Version",
+  "@version": {
+     "description": "App version text"
+  },
+
+  "artist": "Artist",
+  "@artist": {
+     "description": "Label for artist name in song details"
+  },
+  "album": "Album",
+  "@album": {
+     "description": "Label for album name in song details"
+  },
+  "song": "Song",
+  "@song": {
+     "description": "Label for song name in song details"
+  },
+  "songCountUnit": "songs",
+  "@songCountUnit": {
+    "description": "Plural unit for song count"
+  },
+  "albumCount": "Album Count",
+  "@albumCount": {
+    "description": "number of albums of artist"
+  },
+
+
+
+
+  "manyArtists": "... and ${artistCount} artists",
+  "@manyArtists": {
+    "description": "Plural form for many artists",
+    "placeholders": {
+      "artistCount": {
+        "type": "num",
+        "example": "3"
+      }
+    }
+  },
+
+  "noTitle": "No Title",
+  "@noTitle": {
+    "description": "Default title when no title available in notification title"
+  },
+
+  "endOfData": "End Of Data",
+  "@endOfData": {
+     "description": "List end message"
+   },
+   "noDataFound": "No Data Found",
+   "@noDataFound": {
+     "description": "List empty message"
+  },
+
+  "serverOnline": "Online",
+  "@serverOnline": {
+    "description": "Server status text for online state"
+   },
+  "serverOffline": "Offline",
+  "@serverOffline": {
+     "description": "Server status text for offline state"
+   },
+   "serverStatus": "Server Status",
+   "@serverStatus": {
+     "description": "Title of server status is OK"
+   },
+   "serverScaning": "Scaning...",
+   "@serverScaning": {
+     "description": "server status text for scanned state"
+   },
+   "serverLastScanTime": "Last Scan",
+    "@serverLastScanTime": {
+     "description": "Server Last Scan Time"
+    },
+    "serverSongCount": "Songs Count",
+    "@serverSongCount": {
+     "description": "Songs Count of Server"
+  },
+
+
+
+  "cachedSize": "Cached Size",
+  "@cachedSize": {
+      "description": "Local Cached Size of Songs and Iamges"
+  },
+
+  "calculating": "Calculating...",
+  "@calculating": {
+     "description": "Text to show while CacheSize calculation is in progress"
+  },
+
+   "recentAdded": "Recenty Added",
+   "@recentAdded": {
+     "description": "recently added songs of server"
+   },
+   "randomAlbum": "Random Album",
+   "@randomAlbum": {
+      "description": "Random Album of server pushed"
+   },
+   "viewAll": "View All",
+   "@viewAll": {
+     "description": "View all button for recommended songs"
+   },
+   "rencentPlayed": "Recently Played",
+   "@rencentPlayed": {
+      "description": "Recently Played songs of user"
+   },
+
+   "recommendedToday": "Recommended Today",
+   "@recommendedToday": {
+      "description": "Title of recommended songs for today"
+   },
+
+
+   "searchHint": "Search for songs, artists or albums...",
+   "@searchHint": {
+     "description": "Search hint text for search bar"
+   },
+
+   "searchHistory": "Search History",
+   "@searchHistory": {
+      "description": "Title of search history page"
+   },
+
+   "theme": "Theme",
+   "@theme": {
+     "description": "Theme selection for app"
+   },
+   "themeDark": "Dark",
+   "@themeDark": {
+     "description": "Dark theme option for app"
+   },
+   "themeLight": "Light",
+   "@themeLight": {
+     "description": "Light theme option for app"
+   },
+   "themeSystemDefault": "System Default",
+   "@themeSystemDefault": {
+     "description": "System default theme option for app"
+   },
+
+   "songMetaDuration": "Duration",
+   "@songMetaDuration": {
+     "description": "Duration of song meta data"
+   },
+   "songMetaFormat": "Format",
+   "@songMetaFormat": {
+     "description": "songMetaFormat of song meta data"
+   },
+   "songMetaBitRate": "Bit Rate",
+   "@songMetaBitRate": {
+    "description": "Bit Rate of song meta data"
+   },
+   "songMetaGenre": "Genre",
+   "@songMetaGenre": {
+     "description": "Genre of song meta data"
+   },
+   "songMetaYear": "Year",
+   "@songMetaYear": {
+     "description": "Year of song meta data"
+   },
+   "songMetaPath": "Path",
+   "@songMetaPath": {
+     "description": "Path of song meta data"
+   },
+   "songMetaSampling": "Sampling",
+   "@songMetaSampling": {
+     "description": "Sampling of song meta data"
+   },
+   "songMetaTrackNumber": "Track No",
+   "@songMetaTrackNumber": {
+    "description": "Track No of song meta data"
+   },
+   "songMetaDiskNumber": "Disk No",
+   "@songMetaDiskNumber": {
+    "description": "Disk Number of song meta data"
+   }, 
+   "songMetaSize": "Size",
+   "@songMetaSize": {
+     "description": "Size of song meta data"
+   },
+
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Favorite A song or artist or album"
+  },
+  "unfavorite": "UnFavorite",
+  "@unfavorite": {
+    "description": "UnFavorite A song or artist or album"
+  },
+  "myFavorites": "My Favorites",
+  "@myFavorites": {
+    "description": "My Favorite songs, artists or albums"
+  },
+
+  "playQueue": "Play Queue",
+  "@playQueue": {
+     "description": "play queue"
+  },
+  "playNext": "Play Next",
+  "@playNext": {
+    "description": "add this song to play queue after current song is played"
+  },
+
+  "addToPlayQueue": "Add Queue",
+  "@addToPlayQueue": {
+     "description": "Add to user play queue "
+  },
+  "removeFromPlayQueue": "Remove Queue",
+  "@removeFromPlayQueue": {
+     "description": "Remove from user play queue "
+  },
+
+
+
+
+
+
+   "playlist": "Playlist",
+   "@playlist": {
+     "description": "Playlist for app"
+   },
+   "myPlaylist": "My Playlist",
+   "@myPlaylist": {
+     "description": "My Playlist for app"
+   },
+   "addToPlaylist": "Add to Playlist",
+   "@addToPlaylist": {
+     "description": "Add song to user playlist "
+   },
+   "createNewPlaylist": "Create New Playlist",
+   "@createNewPlaylist": {
+     "description": "create new playlist"
+   },
+   "playlistInputNameHint": "Enter playlist name...",
+    "@playlistInputNameHint": {
+     "description": "Hint text for playlist name input field"
+    },
+    "playlistInputCommentHint": "Enter comment for playlist...",
+     "@playlistInputCommentHint": {
+     "description": "Hint text for playlist comment input field"
+   },
+
+    "playlistIsPublic": "Public",
+    "@playlistIsPublic": {
+      "description": "is playlist public or not"
+    },
+    "playlistDeleteConfirmation": "Confirm delete  playlist {name} ?",
+    "@playlistDeleteConfirmation": {
+      "description": "Confirmation message for deleting a playlist",
+      "placeholders": {
+         "name": {
+           "type": "String",
+           "example": "my playlist"
+         }
+       }
+    },
+    "songHasAddedToPlaylistToast": "Has been added to playlist {playlistName}.",
+    "@songHasAddedToPlaylistToast": {
+      "placeholders": {
+         "playlistName": {
+           "type": "String", 
+           "example": "my playlist" 
+           } 
+         }
+    },
+
+    "playModeNone": "No Repeat",
+    "@playModeNone": {
+     "description": "Play mode for no repeat play"
+    },
+    "playModeLoop": "Repeat All",
+    "@playModeLoop": {
+     "description": "Play mode for repeat all play"
+    },
+    "playModeSingle": "Single Play",
+    "@playModeSingle": {
+     "description": "Play mode for single song play"
+    },
+    "shuffleOn": "Shuffle On",
+    "@shuffleOn": {
+     "description": "Shuffle mode on for random play"
+    },
+    "shuffleOff": "Shuffle Off",
+    "@shuffleOff": {
+     "description": "Shuffle mode off for normal play"
+    },
+
+   "musicQuality": "Music Quality",
+    "@musicQuality": {
+     "description": "Label for music quality settings"
+    },
+    "musicQualitySmooth": "musicQualitySmooth",
+    "@musicQualitySmooth": {
+     "description": "Description of smooth music quality option"
+    },
+    "musicQualityMedium": "Medium",
+    "@musicQualityMedium": {
+     "description": "Description of medium music quality option"
+    },
+    "musicQualityHigh": "High",
+    "@musicQualityHigh": {
+     "description": "Description of high music quality option"
+    },
+    "musicQualityVeryHigh": "Very High",
+    "@musicQualityVeryHigh": {  
+     "description": "Description of very high music quality option"
+   },
+   "musicQualityLossless": "Lossless",
+    "@musicQualityLossless": {  
+      "description": "Description of lossless music quality option"
+    },
+
+
+   "noLyricsFound": "No Lyrics Found",
+   "@noLyricsFound": {
+      "description": "Lyrics of Song could not be found"
+   },
+
+   "unknownError": "Unknown Error",
+   "@unknownError": {
+      "description": "Generic error message when an unknown error occurs"
+   },
+
+   "encounterUnknownError": "Encounter Unknown Error",
+   "@encounterUnknownError": {
+      "description": "Message when an unknown error is encountered during the process"
+   }
+}

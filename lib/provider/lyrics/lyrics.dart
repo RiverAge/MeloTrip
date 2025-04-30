@@ -18,15 +18,15 @@ Future<SubsonicResponse?> lyrics(Ref ref, String? songId) async {
 }
 
 @riverpod
-String lyricsOfLine(Ref ref, SubsonicResponse lyrics, Duration position) {
+String? lyricsOfLine(Ref ref, SubsonicResponse lyrics, Duration position) {
   final structuredLyrics =
       lyrics.subsonicResponse?.lyricsList?.structuredLyrics;
   if (structuredLyrics == null || structuredLyrics.isEmpty) {
-    return '暂无歌词';
+    return null;
   }
   final lines = structuredLyrics[0].line;
   if (lines == null || structuredLyrics.isEmpty) {
-    return '暂无歌词';
+    return null;
   }
 
   int currentLineIdx = lines.indexWhere(

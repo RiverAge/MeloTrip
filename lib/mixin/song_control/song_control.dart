@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/helper/index.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
 import 'package:melo_trip/pages/artist/artist_detail_page.dart';

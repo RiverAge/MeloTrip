@@ -62,7 +62,9 @@ class _SongActions extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        isCurrentPlaying ? '暂停' : '播放',
+                        isCurrentPlaying
+                            ? AppLocalizations.of(context)!.pause
+                            : AppLocalizations.of(context)!.play,
                         style: const TextStyle(fontSize: 12),
                       ),
                     ],
@@ -81,7 +83,9 @@ class _SongActions extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    isStarred ? '取消收藏' : '收藏',
+                    isStarred
+                        ? AppLocalizations.of(context)!.unfavorite
+                        : AppLocalizations.of(context)!.favorite,
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
@@ -98,8 +102,8 @@ class _SongActions extends StatelessWidget {
                       },
                       icon: const Icon(Icons.not_started_outlined),
                     ),
-                    const Text(
-                      '下一首播放',
+                    Text(
+                      AppLocalizations.of(context)!.playNext,
                       style: TextStyle(fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -117,8 +121,8 @@ class _SongActions extends StatelessWidget {
                       },
                       icon: const Icon(Icons.playlist_add_outlined),
                     ),
-                    const Text(
-                      '加至播放列表',
+                    Text(
+                      AppLocalizations.of(context)!.addToPlayQueue,
                       style: TextStyle(fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -136,8 +140,8 @@ class _SongActions extends StatelessWidget {
                       },
                       icon: const Icon(Icons.playlist_remove_outlined),
                     ),
-                    const Text(
-                      '移出播放列表',
+                    Text(
+                      AppLocalizations.of(context)!.removeFromPlayQueue,
                       style: TextStyle(fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -157,8 +161,8 @@ class _SongActions extends StatelessWidget {
                     },
                     icon: const Icon(Icons.library_add_check_outlined),
                   ),
-                  const Text(
-                    '加至歌单',
+                  Text(
+                    AppLocalizations.of(context)!.addToPlaylist,
                     style: TextStyle(fontSize: 12),
                     textAlign: TextAlign.center,
                   ),

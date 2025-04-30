@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
@@ -40,9 +41,15 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     final subsonicRes = SubsonicResponse.fromJson(data);
     if (subsonicRes.subsonicResponse?.status != 'ok') return;
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('已添加到 ${_current?.name}')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          AppLocalizations.of(
+            context,
+          )!.songHasAddedToPlaylistToast(_current?.name ?? ''),
+        ),
+      ),
+    );
     Navigator.of(context).pop();
   }
 
@@ -51,7 +58,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 3,
-        title: const Text('添加到歌单'),
+        title: Text(AppLocalizations.of(context)!.addToPlaylist),
         actions: [
           IconButton(
             onPressed: () {
@@ -101,7 +108,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
                 ),
                 title: Text(item.name ?? '', overflow: TextOverflow.clip),
                 subtitle: Text(
-                  '${item.songCount}首 ${item.comment ?? ''}',
+                  '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.comment ?? ''}',
                   overflow: TextOverflow.clip,
                 ),
                 value: _current?.id == item.id,

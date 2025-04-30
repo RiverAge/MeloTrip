@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 
 class AddPlaylistPage extends StatefulWidget {
   const AddPlaylistPage({super.key});
@@ -49,39 +50,54 @@ class _AddPlaylistPageState extends State<AddPlaylistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 3,
-          title: const Text('添加新的歌单'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: [
-              const Spacer(flex: 1),
-              TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(hintText: '请输入歌单的名字')),
-              const SizedBox(height: 30),
-              Consumer(builder: (context, ref, child) {
+      appBar: AppBar(
+        elevation: 3,
+        title: Text(AppLocalizations.of(context)!.createNewPlaylist),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          children: [
+            const Spacer(flex: 1),
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.playlistInputNameHint,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Consumer(
+              builder: (context, ref, child) {
                 return ElevatedButton(
-                    style: ButtonStyle(
-                        shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)))),
-                    onPressed: _controller.text.isEmpty || _loading
-                        ? null
-                        : () => _onAdd(ref),
-                    child: _loading
-                        ? const SizedBox(
+                  style: ButtonStyle(
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                  onPressed:
+                      _controller.text.isEmpty || _loading
+                          ? null
+                          : () => _onAdd(ref),
+                  child:
+                      _loading
+                          ? const SizedBox(
                             width: 15,
                             height: 15,
-                            child: CircularProgressIndicator(strokeWidth: 1.5))
-                        : const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40),
-                            child: Text('确定')));
-              }),
-              const Spacer(flex: 3)
-            ],
-          ),
-        ));
+                            child: CircularProgressIndicator(strokeWidth: 1.5),
+                          )
+                          : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(AppLocalizations.of(context)!.confirm),
+                          ),
+                );
+              },
+            ),
+            const Spacer(flex: 3),
+          ],
+        ),
+      ),
+    );
   }
 }

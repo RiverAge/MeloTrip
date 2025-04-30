@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/helper/index.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/mixin/song_control/song_control.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
@@ -91,11 +92,11 @@ class _SearchPageState extends State<SearchPage> {
                       }
                       return Column(
                         children: [
-                          const TabBar(
+                          TabBar(
                             tabs: [
-                              Tab(text: '歌曲'),
-                              Tab(text: '专辑'),
-                              Tab(text: '艺术家'),
+                              Tab(text: AppLocalizations.of(context)!.song),
+                              Tab(text: AppLocalizations.of(context)!.song),
+                              Tab(text: AppLocalizations.of(context)!.artist),
                             ],
                           ),
                           Expanded(

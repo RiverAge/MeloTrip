@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/svc/user.dart';
 
 class MusicQualityPage extends StatefulWidget {
@@ -28,14 +29,29 @@ class MusicQualityPageState extends State<MusicQualityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('音质'), elevation: 3),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.musicQuality),
+        elevation: 3,
+      ),
       body: ListView.separated(
         separatorBuilder: (_, __) => const Divider(),
         itemCount: _list.length,
         itemBuilder: (contex, index) {
           return ListTile(
-            title: Text(_list[index] == '0' ? '无损' : '${_list[index]}kbps'),
-            subtitle: Text(['流畅', '均衡', '高清', '超清', '无损'][index]),
+            title: Text(
+              _list[index] == '0'
+                  ? AppLocalizations.of(context)!.musicQualityLossless
+                  : '${_list[index]}kbps',
+            ),
+            subtitle: Text(
+              [
+                AppLocalizations.of(context)!.musicQualitySmooth,
+                AppLocalizations.of(context)!.musicQualityMedium,
+                AppLocalizations.of(context)!.musicQualityHigh,
+                AppLocalizations.of(context)!.musicQualityVeryHigh,
+                '',
+              ][index],
+            ),
             trailing: _current == _list[index] ? const Icon(Icons.check) : null,
             onTap: () async {
               setState(() {

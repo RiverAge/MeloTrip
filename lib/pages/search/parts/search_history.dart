@@ -15,7 +15,7 @@ class _SearchHistory extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("搜索历史"),
+                Text(AppLocalizations.of(context)!.searchHistory),
                 // Icon(Icons.delete)
                 Consumer(
                   builder: (context, ref, child) {

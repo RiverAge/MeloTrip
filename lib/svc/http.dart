@@ -122,8 +122,6 @@ class Http {
         msg = e.response?.data["error"];
       } else if (e.message != null && e.message != '') {
         msg = e.message!;
-      } else {
-        msg = '未知错误';
       }
       for (final l in ins._errorListeners) {
         l(errorMsg: msg, statusCode: e.response?.statusCode);

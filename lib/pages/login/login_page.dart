@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth/auth.dart';
 import 'package:melo_trip/pages/initial/initial_page.dart';
 import 'package:melo_trip/svc/http.dart';
@@ -88,18 +89,18 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextField(
             controller: _hostController,
-            decoration: const InputDecoration(
-              hintText: '请输入服务器地址',
-              icon: Icon(Icons.dns_outlined),
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.loginInputHostHint,
+              icon: const Icon(Icons.dns_outlined),
             ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: TextField(
               controller: _unameController,
-              decoration: const InputDecoration(
-                hintText: '请输入用户名',
-                icon: Icon(Icons.person_outline),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.loginInputPasswordHint,
+                icon: const Icon(Icons.person_outline),
               ),
             ),
           ),
@@ -108,9 +109,9 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
             textInputAction: TextInputAction.done,
             onSubmitted: _loading ? null : (_) => _onLogin(),
-            decoration: const InputDecoration(
-              hintText: '请输入密码',
-              icon: Icon(Icons.lock_outline),
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.loginInputPasswordHint,
+              icon: const Icon(Icons.lock_outline),
             ),
           ),
           Container(
@@ -123,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                     child:
                         _loading
                             ? const FixedCenterCircular(size: 15)
-                            : const Text('登录'),
+                            : Text(AppLocalizations.of(context)!.login),
                   ),
                 ),
               ],
