@@ -81,7 +81,7 @@ class ArtistDetailPage extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '${item.songCount}首 ${item.year}',
+                                    '${item.songCount}首${item.year != null ? ' ${item.year}' : ''}',
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(fontSize: 10),
                                   ),
