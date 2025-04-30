@@ -28,7 +28,7 @@
     "songCountUnit": "首",
     "albumCount": "专辑数",
 
-    "manyArtists": "...等${artistCount}位艺术家",
+    "manyArtists": "...等{artistCount}位艺术家",
     "@manyArtists": {
       "description": "Plural form for many artists",
       "placeholders": {

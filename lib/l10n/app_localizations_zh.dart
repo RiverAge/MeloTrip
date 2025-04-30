@@ -79,7 +79,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String manyArtists(num artistCount) {
-    return '... and \$$artistCount artists';
+    return '... and $artistCount artists';
   }
 
   @override
@@ -348,7 +348,7 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String manyArtists(num artistCount) {
-    return '...等\$$artistCount位艺术家';
+    return '...等$artistCount位艺术家';
   }
 
   @override
