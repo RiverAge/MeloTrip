@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -65,7 +64,6 @@ class User {
 
   set locale(Locale? locale) {
     _locale = locale;
-    print(_locale?.toString());
     _prefs?.setString('__u__', jsonEncode(toJson()));
   }
 
@@ -144,7 +142,7 @@ class User {
           final theme = ret['theme'] as String;
           instance._themeMode = ThemeMode.values.firstWhere(
             (e) => e.toString() == theme,
-            orElse: () => ThemeMode.light,
+            orElse: () => ThemeMode.system,
           );
         }
       } else {
