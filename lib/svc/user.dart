@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/auth/auth.dart';
 import 'package:melo_trip/model/rec_today/rec_today.dart';
@@ -56,12 +58,35 @@ class User {
     _prefs?.setString('__u__', jsonEncode(toJson()));
   }
 
+  Locale? _locale;
+  Locale? get locale {
+    return _locale;
+  }
+
+  set locale(Locale? locale) {
+    _locale = locale;
+    print(_locale?.toString());
+    _prefs?.setString('__u__', jsonEncode(toJson()));
+  }
+
+  ThemeMode? _themeMode;
+  ThemeMode? get themeMode {
+    return _themeMode;
+  }
+
+  set themeMode(ThemeMode? themeMode) {
+    _themeMode = themeMode;
+    _prefs?.setString('__u__', jsonEncode(toJson()));
+  }
+
   Map<String, dynamic> toJson() => {
     'auth': _auth?.toJson(),
     'recToday': _recToday?.toJson(),
     'searchHistory': _searchHistory,
     'maxRate': _maxRate,
     'playlistMode': _playlistMode.toJson(),
+    'locale': _locale?.toString(),
+    'theme': _themeMode.toString(),
   };
 
   SharedPreferences? _prefs;
@@ -105,9 +130,23 @@ class User {
           final playlistMode = ret['playlistMode'] as String;
           instance._playlistMode = PlaylistModeExtension.fromJson(playlistMode);
         }
-
         final maxRate = ret['maxRate'] ?? '32';
         instance._maxRate = maxRate;
+
+        if (ret['locale'] != null) {
+          final locale = ret['locale'] as String;
+          if (locale.contains("_")) {
+            final [languageCode, countryCode] = locale.split("_");
+            instance._locale = Locale(languageCode, countryCode);
+          }
+        }
+        if (ret['theme'] != null) {
+          final theme = ret['theme'] as String;
+          instance._themeMode = ThemeMode.values.firstWhere(
+            (e) => e.toString() == theme,
+            orElse: () => ThemeMode.light,
+          );
+        }
       } else {
         instance._maxRate = '32';
       }

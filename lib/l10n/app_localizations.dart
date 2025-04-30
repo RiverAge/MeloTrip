@@ -138,6 +138,12 @@ abstract class AppLocalizations {
   /// **'Comment'**
   String get comment;
 
+  /// language of app
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
   /// Hint text for host address input field of login page
   ///
   /// In en, this message translates to:
@@ -234,6 +240,12 @@ abstract class AppLocalizations {
   /// **'Album Count'**
   String get albumCount;
 
+  /// System default theme option for app
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get systemDefault;
+
   /// Plural form for many artists
   ///
   /// In en, this message translates to:
@@ -255,7 +267,7 @@ abstract class AppLocalizations {
   /// List empty message
   ///
   /// In en, this message translates to:
-  /// **'No Data Found'**
+  /// **'No Data'**
   String get noDataFound;
 
   /// Server status text for online state
@@ -365,12 +377,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Light'**
   String get themeLight;
-
-  /// System default theme option for app
-  ///
-  /// In en, this message translates to:
-  /// **'System Default'**
-  String get themeSystemDefault;
 
   /// Duration of song meta data
   ///
@@ -528,36 +534,6 @@ abstract class AppLocalizations {
   /// **'Has been added to playlist {playlistName}.'**
   String songHasAddedToPlaylistToast(String playlistName);
 
-  /// Play mode for no repeat play
-  ///
-  /// In en, this message translates to:
-  /// **'No Repeat'**
-  String get playModeNone;
-
-  /// Play mode for repeat all play
-  ///
-  /// In en, this message translates to:
-  /// **'Repeat All'**
-  String get playModeLoop;
-
-  /// Play mode for single song play
-  ///
-  /// In en, this message translates to:
-  /// **'Single Play'**
-  String get playModeSingle;
-
-  /// Shuffle mode on for random play
-  ///
-  /// In en, this message translates to:
-  /// **'Shuffle On'**
-  String get shuffleOn;
-
-  /// Shuffle mode off for normal play
-  ///
-  /// In en, this message translates to:
-  /// **'Shuffle Off'**
-  String get shuffleOff;
-
   /// Label for music quality settings
   ///
   /// In en, this message translates to:
@@ -593,6 +569,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lossless'**
   String get musicQualityLossless;
+
+  /// Play mode for no repeat play
+  ///
+  /// In en, this message translates to:
+  /// **'No Repeat'**
+  String get playModeNone;
+
+  /// Play mode for repeat all play
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat All'**
+  String get playModeLoop;
+
+  /// Play mode for single song play
+  ///
+  /// In en, this message translates to:
+  /// **'Single Play'**
+  String get playModeSingle;
+
+  /// Shuffle mode on for random play
+  ///
+  /// In en, this message translates to:
+  /// **'Shuffle On'**
+  String get shuffleOn;
+
+  /// Shuffle mode off for normal play
+  ///
+  /// In en, this message translates to:
+  /// **'Shuffle Off'**
+  String get shuffleOff;
+
+  /// English language
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// Simple Chinese
+  ///
+  /// In en, this message translates to:
+  /// **'Simple Chinese'**
+  String get simpleChinese;
+
+  /// United States of America
+  ///
+  /// In en, this message translates to:
+  /// **'United States'**
+  String get us;
+
+  /// People's Republic of China
+  ///
+  /// In en, this message translates to:
+  /// **'China'**
+  String get cn;
 
   /// Lyrics of Song could not be found
   ///

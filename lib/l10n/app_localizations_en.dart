@@ -30,6 +30,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comment => 'Comment';
 
   @override
+  String get language => 'Language';
+
+  @override
   String get loginInputHostHint => 'Please Input Host Address';
 
   @override
@@ -78,6 +81,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get albumCount => 'Album Count';
 
   @override
+  String get systemDefault => 'System Default';
+
+  @override
   String manyArtists(num artistCount) {
     return '... and $artistCount artists';
   }
@@ -89,7 +95,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get endOfData => 'End Of Data';
 
   @override
-  String get noDataFound => 'No Data Found';
+  String get noDataFound => 'No Data';
 
   @override
   String get serverOnline => 'Online';
@@ -144,9 +150,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeLight => 'Light';
-
-  @override
-  String get themeSystemDefault => 'System Default';
 
   @override
   String get songMetaDuration => 'Duration';
@@ -231,21 +234,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get playModeNone => 'No Repeat';
-
-  @override
-  String get playModeLoop => 'Repeat All';
-
-  @override
-  String get playModeSingle => 'Single Play';
-
-  @override
-  String get shuffleOn => 'Shuffle On';
-
-  @override
-  String get shuffleOff => 'Shuffle Off';
-
-  @override
   String get musicQuality => 'Music Quality';
 
   @override
@@ -262,6 +250,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get musicQualityLossless => 'Lossless';
+
+  @override
+  String get playModeNone => 'No Repeat';
+
+  @override
+  String get playModeLoop => 'Repeat All';
+
+  @override
+  String get playModeSingle => 'Single Play';
+
+  @override
+  String get shuffleOn => 'Shuffle On';
+
+  @override
+  String get shuffleOff => 'Shuffle Off';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get simpleChinese => 'Simple Chinese';
+
+  @override
+  String get us => 'United States';
+
+  @override
+  String get cn => 'China';
 
   @override
   String get noLyricsFound => 'No Lyrics Found';

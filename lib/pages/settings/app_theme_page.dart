@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/provider/app_theme_mode/app_theme_mode.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 class AppThemePage extends StatelessWidget {
@@ -50,7 +50,7 @@ class AppThemePage extends StatelessWidget {
                       ? Icons.auto_mode
                       : Icons.auto_mode_outlined,
                 ),
-                title: Text(AppLocalizations.of(context)!.themeSystemDefault),
+                title: Text(AppLocalizations.of(context)!.systemDefault),
                 trailing:
                     data == ThemeMode.system ? const Icon(Icons.check) : null,
               ),
