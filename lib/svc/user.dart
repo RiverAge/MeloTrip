@@ -147,6 +147,7 @@ class User {
         }
       } else {
         instance._maxRate = '32';
+        instance._themeMode = ThemeMode.system;
       }
 
       completer.complete(instance);
