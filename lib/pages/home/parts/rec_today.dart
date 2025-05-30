@@ -63,6 +63,7 @@ class _RecToday extends StatelessWidget with SongControl {
                           subtitle: Text(
                             '${e.album} - ${e.artist}',
                             style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurfaceVariant
