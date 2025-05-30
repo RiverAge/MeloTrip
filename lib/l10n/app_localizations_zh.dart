@@ -9,283 +9,283 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get settings => 'Settings';
+  String get settings => '设置';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => '确认';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => '取消';
 
   @override
-  String get delete => 'Delete';
+  String get delete => '删除';
 
   @override
-  String get save => 'Save';
+  String get save => '保存';
 
   @override
-  String get name => 'Name';
+  String get name => '名称';
 
   @override
-  String get comment => 'Comment';
+  String get comment => '备注';
 
   @override
-  String get language => 'Language';
+  String get language => '语言';
 
   @override
-  String get loginInputHostHint => 'Please Input Host Address';
+  String get loginInputHostHint => '请输入服务器地址';
 
   @override
-  String get loginInputUserHint => 'Please Input Username';
+  String get loginInputUserHint => '请输入用户名';
 
   @override
-  String get loginInputPasswordHint => 'Please Input Password';
+  String get loginInputPasswordHint => '请输入密码';
 
   @override
-  String get login => 'Login';
+  String get login => '登录';
 
   @override
-  String get logout => 'Logout';
+  String get logout => '退出登录';
 
   @override
-  String get logoutDialogConfirm => 'Confirm Logout?';
+  String get logoutDialogConfirm => '确认退出登录？';
 
   @override
-  String get play => 'Play';
+  String get play => '播放';
 
   @override
-  String get pause => 'Pause';
+  String get pause => '暂停';
 
   @override
-  String get yes => 'Yes';
+  String get yes => '是';
 
   @override
-  String get no => 'No';
+  String get no => '否';
 
   @override
-  String get version => 'Version';
+  String get version => '版本';
 
   @override
-  String get artist => 'Artist';
+  String get artist => '艺术家';
 
   @override
-  String get album => 'Album';
+  String get album => '专辑';
 
   @override
-  String get song => 'Song';
+  String get song => '歌曲';
 
   @override
-  String get songCountUnit => 'songs';
+  String get songCountUnit => '首';
 
   @override
-  String get albumCount => 'Album Count';
+  String get albumCount => '专辑数';
 
   @override
-  String get systemDefault => 'System Default';
+  String get systemDefault => '跟随系统';
 
   @override
   String manyArtists(num artistCount) {
-    return '... and $artistCount artists';
+    return '...等$artistCount位艺术家';
   }
 
   @override
-  String get noTitle => 'No Title';
+  String get noTitle => '无标题';
 
   @override
-  String get endOfData => 'End Of Data';
+  String get endOfData => '到底了';
 
   @override
-  String get noDataFound => 'No Data';
+  String get noDataFound => '暂无数据';
 
   @override
-  String get serverOnline => 'Online';
+  String get serverOnline => '在线';
 
   @override
-  String get serverOffline => 'Offline';
+  String get serverOffline => '离线';
 
   @override
-  String get serverStatus => 'Server Status';
+  String get serverStatus => '状态';
 
   @override
-  String get serverScaning => 'Scaning...';
+  String get serverScaning => '正在扫描';
 
   @override
-  String get serverLastScanTime => 'Last Scan';
+  String get serverLastScanTime => '上次扫描';
 
   @override
-  String get serverSongCount => 'Songs Count';
+  String get serverSongCount => '歌曲数量';
 
   @override
-  String get cachedSize => 'Cached Size';
+  String get cachedSize => '已缓存';
 
   @override
-  String get calculating => 'Calculating...';
+  String get calculating => '计算中...';
 
   @override
-  String get recentAdded => 'Recenty Added';
+  String get recentAdded => '近期添加';
 
   @override
-  String get randomAlbum => 'Random Album';
+  String get randomAlbum => '随机专辑';
 
   @override
-  String get viewAll => 'View All';
+  String get viewAll => '查看全部';
 
   @override
-  String get rencentPlayed => 'Recently Played';
+  String get rencentPlayed => '近期播放';
 
   @override
-  String get recommendedToday => 'Recommended Today';
+  String get recommendedToday => '今日推荐';
 
   @override
-  String get searchHint => 'Search for songs, artists or albums...';
+  String get searchHint => '搜索歌曲、艺术家或专辑...';
 
   @override
-  String get searchHistory => 'Search History';
+  String get searchHistory => '搜索历史';
 
   @override
-  String get theme => 'Theme';
+  String get theme => '主题';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => '深色';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => '浅色';
 
   @override
-  String get songMetaDuration => 'Duration';
+  String get songMetaDuration => '时长';
 
   @override
-  String get songMetaFormat => 'Format';
+  String get songMetaFormat => '格式';
 
   @override
-  String get songMetaBitRate => 'Bit Rate';
+  String get songMetaBitRate => '比特率';
 
   @override
-  String get songMetaGenre => 'Genre';
+  String get songMetaGenre => '流派';
 
   @override
-  String get songMetaYear => 'Year';
+  String get songMetaYear => '年份';
 
   @override
-  String get songMetaPath => 'Path';
+  String get songMetaPath => '路径';
 
   @override
-  String get songMetaSampling => 'Sampling';
+  String get songMetaSampling => '采样率';
 
   @override
-  String get songMetaTrackNumber => 'Track No';
+  String get songMetaTrackNumber => '音轨号';
 
   @override
-  String get songMetaDiskNumber => 'Disk No';
+  String get songMetaDiskNumber => '盘号';
 
   @override
-  String get songMetaSize => 'Size';
+  String get songMetaSize => '大小';
 
   @override
-  String get favorite => 'Favorite';
+  String get favorite => '收藏';
 
   @override
-  String get unfavorite => 'UnFavorite';
+  String get unfavorite => '取消收藏';
 
   @override
-  String get myFavorites => 'My Favorites';
+  String get myFavorites => '我的收藏';
 
   @override
-  String get playQueue => 'Play Queue';
+  String get playQueue => '播放队列';
 
   @override
-  String get playNext => 'Play Next';
+  String get playNext => '下一首播放';
 
   @override
-  String get addToPlayQueue => 'Add Queue';
+  String get addToPlayQueue => '加到播放队列';
 
   @override
-  String get removeFromPlayQueue => 'Remove Queue';
+  String get removeFromPlayQueue => '移出播放队列';
 
   @override
-  String get playlist => 'Playlist';
+  String get playlist => '歌单';
 
   @override
-  String get myPlaylist => 'My Playlist';
+  String get myPlaylist => '我的歌单';
 
   @override
-  String get addToPlaylist => 'Add to Playlist';
+  String get addToPlaylist => '加至歌单';
 
   @override
-  String get createNewPlaylist => 'Create New Playlist';
+  String get createNewPlaylist => '新建歌单';
 
   @override
-  String get playlistInputNameHint => 'Enter playlist name...';
+  String get playlistInputNameHint => '输入歌单名称';
 
   @override
-  String get playlistInputCommentHint => 'Enter comment for playlist...';
+  String get playlistInputCommentHint => '输入备注';
 
   @override
-  String get playlistIsPublic => 'Public';
+  String get playlistIsPublic => '是否公开';
 
   @override
   String playlistDeleteConfirmation(String name) {
-    return 'Confirm delete  playlist $name ?';
+    return '确定要删除歌单 $name ?';
   }
 
   @override
   String songHasAddedToPlaylistToast(String playlistName) {
-    return 'Has been added to playlist $playlistName.';
+    return '已添加到 $playlistName.';
   }
 
   @override
-  String get musicQuality => 'Music Quality';
+  String get musicQuality => '音质';
 
   @override
-  String get musicQualitySmooth => 'musicQualitySmooth';
+  String get musicQualitySmooth => '流畅';
 
   @override
-  String get musicQualityMedium => 'Medium';
+  String get musicQualityMedium => '均衡';
 
   @override
-  String get musicQualityHigh => 'High';
+  String get musicQualityHigh => '高清';
 
   @override
-  String get musicQualityVeryHigh => 'Very High';
+  String get musicQualityVeryHigh => '超清';
 
   @override
-  String get musicQualityLossless => 'Lossless';
+  String get musicQualityLossless => '无损';
 
   @override
-  String get playModeNone => 'No Repeat';
+  String get playModeNone => '顺序播放';
 
   @override
-  String get playModeLoop => 'Repeat All';
+  String get playModeLoop => '列表循环';
 
   @override
-  String get playModeSingle => 'Single Play';
+  String get playModeSingle => '单曲循环';
 
   @override
-  String get shuffleOn => 'Shuffle On';
+  String get shuffleOn => '随机播放开启';
 
   @override
-  String get shuffleOff => 'Shuffle Off';
+  String get shuffleOff => '随机播放关闭';
 
   @override
-  String get english => 'English';
+  String get english => '英语';
 
   @override
-  String get simpleChinese => 'Simple Chinese';
+  String get simpleChinese => '简体中文';
 
   @override
-  String get us => 'United States';
+  String get us => '美国';
 
   @override
-  String get cn => 'China';
+  String get cn => '中国';
 
   @override
-  String get noLyricsFound => 'No Lyrics Found';
+  String get noLyricsFound => '无歌词';
 
   @override
-  String get unknownError => 'Unknown Error';
+  String get unknownError => '未知错误';
 
   @override
-  String get encounterUnknownError => 'Encounter Unknown Error';
+  String get encounterUnknownError => '遇到未知错误';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).

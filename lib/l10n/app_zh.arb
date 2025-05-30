@@ -1,3 +1,145 @@
 {
-    "@@locale": "zh"
+    "@@locale": "zh",
+
+    "settings": "设置",
+    "confirm": "确认",
+    "cancel": "取消",
+    "delete": "删除",
+    "save": "保存",
+    "name": "名称",
+    "comment": "备注",
+    "language": "语言",
+
+    "loginInputHostHint": "请输入服务器地址",
+    "loginInputUserHint": "请输入用户名",
+    "loginInputPasswordHint": "请输入密码",
+    "login": "登录",
+    "logout": "退出登录",
+    "logoutDialogConfirm": "确认退出登录？",
+
+    "play": "播放",
+    "pause": "暂停",
+
+    "yes": "是",
+    "no": "否",
+    "version": "版本",
+    "artist": "艺术家",
+    "album": "专辑",
+    "song": "歌曲",
+    "songCountUnit": "首",
+    "albumCount": "专辑数",
+    "systemDefault": "跟随系统",
+
+    "manyArtists": "...等{artistCount}位艺术家",
+    "@manyArtists": {
+      "description": "Plural form for many artists",
+      "placeholders": {
+        "artistCount": {
+          "type": "num",
+          "example": "3"
+        }
+      }
+    },
+
+    "noTitle": "无标题",
+    "endOfData": "到底了",
+    "noDataFound": "暂无数据",
+    "serverOnline": "在线",
+    "serverOffline": "离线",
+    "serverStatus": "状态",
+    "serverScaning": "正在扫描",
+    "serverLastScanTime": "上次扫描",
+    "serverSongCount": "歌曲数量",
+
+    "cachedSize": "已缓存",
+    "calculating": "计算中...",
+
+    "recentAdded": "近期添加",
+    "recommendedToday": "今日推荐",
+    "randomAlbum": "随机专辑",
+    "viewAll": "查看全部",
+    "rencentPlayed": "近期播放",
+
+    "searchHistory": "搜索历史",
+    "searchHint": "搜索歌曲、艺术家或专辑...",
+ 
+    "theme": "主题",
+    "themeDark": "深色",
+    "themeLight": "浅色",
+   
+    "songMetaDuration": "时长",
+    "songMetaFormat": "格式",
+    "songMetaBitRate": "比特率",
+    "songMetaGenre": "流派",
+    "songMetaYear": "年份",
+    "songMetaPath": "路径",
+    "songMetaSampling": "采样率",
+    "songMetaTrackNumber": "音轨号",
+    "songMetaDiskNumber": "盘号",
+    "songMetaSize": "大小",
+
+    "favorite": "收藏",
+    "unfavorite": "取消收藏",
+    "myFavorites": "我的收藏",
+
+
+    "playQueue": "播放队列",
+    "playNext": "下一首播放",
+    "addToPlayQueue": "加到播放队列",
+    "removeFromPlayQueue": "移出播放队列",
+
+   
+    "playlist": "歌单",
+    "myPlaylist": "我的歌单",
+    "addToPlaylist": "加至歌单",
+    "createNewPlaylist": "新建歌单",
+    "playlistInputNameHint": "输入歌单名称",
+    "playlistInputCommentHint": "输入备注",
+    "playlistIsPublic": "是否公开",
+    "playlistDeleteConfirmation": "确定要删除歌单 {name} ?",
+    "@playlistDeleteConfirmation": {
+        "placeholders": {
+           "name": {
+             "type": "String",
+             "example": "我的歌单"
+           }
+         }
+      },
+    "songHasAddedToPlaylistToast": "已添加到 {playlistName}.",
+    "@songHasAddedToPlaylistToast": {
+      "placeholders": {
+         "playlistName": {
+           "type": "String", 
+           "example": "我的歌单" 
+           } 
+         }
+    },
+
+    "musicQuality": "音质",
+    "musicQualitySmooth": "流畅",
+    "musicQualityMedium": "均衡",
+    "musicQualityHigh": "高清",
+    "musicQualityVeryHigh": "超清",
+    "musicQualityLossless": "无损",
+
+
+    "playModeNone": "顺序播放",
+    "playModeLoop": "列表循环",
+    "playModeSingle": "单曲循环",
+    "shuffleOn": "随机播放开启",
+    "shuffleOff": "随机播放关闭",
+
+    "english": "英语",
+    "simpleChinese": "简体中文",
+
+    "us": "美国",
+    "cn": "中国",
+
+    "noLyricsFound": "无歌词",
+
+    "unknownError": "未知错误",
+    "encounterUnknownError": "遇到未知错误"
+
+
+
 }
