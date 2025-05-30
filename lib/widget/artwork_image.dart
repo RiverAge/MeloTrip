@@ -4,11 +4,20 @@ import 'package:melo_trip/provider/artwork_url/artwork_url.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 
 class ArtworkImage extends ConsumerWidget {
-  const ArtworkImage({super.key, required this.id, this.fit, this.size});
+  const ArtworkImage({
+    super.key,
+    required this.id,
+    this.fit,
+    this.size,
+    this.width,
+    this.height,
+  });
 
   final String? id;
   final BoxFit? fit;
   final int? size;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,6 +29,8 @@ class ArtworkImage extends ConsumerWidget {
     return switch (url) {
       AsyncData(:final value) => Image.network(
         '$value&size=${size ?? 100}',
+        width: width,
+        height: height,
         fit: fit,
       ),
       AsyncError() => const Icon(Icons.error),
