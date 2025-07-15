@@ -2,7 +2,7 @@ part of '../player.dart';
 
 extension PlayerState on AppPlayer {
   bool get playing => _player.state.playing;
-  Future<void> playOrPause() => _player.playOrPause();
+
   Duration? get duration => _player.state.duration;
   Duration get position => _player.state.position;
   Duration get buffer => _player.state.buffer;

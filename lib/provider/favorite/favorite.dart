@@ -1,8 +1,5 @@
-import 'package:melo_trip/model/response/album/album.dart';
-import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'favorite.g.dart';

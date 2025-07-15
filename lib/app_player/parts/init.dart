@@ -30,5 +30,48 @@ extension PlayerInit on AppPlayer {
         ),
       );
     });
+
+    final session = await AudioSession.instance;
+    // 配置音频会话。这里我们声明这是一个音乐播放器。
+    await session.configure(const AudioSessionConfiguration.music());
+
+    session.interruptionEventStream.listen((event) {
+      if (event.begin) {
+        switch (event.type) {
+          case AudioInterruptionType.duck:
+            assert(!kIsWeb && Platform.isAndroid);
+            if (session.androidAudioAttributes!.usage ==
+                AndroidAudioUsage.game) {
+              _player.setVolume(_player.state.volume / 2);
+            }
+            _playInterrupted = false;
+            break;
+          case AudioInterruptionType.pause:
+          case AudioInterruptionType.unknown:
+            if (_player.state.playing) {
+              _player.pause();
+              // Although pause is async and sets _playInterrupted = false,
+              // this is done in the sync portion.
+              _playInterrupted = true;
+            }
+            break;
+        }
+      } else {
+        switch (event.type) {
+          case AudioInterruptionType.duck:
+            assert(!kIsWeb && Platform.isAndroid);
+            _player.setVolume(_player.state.volume * 2);
+            _playInterrupted = false;
+            break;
+          case AudioInterruptionType.pause:
+            if (_playInterrupted) _player.play();
+            _playInterrupted = false;
+            break;
+          case AudioInterruptionType.unknown:
+            _playInterrupted = false;
+            break;
+        }
+      }
+    });
   }
 }
