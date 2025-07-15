@@ -20,8 +20,6 @@ import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-// import 'package:flutter/scheduler.dart' show timeDilation;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();

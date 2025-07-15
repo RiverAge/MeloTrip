@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -40,8 +43,15 @@ class AppPlayer extends BaseAudioHandler {
     _mediaResolver = resolver;
   }
 
+  bool _playInterrupted = false;
+
   @override
-  Future<void> play() async => _player.play();
+  Future<void> play() async {
+    final session = await AudioSession.instance;
+    await session.setActive(true);
+    _player.play();
+  }
+
   @override
   Future<void> pause() async => _player.pause();
   @override
