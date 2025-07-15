@@ -15,99 +15,107 @@ class _BottomSheetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () async {
-        final handler = await AppPlayerHandler.instance;
-        final player = handler.player;
-        if (currentPlayingIndex == index) {
-          player.playOrPause();
-        } else {
-          await player.skipToQueueItem(index);
-        }
-      },
-      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            (index + 1).toString().padLeft(2, ' '),
+    return AsyncValueBuilder(
+      provider: appPlayerHandlerProvider,
+      builder: (context, player, _) {
+        return ListTile(
+          onTap: () {
+            if (currentPlayingIndex == index) {
+              player.playOrPause();
+            } else {
+              player.skipToQueueItem(index);
+            }
+          },
+          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                (index + 1).toString().padLeft(2, ' '),
+                style: TextStyle(
+                  fontWeight:
+                      currentPlayingIndex == index
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 17,
+                ),
+              ),
+              AsyncValueBuilder(
+                provider: appPlayerHandlerProvider,
+                builder: (context, player, _) {
+                  return AsyncStreamBuilder(
+                    provider: player.playingStream,
+                    loading: (ctx) => const SizedBox.shrink(),
+                    builder: (_, playing) {
+                      final isPlaying =
+                          currentPlayingIndex == index && playing == true;
+                      return AnimatedSize(
+                        duration: const Duration(milliseconds: 200),
+                        child: SizedBox(
+                          width: isPlaying ? 30 : 0,
+                          height: isPlaying ? 30 : 0,
+                          child:
+                              isPlaying
+                                  ? Image.asset(
+                                    'images/playing.gif',
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  )
+                                  : null,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              Container(
+                width: 40,
+                height: 40,
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                clipBehavior: Clip.antiAlias,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: ArtworkImage(id: songs[index]?.id),
+              ),
+            ],
+          ),
+          title: Text(
+            '${songs[index]?.title}',
             style: TextStyle(
+              color:
+                  currentPlayingIndex == index
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
               fontWeight:
                   currentPlayingIndex == index
                       ? FontWeight.bold
                       : FontWeight.normal,
-              fontStyle: FontStyle.italic,
-              fontSize: 17,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            '${songs[index]?.artist} - ${songs[index]?.album}',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color:
+                  currentPlayingIndex == index
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+              fontSize: 12,
             ),
           ),
-          AsyncStreamBuilder(
-            provider: playingStreamProvider,
-            loading: (ctx, _) => const SizedBox.shrink(),
-            builder: (_, playing, __) {
-              final isPlaying = currentPlayingIndex == index && playing == true;
-              return AnimatedSize(
-                duration: const Duration(milliseconds: 200),
-                child: SizedBox(
-                  width: isPlaying ? 30 : 0,
-                  height: isPlaying ? 30 : 0,
-                  child:
-                      isPlaying
-                          ? Image.asset(
-                            'images/playing.gif',
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                          : null,
-                ),
-              );
+          trailing: IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              player.removeQueueItemAt(index);
             },
           ),
-          Container(
-            width: 40,
-            height: 40,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-            ),
-            child: ArtworkImage(id: songs[index]?.id),
-          ),
-        ],
-      ),
-      title: Text(
-        '${songs[index]?.title}',
-        style: TextStyle(
-          color:
-              currentPlayingIndex == index
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
-          fontWeight:
-              currentPlayingIndex == index
-                  ? FontWeight.bold
-                  : FontWeight.normal,
-        ),
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        '${songs[index]?.artist} - ${songs[index]?.album}',
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color:
-              currentPlayingIndex == index
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          fontSize: 12,
-        ),
-      ),
-      trailing: IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () async {
-          final handler = await AppPlayerHandler.instance;
-          final player = handler.player;
-          await player.removeQueueItemAt(index);
-        },
-      ),
+        );
+      },
     );
   }
 

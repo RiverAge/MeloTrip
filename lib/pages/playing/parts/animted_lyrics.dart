@@ -1,21 +1,21 @@
 part of '../playing_page.dart';
 
-class _AnimtedLyrics extends StatefulWidget {
+class _AnimtedLyrics extends ConsumerStatefulWidget {
   const _AnimtedLyrics();
 
   @override
-  State<StatefulWidget> createState() => _AnimtedLyricsState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AnimtedLyricsState();
 }
 
-class _AnimtedLyricsState extends State<_AnimtedLyrics> {
+class _AnimtedLyricsState extends ConsumerState<_AnimtedLyrics> {
   List<Line> _lyric = [];
   int _currentIndex = -1;
   StreamSubscription<Duration>? _positionStream;
 
   @override
   void initState() {
-    _setPositionListner();
     super.initState();
+    _setPositionListner();
   }
 
   @override
@@ -24,11 +24,9 @@ class _AnimtedLyricsState extends State<_AnimtedLyrics> {
     super.dispose();
   }
 
-  _setPositionListner() async {
-    final handler = await AppPlayerHandler.instance;
-    final player = handler.player;
-
-    _positionStream = player.positionStream.listen((position) {
+  void _setPositionListner() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    _positionStream = player?.positionStream.listen((position) {
       int currentLineIdx = _lyric.indexWhere(
         (e) => (e.start ?? -1) > position.inMilliseconds,
       );

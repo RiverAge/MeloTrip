@@ -1,13 +1,13 @@
 part of '../playing_page.dart';
 
-class _RotateCover extends StatefulWidget {
+class _RotateCover extends ConsumerStatefulWidget {
   const _RotateCover();
 
   @override
-  State<StatefulWidget> createState() => _RotateCoverState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _RotateCoverState();
 }
 
-class _RotateCoverState extends State<_RotateCover>
+class _RotateCoverState extends ConsumerState<_RotateCover>
     with SingleTickerProviderStateMixin {
   StreamSubscription<bool>? _playingStream;
 
@@ -20,8 +20,8 @@ class _RotateCoverState extends State<_RotateCover>
 
   @override
   void initState() {
-    _setStream();
     super.initState();
+    _setStreamListner();
   }
 
   @override
@@ -31,10 +31,9 @@ class _RotateCoverState extends State<_RotateCover>
     super.dispose();
   }
 
-  _setStream() async {
-    final handler = await AppPlayerHandler.instance;
-    final player = handler.player;
-    _playingStream = player.playingStream.listen((playing) {
+  void _setStreamListner() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    _playingStream = player?.playingStream.listen((playing) {
       if (playing) {
         _controller.repeat();
       } else {

@@ -5,8 +5,8 @@ import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/playlist/add_playlist_page.dart';
+import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
-import 'package:melo_trip/svc/http.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -28,15 +28,16 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     super.dispose();
   }
 
-  _onAddToPlaylist(WidgetRef ref) async {
+  void _onAddToPlaylist(WidgetRef ref) async {
     final playlistId = _current?.id;
     final songId = widget.song?.id;
     if (playlistId == null || songId == null) return;
-    final res = await Http.get<Map<String, dynamic>>(
+    final api = await ref.read(apiProvider.future);
+    final res = await api.get<Map<String, dynamic>>(
       '/rest/updatePlaylist',
       queryParameters: {'playlistId': playlistId, 'songIdToAdd': songId},
     );
-    final data = res?.data;
+    final data = res.data;
     if (data == null) return;
     final subsonicRes = SubsonicResponse.fromJson(data);
     if (subsonicRes.subsonicResponse?.status != 'ok') return;
@@ -114,7 +115,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
                 value: _current?.id == item.id,
               );
             },
-            separatorBuilder: (_, __) => const Divider(),
+            separatorBuilder: (_, _) => const Divider(),
             itemCount: playlist.length,
           );
         },

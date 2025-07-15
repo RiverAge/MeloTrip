@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/playing/playing_page.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
-import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/guesture_hint.dart';
 import 'package:melo_trip/widget/no_data.dart';
@@ -34,7 +35,7 @@ class _MusicBarState extends State<MusicBar> {
     super.initState();
   }
 
-  _onOpenPlaylist(BuildContext context) async {
+  void _onOpenPlaylist(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -49,41 +50,10 @@ class _MusicBarState extends State<MusicBar> {
     );
   }
 
-  _onOpenPlaying(BuildContext context) {
-    // final renderBox = context.findRenderObject() as RenderBox?;
-    // final rect = renderBox != null
-    //     ? (renderBox.globalToLocal(Offset.zero) & renderBox.size)
-    //     : Rect.zero;
-    // print('retct $rect');
-    // final relativeRect =
-    //     RelativeRect.fromSize(rect, MediaQuery.of(context).size);
-    // final relativeRectTween =
-    //     RelativeRectTween(begin: relativeRect, end: RelativeRect.fill);
-    // final realtiveAnimation =
-    //     relativeRectTween.chain(CurveTween(curve: Curves.ease));
-    // final pageRouteBuilder = PageRouteBuilder(
-    //     pageBuilder: (_, __, ___) => const PlayingPage(),
-    //     transitionDuration: const Duration(seconds: 10),
-    //     transitionsBuilder: (_, animation, __, child) {
-    //       return Stack(
-    //         children: [
-    //           PositionedTransition(
-    //               rect: realtiveAnimation.animate(animation), child: child)
-    //         ],
-    //       );
-    //     });
-    // Navigator.of(context).push(pageRouteBuilder);
-
+  void _onOpenPlaying(BuildContext context) {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const PlayingPage()));
-
-    // showModalBottomSheet(
-    //     isScrollControlled: true,
-    //     shape: const RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.vertical(top: Radius.circular(0))),
-    //     context: context,
-    //     builder: (context2) => const PlayingPage());
   }
 
   @override
@@ -124,17 +94,22 @@ class _MusicBarState extends State<MusicBar> {
               ),
               subtitle: AsyncValueBuilder(
                 provider: lyricsProvider(current.id),
-                loading: (_, __) => const SizedBox.shrink(),
-                builder: (_, lyrics, __) {
-                  return AsyncStreamBuilder(
-                    loading: (p0, _) => const SizedBox.shrink(),
-                    provider: positionStreamProvider,
-                    builder: (_, position, ref) {
-                      return Text(
-                        ref.watch(lyricsOfLineProvider(lyrics, position)) ??
-                            AppLocalizations.of(context)!.noLyricsFound,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12),
+                loading: (_, _) => const SizedBox.shrink(),
+                builder: (_, lyrics, _) {
+                  return AsyncValueBuilder(
+                    provider: appPlayerHandlerProvider,
+                    builder: (context, player, _) {
+                      return AsyncStreamBuilder(
+                        loading: (_) => const SizedBox.shrink(),
+                        provider: player.positionStream,
+                        builder: (_, position) {
+                          return Text(
+                            ref.watch(lyricsOfLineProvider(lyrics, position)) ??
+                                AppLocalizations.of(context)!.noLyricsFound,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12),
+                          );
+                        },
                       );
                     },
                   );
@@ -145,27 +120,29 @@ class _MusicBarState extends State<MusicBar> {
                   return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      AsyncStreamBuilder(
-                        provider: playingStreamProvider,
-                        loading: (_, __) => const SizedBox.shrink(),
-                        builder: (context, data, ref) {
-                          return IconButton(
-                            style: IconButton.styleFrom(
-                              // minimumSize: Size.zero,
-                              // padding: const EdgeInsets.all(0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () async {
-                              final handler = await AppPlayerHandler.instance;
-                              final player = handler.player;
-                              player.playOrPause();
+                      AsyncValueBuilder(
+                        provider: appPlayerHandlerProvider,
+                        builder: (context, player, _) {
+                          return AsyncStreamBuilder(
+                            provider: player.playingStream,
+                            loading: (_) => const SizedBox.shrink(),
+                            builder: (context, data) {
+                              return IconButton(
+                                style: IconButton.styleFrom(
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                onPressed: () {
+                                  player.playOrPause();
+                                },
+                                icon: Icon(
+                                  data
+                                      ? Icons.pause_circle_outline
+                                      : Icons.play_circle_outlined,
+                                  size: 35,
+                                ),
+                              );
                             },
-                            icon: Icon(
-                              data
-                                  ? Icons.pause_circle_outline
-                                  : Icons.play_circle_outlined,
-                              size: 35,
-                            ),
                           );
                         },
                       ),
@@ -197,7 +174,7 @@ class _MusicBarState extends State<MusicBar> {
     );
   }
 
-  _durationBulder() {
+  Widget _durationBulder() {
     // 这里just_audio偶尔无法获取duration，这里使用后端返回的数据
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
@@ -207,30 +184,41 @@ class _MusicBarState extends State<MusicBar> {
         final current = playQueue.songs[playQueue.index];
         final serverDuration = Duration(seconds: current.duration ?? 0);
 
-        return AsyncStreamBuilder(
-          loading: (context, _) => const SizedBox.shrink(),
-          provider: durationStreamProvider,
-          emptyBuilder: (_, ref) => _positionBuilder(duration: serverDuration),
-          builder:
-              (_, duration, __) =>
-                  _positionBuilder(duration: duration ?? serverDuration),
+        return AsyncValueBuilder(
+          provider: appPlayerHandlerProvider,
+          builder: (context, player, _) {
+            return AsyncStreamBuilder(
+              loading: (context) => const SizedBox.shrink(),
+              provider: player.durationStream,
+              emptyBuilder:
+                  (_) => _positionBuilder(
+                    duration: serverDuration,
+                    player: player,
+                  ),
+              builder:
+                  (_, duration) => _positionBuilder(
+                    duration: duration ?? serverDuration,
+                    player: player,
+                  ),
+            );
+          },
         );
       },
     );
   }
 
-  _positionBuilder({Duration? duration}) {
+  Widget _positionBuilder({Duration? duration, required AppPlayer player}) {
     return AsyncStreamBuilder(
-      loading: (context, _) => const SizedBox.shrink(),
-      provider: positionStreamProvider,
-      emptyBuilder: (_, __) => _progressBuilder(duration: duration),
+      loading: (context) => const SizedBox.shrink(),
+      provider: player.positionStream,
+      emptyBuilder: (_) => _progressBuilder(duration: duration),
       builder:
-          (_, position, __) =>
+          (_, position) =>
               _progressBuilder(duration: duration, position: position),
     );
   }
 
-  _progressBuilder({Duration? duration, Duration? position}) {
+  Widget _progressBuilder({Duration? duration, Duration? position}) {
     final effectivePosition = position?.inSeconds ?? 0;
     final effectiveDuration = duration?.inSeconds ?? 0;
 
@@ -239,34 +227,37 @@ class _MusicBarState extends State<MusicBar> {
     );
   }
 
-  _volumeBuilder() {
-    return AsyncStreamBuilder(
-      loading: (context, _) => const SizedBox.shrink(),
-      provider: volumeStreamProvider,
-      builder: (context, data, ref) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(width: 10),
-            Icon(Icons.volume_up, size: 25),
-            SliderTheme(
-              data: SliderThemeData(
-                trackHeight: 2,
-                overlayShape: SliderComponentShape.noOverlay,
-                thumbShape: SliderComponentShape.noOverlay,
-              ),
-              child: Slider(
-                value: data,
-                min: 0.0,
-                max: 100.0,
-                onChanged: (value) async {
-                  final handler = await AppPlayerHandler.instance;
-                  final player = handler.player;
-                  await player.setVolume(value);
-                },
-              ),
-            ),
-          ],
+  Widget _volumeBuilder() {
+    return AsyncValueBuilder(
+      provider: appPlayerHandlerProvider,
+      builder: (context, player, _) {
+        return AsyncStreamBuilder(
+          loading: (_) => const SizedBox.shrink(),
+          provider: player.volumeStream,
+          builder: (context, data) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(width: 10),
+                Icon(Icons.volume_up, size: 25),
+                SliderTheme(
+                  data: SliderThemeData(
+                    trackHeight: 2,
+                    overlayShape: SliderComponentShape.noOverlay,
+                    thumbShape: SliderComponentShape.noOverlay,
+                  ),
+                  child: Slider(
+                    value: data,
+                    min: 0.0,
+                    max: 100.0,
+                    onChanged: (value) {
+                      player.setVolume(value);
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

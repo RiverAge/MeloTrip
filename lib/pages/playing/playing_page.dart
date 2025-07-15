@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/mixin/song_control/song_control.dart';
@@ -11,7 +13,6 @@ import 'package:melo_trip/pages/playlist/add_to_playlist_page.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
-import 'package:melo_trip/svc/app_player/player_handler.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -54,10 +55,10 @@ class PlayingPage extends StatelessWidget {
                   final isStarred =
                       data.subsonicResponse?.song?.starred != null;
                   return IconButton(
-                    onPressed: () async {
+                    onPressed: () {
                       ref
                           .read(songFavoriteProvider.notifier)
-                          .toggleFavorite(current?.id);
+                          .toggleFavorite(current);
                     },
                     icon: Icon(
                       isStarred ? Icons.favorite : Icons.favorite_outline,

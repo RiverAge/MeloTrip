@@ -23,7 +23,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     super.dispose();
   }
 
-  _deletePlaylist(String? playlistId, WidgetRef ref) async {
+  void _deletePlaylist(String? playlistId, WidgetRef ref) async {
     if (playlistId == null) return;
     final res = await ref
         .read(playlistsProvider.notifier)
@@ -33,27 +33,28 @@ class _PlaylistPageState extends State<PlaylistPage> {
     Navigator.of(context).pop();
   }
 
-  _onDelete(PlaylistEntity playlist, WidgetRef ref) {
-    if (playlist.id == null) return;
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.delete),
-          content: Text(
-            AppLocalizations.of(
-              context,
-            )!.playlistDeleteConfirmation(playlist.name ?? ''),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => _deletePlaylist(playlist.id, ref),
-              child: Text(AppLocalizations.of(context)!.confirm),
+  void _onDelete(PlaylistEntity playlist, WidgetRef ref) {
+    if (playlist.id != null) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.delete),
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.playlistDeleteConfirmation(playlist.name ?? ''),
             ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () => _deletePlaylist(playlist.id, ref),
+                child: Text(AppLocalizations.of(context)!.confirm),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -99,7 +100,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 ),
               );
             },
-            separatorBuilder: (_, __) => const Divider(),
+            separatorBuilder: (_, _) => const Divider(),
             itemCount: playlist.length,
           );
         },

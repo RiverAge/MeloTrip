@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/provider/artwork_url/artwork_url.dart';
+import 'package:melo_trip/const/index.dart';
+import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 
 class ArtworkImage extends ConsumerWidget {
@@ -25,10 +26,11 @@ class ArtworkImage extends ConsumerWidget {
     if (artworkId == null) {
       return const SizedBox.shrink();
     }
-    final AsyncValue<String> url = ref.watch(ArtworkUrlProvider(artworkId));
-    return switch (url) {
+
+    final auth = ref.watch(currentUserProvider);
+    return switch (auth) {
       AsyncData(:final value) => Image.network(
-        '$value&size=${size ?? 100}',
+        '$proxyCacheHost/rest/getCoverArt?id=$artworkId&u=${value?.username}&t=${value?.subsonicToken}&s=${value?.subsonicSalt}&f=json&v=1.8.0&c=MeloTrip&size=${size ?? 100}',
         width: width,
         height: height,
         fit: fit,

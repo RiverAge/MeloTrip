@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/svc/http.dart';
+import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'song_detail.g.dart';
@@ -12,12 +14,14 @@ Future<SubsonicResponse?> songDetail(Ref ref, String? songId) async {
     return null;
   }
 
-  final res = await Http.get<Map<String, dynamic>>(
+  final api = await ref.read(apiProvider.future);
+
+  final res = await api.get<Map<String, dynamic>>(
     '/rest/getSong',
     queryParameters: {'id': songId},
   );
 
-  final data = res?.data;
+  final data = res.data;
   if (data != null) {
     return SubsonicResponse.fromJson(data);
   }
@@ -31,24 +35,30 @@ class SongFavorite extends _$SongFavorite {
     return null;
   }
 
-  Future<SubsonicResponse?> toggleFavorite(String? songId) async {
-    if (songId == null) {
+  Future<SubsonicResponse?> toggleFavorite(SongEntity? song) async {
+    if (song == null || song.id == null) {
       return null;
     }
 
-    final res = await ref.watch(songDetailProvider(songId).future);
+    final res = await ref.read(songDetailProvider(song.id).future);
     final starred = res?.subsonicResponse?.song?.starred;
 
-    final ret = await Http.get<Map<String, dynamic>>(
+    final api = await ref.read(apiProvider.future);
+
+    if (starred == null && song.id != null) {
+      ref.read(smartSuggestionProvider.notifier).similarSongs(song);
+    }
+
+    final ret = await api.get<Map<String, dynamic>>(
       '/rest/${starred != null ? 'un' : ''}star',
-      queryParameters: {'id': songId},
+      queryParameters: {'id': song.id},
     );
 
-    final data = ret?.data;
+    final data = ret.data;
     if (data == null) return null;
     final subsonic = SubsonicResponse.fromJson(data);
     if (subsonic.subsonicResponse?.status == 'ok') {
-      ref.invalidate(songDetailProvider(songId));
+      ref.invalidate(songDetailProvider(song.id));
     }
     return subsonic;
   }
@@ -66,12 +76,13 @@ class SongRating extends _$SongRating {
       return null;
     }
 
-    final ret = await Http.get<Map<String, dynamic>>(
+    final api = await ref.read(apiProvider.future);
+    final ret = await api.get<Map<String, dynamic>>(
       '/rest/setRating',
       queryParameters: {'id': songId, 'rating': rating},
     );
 
-    final data = ret?.data;
+    final data = ret.data;
     if (data == null) return null;
     final subsonic = SubsonicResponse.fromJson(data);
     if (subsonic.subsonicResponse?.status == 'ok') {

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
+import 'package:melo_trip/provider/album/album_detail.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
-import 'package:melo_trip/svc/app_player/player_handler.dart';
+import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -43,7 +46,7 @@ class _FavoritePageState extends State<FavoritePage>
     super.dispose();
   }
 
-  _indexChangeListener() {
+  void _indexChangeListener() {
     if (_currentIndex != _controller.index) {
       setState(() {
         _currentIndex = _controller.index;
@@ -89,13 +92,17 @@ class _FavoritePageState extends State<FavoritePage>
                 _AlbumsBuilder(
                   albums: albums,
                   onToggleFavorite: (album) {
-                    ref.read(favoriteProvider.notifier).toggleAlbum(album);
+                    ref
+                        .read(albumFavoriteProvider.notifier)
+                        .toggleFavorite(album);
                   },
                 ),
                 _SongsBuilder(
                   songs: songs,
                   onToggleFavorite: (song) {
-                    ref.read(favoriteProvider.notifier).toggleSong(song);
+                    ref
+                        .read(songFavoriteProvider.notifier)
+                        .toggleFavorite(song);
                   },
                 ),
               ],

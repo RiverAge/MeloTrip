@@ -71,37 +71,31 @@ class AsyncStreamBuilder<T> extends StatelessWidget {
     this.emptyBuilder,
   });
 
-  final ProviderListenable<AsyncValue<Stream<T>?>> provider;
-  final Widget Function(BuildContext context, T data, WidgetRef ref) builder;
-  final Widget Function(BuildContext context, WidgetRef ref)? emptyBuilder;
-  final Widget Function(BuildContext context, WidgetRef ref)? loading;
+  final Stream<T> provider;
+  final Widget Function(BuildContext context, T data) builder;
+  final Widget Function(BuildContext context)? emptyBuilder;
+  final Widget Function(BuildContext context)? loading;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncValueBuilder(
-      provider: provider,
-      builder: (context, data, ref) {
-        return StreamBuilder(
-          stream: data,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return loading == null
-                  ? const FixedCenterCircular()
-                  : loading!(context, ref);
-            }
-            final stream = snapshot.data;
-            if (stream == null) {
-              final effectiveEmptyBuilder = emptyBuilder;
-              if (effectiveEmptyBuilder != null) {
-                return effectiveEmptyBuilder(context, ref);
-              }
-              return const NoData();
-            }
-            return builder(context, stream, ref);
-          },
-        );
+    return StreamBuilder(
+      stream: provider,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return loading == null
+              ? const FixedCenterCircular()
+              : loading!(context);
+        }
+        final stream = snapshot.data;
+        if (stream == null) {
+          final effectiveEmptyBuilder = emptyBuilder;
+          if (effectiveEmptyBuilder != null) {
+            return effectiveEmptyBuilder(context);
+          }
+          return const NoData();
+        }
+        return builder(context, stream);
       },
-      loading: loading,
     );
   }
 }

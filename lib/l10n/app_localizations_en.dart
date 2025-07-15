@@ -137,6 +137,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recommendedToday => 'Recommended Today';
 
   @override
+  String get guessYouLike => 'GuessYouLike';
+
+  @override
   String get searchHint => 'Search for songs, artists or albums...';
 
   @override

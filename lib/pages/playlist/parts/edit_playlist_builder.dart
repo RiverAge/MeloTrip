@@ -45,7 +45,7 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
     super.initState();
   }
 
-  _onNameChange() {
+  void _onNameChange() {
     setState(() {
       _enableSave = _nameController.text != '';
     });
@@ -124,7 +124,7 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
     );
   }
 
-  _buildLoginButton(WidgetRef ref) {
+  Widget _buildLoginButton(WidgetRef ref) {
     return ElevatedButton(
       onPressed: _enableSave ? () => _submitForm(ref) : null,
       child: Text(AppLocalizations.of(context)!.save),
