@@ -6,7 +6,7 @@ part of 'scan_status.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$scanStatusHash() => r'78e6e54b4afac193ebad337bd7d6182056bd576d';
+String _$scanStatusHash() => r'b16d39a11153a2f07ce7396a024279f1f0fa62f6';
 
 /// See also [scanStatus].
 @ProviderFor(scanStatus)

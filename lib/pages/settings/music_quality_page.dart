@@ -16,11 +16,11 @@ class MusicQualityPage extends StatelessWidget {
         elevation: 3,
       ),
       body: ListView.separated(
-        separatorBuilder: (_, __) => const Divider(),
+        separatorBuilder: (_, _) => const Divider(),
         itemCount: _list.length,
         itemBuilder: (contex, index) {
           return AsyncValueBuilder(
-            provider: userMaxBitRateProvider,
+            provider: userConfigProvider,
             builder: (context, data, ref) {
               return ListTile(
                 title: Text(
@@ -37,11 +37,14 @@ class MusicQualityPage extends StatelessWidget {
                     '',
                   ][index],
                 ),
-                trailing: data == _list[index] ? const Icon(Icons.check) : null,
-                onTap: () async {
-                  await ref
-                      .read(userMaxBitRateProvider.notifier)
-                      .setRate(_list[index]);
+                trailing:
+                    data.maxRate == _list[index]
+                        ? const Icon(Icons.check)
+                        : null,
+                onTap: () {
+                  ref
+                      .read(userConfigProvider.notifier)
+                      .setConfiguration(maxRate: ValueUpdater(_list[index]));
                 },
               );
             },

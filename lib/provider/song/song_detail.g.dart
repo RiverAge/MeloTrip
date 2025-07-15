@@ -6,7 +6,7 @@ part of 'song_detail.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$songDetailHash() => r'6692854a1a0ae32884d699756121f1ebeb57eacf';
+String _$songDetailHash() => r'c1b5862c8fe072b93f0b07f671557b63cdd38c3d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -147,7 +147,7 @@ class _SongDetailProviderElement
   String? get songId => (origin as SongDetailProvider).songId;
 }
 
-String _$songFavoriteHash() => r'cf2c773526ac6c9db08e35d741827de8af9b16e2';
+String _$songFavoriteHash() => r'cf5e8af3c48931ebdfb2b4808a7069403703bf09';
 
 /// See also [SongFavorite].
 @ProviderFor(SongFavorite)
@@ -164,7 +164,7 @@ final songFavoriteProvider =
     );
 
 typedef _$SongFavorite = AutoDisposeAsyncNotifier<SubsonicResponse?>;
-String _$songRatingHash() => r'1ba09eec80541e87e468b305596fd5bd27b91540';
+String _$songRatingHash() => r'70a8c77d55220ed6ffda289c14ffa460a7c6c4cd';
 
 /// See also [SongRating].
 @ProviderFor(SongRating)

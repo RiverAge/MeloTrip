@@ -49,10 +49,13 @@ Melo Trip.
 1. ~~张韶涵阿刁 音轨号null~~
 1. ~~手机底部没有保护区域~~
 1. ~~记忆播放列表的顺寻~~
-1. window上字体渲染问题，比如【复】只占了一半的空间【径】渲染成了繁体 为Text添加local之后有改善
-> [flutter开发windows软件字体显示粗细不一样，而且还有繁体解决办法](https://blog.csdn.net/weixin_44786530/article/details/135317823)
-
+1. ~~window上字体渲染问题，比如【复】只占了一半的空间【径】渲染成了繁体 为Text添加local之后有改善 ~~
+>  ~~[flutter开发windows软件字体显示粗细不一样，而且还有繁体解决办法](https://blog.csdn.net/weixin_44786530/article/details/135317823) ~~
+>  ~~并不是繁体后续发现是不同字体渲染出来的样子不一样 ~~
+1. 音乐播放是，其他视频app播放视频或者启动录像并没有停止
 ### 启动
 
 #### freezed 自动生成代码
 `dart run build_runner watch`
+### 生成翻译
+`flutter gen-l10n`

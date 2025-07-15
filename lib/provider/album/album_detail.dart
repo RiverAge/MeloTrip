@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/svc/http.dart';
+import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'album_detail.g.dart';
@@ -12,10 +14,13 @@ Future<SubsonicResponse?> albumDetail(Ref ref, String? albumId) async {
     return null;
   }
 
-  final res = await Http.get<Map<String, dynamic>>('/rest/getAlbum',
-      queryParameters: {'id': albumId});
+  final api = await ref.read(apiProvider.future);
+  final res = await api.get<Map<String, dynamic>>(
+    '/rest/getAlbum',
+    queryParameters: {'id': albumId},
+  );
 
-  final data = res?.data;
+  final data = res.data;
   if (data != null) {
     return SubsonicResponse.fromJson(data);
   }
@@ -29,23 +34,25 @@ class AlbumFavorite extends _$AlbumFavorite {
     return null;
   }
 
-  Future<SubsonicResponse?> toggleFavorite(String? albumId) async {
-    if (albumId == null) {
+  Future<SubsonicResponse?> toggleFavorite(AlbumEntity? album) async {
+    if (album == null || album.id == null) {
       return null;
     }
 
-    final res = await ref.watch(albumDetailProvider(albumId).future);
+    final res = await ref.read(albumDetailProvider(album.id).future);
+    final api = await ref.read(apiProvider.future);
+
     final starred = res?.subsonicResponse?.album?.starred;
+    final ret = await api.get<Map<String, dynamic>>(
+      '/rest/${starred != null ? 'un' : ''}star',
+      queryParameters: {'albumId': album.id},
+    );
 
-    final ret = await Http.get<Map<String, dynamic>>(
-        '/rest/${starred != null ? 'un' : ''}star',
-        queryParameters: {'albumId': albumId});
-
-    final data = ret?.data;
+    final data = ret.data;
     if (data == null) return null;
     final subsonic = SubsonicResponse.fromJson(data);
     if (subsonic.subsonicResponse?.status == 'ok') {
-      ref.invalidate(albumDetailProvider(albumId));
+      ref.invalidate(albumDetailProvider(album.id));
     }
     return subsonic;
   }
@@ -63,10 +70,13 @@ class AlbumRating extends _$AlbumRating {
       return null;
     }
 
-    final ret = await Http.get<Map<String, dynamic>>('/rest/setRating',
-        queryParameters: {'id': albumId, 'rating': rating});
+    final api = await ref.read(apiProvider.future);
+    final ret = await api.get<Map<String, dynamic>>(
+      '/rest/setRating',
+      queryParameters: {'id': albumId, 'rating': rating},
+    );
 
-    final data = ret?.data;
+    final data = ret.data;
     if (data == null) return null;
     final subsonic = SubsonicResponse.fromJson(data);
     if (subsonic.subsonicResponse?.status == 'ok') {

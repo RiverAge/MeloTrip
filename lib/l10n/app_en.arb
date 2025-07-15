@@ -194,6 +194,10 @@
       "description": "Title of recommended songs for today"
    },
 
+   "guessYouLike": "GuessYouLike",
+   "@guessYouLike": {
+      "description": "Title of smart suggestion"
+   },
 
    "searchHint": "Search for songs, artists or albums...",
    "@searchHint": {

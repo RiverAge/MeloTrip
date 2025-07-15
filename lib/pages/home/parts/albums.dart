@@ -36,7 +36,7 @@ class _Albums extends StatelessWidget {
     );
   }
 
-  _itemBuilder(BuildContext context, AlbumEntity? album) {
+  Widget _itemBuilder(BuildContext context, AlbumEntity? album) {
     return Row(
       children: [
         Stack(
@@ -65,13 +65,13 @@ class _Albums extends StatelessWidget {
     );
   }
 
-  _onTap(BuildContext context, AlbumEntity? album) {
+  void _onTap(BuildContext context, AlbumEntity? album) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => AlbumDetailPage(albumId: album?.id)),
     );
   }
 
-  _positioned(BuildContext context, AlbumEntity? album) {
+  Widget _positioned(BuildContext context, AlbumEntity? album) {
     final color = Theme.of(
       context,
     ).colorScheme.onSurfaceVariant.withValues(alpha: 1);

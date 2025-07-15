@@ -14,28 +14,34 @@ class LanguagePage extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.language),
       ),
       body: AsyncValueBuilder(
-        provider: appLocaleProvider,
-        nullableBuilder: (context, locale, ref) {
+        provider: userConfigProvider,
+        nullableBuilder: (context, config, ref) {
           return ListView(
             children: [
               ListTile(
                 onTap: () {
-                  ref.read(appLocaleProvider.notifier).setLocale(null);
+                  ref
+                      .read(userConfigProvider.notifier)
+                      .setConfiguration(locale: ValueUpdater(null));
                 },
                 title: Text(AppLocalizations.of(context)!.systemDefault),
-                trailing: locale == null ? const Icon(Icons.check) : null,
+                trailing:
+                    config?.locale == null ? const Icon(Icons.check) : null,
               ),
+
               Divider(),
               ListTile(
                 onTap: () {
                   ref
-                      .read(appLocaleProvider.notifier)
-                      .setLocale(Locale('en', 'US'));
+                      .read(userConfigProvider.notifier)
+                      .setConfiguration(
+                        locale: ValueUpdater(Locale('en', 'US')),
+                      );
                 },
                 title: Text(AppLocalizations.of(context)!.english),
                 subtitle: Text(AppLocalizations.of(context)!.us),
                 trailing:
-                    locale == Locale('en', 'US')
+                    config?.locale == Locale('en', 'US')
                         ? const Icon(Icons.check)
                         : null,
               ),
@@ -43,13 +49,15 @@ class LanguagePage extends StatelessWidget {
               ListTile(
                 onTap: () {
                   ref
-                      .read(appLocaleProvider.notifier)
-                      .setLocale(Locale('zh', 'CN'));
+                      .read(userConfigProvider.notifier)
+                      .setConfiguration(
+                        locale: ValueUpdater(Locale('zh', 'CN')),
+                      );
                 },
                 title: Text(AppLocalizations.of(context)!.simpleChinese),
                 subtitle: Text(AppLocalizations.of(context)!.cn),
                 trailing:
-                    locale == Locale('zh', 'CN')
+                    config?.locale == Locale('zh', 'CN')
                         ? const Icon(Icons.check)
                         : null,
               ),

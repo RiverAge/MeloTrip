@@ -21,7 +21,11 @@ class _SearchHistory extends StatelessWidget {
                   builder: (context, ref, child) {
                     return IconButton(
                       onPressed: () {
-                        ref.read(searchHistoryProvider.notifier).clearAll();
+                        ref
+                            .read(userConfigProvider.notifier)
+                            .setConfiguration(
+                              recentSearches: ValueUpdater(null),
+                            );
                       },
                       icon: const Icon(Icons.delete),
                     );
@@ -32,16 +36,17 @@ class _SearchHistory extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: AsyncValueBuilder(
-                provider: searchHistoryProvider,
+                provider: userConfigProvider,
                 empty: (context, ref) => const SizedBox.shrink(),
-                builder: (context, data, ref) {
+                builder: (context, config, ref) {
                   return Wrap(
                     spacing: 10.0,
                     runSpacing: 5.0,
                     alignment: WrapAlignment.start,
                     runAlignment: WrapAlignment.center,
                     children:
-                        data
+                        (config.recentSearches ?? '')
+                            .split(',')
                             .map(
                               (e) => InkWell(
                                 onTap: () {

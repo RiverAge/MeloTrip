@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/favorite/favorite_page.dart';
@@ -7,10 +8,10 @@ import 'package:melo_trip/pages/playlist/playlist_page.dart';
 import 'package:melo_trip/pages/settings/app_theme_page.dart';
 import 'package:melo_trip/pages/settings/language_page.dart';
 import 'package:melo_trip/pages/settings/music_quality_page.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/cached_data/cached_data.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
-import 'package:melo_trip/svc/app_player/player_handler.dart';
-import 'package:melo_trip/svc/user.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'parts/cache_file.dart';
@@ -111,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage>
   @override
   bool get wantKeepAlive => true;
 
-  _onLogout() {
+  void _onLogout() {
     showDialog(
       context: context,
       builder:
@@ -123,22 +124,29 @@ class _SettingsPageState extends State<SettingsPage>
                 child: Text(AppLocalizations.of(context)!.cancel),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              TextButton(
-                child: Text(AppLocalizations.of(context)!.confirm),
-                onPressed: () async {
-                  final navigator = Navigator.of(context);
-                  final playerHandler = await AppPlayerHandler.instance;
-                  final player = playerHandler.player;
-                  await player.pause();
-                  final user = await User.instance;
-                  user.clear();
-                  navigator.pushAndRemoveUntil(
-                    PageRouteBuilder(
-                      pageBuilder: (context, _, __) => const InitialPage(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                    (route) => false,
+              AsyncValueBuilder(
+                provider: appPlayerHandlerProvider,
+                builder: (context, player, _) {
+                  return Consumer(
+                    builder: (context, ref, _) {
+                      return TextButton(
+                        child: Text(AppLocalizations.of(context)!.confirm),
+                        onPressed: () async {
+                          final navigator = Navigator.of(context);
+                          await player.pause();
+                          await ref.read(logoutProvider.future);
+                          navigator.pushAndRemoveUntil(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, _, _) => const InitialPage(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                            (route) => false,
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),

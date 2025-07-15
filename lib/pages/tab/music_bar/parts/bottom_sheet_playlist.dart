@@ -1,24 +1,25 @@
 part of 'music_bar.dart';
 
-class _BottomSheetPlaylist extends StatefulWidget {
+class _BottomSheetPlaylist extends ConsumerStatefulWidget {
   const _BottomSheetPlaylist();
 
   @override
-  State<StatefulWidget> createState() => _BottomSheetPlaylistState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BottomSheetPlaylistState();
 }
 
-class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
+class _BottomSheetPlaylistState extends ConsumerState<_BottomSheetPlaylist> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _setPosition();
+    _setPositionListner();
   }
 
-  _setPosition() async {
-    final hanlder = await AppPlayerHandler.instance;
-    final player = hanlder.player;
+  void _setPositionListner() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    if (player == null) return;
     final index = player.playQueue.index;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -60,7 +61,7 @@ class _BottomSheetPlaylistState extends State<_BottomSheetPlaylist> {
         ),
         Expanded(
           child: PlayQueueBuilder(
-            builder: (_, playQueue, __) {
+            builder: (_, playQueue, _) {
               if (playQueue.songs.isEmpty) {
                 return NoData();
               }

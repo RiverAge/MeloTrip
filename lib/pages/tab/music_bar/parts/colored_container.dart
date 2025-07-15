@@ -1,11 +1,12 @@
 part of 'music_bar.dart';
 
-class _ColoredContainer extends StatefulWidget {
+class _ColoredContainer extends ConsumerStatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ColoredContainerState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ColoredContainerState();
 }
 
-class _ColoredContainerState extends State<_ColoredContainer>
+class _ColoredContainerState extends ConsumerState<_ColoredContainer>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animationController = AnimationController(
     duration: const Duration(seconds: 7),
@@ -16,14 +17,14 @@ class _ColoredContainerState extends State<_ColoredContainer>
 
   @override
   void initState() {
-    _setStream();
     super.initState();
+
+    _setStreamListner();
   }
 
-  _setStream() async {
-    final handler = await AppPlayerHandler.instance;
-    final player = handler.player;
-    _playingStream = player.playingStream.listen((playing) {
+  void _setStreamListner() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    _playingStream = player?.playingStream.listen((playing) {
       if (playing) {
         _animationController.repeat(reverse: true);
       } else {

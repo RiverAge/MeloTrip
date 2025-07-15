@@ -34,7 +34,7 @@ class _TablePageState extends State<TabPage>
     super.dispose();
   }
 
-  _indexChangeListener() {
+  void _indexChangeListener() {
     if (_currentIndex != _controller.index) {
       setState(() {
         _currentIndex = _controller.index;
@@ -42,7 +42,7 @@ class _TablePageState extends State<TabPage>
     }
   }
 
-  _setTab(int index) {
+  void _setTab(int index) {
     _controller.animateTo(index);
   }
 

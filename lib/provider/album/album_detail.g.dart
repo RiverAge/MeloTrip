@@ -6,7 +6,7 @@ part of 'album_detail.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumDetailHash() => r'8ef70ddc73f6e706afd07f7bdd3586373145e65e';
+String _$albumDetailHash() => r'271e6bdebbf7054d4e35a3985048777e570a7933';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -147,7 +147,7 @@ class _AlbumDetailProviderElement
   String? get albumId => (origin as AlbumDetailProvider).albumId;
 }
 
-String _$albumFavoriteHash() => r'ba7db6b11db08aef3b7b8bbc1ab7ce7591ee784f';
+String _$albumFavoriteHash() => r'1689d9a38bf3640d81f5ce9a8ce8ea51a37b166b';
 
 /// See also [AlbumFavorite].
 @ProviderFor(AlbumFavorite)
@@ -164,7 +164,7 @@ final albumFavoriteProvider =
     );
 
 typedef _$AlbumFavorite = AutoDisposeAsyncNotifier<SubsonicResponse?>;
-String _$albumRatingHash() => r'ebea7eccbadfcff6a580525945ade91ed64247a2';
+String _$albumRatingHash() => r'b4c0b56a734ac43cd5c5694606093249765737d4';
 
 /// See also [AlbumRating].
 @ProviderFor(AlbumRating)

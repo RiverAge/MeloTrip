@@ -15,44 +15,50 @@ class AppThemePage extends StatelessWidget {
         elevation: 3.0,
       ),
       body: AsyncValueBuilder(
-        provider: appThemeModeProvider,
-        builder: (context, data, ref) {
+        provider: userConfigProvider,
+        builder: (context, config, ref) {
           return ListView(
             children: [
               ListTile(
                 onTap: () => _onTap(ref, ThemeMode.system),
                 leading: Icon(
-                  data == ThemeMode.system
+                  config.theme == ThemeMode.system
                       ? Icons.auto_mode
                       : Icons.auto_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.systemDefault),
                 trailing:
-                    data == ThemeMode.system ? const Icon(Icons.check) : null,
+                    config.theme == ThemeMode.system
+                        ? const Icon(Icons.check)
+                        : null,
               ),
               Divider(),
               ListTile(
                 onTap: () => _onTap(ref, ThemeMode.light),
                 leading: Icon(
-                  data == ThemeMode.light
+                  config.theme == ThemeMode.light
                       ? Icons.light_mode
                       : Icons.light_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.themeLight),
                 trailing:
-                    data == ThemeMode.light ? const Icon(Icons.check) : null,
+                    config.theme == ThemeMode.light
+                        ? const Icon(Icons.check)
+                        : null,
               ),
               Divider(),
               ListTile(
                 onTap: () => _onTap(ref, ThemeMode.dark),
                 leading: Icon(
-                  data == ThemeMode.dark
+                  config.theme == ThemeMode.dark
                       ? Icons.dark_mode
                       : Icons.dark_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.themeDark),
                 trailing:
-                    data == ThemeMode.dark ? const Icon(Icons.check) : null,
+                    config.theme == ThemeMode.dark
+                        ? const Icon(Icons.check)
+                        : null,
               ),
             ],
           );
@@ -61,7 +67,9 @@ class AppThemePage extends StatelessWidget {
     );
   }
 
-  _onTap(WidgetRef ref, ThemeMode mode) {
-    ref.read(appThemeModeProvider.notifier).setMode(mode);
+  void _onTap(WidgetRef ref, ThemeMode mode) {
+    ref
+        .read(userConfigProvider.notifier)
+        .setConfiguration(theme: ValueUpdater(mode));
   }
 }

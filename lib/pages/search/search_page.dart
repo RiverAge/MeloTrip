@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/mixin/song_control/song_control.dart';
@@ -8,9 +9,9 @@ import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
 import 'package:melo_trip/pages/artist/artist_detail_page.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/search/search.dart';
-import 'package:melo_trip/provider/search/search_history.dart';
-import 'package:melo_trip/svc/app_player/player_handler.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/no_data.dart';

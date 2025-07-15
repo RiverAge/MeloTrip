@@ -1,18 +1,28 @@
 part of '../playing_page.dart';
 
-class _TimerAxis extends StatelessWidget {
-  const _TimerAxis();
+class _TimerAxis extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _TimerAxisState();
+}
 
-  _progresssBuilder({
+class _TimerAxisState extends State<_TimerAxis> {
+  bool _isSliding = false;
+  double _slidigValue = 0;
+
+  Widget _progresssBuilder({
     Duration? duration,
     Duration? bufferedPosition,
     Duration? position,
+    required AppPlayer player,
   }) {
     final sCurrent = position?.inSeconds ?? 0;
     final sTotal = duration?.inSeconds ?? 0;
     final sBuffer = bufferedPosition?.inSeconds ?? 0;
     final sBufferPercent = sBuffer / sTotal;
     final double value = sTotal == 0 ? 0 : sCurrent / sTotal;
+    // 拖动滑动条时播放器会出现电流音，
+    // 只有停止拖动滚动条才能调用seek
+    final effectiveValue = _isSliding ? _slidigValue : value;
     return Column(
       children: [
         SliderTheme(
@@ -21,9 +31,24 @@ class _TimerAxis extends StatelessWidget {
             thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
           ),
           child: Slider(
-            onChanged: (value) async {
-              final handler = await AppPlayerHandler.instance;
-              handler.player.seek(Duration(seconds: (sTotal * value).toInt()));
+            onChangeStart: (val) {
+              setState(() {
+                _isSliding = true;
+                _slidigValue = val;
+              });
+            },
+            onChangeEnd: (val) async {
+              await player.seek(Duration(seconds: (sTotal * val).toInt()));
+              setState(() {
+                _isSliding = false;
+                _slidigValue = val;
+              });
+            },
+            onChanged: (val) {
+              setState(() {
+                _slidigValue = val;
+              });
+              // player.seek(Duration(seconds: (sTotal * value).toInt()));
             },
             secondaryTrackValue:
                 sTotal == 0
@@ -32,23 +57,9 @@ class _TimerAxis extends StatelessWidget {
                     ? 1
                     : sBufferPercent,
             // 20240829会有超过1的情况
-            value: value > 1 ? 1 : value,
+            value: effectiveValue > 1 ? 1 : effectiveValue,
           ),
         ),
-        // Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        //     child: SizedBox(
-        //       // height: 12,
-        //       width: double.infinity,
-        //       child: Slider(
-        //         onChanged: (value) {},
-        //         value: sTotal == 0 ? 0 : sBuffer / sTotal,
-        //       ),
-
-        //       // child: BufferedProgress(
-        //       //     percent: sTotal == 0 ? 0 : sCurrent / sTotal,
-        //       //     buffer: sTotal == 0 ? 0 : sBuffer / sTotal)
-        //     )),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
           child: Row(
@@ -63,26 +74,32 @@ class _TimerAxis extends StatelessWidget {
     );
   }
 
-  _positionBuilder({Duration? duration, Duration? bufferedPosition}) {
+  Widget _positionBuilder({
+    Duration? duration,
+    Duration? bufferedPosition,
+    required AppPlayer player,
+  }) {
     return AsyncStreamBuilder(
-      provider: positionStreamProvider,
+      provider: player.positionStream,
       builder:
-          (_, position, __) => _progresssBuilder(
+          (_, position) => _progresssBuilder(
             duration: duration,
             bufferedPosition: bufferedPosition,
             position: position,
+            player: player,
           ),
     );
   }
 
-  _bufferBuilder({Duration? duration}) {
+  Widget _bufferBuilder({Duration? duration, required AppPlayer player}) {
     return AsyncStreamBuilder(
-      provider: bufferedPositionStreamProvider,
-      emptyBuilder: (_, __) => _positionBuilder(duration: duration),
+      provider: player.bufferedPositionStream,
+      emptyBuilder: (_) => _positionBuilder(duration: duration, player: player),
       builder:
-          (_, bufferedPosition, __) => _positionBuilder(
+          (_, bufferedPosition) => _positionBuilder(
             duration: duration,
             bufferedPosition: bufferedPosition,
+            player: player,
           ),
     );
   }
@@ -98,12 +115,21 @@ class _TimerAxis extends StatelessWidget {
 
         final current = playQueue.songs[playQueue.index];
         final serverDuration = Duration(seconds: current.duration ?? 0);
-        return AsyncStreamBuilder(
-          provider: durationStreamProvider,
-          emptyBuilder: (_, __) => _bufferBuilder(duration: serverDuration),
-          builder:
-              (_, duration, __) =>
-                  _bufferBuilder(duration: duration ?? serverDuration),
+        return AsyncValueBuilder(
+          provider: appPlayerHandlerProvider,
+          builder: (context, player, _) {
+            return AsyncStreamBuilder(
+              provider: player.durationStream,
+              emptyBuilder:
+                  (_) =>
+                      _bufferBuilder(duration: serverDuration, player: player),
+              builder:
+                  (_, duration) => _bufferBuilder(
+                    duration: duration ?? serverDuration,
+                    player: player,
+                  ),
+            );
+          },
         );
       },
     );

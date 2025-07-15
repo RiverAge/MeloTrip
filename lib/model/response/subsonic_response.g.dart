@@ -41,6 +41,12 @@ _SubsonicResponseClass _$SubsonicResponseClassFromJson(
           : SearchResult3Entity.fromJson(
             json['searchResult3'] as Map<String, dynamic>,
           ),
+  similarSongs2:
+      json['similarSongs2'] == null
+          ? null
+          : SimilarSongs2Entity.fromJson(
+            json['similarSongs2'] as Map<String, dynamic>,
+          ),
   randomSongs:
       json['randomSongs'] == null
           ? null
@@ -100,6 +106,7 @@ Map<String, dynamic> _$SubsonicResponseClassToJson(
   'album': instance.album,
   'albumList': instance.albumList,
   'searchResult3': instance.searchResult3,
+  'similarSongs2': instance.similarSongs2,
   'randomSongs': instance.randomSongs,
   'song': instance.song,
   'playlist': instance.playlist,

@@ -351,6 +351,12 @@ abstract class AppLocalizations {
   /// **'Recommended Today'**
   String get recommendedToday;
 
+  /// Title of smart suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'GuessYouLike'**
+  String get guessYouLike;
+
   /// Search hint text for search bar
   ///
   /// In en, this message translates to:

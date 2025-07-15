@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -118,6 +117,136 @@ $ReleaseDateCopyWith<$Res>? get releaseDate {
 }
 }
 
+
+/// Adds pattern-matching-related methods to [AlbumEntity].
+extension AlbumEntityPatterns on AlbumEntity {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AlbumEntity value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AlbumEntity() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AlbumEntity value)  $default,){
+final _that = this;
+switch (_that) {
+case _AlbumEntity():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AlbumEntity value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AlbumEntity() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? name,  String? artist,  String? artistId,  String? coverArt,  int? songCount,  int? duration,  DateTime? created,  DateTime? starred,  int? year,  String? genre,  int? userRating,  List<GenreElement>? genres,  String? musicBrainzId,  bool? isCompilation,  String? sortName,  List<DiscTitle>? discTitles,  ReleaseDate? originalReleaseDate,  ReleaseDate? releaseDate,  List<SongEntity>? song)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AlbumEntity() when $default != null:
+return $default(_that.id,_that.name,_that.artist,_that.artistId,_that.coverArt,_that.songCount,_that.duration,_that.created,_that.starred,_that.year,_that.genre,_that.userRating,_that.genres,_that.musicBrainzId,_that.isCompilation,_that.sortName,_that.discTitles,_that.originalReleaseDate,_that.releaseDate,_that.song);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? name,  String? artist,  String? artistId,  String? coverArt,  int? songCount,  int? duration,  DateTime? created,  DateTime? starred,  int? year,  String? genre,  int? userRating,  List<GenreElement>? genres,  String? musicBrainzId,  bool? isCompilation,  String? sortName,  List<DiscTitle>? discTitles,  ReleaseDate? originalReleaseDate,  ReleaseDate? releaseDate,  List<SongEntity>? song)  $default,) {final _that = this;
+switch (_that) {
+case _AlbumEntity():
+return $default(_that.id,_that.name,_that.artist,_that.artistId,_that.coverArt,_that.songCount,_that.duration,_that.created,_that.starred,_that.year,_that.genre,_that.userRating,_that.genres,_that.musicBrainzId,_that.isCompilation,_that.sortName,_that.discTitles,_that.originalReleaseDate,_that.releaseDate,_that.song);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? name,  String? artist,  String? artistId,  String? coverArt,  int? songCount,  int? duration,  DateTime? created,  DateTime? starred,  int? year,  String? genre,  int? userRating,  List<GenreElement>? genres,  String? musicBrainzId,  bool? isCompilation,  String? sortName,  List<DiscTitle>? discTitles,  ReleaseDate? originalReleaseDate,  ReleaseDate? releaseDate,  List<SongEntity>? song)?  $default,) {final _that = this;
+switch (_that) {
+case _AlbumEntity() when $default != null:
+return $default(_that.id,_that.name,_that.artist,_that.artistId,_that.coverArt,_that.songCount,_that.duration,_that.created,_that.starred,_that.year,_that.genre,_that.userRating,_that.genres,_that.musicBrainzId,_that.isCompilation,_that.sortName,_that.discTitles,_that.originalReleaseDate,_that.releaseDate,_that.song);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()
@@ -339,6 +468,136 @@ as String?,
 }
 
 
+/// Adds pattern-matching-related methods to [DiscTitle].
+extension DiscTitlePatterns on DiscTitle {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DiscTitle value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DiscTitle() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DiscTitle value)  $default,){
+final _that = this;
+switch (_that) {
+case _DiscTitle():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DiscTitle value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DiscTitle() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? disc,  String? title)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DiscTitle() when $default != null:
+return $default(_that.disc,_that.title);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? disc,  String? title)  $default,) {final _that = this;
+switch (_that) {
+case _DiscTitle():
+return $default(_that.disc,_that.title);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? disc,  String? title)?  $default,) {final _that = this;
+switch (_that) {
+case _DiscTitle() when $default != null:
+return $default(_that.disc,_that.title);case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 @JsonSerializable()
 
@@ -443,6 +702,136 @@ $ReleaseDateCopyWith(ReleaseDate _, $Res Function(ReleaseDate) __);
 }
 
 
+/// Adds pattern-matching-related methods to [ReleaseDate].
+extension ReleaseDatePatterns on ReleaseDate {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReleaseDate value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReleaseDate() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReleaseDate value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseDate():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReleaseDate value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReleaseDate() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function()?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReleaseDate() when $default != null:
+return $default();case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function()  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseDate():
+return $default();case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function()?  $default,) {final _that = this;
+switch (_that) {
+case _ReleaseDate() when $default != null:
+return $default();case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 @JsonSerializable()
 
@@ -541,6 +930,136 @@ as List<AlbumEntity>?,
 
 }
 
+
+/// Adds pattern-matching-related methods to [AlbumListEntity].
+extension AlbumListEntityPatterns on AlbumListEntity {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AlbumListEntity value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AlbumListEntity() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AlbumListEntity value)  $default,){
+final _that = this;
+switch (_that) {
+case _AlbumListEntity():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AlbumListEntity value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AlbumListEntity() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<AlbumEntity>? album)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AlbumListEntity() when $default != null:
+return $default(_that.album);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<AlbumEntity>? album)  $default,) {final _that = this;
+switch (_that) {
+case _AlbumListEntity():
+return $default(_that.album);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<AlbumEntity>? album)?  $default,) {final _that = this;
+switch (_that) {
+case _AlbumListEntity() when $default != null:
+return $default(_that.album);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

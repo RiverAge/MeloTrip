@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/svc/http.dart';
+import 'package:melo_trip/provider/api/api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'lyrics.g.dart';
@@ -8,11 +8,12 @@ part 'lyrics.g.dart';
 @riverpod
 Future<SubsonicResponse?> lyrics(Ref ref, String? songId) async {
   if (songId == null) return null;
-  final res = await Http.get<Map<String, dynamic>>(
+  final api = await ref.read(apiProvider.future);
+  final res = await api.get<Map<String, dynamic>>(
     '/rest/getLyricsBySongId',
     queryParameters: {'id': songId},
   );
-  final data = res?.data;
+  final data = res.data;
   if (data == null) return null;
   return SubsonicResponse.fromJson(data);
 }

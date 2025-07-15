@@ -9,6 +9,7 @@ import 'package:melo_trip/model/response/random_song/random_song.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/scan_status/scan_status.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
+import 'package:melo_trip/model/response/similar_songs/similar_songs2.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
 
@@ -36,6 +37,7 @@ abstract class SubsonicResponseClass with _$SubsonicResponseClass {
     AlbumEntity? album,
     AlbumListEntity? albumList,
     SearchResult3Entity? searchResult3,
+    SimilarSongs2Entity? similarSongs2,
     RandomSongsEntity? randomSongs,
     SongEntity? song,
     PlaylistEntity? playlist,

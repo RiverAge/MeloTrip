@@ -20,7 +20,7 @@ class _AddPlaylistPageState extends State<AddPlaylistPage> {
     super.initState();
   }
 
-  _onTextChange() {
+  void _onTextChange() {
     setState(() {});
   }
 
@@ -31,7 +31,7 @@ class _AddPlaylistPageState extends State<AddPlaylistPage> {
     super.dispose();
   }
 
-  _onAdd(WidgetRef ref) async {
+  void _onAdd(WidgetRef ref) {
     setState(() {
       _loading = true;
     });
