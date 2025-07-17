@@ -39,13 +39,15 @@ class _SearchHistory extends StatelessWidget {
                 provider: userConfigProvider,
                 empty: (context, ref) => const SizedBox.shrink(),
                 builder: (context, config, ref) {
+                  final effectiveSearches = config.recentSearches;
+                  if (effectiveSearches == null) return SizedBox.shrink();
                   return Wrap(
                     spacing: 10.0,
                     runSpacing: 5.0,
                     alignment: WrapAlignment.start,
                     runAlignment: WrapAlignment.center,
                     children:
-                        (config.recentSearches ?? '')
+                        effectiveSearches
                             .split(',')
                             .map(
                               (e) => InkWell(
