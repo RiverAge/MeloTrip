@@ -66,7 +66,7 @@ extension PlayerInit on AppPlayer {
         switch (event.type) {
           case AudioInterruptionType.duck:
             assert(!kIsWeb && Platform.isAndroid);
-            setVolume(min(1.0, volume * 2));
+            setVolume(min(100.0, volume * 2));
             _playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
