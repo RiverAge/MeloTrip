@@ -46,15 +46,12 @@ extension PlayerInit on AppPlayer {
         switch (event.type) {
           case AudioInterruptionType.duck:
             assert(!kIsWeb && Platform.isAndroid);
-            if (session.androidAudioAttributes!.usage ==
-                AndroidAudioUsage.game) {
-              setVolume(_player.state.volume / 2);
-            }
+            _animateVolume(volume / 2);
             _playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
           case AudioInterruptionType.unknown:
-            if (_player.state.playing) {
+            if (playing) {
               pause();
               // Although pause is async and sets _playInterrupted = false,
               // this is done in the sync portion.
@@ -66,7 +63,7 @@ extension PlayerInit on AppPlayer {
         switch (event.type) {
           case AudioInterruptionType.duck:
             assert(!kIsWeb && Platform.isAndroid);
-            setVolume(min(100.0, volume * 2));
+            _animateVolume(min(100.0, volume * 2));
             _playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
@@ -77,6 +74,37 @@ extension PlayerInit on AppPlayer {
             _playInterrupted = false;
             break;
         }
+      }
+    });
+  }
+
+  /// Animates the player volume to a [target] value.
+  void _animateVolume(double target) {
+    // 如果有正在进行的动画，先取消掉
+    _volumeAnimationTimer?.cancel();
+
+    final double startVolume = volume; // 获取当前音量
+    const Duration animationDuration = Duration(milliseconds: 300); // 动画总时长
+    const int steps = 20; // 动画步数，越多越平滑
+    final double stepValue = (target - startVolume) / steps; // 每一步的音量变化量
+    final Duration stepDuration = animationDuration ~/ steps; // 每一步的间隔时间
+
+    // 如果目标音量和当前音量几乎没差别，就不用动画了
+    if ((target - startVolume).abs() < 0.01) {
+      setVolume(target);
+      return;
+    }
+
+    int currentStep = 0;
+    _volumeAnimationTimer = Timer.periodic(stepDuration, (timer) {
+      currentStep++;
+      if (currentStep >= steps) {
+        // 动画结束，确保音量精确到目标值并取消定时器
+        setVolume(target);
+        timer.cancel();
+      } else {
+        // 在动画过程中，逐步改变音量
+        setVolume(startVolume + stepValue * currentStep);
       }
     });
   }

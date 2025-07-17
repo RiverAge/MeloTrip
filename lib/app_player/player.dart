@@ -48,6 +48,7 @@ class AppPlayer extends BaseAudioHandler {
   }
 
   bool _playInterrupted = false;
+  Timer? _volumeAnimationTimer;
 
   @override
   Future<void> play() async {
