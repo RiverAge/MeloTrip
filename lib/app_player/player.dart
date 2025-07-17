@@ -28,6 +28,9 @@ class AppPlayer extends BaseAudioHandler {
     PlayQueue(songs: [], index: 0),
   );
 
+  StreamSubscription<void>? _becomingNoisyEventSubscription;
+  StreamSubscription<AudioInterruptionEvent>? _interruptionEventSubscription;
+
   AppPlayer._interal() {
     _init();
   }
@@ -92,6 +95,9 @@ class AppPlayer extends BaseAudioHandler {
     _playlistModeSubject.close();
     _volumeSubject.close();
     _playQueueSubject.close();
+
+    _becomingNoisyEventSubscription?.cancel();
+    _interruptionEventSubscription?.cancel();
 
     _player.dispose();
   }
