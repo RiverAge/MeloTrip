@@ -34,22 +34,28 @@ extension PlayerInit on AppPlayer {
     final session = await AudioSession.instance;
     // 配置音频会话。这里我们声明这是一个音乐播放器。
     await session.configure(const AudioSessionConfiguration.music());
-
-    session.interruptionEventStream.listen((event) {
+    _becomingNoisyEventSubscription = session.becomingNoisyEventStream.listen((
+      _,
+    ) {
+      pause();
+    });
+    _interruptionEventSubscription = session.interruptionEventStream.listen((
+      event,
+    ) {
       if (event.begin) {
         switch (event.type) {
           case AudioInterruptionType.duck:
             assert(!kIsWeb && Platform.isAndroid);
             if (session.androidAudioAttributes!.usage ==
                 AndroidAudioUsage.game) {
-              _player.setVolume(_player.state.volume / 2);
+              setVolume(_player.state.volume / 2);
             }
             _playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
           case AudioInterruptionType.unknown:
             if (_player.state.playing) {
-              _player.pause();
+              pause();
               // Although pause is async and sets _playInterrupted = false,
               // this is done in the sync portion.
               _playInterrupted = true;
@@ -60,11 +66,11 @@ extension PlayerInit on AppPlayer {
         switch (event.type) {
           case AudioInterruptionType.duck:
             assert(!kIsWeb && Platform.isAndroid);
-            _player.setVolume(_player.state.volume * 2);
+            setVolume(_player.state.volume * 2);
             _playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
-            if (_playInterrupted) _player.play();
+            if (_playInterrupted) play();
             _playInterrupted = false;
             break;
           case AudioInterruptionType.unknown:
