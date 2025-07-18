@@ -62,7 +62,7 @@ class PlayingPage extends StatelessWidget {
                     },
                     icon: Icon(
                       isStarred ? Icons.favorite : Icons.favorite_outline,
-                      color: isStarred ? Colors.red : null,
+                      color: isStarred ? Theme.of(context).colorScheme.primary : null,
                     ),
                   );
                 },
