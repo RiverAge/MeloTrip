@@ -55,7 +55,9 @@ Melo Trip.
 1. 音乐播放是，其他视频app播放视频或者启动录像并没有停止
 ### 启动
 
-#### freezed 自动生成代码
+#### freezed riverpod 自动生成代码
 `dart run build_runner watch`
 ### 生成翻译
 `flutter gen-l10n`
+### 启动闪屏(初次可能需要删除App才能生效)
+`dart run flutter_native_splash:create`

@@ -5,6 +5,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
@@ -21,7 +22,8 @@ import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   MediaKit.ensureInitialized();
   // 这是关键的初始化步骤
   if (Platform.isWindows || Platform.isLinux) {

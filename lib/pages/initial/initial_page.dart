@@ -1,6 +1,7 @@
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
@@ -75,7 +76,9 @@ class _InitState extends ConsumerState<InitialPage> {
         ),
         (route) => false,
       );
+      FlutterNativeSplash.remove();
     } else {
+      FlutterNativeSplash.remove();
       navigator.pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, _, _) => const LoginPage(),
