@@ -58,6 +58,8 @@ dependencies:
   sqflite: ^2.4.2
   sqflite_common_ffi: ^2.3.6
   audio_session: ^0.2.2
+  dev: ^1.0.0
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,21 @@ dev_dependencies:
   freezed: ^3.0.6
   json_serializable: ^6.9.3
   flutter_launcher_icons: ^0.14.3
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  color: "#db1d5d" 
+  background_image: 'images/splash/background.png'
+  image: 'images/splash/logo.png'
+  branding: 'images/splash/brand.png'
+
+  android_12:
+    image: 'images/splash/logo.png'
+    branding: 'images/splash/brand.png'
+
 
 flutter_launcher_icons:
   android: "ic_launcher"
@@ -112,6 +129,9 @@ flutter:
   assets:
     - images/navidrome.png
     - images/playing.gif
+    # - images/splash/background.png
+    # - images/splash/logo.png
+    # - images/splash/brand.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
