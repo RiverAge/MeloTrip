@@ -174,6 +174,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Future<void> _updateMediaItem(AppPlayer player) async {
     final playQueue = player.playQueue;
     final noTitle = AppLocalizations.of(context)?.noTitle;
+    final api = await ref.read(apiProvider.future);
     if (playQueue.index >= playQueue.songs.length) {
       const item = MediaItem(
         id: '-1',
@@ -184,6 +185,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         playable: false,
       );
       player.addMediaItem(item);
+      api.get('/rest/savePlayQueue');
       return;
     }
 
@@ -205,7 +207,6 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     player.addMediaItem(item);
     final ids = playQueue.songs.map((e) => 'id=${e.id}').join('&');
-    final api = await ref.read(apiProvider.future);
     api.get('/rest/savePlayQueue?$ids&current=${item.id}');
   }
 

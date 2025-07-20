@@ -69,9 +69,6 @@ class _BottomSheetPlayQueueState extends ConsumerState<_BottomSheetPlayQueue> {
                       final messager = ScaffoldMessenger.of(context);
                       final localizations = AppLocalizations.of(context);
                       await player.setPlaylist(songs: []);
-                      final api = await ref.read(apiProvider.future);
-                      await api.get('/rest/savePlayQueue');
-                      // 不能在main中监听，因为player初始化的时候会有playlist的stream，他会返回空
                       navigator.pop();
                       messager.showSnackBar(
                         SnackBar(

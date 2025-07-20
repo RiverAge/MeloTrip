@@ -25,9 +25,10 @@ class AppPlayer extends BaseAudioHandler {
   final _playingSubject = BehaviorSubject<bool>.seeded(false);
   final _playlistModeSubject = BehaviorSubject<PlaylistMode>();
   final _volumeSubject = BehaviorSubject<double>.seeded(100.0);
-  final _playQueueSubject = BehaviorSubject<PlayQueue>.seeded(
-    PlayQueue(songs: [], index: 0),
-  );
+  final _playQueueSubject = BehaviorSubject<PlayQueue>();
+  // .seeded(
+  // PlayQueue(songs: [], index: 0),
+  // );
 
   StreamSubscription<void>? _becomingNoisyEventSubscription;
   StreamSubscription<AudioInterruptionEvent>? _interruptionEventSubscription;
