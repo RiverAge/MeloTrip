@@ -261,9 +261,18 @@ class _MyAppState extends ConsumerState<MyApp> {
           (context, config, ref) => MaterialApp(
             scaffoldMessengerKey: _scaffoldMessengerKey,
             title: 'MeloTrip',
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFDB1D5D)),
+            ),
             themeMode: config?.theme,
             locale: config?.locale,
-            darkTheme: ThemeData.dark(),
+            darkTheme: ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.fromSeed(
+                brightness: Brightness.dark,
+                seedColor: Color(0xFFDB1D5D),
+              ),
+            ),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: InitialPage(),
