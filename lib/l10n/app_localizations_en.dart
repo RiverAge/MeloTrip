@@ -206,6 +206,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeFromPlayQueue => 'Remove Queue';
 
   @override
+  String get confirmClearPlayQueue => 'Confirm Clear Queue';
+
+  @override
   String get playlist => 'Playlist';
 
   @override

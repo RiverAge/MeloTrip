@@ -489,6 +489,12 @@ abstract class AppLocalizations {
   /// **'Remove Queue'**
   String get removeFromPlayQueue;
 
+  /// confirmclear user play queue
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Clear Queue'**
+  String get confirmClearPlayQueue;
+
   /// Playlist for app
   ///
   /// In en, this message translates to:

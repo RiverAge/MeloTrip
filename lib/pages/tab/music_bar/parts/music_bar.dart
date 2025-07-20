@@ -15,7 +15,7 @@ import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
-part 'bottom_sheet_playlist.dart';
+part 'bottom_sheet_play_queue.dart';
 part 'bottom_sheet_actions_shuffle.dart';
 part 'bottom_sheet_item.dart';
 part 'bottom_sheet_title.dart';
@@ -35,7 +35,7 @@ class _MusicBarState extends State<MusicBar> {
     super.initState();
   }
 
-  void _onOpenPlaylist(BuildContext context) {
+  void _onOpenPlayQueue(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -45,7 +45,7 @@ class _MusicBarState extends State<MusicBar> {
       builder:
           (context) => const FractionallySizedBox(
             heightFactor: 0.6,
-            child: _BottomSheetPlaylist(),
+            child: _BottomSheetPlayQueue(),
           ),
     );
   }
@@ -152,7 +152,7 @@ class _MusicBarState extends State<MusicBar> {
                           // padding: const EdgeInsets.all(0),
                           // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        onPressed: () => _onOpenPlaylist(context),
+                        onPressed: () => _onOpenPlayQueue(context),
                         icon: const Icon(Icons.playlist_play_sharp, size: 35),
                       ),
                       if (dimens.maxWidth >= 600) _volumeBuilder(),
