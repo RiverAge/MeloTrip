@@ -11,6 +11,7 @@ import 'package:melo_trip/model/response/scan_status/scan_status.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
 import 'package:melo_trip/model/response/similar_songs/similar_songs2.dart';
 import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/model/response/songs_by_genre/songs_by_gener.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
 
 part 'subsonic_response.freezed.dart';
@@ -47,6 +48,7 @@ abstract class SubsonicResponseClass with _$SubsonicResponseClass {
     ScanStatusEntity? scanStatus,
     StarredEntity? starred,
     ArtistEntity? artist,
+    SongsByGenreEntity? songsByGenre,
     ErrorEntity? error,
   }) = _SubsonicResponseClass;
 

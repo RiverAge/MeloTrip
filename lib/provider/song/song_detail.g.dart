@@ -147,7 +147,7 @@ class _SongDetailProviderElement
   String? get songId => (origin as SongDetailProvider).songId;
 }
 
-String _$songFavoriteHash() => r'cf5e8af3c48931ebdfb2b4808a7069403703bf09';
+String _$songFavoriteHash() => r'70568fbfa92dde551a8b805de36e9e1f3c37db4a';
 
 /// See also [SongFavorite].
 @ProviderFor(SongFavorite)
