@@ -206,6 +206,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get removeFromPlayQueue => '移出播放队列';
 
   @override
+  String get confirmClearPlayQueue => '清空播放队列？';
+
+  @override
   String get playlist => '歌单';
 
   @override
@@ -491,6 +494,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get removeFromPlayQueue => '移出播放队列';
+
+  @override
+  String get confirmClearPlayQueue => '清空播放队列？';
 
   @override
   String get playlist => '歌单';

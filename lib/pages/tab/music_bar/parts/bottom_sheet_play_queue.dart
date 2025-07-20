@@ -1,14 +1,14 @@
 part of 'music_bar.dart';
 
-class _BottomSheetPlaylist extends ConsumerStatefulWidget {
-  const _BottomSheetPlaylist();
+class _BottomSheetPlayQueue extends ConsumerStatefulWidget {
+  const _BottomSheetPlayQueue();
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _BottomSheetPlaylistState();
+      _BottomSheetPlayQueueState();
 }
 
-class _BottomSheetPlaylistState extends ConsumerState<_BottomSheetPlaylist> {
+class _BottomSheetPlayQueueState extends ConsumerState<_BottomSheetPlayQueue> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -56,6 +56,37 @@ class _BottomSheetPlaylistState extends ConsumerState<_BottomSheetPlaylist> {
             children: [
               Expanded(child: _BottomSheetTitle()),
               _BottomSheetActionsMode(),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text(
+                          AppLocalizations.of(context)!.confirmClearPlayQueue,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              final navigator = Navigator.of(context);
+                              final player = await ref.read(
+                                appPlayerHandlerProvider.future,
+                              );
+                              await player?.setPlaylist(songs: []);
+                              navigator.pop();
+                            },
+                            child: Text(AppLocalizations.of(context)!.confirm),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  // ScaffoldMessenger.of(
+                  //   context,
+                  // ).showSnackBar(SnackBar(content: Text('122')));
+                },
+                icon: Icon(Icons.clear_all_outlined),
+              ),
             ],
           ),
         ),

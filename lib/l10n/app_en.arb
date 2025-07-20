@@ -293,6 +293,10 @@
   "@removeFromPlayQueue": {
      "description": "Remove from user play queue "
   },
+  "confirmClearPlayQueue": "Confirm Clear Queue",
+  "@confirmClearPlayQueue": {
+     "description": "confirmclear user play queue "
+  },
 
 
 
