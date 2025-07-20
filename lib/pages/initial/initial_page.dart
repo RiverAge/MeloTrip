@@ -76,9 +76,9 @@ class _InitState extends ConsumerState<InitialPage> {
         ),
         (route) => false,
       );
-      FlutterNativeSplash.remove();
+      // FlutterNativeSplash.remove();
     } else {
-      FlutterNativeSplash.remove();
+      // FlutterNativeSplash.remove();
       navigator.pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, _, _) => const LoginPage(),
