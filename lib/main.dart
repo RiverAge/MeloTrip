@@ -184,8 +184,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         playable: false,
       );
       player.addMediaItem(item);
-      // print('empty play queu ${playQueue.index} ${playQueue.songs.length}');
-      // Http.get('/rest/savePlayQueue?id=');
       return;
     }
 

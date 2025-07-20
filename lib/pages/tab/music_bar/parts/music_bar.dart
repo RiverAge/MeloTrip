@@ -7,6 +7,7 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/playing/playing_page.dart';
+import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';

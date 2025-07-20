@@ -15,11 +15,23 @@
   "@cancel": {
      "description": "Text for cancel button"
   },
+
+  "revoke": "Revoke",
+  "@revoke": {
+     "description": "Text for revoke"
+  },
+
   
   "delete": "Delete",
   "@delete": {
-    "description": "Text for delete "
+    "description": "Text for delete"
   },
+  "deleted": "Deleted",
+  "@deleted": {
+    "description": "Text for deleted"
+  },
+
+
   "save": "Save",
   "@save": {
     "description": "Text for save button"
@@ -287,15 +299,15 @@
 
   "addToPlayQueue": "Add Queue",
   "@addToPlayQueue": {
-     "description": "Add to user play queue "
+     "description": "Add to user play queue"
   },
   "removeFromPlayQueue": "Remove Queue",
   "@removeFromPlayQueue": {
-     "description": "Remove from user play queue "
+     "description": "Remove from user play queue"
   },
-  "confirmClearPlayQueue": "Confirm Clear Queue",
-  "@confirmClearPlayQueue": {
-     "description": "confirmclear user play queue "
+  "playQueueCleared": "Play Queue Cleared",
+  "@playQueueCleared": {
+     "description": "Play Queue Cleared hint"
   },
 
 
