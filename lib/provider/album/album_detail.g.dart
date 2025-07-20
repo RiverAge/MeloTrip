@@ -147,7 +147,7 @@ class _AlbumDetailProviderElement
   String? get albumId => (origin as AlbumDetailProvider).albumId;
 }
 
-String _$albumFavoriteHash() => r'1689d9a38bf3640d81f5ce9a8ce8ea51a37b166b';
+String _$albumFavoriteHash() => r'1e34f0843dfb477310a62b2693a5b95ff6483b0a';
 
 /// See also [AlbumFavorite].
 @ProviderFor(AlbumFavorite)

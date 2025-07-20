@@ -99,19 +99,86 @@ class SmartSuggestion extends _$SmartSuggestion {
 
   Future<void> similarSongs(SongEntity song) async {
     final songId = song.id;
+    final albumId = song.albumId;
+    final genre = song.genre;
+    final artist = song.artist;
+
     final auth = await ref.read(currentUserProvider.future);
     final userId = auth?.id;
     if (songId == null || userId == null) return;
     final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/getSimilarSongs2',
-      queryParameters: {'id': songId, 'count': 10},
-    );
-    final data = res.data;
-    if (data == null) return;
-    final similarSongs =
-        SubsonicResponse.fromJson(data).subsonicResponse?.similarSongs2?.song;
-    if (similarSongs == null || similarSongs.isEmpty) {
+
+    // 2. Fetch from 3 sources in parallel
+    final futures = [
+      // Source 1: Similar songs (5)
+      api.get<Map<String, dynamic>>(
+        '/rest/getSimilarSongs2',
+        queryParameters: {'id': songId, 'count': 5},
+      ),
+      // Source 2: Same album songs (2)
+      if (albumId != null)
+        api.get<Map<String, dynamic>>(
+          '/rest/getAlbum',
+          queryParameters: {'id': albumId},
+        ),
+      // Source 3: Same genre, different artist (3)
+      if (genre != null)
+        api.get<Map<String, dynamic>>(
+          '/rest/getSongsByGenre',
+          queryParameters: {'genre': genre, 'count': 20},
+        ),
+    ];
+
+    final results = await Future.wait(futures);
+
+    final allSongs = <SongEntity>{};
+
+    // Process results
+    final similarSongsResData = results[0].data;
+    if (similarSongsResData != null) {
+      allSongs.addAll(
+        SubsonicResponse.fromJson(
+              similarSongsResData,
+            ).subsonicResponse?.similarSongs2?.song ??
+            [],
+      );
+    }
+
+    if (results.length >= 2) {
+      final albumSongsResData = results[1].data;
+      if (albumSongsResData != null) {
+        final items =
+            SubsonicResponse.fromJson(albumSongsResData)
+                .subsonicResponse
+                ?.album
+                ?.song
+                ?.where((s) => s.id != songId)
+                .toList() ??
+            [];
+        items.shuffle();
+        allSongs.addAll(items.take(2));
+      }
+    }
+
+    if (results.length >= 3) {
+      final genreSongsResData = results[2].data;
+      if (genreSongsResData != null) {
+        final items =
+            SubsonicResponse.fromJson(genreSongsResData)
+                .subsonicResponse
+                ?.songsByGenre
+                ?.song
+                ?.where((s) => s.artist != artist)
+                .toList() ??
+            [];
+
+        items.shuffle();
+        allSongs.addAll(items.take(3));
+      }
+    }
+
+    final finalSongs = allSongs.toList()..shuffle();
+    if (finalSongs.isEmpty) {
       return;
     }
 
@@ -119,7 +186,7 @@ class SmartSuggestion extends _$SmartSuggestion {
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final batch = db.batch();
-    for (final song in similarSongs) {
+    for (final song in finalSongs) {
       batch.insert('smart_suggestion', {
         'song_id': song.id,
         'meta': jsonEncode(song.toJson()),

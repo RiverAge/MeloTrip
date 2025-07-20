@@ -6,7 +6,7 @@ part of 'smart_suggestion.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$smartSuggestionHash() => r'3813f6805f05c5899a93a72540d68ff8d6ec569f';
+String _$smartSuggestionHash() => r'2a528a2cf91a2fecde96074aedf0f568e8c80600';
 
 /// See also [SmartSuggestion].
 @ProviderFor(SmartSuggestion)
