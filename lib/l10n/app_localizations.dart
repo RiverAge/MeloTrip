@@ -117,11 +117,23 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// Text for revoke
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get revoke;
+
   /// Text for delete
   ///
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// Text for deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get deleted;
 
   /// Text for save button
   ///
@@ -489,11 +501,11 @@ abstract class AppLocalizations {
   /// **'Remove Queue'**
   String get removeFromPlayQueue;
 
-  /// confirmclear user play queue
+  /// Play Queue Cleared hint
   ///
   /// In en, this message translates to:
-  /// **'Confirm Clear Queue'**
-  String get confirmClearPlayQueue;
+  /// **'Play Queue Cleared'**
+  String get playQueueCleared;
 
   /// Playlist for app
   ///

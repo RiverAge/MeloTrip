@@ -56,36 +56,42 @@ class _BottomSheetPlayQueueState extends ConsumerState<_BottomSheetPlayQueue> {
             children: [
               Expanded(child: _BottomSheetTitle()),
               _BottomSheetActionsMode(),
-              IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(
-                          AppLocalizations.of(context)!.confirmClearPlayQueue,
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              final navigator = Navigator.of(context);
-                              final player = await ref.read(
-                                appPlayerHandlerProvider.future,
+              AsyncValueBuilder(
+                provider: appPlayerHandlerProvider,
+                builder: (context, player, ref) {
+                  final playQueue = player.playQueue;
+                  if (playQueue.songs.isEmpty) {
+                    return SizedBox.shrink();
+                  }
+                  return IconButton(
+                    onPressed: () async {
+                      final navigator = Navigator.of(context);
+                      final messager = ScaffoldMessenger.of(context);
+                      final localizations = AppLocalizations.of(context);
+                      await player.setPlaylist(songs: []);
+                      final api = await ref.read(apiProvider.future);
+                      await api.get('/rest/savePlayQueue');
+                      // 不能在main中监听，因为player初始化的时候会有playlist的stream，他会返回空
+                      navigator.pop();
+                      messager.showSnackBar(
+                        SnackBar(
+                          duration: Duration(seconds: 6),
+                          content: Text(localizations!.deleted),
+                          action: SnackBarAction(
+                            label: localizations.revoke,
+                            onPressed: () {
+                              player.setPlaylist(
+                                songs: playQueue.songs,
+                                initialId: playQueue.songs[playQueue.index].id,
                               );
-                              await player?.setPlaylist(songs: []);
-                              navigator.pop();
                             },
-                            child: Text(AppLocalizations.of(context)!.confirm),
                           ),
-                        ],
+                        ),
                       );
                     },
+                    icon: Icon(Icons.clear_all_outlined),
                   );
-                  // ScaffoldMessenger.of(
-                  //   context,
-                  // ).showSnackBar(SnackBar(content: Text('122')));
                 },
-                icon: Icon(Icons.clear_all_outlined),
               ),
             ],
           ),

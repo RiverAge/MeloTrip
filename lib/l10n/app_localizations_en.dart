@@ -18,7 +18,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get revoke => 'Revoke';
+
+  @override
   String get delete => 'Delete';
+
+  @override
+  String get deleted => 'Deleted';
 
   @override
   String get save => 'Save';
@@ -206,7 +212,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeFromPlayQueue => 'Remove Queue';
 
   @override
-  String get confirmClearPlayQueue => 'Confirm Clear Queue';
+  String get playQueueCleared => 'Play Queue Cleared';
 
   @override
   String get playlist => 'Playlist';

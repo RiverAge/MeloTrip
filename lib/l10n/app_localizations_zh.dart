@@ -18,7 +18,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cancel => '取消';
 
   @override
+  String get revoke => '撤销';
+
+  @override
   String get delete => '删除';
+
+  @override
+  String get deleted => '已删除';
 
   @override
   String get save => '保存';
@@ -206,7 +212,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get removeFromPlayQueue => '移出播放队列';
 
   @override
-  String get confirmClearPlayQueue => '清空播放队列？';
+  String get playQueueCleared => '播放队列已清空';
 
   @override
   String get playlist => '歌单';
@@ -308,7 +314,13 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get cancel => '取消';
 
   @override
+  String get revoke => '撤销';
+
+  @override
   String get delete => '删除';
+
+  @override
+  String get deleted => '已删除';
 
   @override
   String get save => '保存';
@@ -496,7 +508,7 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get removeFromPlayQueue => '移出播放队列';
 
   @override
-  String get confirmClearPlayQueue => '清空播放队列？';
+  String get playQueueCleared => '播放队列已清空';
 
   @override
   String get playlist => '歌单';
