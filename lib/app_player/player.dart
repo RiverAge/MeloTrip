@@ -67,7 +67,12 @@ class AppPlayer extends BaseAudioHandler {
   @override
   Future<void> skipToNext() async => _player.next();
   @override
-  Future<void> seek(Duration position) => _player.seek(position);
+  Future<void> seek(Duration position) async {
+    await _player.seek(position);
+    // 这里seek之后发现获取state下的duration还是之前的
+    _updateCurrentMediaItemButton(position: position);
+  }
+
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
     _player.setShuffle(shuffleMode != AudioServiceShuffleMode.none);

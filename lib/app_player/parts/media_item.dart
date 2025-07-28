@@ -1,9 +1,9 @@
 part of '../player.dart';
 
 extension PlayerMediaItem on AppPlayer {
-  Future<void> _updateCurrentMediaItemButton() async {
+  void _updateCurrentMediaItemButton({Duration? position}) {
     // final starred = await _isCurrentStarred();
-    playbackState.add(
+    return playbackState.add(
       playbackState.value.copyWith(
         controls: [
           MediaControl.skipToPrevious,
@@ -24,7 +24,7 @@ extension PlayerMediaItem on AppPlayer {
                 ? AudioProcessingState.completed
                 : AudioProcessingState.ready,
         playing: playing,
-        updatePosition: position,
+        updatePosition: position ?? _player.state.position,
         bufferedPosition: buffer,
         speed: rate,
       ),
