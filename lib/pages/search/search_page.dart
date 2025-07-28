@@ -96,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
                           TabBar(
                             tabs: [
                               Tab(text: AppLocalizations.of(context)!.song),
-                              Tab(text: AppLocalizations.of(context)!.song),
+                              Tab(text: AppLocalizations.of(context)!.album),
                               Tab(text: AppLocalizations.of(context)!.artist),
                             ],
                           ),

@@ -33,8 +33,18 @@ Future<SubsonicResponse?> search(Ref ref, String query) async {
   final data = res.data;
   if (data != null) {
     final config = await ref.read(userConfigProvider.future);
-    final recentSearches = (config?.recentSearches ?? '').split(',');
-    recentSearches.add(query);
+    final effectiveSearches = config?.recentSearches;
+    final recentSearches =
+        effectiveSearches != null && effectiveSearches != ''
+            ? effectiveSearches.split(',')
+            : [];
+    final queryIndex = recentSearches.indexOf(query);
+    if (queryIndex == -1) {
+      recentSearches.insert(0, query);
+    } else {
+      recentSearches.remove(query);
+      recentSearches.insert(0, query);
+    }
     ref
         .read(userConfigProvider.notifier)
         .setConfiguration(
