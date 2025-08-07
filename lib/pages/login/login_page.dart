@@ -23,9 +23,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void initState() {
     super.initState();
 
-    _hostController.text = '';
-    _unameController.text = '';
-    _pwdController.text = '';
+    _hostController.text = 'https://music.587626.xyz';
+    _unameController.text = 'admin';
+    _pwdController.text = 'admin';
   }
 
   @override
