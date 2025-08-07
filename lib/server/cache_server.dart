@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
@@ -78,6 +79,9 @@ void runHttpServer(Map<String, dynamic> args) async {
     return;
   }
 
+  final String metaPath = p.join(dirPath, '.meta');
+  Directory(metaPath).createSync();
+
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
     cacheServerPort,
@@ -111,17 +115,38 @@ void runHttpServer(Map<String, dynamic> args) async {
     }
 
     if (endByte < cacheSize && cacheSize > 0 && startByte < cacheSize) {
+      final metaFile = File(p.join(metaPath, digest));
+      if (metaFile.existsSync()) {
+        final metaJson = await metaFile.readAsString();
+        final metadata = jsonDecode(metaJson) as Map<String, dynamic>;
+        // 3. 将元数据应用到当前的响应头中
+        if (metadata['contentType'] != null) {
+          request.response.headers.contentType = ContentType.parse(
+            metadata['contentType'],
+          );
+        }
+        if (metadata['lastModified'] != null) {
+          // HTTP头的key是大小写不敏感的，但通常用 'Last-Modified'
+          request.response.headers.set(
+            'Last-Modified',
+            metadata['lastModified'],
+          );
+        }
+      } else {
+        request.response.headers.contentType = ContentType.binary;
+      }
+
       final stream = file.openRead(startByte, endByte + 1);
       request.response
         ..statusCode =
             rangeHeader == null ? HttpStatus.ok : HttpStatus.partialContent
-        ..headers.contentType = ContentType.binary
         ..headers.add(
           'Content-Range',
           'bytes${rangeHeader == null ? '' : ' $startByte-$endByte/$cacheSize'}',
         )
         ..headers.contentLength = endByte - startByte + 1;
       await stream.pipe(request.response);
+      log('缓存命中 ${request.uri.toString()}');
       return;
     }
 
@@ -151,35 +176,42 @@ void runHttpServer(Map<String, dynamic> args) async {
       }
     });
     request.response.statusCode = proxyResponse.statusCode;
+
+    final List<int> chunks = [];
+    await for (var data in proxyResponse) {
+      request.response.add(data);
+      chunks.addAll(data);
+    }
+    await request.response.close();
+    int streamPointer = _getResponseStartBytes(request.response);
+
     final lock = locks.putIfAbsent(digest, () => Lock());
     await lock.synchronized(() async {
       RandomAccessFile? raf;
-      int filePointer = 0;
       try {
         final contentLength = _getContentLength(request.response);
         if (contentLength != 0 && request.response.statusCode < 300) {
           raf = await file.open(mode: FileMode.append);
-          filePointer = file.existsSync() ? file.lengthSync() : 0;
         }
-      } catch (e) {
-        raf?.close();
+        await raf?.setPosition(streamPointer);
+        await raf?.writeFrom(chunks);
+        log('写入缓存data ${request.uri.toString()}');
+      } finally {
+        await raf?.close();
       }
-      int streamPointer = _getResponseStartBytes(request.response);
-
-      await for (var data in proxyResponse) {
-        if (streamPointer >= filePointer) {
-          await raf?.setPosition(streamPointer);
-          await raf?.writeFrom(data);
-        }
-        streamPointer += data.length;
-        request.response.add(data);
-        length += data.length;
-      }
-      await raf?.close();
     });
     if (locks[digest]?.locked == false) {
       locks.remove(digest);
     }
-    await request.response.close();
+
+    // 1. 准备要缓存的元数据
+    final metadata = {
+      'contentType': proxyResponse.headers.contentType?.toString(),
+      // 你还可以存储其他有用的头信息，比如 ETag 或 Last-Modified
+      'lastModified': proxyResponse.headers.value('Last-Modified'),
+    };
+    final metaFile = File(p.join(metaPath, digest));
+    await metaFile.writeAsString(jsonEncode(metadata));
+    log('写入缓存meta ${request.uri.toString()}');
   });
 }
