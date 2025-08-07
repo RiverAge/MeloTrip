@@ -126,9 +126,11 @@ void runHttpServer(Map<String, dynamic> args) async {
     }
 
     final httpClient = HttpClient();
+    httpClient.autoUncompress = false;
     final HttpClientRequest proxyRequest = await httpClient.getUrl(
       Uri.parse('$host${request.uri}'),
     );
+    proxyRequest.followRedirects = false;
 
     request.headers.forEach((key, value) {
       proxyRequest.headers.add(key, value);
