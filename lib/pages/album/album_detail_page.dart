@@ -53,6 +53,11 @@ class AlbumDetailPage extends StatelessWidget {
                       .updateRating(album.id, rating);
                 },
               ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: (DividerTheme.of(context).space ?? 16) / 2,
+                ),
+              ),
               SliverList.separated(
                 separatorBuilder: (context, index) => const Divider(),
                 itemCount: album.song?.length ?? 0,
