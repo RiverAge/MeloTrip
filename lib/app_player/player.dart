@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' hide log;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
