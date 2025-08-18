@@ -5,6 +5,7 @@ import 'dart:math' hide log;
 
 import 'package:crypto/crypto.dart';
 import 'package:melo_trip/const/index.dart';
+import 'package:melo_trip/model/cache_server/cache_manifest.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:path/path.dart' as p;
 
