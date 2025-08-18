@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:math' hide log;
+// import 'dart:math' hide log;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -51,6 +49,8 @@ class AppPlayer extends BaseAudioHandler {
 
   bool _playInterrupted = false;
   Timer? _volumeAnimationTimer;
+  double? _volumeBeforeDucking;
+  Timer? _duckingTimeout;
 
   @override
   Future<void> play() async {
