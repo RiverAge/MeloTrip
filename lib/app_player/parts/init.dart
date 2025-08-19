@@ -34,9 +34,7 @@ extension PlayerInit on AppPlayer {
     _player.stream.log.listen((data) {
       log('stream log -> $data');
     });
-    _player.stream.error.listen((data) {
-      log('stream error -> $data');
-    });
+    _player.stream.error.listen(_errorSubject.add);
 
     final session = await AudioSession.instance;
     // 配置音频会话。这里我们声明这是一个音乐播放器。

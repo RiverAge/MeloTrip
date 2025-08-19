@@ -25,6 +25,7 @@ class AppPlayer extends BaseAudioHandler {
   final _playlistModeSubject = BehaviorSubject<PlaylistMode>();
   final _volumeSubject = BehaviorSubject<double>.seeded(100.0);
   final _playQueueSubject = BehaviorSubject<PlayQueue>();
+  final _errorSubject = BehaviorSubject<String>();
   // .seeded(
   // PlayQueue(songs: [], index: 0),
   // );
@@ -104,6 +105,7 @@ class AppPlayer extends BaseAudioHandler {
     _playlistModeSubject.close();
     _volumeSubject.close();
     _playQueueSubject.close();
+    _errorSubject.close();
 
     _becomingNoisyEventSubscription?.cancel();
     _interruptionEventSubscription?.cancel();

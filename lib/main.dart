@@ -68,6 +68,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     _setPlayQueueListener();
     _setPlaylistModeListener();
     _setPositionListener();
+
+    _setPlayerErrorListener();
   }
 
   void _setApiInterceptor() async {
@@ -148,6 +150,11 @@ class _MyAppState extends ConsumerState<MyApp> {
   void _setPositionListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
     player?.positionStream.listen((pos) => _updateScrolling(player, pos));
+  }
+
+  void _setPlayerErrorListener() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    player?.errorStream.listen((err) => _onErrorScanfoldMessage(errorMsg: err));
   }
 
   @override
