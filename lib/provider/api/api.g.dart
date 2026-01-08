@@ -13,8 +13,9 @@ String _$apiHash() => r'5b8f7526ca77adcb3f428da30ffd515b224ece50';
 final apiProvider = AsyncNotifierProvider<Api, Dio>.internal(
   Api.new,
   name: r'apiProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$apiHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$apiHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

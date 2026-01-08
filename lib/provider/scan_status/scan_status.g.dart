@@ -14,10 +14,9 @@ final scanStatusProvider =
     AutoDisposeFutureProvider<SubsonicResponse?>.internal(
       scanStatus,
       name: r'scanStatusProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$scanStatusHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$scanStatusHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

@@ -15,19 +15,16 @@ _PlaylistEntity _$PlaylistEntityFromJson(Map<String, dynamic> json) =>
       duration: (json['duration'] as num?)?.toInt(),
       public: json['public'] as bool?,
       owner: json['owner'] as String?,
-      created:
-          json['created'] == null
-              ? null
-              : DateTime.parse(json['created'] as String),
-      changed:
-          json['changed'] == null
-              ? null
-              : DateTime.parse(json['changed'] as String),
+      created: json['created'] == null
+          ? null
+          : DateTime.parse(json['created'] as String),
+      changed: json['changed'] == null
+          ? null
+          : DateTime.parse(json['changed'] as String),
       coverArt: json['coverArt'] as String?,
-      entry:
-          (json['entry'] as List<dynamic>?)
-              ?.map((e) => SongEntity.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      entry: (json['entry'] as List<dynamic>?)
+          ?.map((e) => SongEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PlaylistEntityToJson(_PlaylistEntity instance) =>
@@ -47,10 +44,9 @@ Map<String, dynamic> _$PlaylistEntityToJson(_PlaylistEntity instance) =>
 
 _PlaylistsEntity _$PlaylistsEntityFromJson(Map<String, dynamic> json) =>
     _PlaylistsEntity(
-      playlist:
-          (json['playlist'] as List<dynamic>?)
-              ?.map((e) => PlaylistEntity.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      playlist: (json['playlist'] as List<dynamic>?)
+          ?.map((e) => PlaylistEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PlaylistsEntityToJson(_PlaylistsEntity instance) =>

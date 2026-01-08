@@ -11,10 +11,9 @@ _ScanStatusEntity _$ScanStatusEntityFromJson(Map<String, dynamic> json) =>
       scanning: json['scanning'] as bool?,
       count: (json['count'] as num?)?.toInt(),
       folderCount: (json['folderCount'] as num?)?.toInt(),
-      lastScan:
-          json['lastScan'] == null
-              ? null
-              : DateTime.parse(json['lastScan'] as String),
+      lastScan: json['lastScan'] == null
+          ? null
+          : DateTime.parse(json['lastScan'] as String),
     );
 
 Map<String, dynamic> _$ScanStatusEntityToJson(_ScanStatusEntity instance) =>

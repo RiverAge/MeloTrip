@@ -14,42 +14,35 @@ _AlbumEntity _$AlbumEntityFromJson(Map<String, dynamic> json) => _AlbumEntity(
   coverArt: json['coverArt'] as String?,
   songCount: (json['songCount'] as num?)?.toInt(),
   duration: (json['duration'] as num?)?.toInt(),
-  created:
-      json['created'] == null
-          ? null
-          : DateTime.parse(json['created'] as String),
-  starred:
-      json['starred'] == null
-          ? null
-          : DateTime.parse(json['starred'] as String),
+  created: json['created'] == null
+      ? null
+      : DateTime.parse(json['created'] as String),
+  starred: json['starred'] == null
+      ? null
+      : DateTime.parse(json['starred'] as String),
   year: (json['year'] as num?)?.toInt(),
   genre: json['genre'] as String?,
   userRating: (json['userRating'] as num?)?.toInt(),
-  genres:
-      (json['genres'] as List<dynamic>?)
-          ?.map((e) => GenreElement.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  genres: (json['genres'] as List<dynamic>?)
+      ?.map((e) => GenreElement.fromJson(e as Map<String, dynamic>))
+      .toList(),
   musicBrainzId: json['musicBrainzId'] as String?,
   isCompilation: json['isCompilation'] as bool?,
   sortName: json['sortName'] as String?,
-  discTitles:
-      (json['discTitles'] as List<dynamic>?)
-          ?.map((e) => DiscTitle.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  originalReleaseDate:
-      json['originalReleaseDate'] == null
-          ? null
-          : ReleaseDate.fromJson(
-            json['originalReleaseDate'] as Map<String, dynamic>,
-          ),
-  releaseDate:
-      json['releaseDate'] == null
-          ? null
-          : ReleaseDate.fromJson(json['releaseDate'] as Map<String, dynamic>),
-  song:
-      (json['song'] as List<dynamic>?)
-          ?.map((e) => SongEntity.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  discTitles: (json['discTitles'] as List<dynamic>?)
+      ?.map((e) => DiscTitle.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  originalReleaseDate: json['originalReleaseDate'] == null
+      ? null
+      : ReleaseDate.fromJson(
+          json['originalReleaseDate'] as Map<String, dynamic>,
+        ),
+  releaseDate: json['releaseDate'] == null
+      ? null
+      : ReleaseDate.fromJson(json['releaseDate'] as Map<String, dynamic>),
+  song: (json['song'] as List<dynamic>?)
+      ?.map((e) => SongEntity.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$AlbumEntityToJson(_AlbumEntity instance) =>
@@ -91,10 +84,9 @@ Map<String, dynamic> _$ReleaseDateToJson(_ReleaseDate instance) =>
 
 _AlbumListEntity _$AlbumListEntityFromJson(Map<String, dynamic> json) =>
     _AlbumListEntity(
-      album:
-          (json['album'] as List<dynamic>?)
-              ?.map((e) => AlbumEntity.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      album: (json['album'] as List<dynamic>?)
+          ?.map((e) => AlbumEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$AlbumListEntityToJson(_AlbumListEntity instance) =>

@@ -13,10 +13,9 @@ String _$cachedFileSizeHash() => r'408c46044aef5889a12c91800dc4cb6b66530019';
 final cachedFileSizeProvider = AutoDisposeFutureProvider<double>.internal(
   cachedFileSize,
   name: r'cachedFileSizeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$cachedFileSizeHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$cachedFileSizeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

@@ -13,8 +13,9 @@ String _$playQueueHash() => r'904c12f36b62560a3c72ef2a339997fbf79c6941';
 final playQueueProvider = AutoDisposeFutureProvider<SubsonicResponse?>.internal(
   playQueue,
   name: r'playQueueProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$playQueueHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$playQueueHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

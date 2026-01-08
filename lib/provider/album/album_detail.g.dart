@@ -73,10 +73,9 @@ class AlbumDetailProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
         (ref) => albumDetail(ref as AlbumDetailRef, albumId),
         from: albumDetailProvider,
         name: r'albumDetailProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$albumDetailHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$albumDetailHash,
         dependencies: AlbumDetailFamily._dependencies,
         allTransitiveDependencies: AlbumDetailFamily._allTransitiveDependencies,
         albumId: albumId,
@@ -155,10 +154,9 @@ final albumFavoriteProvider =
     AutoDisposeAsyncNotifierProvider<AlbumFavorite, SubsonicResponse?>.internal(
       AlbumFavorite.new,
       name: r'albumFavoriteProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$albumFavoriteHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$albumFavoriteHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -172,10 +170,9 @@ final albumRatingProvider =
     AutoDisposeAsyncNotifierProvider<AlbumRating, SubsonicResponse?>.internal(
       AlbumRating.new,
       name: r'albumRatingProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$albumRatingHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$albumRatingHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

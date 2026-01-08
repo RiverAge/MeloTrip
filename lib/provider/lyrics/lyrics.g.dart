@@ -71,8 +71,9 @@ class LyricsProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
         (ref) => lyrics(ref as LyricsRef, songId),
         from: lyricsProvider,
         name: r'lyricsProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product') ? null : _$lyricsHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$lyricsHash,
         dependencies: LyricsFamily._dependencies,
         allTransitiveDependencies: LyricsFamily._allTransitiveDependencies,
         songId: songId,
@@ -189,10 +190,9 @@ class LyricsOfLineProvider extends AutoDisposeProvider<String?> {
         (ref) => lyricsOfLine(ref as LyricsOfLineRef, lyrics, position),
         from: lyricsOfLineProvider,
         name: r'lyricsOfLineProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$lyricsOfLineHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$lyricsOfLineHash,
         dependencies: LyricsOfLineFamily._dependencies,
         allTransitiveDependencies:
             LyricsOfLineFamily._allTransitiveDependencies,

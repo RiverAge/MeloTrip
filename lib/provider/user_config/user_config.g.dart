@@ -14,10 +14,9 @@ final userConfigProvider =
     AutoDisposeAsyncNotifierProvider<UserConfig, Configuration?>.internal(
       UserConfig.new,
       name: r'userConfigProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$userConfigHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$userConfigHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

@@ -10,19 +10,19 @@ String _$smartSuggestionHash() => r'2a528a2cf91a2fecde96074aedf0f568e8c80600';
 
 /// See also [SmartSuggestion].
 @ProviderFor(SmartSuggestion)
-final smartSuggestionProvider = AutoDisposeAsyncNotifierProvider<
-  SmartSuggestion,
-  List<SongEntity>?
->.internal(
-  SmartSuggestion.new,
-  name: r'smartSuggestionProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
+final smartSuggestionProvider =
+    AutoDisposeAsyncNotifierProvider<
+      SmartSuggestion,
+      List<SongEntity>?
+    >.internal(
+      SmartSuggestion.new,
+      name: r'smartSuggestionProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
           : _$smartSuggestionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SmartSuggestion = AutoDisposeAsyncNotifier<List<SongEntity>?>;
 // ignore_for_file: type=lint

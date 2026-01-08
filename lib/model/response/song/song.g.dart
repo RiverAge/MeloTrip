@@ -19,18 +19,16 @@ _SongEntity _$SongEntityFromJson(Map<String, dynamic> json) => _SongEntity(
   size: (json['size'] as num?)?.toInt(),
   contentType: json['contentType'] as String?,
   suffix: json['suffix'] as String?,
-  starred:
-      json['starred'] == null
-          ? null
-          : DateTime.parse(json['starred'] as String),
+  starred: json['starred'] == null
+      ? null
+      : DateTime.parse(json['starred'] as String),
   duration: (json['duration'] as num?)?.toInt(),
   bitRate: (json['bitRate'] as num?)?.toInt(),
   path: json['path'] as String?,
   discNumber: (json['discNumber'] as num?)?.toInt(),
-  created:
-      json['created'] == null
-          ? null
-          : DateTime.parse(json['created'] as String),
+  created: json['created'] == null
+      ? null
+      : DateTime.parse(json['created'] as String),
   albumId: json['albumId'] as String?,
   artistId: json['artistId'] as String?,
   type: json['type'] as String?,
@@ -41,33 +39,28 @@ _SongEntity _$SongEntityFromJson(Map<String, dynamic> json) => _SongEntity(
   sortName: json['sortName'] as String?,
   mediaType: json['mediaType'] as String?,
   musicBrainzId: json['musicBrainzId'] as String?,
-  genres:
-      (json['genres'] as List<dynamic>?)
-          ?.map((e) => GenreElement.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  replayGain:
-      json['replayGain'] == null
-          ? null
-          : ReplayGain.fromJson(json['replayGain'] as Map<String, dynamic>),
+  genres: (json['genres'] as List<dynamic>?)
+      ?.map((e) => GenreElement.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  replayGain: json['replayGain'] == null
+      ? null
+      : ReplayGain.fromJson(json['replayGain'] as Map<String, dynamic>),
   channelCount: (json['channelCount'] as num?)?.toInt(),
   genre: json['genre'] as String?,
   samplingRate: (json['samplingRate'] as num?)?.toInt(),
   bitDepth: (json['bitDepth'] as num?)?.toInt(),
   moods: (json['moods'] as List<dynamic>?)?.map((e) => e as String).toList(),
-  artists:
-      (json['artists'] as List<dynamic>?)
-          ?.map((e) => ParticipateEntity.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  artists: (json['artists'] as List<dynamic>?)
+      ?.map((e) => ParticipateEntity.fromJson(e as Map<String, dynamic>))
+      .toList(),
   displayArtist: json['displayArtist'] as String?,
-  albumArtists:
-      (json['albumArtists'] as List<dynamic>?)
-          ?.map((e) => ParticipateEntity.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  albumArtists: (json['albumArtists'] as List<dynamic>?)
+      ?.map((e) => ParticipateEntity.fromJson(e as Map<String, dynamic>))
+      .toList(),
   displayAlbumArtist: json['displayAlbumArtist'] as String?,
-  contributors:
-      (json['contributors'] as List<dynamic>?)
-          ?.map((e) => ContributorEntity.fromJson(e as Map<String, dynamic>))
-          .toList(),
+  contributors: (json['contributors'] as List<dynamic>?)
+      ?.map((e) => ContributorEntity.fromJson(e as Map<String, dynamic>))
+      .toList(),
   displayComposer: json['displayComposer'] as String?,
   explicitStatus: json['explicitStatus'] as String?,
 );

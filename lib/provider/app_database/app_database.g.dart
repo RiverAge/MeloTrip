@@ -14,10 +14,9 @@ final appDatabaseProvider =
     AutoDisposeAsyncNotifierProvider<AppDatabase, Database>.internal(
       AppDatabase.new,
       name: r'appDatabaseProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$appDatabaseHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$appDatabaseHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

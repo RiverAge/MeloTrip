@@ -14,8 +14,9 @@ final favoriteProvider =
     AutoDisposeAsyncNotifierProvider<Favorite, SubsonicResponse?>.internal(
       Favorite.new,
       name: r'favoriteProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$favoriteHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$favoriteHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

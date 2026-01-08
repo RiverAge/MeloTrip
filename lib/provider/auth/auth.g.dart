@@ -87,8 +87,9 @@ class LoginProvider extends AutoDisposeFutureProvider<AuthUser?> {
          ),
          from: loginProvider,
          name: r'loginProvider',
-         debugGetCreateSourceHash:
-             const bool.fromEnvironment('dart.vm.product') ? null : _$loginHash,
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$loginHash,
          dependencies: LoginFamily._dependencies,
          allTransitiveDependencies: LoginFamily._allTransitiveDependencies,
          host: host,
@@ -188,8 +189,9 @@ String _$logoutHash() => r'572745a7e4d85a7f18f536b25647056bbdb491d9';
 final logoutProvider = AutoDisposeFutureProvider<void>.internal(
   logout,
   name: r'logoutProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$logoutHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$logoutHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -205,10 +207,9 @@ final currentUserProvider =
     AutoDisposeAsyncNotifierProvider<CurrentUser, AuthUser?>.internal(
       CurrentUser.new,
       name: r'currentUserProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$currentUserHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$currentUserHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

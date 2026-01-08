@@ -8,10 +8,9 @@ part of 'lyrics.dart';
 
 _LyricsListEntity _$LyricsListEntityFromJson(Map<String, dynamic> json) =>
     _LyricsListEntity(
-      structuredLyrics:
-          (json['structuredLyrics'] as List<dynamic>?)
-              ?.map((e) => StructuredLyric.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      structuredLyrics: (json['structuredLyrics'] as List<dynamic>?)
+          ?.map((e) => StructuredLyric.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$LyricsListEntityToJson(_LyricsListEntity instance) =>

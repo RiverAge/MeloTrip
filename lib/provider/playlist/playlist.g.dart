@@ -74,10 +74,9 @@ class PlaylistDetailProvider
         (ref) => playlistDetail(ref as PlaylistDetailRef, playlistId),
         from: playlistDetailProvider,
         name: r'playlistDetailProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$playlistDetailHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$playlistDetailHash,
         dependencies: PlaylistDetailFamily._dependencies,
         allTransitiveDependencies:
             PlaylistDetailFamily._allTransitiveDependencies,
@@ -157,10 +156,9 @@ final playlistsProvider =
     AutoDisposeAsyncNotifierProvider<Playlists, SubsonicResponse?>.internal(
       Playlists.new,
       name: r'playlistsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$playlistsHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$playlistsHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -170,19 +168,19 @@ String _$playlistUpdateHash() => r'127861dba3def6d47160caead98bed96125a4885';
 
 /// See also [PlaylistUpdate].
 @ProviderFor(PlaylistUpdate)
-final playlistUpdateProvider = AutoDisposeAsyncNotifierProvider<
-  PlaylistUpdate,
-  SubsonicResponse?
->.internal(
-  PlaylistUpdate.new,
-  name: r'playlistUpdateProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
+final playlistUpdateProvider =
+    AutoDisposeAsyncNotifierProvider<
+      PlaylistUpdate,
+      SubsonicResponse?
+    >.internal(
+      PlaylistUpdate.new,
+      name: r'playlistUpdateProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
           : _$playlistUpdateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PlaylistUpdate = AutoDisposeAsyncNotifier<SubsonicResponse?>;
 // ignore_for_file: type=lint

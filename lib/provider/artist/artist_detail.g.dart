@@ -74,10 +74,9 @@ class ArtistDetailProvider
         (ref) => artistDetail(ref as ArtistDetailRef, artistId),
         from: artistDetailProvider,
         name: r'artistDetailProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$artistDetailHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$artistDetailHash,
         dependencies: ArtistDetailFamily._dependencies,
         allTransitiveDependencies:
             ArtistDetailFamily._allTransitiveDependencies,

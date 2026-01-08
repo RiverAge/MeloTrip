@@ -14,10 +14,9 @@ final appPlayerHandlerProvider =
     AsyncNotifierProvider<AppPlayerHandler, AppPlayer?>.internal(
       AppPlayerHandler.new,
       name: r'appPlayerHandlerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$appPlayerHandlerHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$appPlayerHandlerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

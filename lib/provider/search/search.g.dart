@@ -71,8 +71,9 @@ class SearchProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
         (ref) => search(ref as SearchRef, query),
         from: searchProvider,
         name: r'searchProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product') ? null : _$searchHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$searchHash,
         dependencies: SearchFamily._dependencies,
         allTransitiveDependencies: SearchFamily._allTransitiveDependencies,
         query: query,

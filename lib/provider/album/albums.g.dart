@@ -71,8 +71,9 @@ class AlbumsProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
         (ref) => albums(ref as AlbumsRef, type),
         from: albumsProvider,
         name: r'albumsProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product') ? null : _$albumsHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$albumsHash,
         dependencies: AlbumsFamily._dependencies,
         allTransitiveDependencies: AlbumsFamily._allTransitiveDependencies,
         type: type,

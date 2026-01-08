@@ -73,10 +73,9 @@ class SongDetailProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
         (ref) => songDetail(ref as SongDetailRef, songId),
         from: songDetailProvider,
         name: r'songDetailProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$songDetailHash,
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$songDetailHash,
         dependencies: SongDetailFamily._dependencies,
         allTransitiveDependencies: SongDetailFamily._allTransitiveDependencies,
         songId: songId,
@@ -155,10 +154,9 @@ final songFavoriteProvider =
     AutoDisposeAsyncNotifierProvider<SongFavorite, SubsonicResponse?>.internal(
       SongFavorite.new,
       name: r'songFavoriteProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$songFavoriteHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$songFavoriteHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
@@ -172,10 +170,9 @@ final songRatingProvider =
     AutoDisposeAsyncNotifierProvider<SongRating, SubsonicResponse?>.internal(
       SongRating.new,
       name: r'songRatingProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$songRatingHash,
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$songRatingHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );

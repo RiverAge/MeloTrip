@@ -8,10 +8,9 @@ part of 'random_song.dart';
 
 _RandomSongsEntity _$RandomSongsEntityFromJson(Map<String, dynamic> json) =>
     _RandomSongsEntity(
-      song:
-          (json['song'] as List<dynamic>?)
-              ?.map((e) => SongEntity.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      song: (json['song'] as List<dynamic>?)
+          ?.map((e) => SongEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$RandomSongsEntityToJson(_RandomSongsEntity instance) =>
