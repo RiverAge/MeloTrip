@@ -53,6 +53,8 @@ Melo Trip.
 >  ~~[flutter开发windows软件字体显示粗细不一样，而且还有繁体解决办法](https://blog.csdn.net/weixin_44786530/article/details/135317823) ~~
 >  ~~并不是繁体后续发现是不同字体渲染出来的样子不一样 ~~
 1. 音乐播放是，其他视频app播放视频或者启动录像并没有停止
+1. 错误日志的跟踪（通信有问题？抓换失败）
+> [log] ERR [log] _TypeError (type 'MappedListIterable<dynamic, dynamic>' is not a subtype of type 'FutureOr<List<NvidiaModel>>')
 ### 启动
 
 #### freezed riverpod 自动生成代码

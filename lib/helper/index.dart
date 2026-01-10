@@ -8,3 +8,4 @@ import 'package:path_provider/path_provider.dart';
 part 'duration_formatter.dart';
 part 'file_size_formatter.dart';
 part 'cache_file_path.dart';
+part 'ai_provider_logo.dart';

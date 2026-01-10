@@ -78,26 +78,38 @@ class _MyAppState extends ConsumerState<MyApp> {
     api.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final auth = await ref.read(currentUserProvider.future);
-          final subsonicToken = auth?.subsonicToken;
-          final host = auth?.host;
-          if (subsonicToken != null && host != null) {
-            options.baseUrl = host;
-            options.queryParameters.addAll({
-              'u': auth?.username,
-              't': subsonicToken, // 假设 token 是这样传递
-              's': auth?.subsonicSalt, // 假设 salt 是这样传递
-              '_': DateTime.now().toIso8601String(),
-              'v': '1.16.1',
-              'c': 'melo_trip',
-              'f': 'json',
+          if (options.extra['ai-chat'] == '1') {
+            final uc = await ref.read(userConfigProvider.future);
+            options.baseUrl = uc?.aiApiUrl ?? '';
+            final aiApiKey = uc?.aiApiKey;
+            options.headers.addAll({
+              if (aiApiKey != null && aiApiKey != '')
+                'Authorization': 'Bearer $aiApiKey',
+              'Content-Type': 'application/json',
             });
+          } else {
+            final auth = await ref.read(currentUserProvider.future);
+            final subsonicToken = auth?.subsonicToken;
+            final host = auth?.host;
+            if (subsonicToken != null && host != null) {
+              options.baseUrl = host;
+              options.queryParameters.addAll({
+                'u': auth?.username,
+                't': subsonicToken, // 假设 token 是这样传递
+                's': auth?.subsonicSalt, // 假设 salt 是这样传递
+                '_': DateTime.now().toIso8601String(),
+                'v': '1.16.1',
+                'c': 'melo_trip',
+                'f': 'json',
+              });
+            }
           }
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          final data = response.data;
-          if (data is Map<String, dynamic>?) {
+          if (response.requestOptions.responseType != ResponseType.stream &&
+              response.data is Map<String, dynamic>?) {
+            final data = response.data;
             final error = data?['subsonic-response']?['error'];
             if (error is Map<String, dynamic>) {
               final errorMsg = error['message'] as String?;
@@ -263,26 +275,25 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
       provider: userConfigProvider,
-      nullableBuilder:
-          (context, config, ref) => MaterialApp(
-            scaffoldMessengerKey: _scaffoldMessengerKey,
-            title: 'MeloTrip',
-            theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFDB1D5D)),
-            ),
-            themeMode: config?.theme,
-            locale: config?.locale,
-            darkTheme: ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.fromSeed(
-                brightness: Brightness.dark,
-                seedColor: Color(0xFFDB1D5D),
-              ),
-            ),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: InitialPage(),
+      nullableBuilder: (context, config, ref) => MaterialApp(
+        scaffoldMessengerKey: _scaffoldMessengerKey,
+        title: 'MeloTrip',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFDB1D5D)),
+        ),
+        themeMode: config?.theme,
+        locale: config?.locale,
+        darkTheme: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: Color(0xFFDB1D5D),
           ),
+        ),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: InitialPage(),
+      ),
     );
   }
 }

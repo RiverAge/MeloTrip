@@ -142,8 +142,89 @@
     "noLyricsFound": "无歌词",
 
     "unknownError": "未知错误",
-    "encounterUnknownError": "遇到未知错误"
+    "encounterUnknownError": "遇到未知错误",
 
-
-
+    "aiChat": "AI 聊天",
+    "selectModel": "选择模型",
+    "searchModels": "搜索模型...",
+    "noModelsAvailable": "无可用模型",
+    "checkNetworkConnection": "请检查网络连接",
+    "noModelsFound": "未找到模型",
+    "loadingModels": "加载模型中...",
+    "failedToLoadModels": "加载模型失败",
+    "retry": "重试",
+    "startConversation": "开始对话",
+    "askMeAnything": "问我任何问题！由 NVIDIA AI 驱动。",
+    "typeMessage": "输入消息...",
+    "justNow": "刚刚",
+    "minutesAgo": "{minutes}分钟前",
+    "@minutesAgo": {
+      "placeholders": {
+        "minutes": {
+          "type": "int"
+        }
+      }
+    },
+    "hoursAgo": "{hours}小时前",
+    "@hoursAgo": {
+      "placeholders": {
+        "hours": {
+          "type": "int"
+        }
+      }
+    },
+    "copy": "复制",
+    "copiedToClipboard": "已复制到剪贴板",
+    "tellMeJoke": "讲个笑话",
+    "explainQuantumPhysics": "解释量子物理",
+    "writePoem": "写首诗",
+    "helpMeCode": "帮我写代码",
+    "maxTokens": "最大 tokens",
+    "thinking": "思考中...",
+    "thoughtProcess": "思考过程",
+    "aiConfig": "AI 配置",
+    "aiSaveConfig": "保存配置",
+    "aiConfigSaved": "配置已保存",
+    "aiApiUrlHint": "https://api.openai.com/v1",
+    "aiApiKeyHint": "sk-xxxxxxxxxxxxxxxx",
+    "aiTestConnection": "测试连接",
+    "aiTestingConnection": "正在连接...",
+    "aiConnectionSuccess": "连接成功！",
+    "aiConnectionFailed": "连接失败",
+    "aiEndpointLabel": "API Endpoint",
+    "aiApiKeyLabel": "API Key",
+    "aiConfigTip": "配置兼容 OpenAI 格式的接口，可用于接入 OpenAI, DeepSeek, 硅基流动等服务。",
+    "aiInputRequired": "请填写完整的 API URL 和 Key",
+    "noModelSelected": "未选择模型",
+    "aiNeedConfig": "需要配置 API Key 才能使用 AI",
+    "goToConfig": "去配置",
+    "selectModelToStart": "选择一个模型开始聊天",
+    "timeConsumed": "耗时: {seconds}s",
+    "@timeConsumed": {
+       "placeholders": {
+          "seconds": {
+             "type": "String"
+          }
+       }
+    },
+    "timeUsed": " (用时 {seconds} 秒)",
+    "@timeUsed": {
+       "placeholders": {
+          "seconds": {
+             "type": "String"
+          }
+       }
+    },
+    "chatHistory": "历史聊天",
+    "deleteConversationConfirm": "确定要删除会话 {title}？",
+    "@deleteConversationConfirm": {
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "cancelledByUser": "用户已取消",
+    "resetByNewRequest": "已被新请求重置"
 }
+

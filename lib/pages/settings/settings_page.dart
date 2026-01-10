@@ -5,6 +5,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/favorite/favorite_page.dart';
 import 'package:melo_trip/pages/initial/initial_page.dart';
 import 'package:melo_trip/pages/playlist/playlist_page.dart';
+import 'package:melo_trip/pages/settings/ai_config_page.dart';
 import 'package:melo_trip/pages/settings/app_theme_page.dart';
 import 'package:melo_trip/pages/settings/language_page.dart';
 import 'package:melo_trip/pages/settings/music_quality_page.dart';
@@ -55,45 +56,43 @@ class _SettingsPageState extends State<SettingsPage>
                 ListTile(
                   leading: const Icon(Icons.high_quality),
                   title: Text(AppLocalizations.of(context)!.musicQuality),
-                  onTap:
-                      () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: ((_) => MusicQualityPage())),
-                      ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((_) => MusicQualityPage())),
+                  ),
                   trailing: const Icon(Icons.arrow_forward),
                 ),
 
                 ListTile(
                   leading: const Icon(Icons.featured_play_list_outlined),
                   title: Text(AppLocalizations.of(context)!.myPlaylist),
-                  onTap:
-                      () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: ((_) => const PlaylistPage()),
-                        ),
-                      ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((_) => const PlaylistPage())),
+                  ),
                   trailing: const Icon(Icons.arrow_forward),
                 ),
 
                 ListTile(
                   leading: const Icon(Icons.favorite_border_outlined),
                   title: Text(AppLocalizations.of(context)!.myFavorites),
-                  onTap:
-                      () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: ((_) => const FavoritePage()),
-                        ),
-                      ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((_) => const FavoritePage())),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.smart_toy_rounded),
+                  title: Text(AppLocalizations.of(context)!.aiConfig),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((_) => const AiConfigPage())),
+                  ),
                   trailing: const Icon(Icons.arrow_forward),
                 ),
                 ListTile(
                   leading: const Icon(Icons.language_outlined),
                   title: Text(AppLocalizations.of(context)!.language),
-                  onTap:
-                      () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: ((_) => const LanguagePage()),
-                        ),
-                      ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((_) => const LanguagePage())),
+                  ),
                   trailing: const Icon(Icons.arrow_forward),
                 ),
               ],
@@ -115,43 +114,41 @@ class _SettingsPageState extends State<SettingsPage>
   void _onLogout() {
     showDialog(
       context: context,
-      builder:
-          (_) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.logout),
-            content: Text(AppLocalizations.of(context)!.logoutDialogConfirm),
-            actions: <Widget>[
-              TextButton(
-                child: Text(AppLocalizations.of(context)!.cancel),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              AsyncValueBuilder(
-                provider: appPlayerHandlerProvider,
-                builder: (context, player, _) {
-                  return Consumer(
-                    builder: (context, ref, _) {
-                      return TextButton(
-                        child: Text(AppLocalizations.of(context)!.confirm),
-                        onPressed: () async {
-                          final navigator = Navigator.of(context);
-                          await player.pause();
-                          await ref.read(logoutProvider.future);
-                          navigator.pushAndRemoveUntil(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, _, _) => const InitialPage(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
-                            ),
-                            (route) => false,
-                          );
-                        },
+      builder: (_) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.logout),
+        content: Text(AppLocalizations.of(context)!.logoutDialogConfirm),
+        actions: <Widget>[
+          TextButton(
+            child: Text(AppLocalizations.of(context)!.cancel),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          AsyncValueBuilder(
+            provider: appPlayerHandlerProvider,
+            builder: (context, player, _) {
+              return Consumer(
+                builder: (context, ref, _) {
+                  return TextButton(
+                    child: Text(AppLocalizations.of(context)!.confirm),
+                    onPressed: () async {
+                      final navigator = Navigator.of(context);
+                      await player.pause();
+                      await ref.read(logoutProvider.future);
+                      navigator.pushAndRemoveUntil(
+                        PageRouteBuilder(
+                          pageBuilder: (context, _, _) => const InitialPage(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                        (route) => false,
                       );
                     },
                   );
                 },
-              ),
-            ],
+              );
+            },
           ),
+        ],
+      ),
     );
   }
 }

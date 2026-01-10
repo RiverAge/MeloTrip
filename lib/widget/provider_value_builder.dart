@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
@@ -24,30 +26,28 @@ class AsyncValueBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Consumer(
-    builder:
-        (context, ref, child) => ref
-            .watch(provider)
-            .when(
-              loading:
-                  () =>
-                      loading == null
-                          ? const FixedCenterCircular()
-                          : loading!(context, ref),
-              error: (error, stack) {
-                debugPrintStack(stackTrace: stack);
-                return const _Error();
-              },
-              data: (value) {
-                if (nullableBuilder != null) {
-                  return nullableBuilder!(context, value, ref);
-                } else if (value == null) {
-                  return empty != null ? empty!(context, ref) : const NoData();
-                } else if (builder != null) {
-                  return builder!(context, value, ref);
-                }
-                return SizedBox.shrink();
-              },
-            ),
+    builder: (context, ref, child) => ref
+        .watch(provider)
+        .when(
+          loading: () => loading == null
+              ? const FixedCenterCircular()
+              : loading!(context, ref),
+          error: (error, stack) {
+            log('ERR', level: 1, error: error);
+            debugPrintStack(stackTrace: stack);
+            return const _Error();
+          },
+          data: (value) {
+            if (nullableBuilder != null) {
+              return nullableBuilder!(context, value, ref);
+            } else if (value == null) {
+              return empty != null ? empty!(context, ref) : const NoData();
+            } else if (builder != null) {
+              return builder!(context, value, ref);
+            }
+            return SizedBox.shrink();
+          },
+        ),
   );
 }
 
