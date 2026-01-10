@@ -140,11 +140,31 @@ class _ModelSelectionPageState extends State<ModelSelectionPage> {
                         count: groupedData[key]!.length, // 传入数量显示
                       ),
                     ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        final item = groupedData[key]![index];
-                        return _ModelListItem(model: item, groupKey: key);
-                      }, childCount: groupedData[key]!.length),
+                    AsyncValueBuilder(
+                      provider: userConfigProvider,
+                      builder: (context, uc, ref) {
+                        return SliverList.separated(
+                          itemBuilder: (context, index) {
+                            final item = groupedData[key]![index];
+                            return _ModelListItem(
+                              model: item,
+                              groupKey: key,
+                              isChecked: item.id == uc.aiModel,
+                              onTap: () async {
+                                final navigator = Navigator.of(context);
+                                await ref
+                                    .read(userConfigProvider.notifier)
+                                    .setConfiguration(
+                                      aiModel: ValueUpdater(item.id),
+                                    );
+                                navigator.pop();
+                              },
+                            );
+                          },
+                          itemCount: groupedData[key]!.length,
+                          separatorBuilder: (context, index) => Divider(),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -179,78 +199,73 @@ class _ModelGroupHeader extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      color: colorScheme.surface,
-      child: Material(
-        color: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: colorScheme.outlineVariant, width: 1.0),
+      color: colorScheme.surface, // 必须设置背景色防止透视
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          border: Border(
+            bottom: BorderSide(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              width: 0.5,
             ),
           ),
-          child: ListTile(
-            visualDensity: VisualDensity.compact,
-            tileColor: colorScheme.surfaceContainerLow,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 4,
-            ),
-            leading: logoName != null
-                ? Container(
-                    width: 32,
-                    height: 32,
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: colorScheme.surface,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: colorScheme.outlineVariant.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                    child: Image.network(
-                      logoName!,
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, _, _) => Icon(
-                        Icons.dns_outlined,
-                        size: 20,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  )
-                : Icon(Icons.folder_open, color: colorScheme.primary),
-            title: Row(
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
+        ),
+        child: Row(
+          children: [
+            if (logoName != null)
+              Container(
+                width: 28,
+                height: 28,
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: .3),
                   ),
                 ),
-                const SizedBox(width: 8),
-                // 显示数量 Badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '$count',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
+                child: Image.network(
+                  logoName!,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => Icon(
+                    Icons.dns_outlined,
+                    size: 16,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
-              ],
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Icon(Icons.folder_open, color: colorScheme.primary),
+              ),
+
+            Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
             ),
-          ),
+            const Spacer(),
+            // 数量 Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                '$count',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -260,8 +275,14 @@ class _ModelGroupHeader extends StatelessWidget {
 class _ModelListItem extends StatelessWidget {
   final ChatModel model;
   final String groupKey;
-
-  const _ModelListItem({required this.model, required this.groupKey});
+  final bool isChecked;
+  final void Function() onTap;
+  const _ModelListItem({
+    required this.model,
+    required this.groupKey,
+    required this.isChecked,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -275,34 +296,23 @@ class _ModelListItem extends StatelessWidget {
           )
         : '';
 
-    return AsyncValueBuilder(
-      provider: userConfigProvider,
-      builder: (context, data, ref) {
-        return ListTile(
-          onTap: () async {
-            final navigator = Navigator.of(context);
-            await ref
-                .read(userConfigProvider.notifier)
-                .setConfiguration(aiModel: ValueUpdater(model.id));
-            navigator.pop();
-          },
-          title: Text(
-            displayName,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          subtitle: dateStr.isNotEmpty
-              ? Text(
-                  dateStr,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                )
-              : null,
-          trailing: data.aiModel == model.id ? const Icon(Icons.check) : null,
-        );
-      },
+    return ListTile(
+      onTap: onTap,
+      title: Text(
+        displayName,
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: theme.colorScheme.onSurface,
+        ),
+      ),
+      subtitle: dateStr.isNotEmpty
+          ? Text(
+              dateStr,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
+          : null,
+      trailing: isChecked ? const Icon(Icons.check) : null,
     );
   }
 }
