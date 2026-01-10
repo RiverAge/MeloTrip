@@ -96,7 +96,11 @@ class _TablePageState extends ConsumerState<TabPage>
         showUnselectedLabels: false,
         items: items,
       ),
-      body: TabBarView(controller: _controller, children: tabViews),
+      body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _controller,
+        children: tabViews,
+      ),
     );
   }
 }
