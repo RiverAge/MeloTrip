@@ -27,8 +27,26 @@ class _TimerAxisState extends State<_TimerAxis> {
       children: [
         SliderTheme(
           data: SliderThemeData(
-            trackHeight: 2,
-            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+            trackHeight: 4.0, // 稍微加粗一点点，更有质感
+            // 1. 定制滑块形状：平时让它小一点，甚至可以自定义成一个小竖线
+            thumbShape: const RoundSliderThumbShape(
+              enabledThumbRadius: 6.0, // 缩小到 6，显得精致
+              pressedElevation: 9.0, // 按下时放大，提供反馈
+            ),
+
+            // 2. 去掉滑块周围的“光晕” (Overlay)，或者让它更淡
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 16.0),
+
+            // 3. 颜色适配：这是提升“素”感的关键
+            activeTrackColor: Theme.of(context).colorScheme.primary, // 已播放部分用主色
+            inactiveTrackColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest, // 未播放部分用深灰色
+            secondaryActiveTrackColor: Theme.of(
+              context,
+            ).colorScheme.primary.withAlpha(76), // 缓冲颜色
+            // 4. 让轨道两端更圆润
+            trackShape: const RoundedRectSliderTrackShape(),
           ),
           child: Slider(
             onChangeStart: (val) {
@@ -50,18 +68,17 @@ class _TimerAxisState extends State<_TimerAxis> {
               });
               // player.seek(Duration(seconds: (sTotal * value).toInt()));
             },
-            secondaryTrackValue:
-                sTotal == 0
-                    ? 0
-                    : sBufferPercent > 1
-                    ? 1
-                    : sBufferPercent,
+            secondaryTrackValue: sTotal == 0
+                ? 0
+                : sBufferPercent > 1
+                ? 1
+                : sBufferPercent,
             // 20240829会有超过1的情况
             value: effectiveValue > 1 ? 1 : effectiveValue,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -81,13 +98,12 @@ class _TimerAxisState extends State<_TimerAxis> {
   }) {
     return AsyncStreamBuilder(
       provider: player.positionStream,
-      builder:
-          (_, position) => _progresssBuilder(
-            duration: duration,
-            bufferedPosition: bufferedPosition,
-            position: position,
-            player: player,
-          ),
+      builder: (_, position) => _progresssBuilder(
+        duration: duration,
+        bufferedPosition: bufferedPosition,
+        position: position,
+        player: player,
+      ),
     );
   }
 
@@ -95,12 +111,11 @@ class _TimerAxisState extends State<_TimerAxis> {
     return AsyncStreamBuilder(
       provider: player.bufferedPositionStream,
       emptyBuilder: (_) => _positionBuilder(duration: duration, player: player),
-      builder:
-          (_, bufferedPosition) => _positionBuilder(
-            duration: duration,
-            bufferedPosition: bufferedPosition,
-            player: player,
-          ),
+      builder: (_, bufferedPosition) => _positionBuilder(
+        duration: duration,
+        bufferedPosition: bufferedPosition,
+        player: player,
+      ),
     );
   }
 
@@ -120,14 +135,12 @@ class _TimerAxisState extends State<_TimerAxis> {
           builder: (context, player, _) {
             return AsyncStreamBuilder(
               provider: player.durationStream,
-              emptyBuilder:
-                  (_) =>
-                      _bufferBuilder(duration: serverDuration, player: player),
-              builder:
-                  (_, duration) => _bufferBuilder(
-                    duration: duration ?? serverDuration,
-                    player: player,
-                  ),
+              emptyBuilder: (_) =>
+                  _bufferBuilder(duration: serverDuration, player: player),
+              builder: (_, duration) => _bufferBuilder(
+                duration: duration ?? serverDuration,
+                player: player,
+              ),
             );
           },
         );

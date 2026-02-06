@@ -10,7 +10,11 @@ class _CoverBackground extends StatelessWidget {
           return SizedBox.shrink();
         }
         final current = playQueue.songs[playQueue.index];
-        return ArtworkImage(fit: BoxFit.cover, id: 'mf-${current.id}');
+        return ArtworkImage(
+          fit: BoxFit.cover,
+          id: 'mf-${current.id}',
+          size: 10,
+        );
       },
     ),
   );

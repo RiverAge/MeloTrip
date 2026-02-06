@@ -16,6 +16,7 @@ import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+// import 'package:path/path.dart';
 
 part 'parts/rotate_cover.dart';
 part 'parts/timer_axis.dart';
@@ -26,6 +27,7 @@ part 'parts/cover_background.dart';
 part 'parts/blur_filter.dart';
 part 'parts/animted_lyrics.dart';
 part 'parts/cover_lyrics_switcher.dart';
+part 'parts/rounded_cover.dart';
 
 class PlayingPage extends StatelessWidget {
   const PlayingPage({super.key});
@@ -34,23 +36,68 @@ class PlayingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
-        final current =
-            playQueue.index >= playQueue.songs.length
-                ? null
-                : playQueue.songs[playQueue.index];
+        final current = playQueue.index >= playQueue.songs.length
+            ? null
+            : playQueue.songs[playQueue.index];
+        final effictiveArtist = current?.artists ?? [];
+        final effectiveDisplayArtist = effictiveArtist.length > 1
+            ? '${effictiveArtist[0].name}'
+            : current?.displayArtist;
         return Scaffold(
           // extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             centerTitle: true,
             scrolledUnderElevation: 0,
-            title: Text(
-              current?.title ?? '',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            title: Column(
+              children: [
+                Text(
+                  current?.title ?? '-',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 2),
+                if (effictiveArtist.length <= 2)
+                  Text(
+                    '$effectiveDisplayArtist',
+                    style: const TextStyle(fontSize: 11),
+                    textAlign: TextAlign.left,
+                  ),
+                if (effictiveArtist.length > 2)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${effictiveArtist[0].name} ${effictiveArtist[1].name}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
+
+                      Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.manyArtists(effictiveArtist.length),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(100),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
+            // title: Text(
+            //   current?.title ?? '',
+            //   style: const TextStyle(fontWeight: FontWeight.bold),
+            // ),
             actions: [
               AsyncValueBuilder(
                 provider: songDetailProvider(current?.id),
+                empty: (_, _) => SizedBox.shrink(),
                 builder: (ctx, data, ref) {
                   final isStarred =
                       data.subsonicResponse?.song?.starred != null;
@@ -62,7 +109,9 @@ class PlayingPage extends StatelessWidget {
                     },
                     icon: Icon(
                       isStarred ? Icons.favorite : Icons.favorite_outline,
-                      color: isStarred ? Theme.of(context).colorScheme.primary : null,
+                      color: isStarred
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
                     ),
                   );
                 },
