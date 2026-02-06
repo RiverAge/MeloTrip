@@ -28,6 +28,7 @@ part 'parts/blur_filter.dart';
 part 'parts/animted_lyrics.dart';
 part 'parts/cover_lyrics_switcher.dart';
 part 'parts/rounded_cover.dart';
+part 'parts/media_meta.dart';
 
 class PlayingPage extends StatelessWidget {
   const PlayingPage({super.key});

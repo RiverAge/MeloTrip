@@ -11,19 +11,27 @@ class _RoundedCover extends StatelessWidget {
         }
 
         final current = playQueue.songs[playQueue.index];
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-          child: AspectRatio(
-            aspectRatio: 1 / 1, // 强制保持 1:1 正方形
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: ArtworkImage(
-                id: 'mf-${current.id}',
-                fit: BoxFit.cover,
-                size: 5000,
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+              child: AspectRatio(
+                aspectRatio: 1 / 1, // 强制保持 1:1 正方形
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: ArtworkImage(
+                    id: 'mf-${current.id}',
+                    fit: BoxFit.cover,
+                    size: 5000,
+                  ),
+                ),
               ),
             ),
-          ),
+
+            SizedBox(height: 8),
+            _MediaMeta(),
+          ],
         );
       },
     );
