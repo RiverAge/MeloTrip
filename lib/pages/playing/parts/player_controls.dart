@@ -17,7 +17,6 @@ class _PlayerControls extends StatelessWidget {
               onPressed: () {
                 player.skipToPrevious();
               },
-              color: Theme.of(context).colorScheme.primary,
               icon: const Icon(Icons.skip_previous_rounded, size: 40),
             ),
             // IconButton(
@@ -40,12 +39,9 @@ class _PlayerControls extends StatelessWidget {
                   onPressed: () {
                     player.playOrPause();
                   },
-                  color: Theme.of(context).colorScheme.primary,
                   icon: Icon(
-                    playing
-                        ? Icons.pause_circle_outline_rounded
-                        : Icons.play_circle_outline_rounded,
-                    size: 60,
+                    playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    size: 50,
                   ),
                 );
               },
@@ -69,7 +65,6 @@ class _PlayerControls extends StatelessWidget {
               onPressed: () {
                 player.skipToNext();
               },
-              color: Theme.of(context).colorScheme.primary,
               icon: const Icon(Icons.skip_next_rounded, size: 40),
             ),
           ],

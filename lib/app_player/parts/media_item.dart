@@ -17,12 +17,11 @@ extension PlayerMediaItem on AppPlayer {
         },
 
         androidCompactActionIndices: const [0, 1, 3],
-        processingState:
-            _player.state.buffering
-                ? AudioProcessingState.buffering
-                : _player.state.completed
-                ? AudioProcessingState.completed
-                : AudioProcessingState.ready,
+        processingState: _player.state.buffering
+            ? AudioProcessingState.buffering
+            : _player.state.completed
+            ? AudioProcessingState.completed
+            : AudioProcessingState.ready,
         playing: playing,
         updatePosition: position ?? _player.state.position,
         bufferedPosition: buffer,

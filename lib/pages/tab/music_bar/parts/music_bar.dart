@@ -14,6 +14,7 @@ import 'package:melo_trip/widget/guesture_hint.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:melo_trip/widget/single_line_animated_lyrics.dart';
 
 part 'bottom_sheet_play_queue.dart';
 part 'bottom_sheet_actions_shuffle.dart';
@@ -42,11 +43,10 @@ class _MusicBarState extends State<MusicBar> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
       ),
-      builder:
-          (context) => const FractionallySizedBox(
-            heightFactor: 0.6,
-            child: _BottomSheetPlayQueue(),
-          ),
+      builder: (context) => const FractionallySizedBox(
+        heightFactor: 0.6,
+        child: _BottomSheetPlayQueue(),
+      ),
     );
   }
 
@@ -88,7 +88,7 @@ class _MusicBarState extends State<MusicBar> {
                 child: ArtworkImage(fit: BoxFit.contain, id: current.id),
               ),
               title: Text(
-                '${current.title} - ${current.artist}',
+                '${current.title}',
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -96,23 +96,45 @@ class _MusicBarState extends State<MusicBar> {
                 provider: lyricsProvider(current.id),
                 loading: (_, _) => const SizedBox.shrink(),
                 builder: (_, lyrics, _) {
-                  return AsyncValueBuilder(
-                    provider: appPlayerHandlerProvider,
-                    builder: (context, player, _) {
-                      return AsyncStreamBuilder(
-                        loading: (_) => const SizedBox.shrink(),
-                        provider: player.positionStream,
-                        builder: (_, position) {
-                          return Text(
-                            ref.watch(lyricsOfLineProvider(lyrics, position)) ??
-                                AppLocalizations.of(context)!.noLyricsFound,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 12),
-                          );
-                        },
-                      );
-                    },
-                  );
+                  final structuredLyrics =
+                      lyrics.subsonicResponse?.lyricsList?.structuredLyrics;
+                  if (structuredLyrics == null || structuredLyrics.isEmpty) {
+                    return SizedBox.shrink();
+                  }
+                  final lines = structuredLyrics[0].line;
+                  if (lines == null || structuredLyrics.isEmpty) {
+                    return SizedBox.shrink();
+                  }
+
+                  return SingleLineAnimatedLyrics(lyricsLines: lines);
+                  // return AsyncValueBuilder(
+                  //   provider: appPlayerHandlerProvider,
+                  //   builder: (context, player, _) {
+                  //     return AsyncStreamBuilder(
+                  //       loading: (_) => const SizedBox.shrink(),
+                  //       provider: player.positionStream,
+                  //       builder: (_, position) {
+                  //         final structuredLyrics = lyrics
+                  //             .subsonicResponse
+                  //             ?.lyricsList
+                  //             ?.structuredLyrics;
+                  //         if (structuredLyrics == null ||
+                  //             structuredLyrics.isEmpty) {
+                  //           return SizedBox.shrink();
+                  //         }
+                  //         final lines = structuredLyrics[0].line;
+                  //         if (lines == null || structuredLyrics.isEmpty) {
+                  //           return SizedBox.shrink();
+                  //         }
+
+                  //         return SingleLineAnimatedLyrics(
+                  //           lyricsLines: lines,
+                  //           position: position,
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  // );
                 },
               ),
               trailing: LayoutBuilder(
@@ -137,8 +159,8 @@ class _MusicBarState extends State<MusicBar> {
                                 },
                                 icon: Icon(
                                   data
-                                      ? Icons.pause_circle_outline
-                                      : Icons.play_circle_outlined,
+                                      ? Icons.pause_rounded
+                                      : Icons.play_arrow_rounded,
                                   size: 35,
                                 ),
                               );
@@ -153,7 +175,7 @@ class _MusicBarState extends State<MusicBar> {
                           // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: () => _onOpenPlayQueue(context),
-                        icon: const Icon(Icons.playlist_play_sharp, size: 35),
+                        icon: const Icon(Icons.playlist_play_rounded, size: 35),
                       ),
                       if (dimens.maxWidth >= 600) _volumeBuilder(),
                     ],
@@ -190,16 +212,12 @@ class _MusicBarState extends State<MusicBar> {
             return AsyncStreamBuilder(
               loading: (context) => const SizedBox.shrink(),
               provider: player.durationStream,
-              emptyBuilder:
-                  (_) => _positionBuilder(
-                    duration: serverDuration,
-                    player: player,
-                  ),
-              builder:
-                  (_, duration) => _positionBuilder(
-                    duration: duration ?? serverDuration,
-                    player: player,
-                  ),
+              emptyBuilder: (_) =>
+                  _positionBuilder(duration: serverDuration, player: player),
+              builder: (_, duration) => _positionBuilder(
+                duration: duration ?? serverDuration,
+                player: player,
+              ),
             );
           },
         );
@@ -212,9 +230,8 @@ class _MusicBarState extends State<MusicBar> {
       loading: (context) => const SizedBox.shrink(),
       provider: player.positionStream,
       emptyBuilder: (_) => _progressBuilder(duration: duration),
-      builder:
-          (_, position) =>
-              _progressBuilder(duration: duration, position: position),
+      builder: (_, position) =>
+          _progressBuilder(duration: duration, position: position),
     );
   }
 

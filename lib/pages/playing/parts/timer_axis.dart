@@ -27,6 +27,7 @@ class _TimerAxisState extends State<_TimerAxis> {
       children: [
         SliderTheme(
           data: SliderThemeData(
+            padding: EdgeInsets.only(left: 25, right: 25, top: 4),
             trackHeight: 4.0, // 稍微加粗一点点，更有质感
             // 1. 定制滑块形状：平时让它小一点，甚至可以自定义成一个小竖线
             thumbShape: const RoundSliderThumbShape(
@@ -37,15 +38,6 @@ class _TimerAxisState extends State<_TimerAxis> {
             // 2. 去掉滑块周围的“光晕” (Overlay)，或者让它更淡
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 16.0),
 
-            // 3. 颜色适配：这是提升“素”感的关键
-            activeTrackColor: Theme.of(context).colorScheme.primary, // 已播放部分用主色
-            inactiveTrackColor: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHighest, // 未播放部分用深灰色
-            secondaryActiveTrackColor: Theme.of(
-              context,
-            ).colorScheme.primary.withAlpha(76), // 缓冲颜色
-            // 4. 让轨道两端更圆润
             trackShape: const RoundedRectSliderTrackShape(),
           ),
           child: Slider(
@@ -82,8 +74,18 @@ class _TimerAxisState extends State<_TimerAxis> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(durationFormatter(sCurrent)),
-              Text(sTotal == 0 ? '--:--' : durationFormatter(sTotal)),
+              Text(
+                durationFormatter(sCurrent),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(127),
+                ),
+              ),
+              Text(
+                sTotal == 0 ? '--:--' : durationFormatter(sTotal),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(127),
+                ),
+              ),
             ],
           ),
         ),

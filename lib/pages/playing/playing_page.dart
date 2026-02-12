@@ -16,6 +16,7 @@ import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:melo_trip/widget/single_line_animated_lyrics.dart';
 // import 'package:path/path.dart';
 
 part 'parts/rotate_cover.dart';
@@ -63,7 +64,12 @@ class PlayingPage extends StatelessWidget {
                 if (effictiveArtist.length <= 2)
                   Text(
                     '$effectiveDisplayArtist',
-                    style: const TextStyle(fontSize: 11),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha(127),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 if (effictiveArtist.length > 2)

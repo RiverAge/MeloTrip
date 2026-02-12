@@ -46,7 +46,7 @@ class MyApp extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey();
 
   var _nowPlaying = true;
@@ -70,6 +70,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     _setPositionListener();
 
     _setPlayerErrorListener();
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void _setApiInterceptor() async {
@@ -171,8 +173,26 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     // _http?.removeErrorScanfoldMessageListner(_onErrorScanfoldMessage);
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        player?.setBackgroundMode(false);
+        break;
+      case AppLifecycleState.paused: // 锁屏或按 Home 键退后台
+      case AppLifecycleState.inactive: // iOS 过渡状态（如下拉通知栏）
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        player?.setBackgroundMode(true);
+        break;
+    }
   }
 
   Future<void> _onErrorScanfoldMessage({required String errorMsg}) async {

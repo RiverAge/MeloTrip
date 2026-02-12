@@ -6,7 +6,7 @@ part of 'lyrics.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lyricsHash() => r'950d36289e869ca8d32c0fefdcfae7f6fc6a7cca';
+String _$lyricsHash() => r'0aa93df9e831f9a9d63511a74a9483558c2c30f2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -142,135 +142,6 @@ class _LyricsProviderElement
 
   @override
   String? get songId => (origin as LyricsProvider).songId;
-}
-
-String _$lyricsOfLineHash() => r'f55bb26fbf95f871619d13405f2c1ca7a8aa255a';
-
-/// See also [lyricsOfLine].
-@ProviderFor(lyricsOfLine)
-const lyricsOfLineProvider = LyricsOfLineFamily();
-
-/// See also [lyricsOfLine].
-class LyricsOfLineFamily extends Family<String?> {
-  /// See also [lyricsOfLine].
-  const LyricsOfLineFamily();
-
-  /// See also [lyricsOfLine].
-  LyricsOfLineProvider call(SubsonicResponse lyrics, Duration position) {
-    return LyricsOfLineProvider(lyrics, position);
-  }
-
-  @override
-  LyricsOfLineProvider getProviderOverride(
-    covariant LyricsOfLineProvider provider,
-  ) {
-    return call(provider.lyrics, provider.position);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'lyricsOfLineProvider';
-}
-
-/// See also [lyricsOfLine].
-class LyricsOfLineProvider extends AutoDisposeProvider<String?> {
-  /// See also [lyricsOfLine].
-  LyricsOfLineProvider(SubsonicResponse lyrics, Duration position)
-    : this._internal(
-        (ref) => lyricsOfLine(ref as LyricsOfLineRef, lyrics, position),
-        from: lyricsOfLineProvider,
-        name: r'lyricsOfLineProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$lyricsOfLineHash,
-        dependencies: LyricsOfLineFamily._dependencies,
-        allTransitiveDependencies:
-            LyricsOfLineFamily._allTransitiveDependencies,
-        lyrics: lyrics,
-        position: position,
-      );
-
-  LyricsOfLineProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.lyrics,
-    required this.position,
-  }) : super.internal();
-
-  final SubsonicResponse lyrics;
-  final Duration position;
-
-  @override
-  Override overrideWith(String? Function(LyricsOfLineRef provider) create) {
-    return ProviderOverride(
-      origin: this,
-      override: LyricsOfLineProvider._internal(
-        (ref) => create(ref as LyricsOfLineRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        lyrics: lyrics,
-        position: position,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeProviderElement<String?> createElement() {
-    return _LyricsOfLineProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is LyricsOfLineProvider &&
-        other.lyrics == lyrics &&
-        other.position == position;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, lyrics.hashCode);
-    hash = _SystemHash.combine(hash, position.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LyricsOfLineRef on AutoDisposeProviderRef<String?> {
-  /// The parameter `lyrics` of this provider.
-  SubsonicResponse get lyrics;
-
-  /// The parameter `position` of this provider.
-  Duration get position;
-}
-
-class _LyricsOfLineProviderElement extends AutoDisposeProviderElement<String?>
-    with LyricsOfLineRef {
-  _LyricsOfLineProviderElement(super.provider);
-
-  @override
-  SubsonicResponse get lyrics => (origin as LyricsOfLineProvider).lyrics;
-  @override
-  Duration get position => (origin as LyricsOfLineProvider).position;
 }
 
 // ignore_for_file: type=lint

@@ -77,10 +77,18 @@ _DiscTitle _$DiscTitleFromJson(Map<String, dynamic> json) => _DiscTitle(
 Map<String, dynamic> _$DiscTitleToJson(_DiscTitle instance) =>
     <String, dynamic>{'disc': instance.disc, 'title': instance.title};
 
-_ReleaseDate _$ReleaseDateFromJson(Map<String, dynamic> json) => _ReleaseDate();
+_ReleaseDate _$ReleaseDateFromJson(Map<String, dynamic> json) => _ReleaseDate(
+  year: (json['year'] as num?)?.toInt(),
+  month: (json['month'] as num?)?.toInt(),
+  day: (json['day'] as num?)?.toInt(),
+);
 
 Map<String, dynamic> _$ReleaseDateToJson(_ReleaseDate instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'year': instance.year,
+      'month': instance.month,
+      'day': instance.day,
+    };
 
 _AlbumListEntity _$AlbumListEntityFromJson(Map<String, dynamic> json) =>
     _AlbumListEntity(

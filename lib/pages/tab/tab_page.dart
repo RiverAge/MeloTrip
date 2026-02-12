@@ -23,7 +23,6 @@ class _TablePageState extends ConsumerState<TabPage>
   @override
   void dispose() {
     _controller?.dispose();
-
     super.dispose();
   }
 

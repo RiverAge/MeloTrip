@@ -9,10 +9,9 @@ class _ListItem extends StatelessWidget with SongControl {
   Widget build(BuildContext context) {
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
-        final current =
-            playQueue.index >= playQueue.songs.length
-                ? null
-                : playQueue.songs[playQueue.index];
+        final current = playQueue.index >= playQueue.songs.length
+            ? null
+            : playQueue.songs[playQueue.index];
         return AsyncValueBuilder(
           provider: appPlayerHandlerProvider,
           builder: (context, player, _) {
@@ -24,14 +23,7 @@ class _ListItem extends StatelessWidget with SongControl {
               },
               horizontalTitleGap: 2,
               selected: current?.id == song?.id,
-              leading: Text(
-                (idx + 1).toString().padLeft(2, ' '),
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              leading: SizedBox(width: 45, child: Text('#${song?.track}')),
               title: Row(
                 children: [
                   AsyncValueBuilder(
@@ -42,12 +34,14 @@ class _ListItem extends StatelessWidget with SongControl {
                         builder: (_, playing) {
                           return current?.id == song?.id && playing
                               ? SizedBox(
-                                width: 30,
-                                child: Image.asset(
-                                  'images/playing.gif',
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              )
+                                  width: 30,
+                                  child: Image.asset(
+                                    'images/playing.gif',
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                )
                               : const SizedBox.shrink();
                         },
                       );

@@ -37,6 +37,7 @@ class _MusicControls extends StatelessWidget with SongControl {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.onSurfaceVariant;
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
         final current = playQueue.index >= playQueue.songs.length
@@ -45,12 +46,47 @@ class _MusicControls extends StatelessWidget with SongControl {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5, color: color),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: AsyncValueBuilder(
+                provider: lyricsProvider(current?.id),
+                loading: (_, _) => const SizedBox.shrink(),
+                builder: (_, lyrics, _) {
+                  final structuredLyrics =
+                      lyrics.subsonicResponse?.lyricsList?.structuredLyrics ??
+                      [];
+                  if (structuredLyrics.isEmpty) {
+                    return SizedBox.shrink();
+                  }
+                  return Text(
+                    '词 ${{'NetEase': '网易云', 'AM': 'APPLE'}[structuredLyrics[0].lang] ?? '默认'}',
+                    style: TextStyle(
+                      height: 1.0,
+                      fontSize: 12, // 徽章字体可以稍微小一点点，显得更精致
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                    // 使用 strutStyle 强制统一行高行为
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: false,
+                      leadingDistribution: TextLeadingDistribution.even,
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            SizedBox(width: 10),
             AsyncValueBuilder(
               provider: appPlayerHandlerProvider,
               builder: (context, player, ref) {
                 final size = MediaQuery.of(context).size;
                 return IconButton(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(127),
                   onPressed: () {
                     final messenger = ScaffoldMessenger.of(context);
                     final playModeNoneText = AppLocalizations.of(
@@ -88,7 +124,7 @@ class _MusicControls extends StatelessWidget with SongControl {
                       return Icon(switch (playlistMode) {
                         PlaylistMode.none => Icons.queue_music_outlined,
                         PlaylistMode.loop => Icons.repeat,
-                        PlaylistMode.single => Icons.repeat_one_outlined,
+                        PlaylistMode.single => Icons.repeat_one,
                       });
                     },
                   ),
@@ -97,7 +133,6 @@ class _MusicControls extends StatelessWidget with SongControl {
             ),
             SizedBox(width: 30),
             IconButton(
-              color: Theme.of(context).colorScheme.primary.withAlpha(127),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => AddToPlaylistPage(song: current),
@@ -108,7 +143,6 @@ class _MusicControls extends StatelessWidget with SongControl {
             ),
             IconButton(
               onPressed: () => showSongControlSheet(context, current?.id),
-              color: Theme.of(context).colorScheme.primary.withAlpha(127),
               icon: const Icon(Icons.more_horiz_rounded),
               iconSize: 30,
             ),

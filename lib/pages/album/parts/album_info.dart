@@ -9,49 +9,59 @@ class _AlbumInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        height: 80,
-        margin: const EdgeInsets.only(left: 20),
-        child: DefaultTextStyle(
-          style: const TextStyle(fontSize: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: Text(
-                  album.name ?? '',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      album.artist ?? '',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '${album.songCount}${AppLocalizations.of(context)!.songCountUnit} ${album.year}',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              Rating(rating: album.userRating, onRating: onUpdateRating),
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(album.name ?? '', style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 4),
+          Text(
+            album.artist ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
-        ),
+          SizedBox(height: 4),
+          Rating(rating: album.userRating, onRating: onUpdateRating),
+        ],
       ),
     );
+    // margin: const EdgeInsets.only(left: 20),
+    // child: DefaultTextStyle(
+    // style: const TextStyle(fontSize: 15),
+    // child: Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //   children: [
+    //     Expanded(
+    //       child: Text(
+    //         album.name ?? '',
+    //         style: TextStyle(
+    //           color: Theme.of(context).colorScheme.onSurface,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //       ),
+    //     ),
+    //     Row(
+    //       children: [
+    //         Expanded(
+    //           child: Text(
+    //             album.artist ?? '',
+    //             overflow: TextOverflow.ellipsis,
+    //             maxLines: 1,
+    //             style: TextStyle(
+    //               color: Theme.of(context).colorScheme.onSurface,
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //     Text(
+    //       '${album.songCount}${AppLocalizations.of(context)!.songCountUnit} ${album.year}',
+    //       style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+    //     ),
+    //     Rating(rating: album.userRating, onRating: onUpdateRating),
+    //   ],
+    // ),
+    // ),
   }
 }

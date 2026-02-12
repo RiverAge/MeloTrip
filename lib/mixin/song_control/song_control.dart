@@ -61,10 +61,9 @@ class _SongControls extends StatelessWidget {
                   _SongTitle(song: song),
                   _SongActions(
                     song: song,
-                    onToggleFavorite:
-                        () => ref
-                            .read(songFavoriteProvider.notifier)
-                            .toggleFavorite(song),
+                    onToggleFavorite: () => ref
+                        .read(songFavoriteProvider.notifier)
+                        .toggleFavorite(song),
                   ),
                   _SongMeta(song: song),
                 ],

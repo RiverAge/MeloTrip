@@ -42,7 +42,7 @@ abstract class DiscTitle with _$DiscTitle {
 
 @freezed
 abstract class ReleaseDate with _$ReleaseDate {
-  const factory ReleaseDate() = _ReleaseDate;
+  const factory ReleaseDate({int? year, int? month, int? day}) = _ReleaseDate;
 
   factory ReleaseDate.fromJson(Map<String, dynamic> json) =>
       _$ReleaseDateFromJson(json);

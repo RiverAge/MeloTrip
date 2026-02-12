@@ -18,9 +18,10 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
           children: [
             Text(
               ' ${current?.album ?? ''}',
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 17),
               textAlign: TextAlign.left,
             ),
+
             // Expanded(
             //   child: Wrap(
             //     children: [

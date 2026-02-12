@@ -54,10 +54,16 @@ Json? _$JsonConverterToJson<Json, Value>(
 
 _Line _$LineFromJson(Map<String, dynamic> json) => _Line(
   start: (json['start'] as num?)?.toInt(),
-  value: json['value'] as String?,
+  value: _$JsonConverterFromJson<String, List<String>>(
+    json['value'],
+    const LineValueConvert().fromJson,
+  ),
 );
 
 Map<String, dynamic> _$LineToJson(_Line instance) => <String, dynamic>{
   'start': instance.start,
-  'value': instance.value,
+  'value': _$JsonConverterToJson<String, List<String>>(
+    instance.value,
+    const LineValueConvert().toJson,
+  ),
 };

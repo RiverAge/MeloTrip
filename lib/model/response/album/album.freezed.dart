@@ -673,7 +673,12 @@ as String?,
 /// @nodoc
 mixin _$ReleaseDate {
 
-
+ int? get year; int? get month; int? get day;
+/// Create a copy of ReleaseDate
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReleaseDateCopyWith<ReleaseDate> get copyWith => _$ReleaseDateCopyWithImpl<ReleaseDate>(this as ReleaseDate, _$identity);
 
   /// Serializes this ReleaseDate to a JSON map.
   Map<String, dynamic> toJson();
@@ -681,24 +686,52 @@ mixin _$ReleaseDate {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReleaseDate);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReleaseDate&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.day, day) || other.day == day));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,year,month,day);
 
 @override
 String toString() {
-  return 'ReleaseDate()';
+  return 'ReleaseDate(year: $year, month: $month, day: $day)';
 }
 
 
 }
 
 /// @nodoc
-class $ReleaseDateCopyWith<$Res>  {
-$ReleaseDateCopyWith(ReleaseDate _, $Res Function(ReleaseDate) __);
+abstract mixin class $ReleaseDateCopyWith<$Res>  {
+  factory $ReleaseDateCopyWith(ReleaseDate value, $Res Function(ReleaseDate) _then) = _$ReleaseDateCopyWithImpl;
+@useResult
+$Res call({
+ int? year, int? month, int? day
+});
+
+
+
+
+}
+/// @nodoc
+class _$ReleaseDateCopyWithImpl<$Res>
+    implements $ReleaseDateCopyWith<$Res> {
+  _$ReleaseDateCopyWithImpl(this._self, this._then);
+
+  final ReleaseDate _self;
+  final $Res Function(ReleaseDate) _then;
+
+/// Create a copy of ReleaseDate
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? year = freezed,Object? month = freezed,Object? day = freezed,}) {
+  return _then(_self.copyWith(
+year: freezed == year ? _self.year : year // ignore: cast_nullable_to_non_nullable
+as int?,month: freezed == month ? _self.month : month // ignore: cast_nullable_to_non_nullable
+as int?,day: freezed == day ? _self.day : day // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
 }
 
 
@@ -780,10 +813,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function()?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? year,  int? month,  int? day)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReleaseDate() when $default != null:
-return $default();case _:
+return $default(_that.year,_that.month,_that.day);case _:
   return orElse();
 
 }
@@ -801,10 +834,10 @@ return $default();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function()  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? year,  int? month,  int? day)  $default,) {final _that = this;
 switch (_that) {
 case _ReleaseDate():
-return $default();case _:
+return $default(_that.year,_that.month,_that.day);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -821,10 +854,10 @@ return $default();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function()?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? year,  int? month,  int? day)?  $default,) {final _that = this;
 switch (_that) {
 case _ReleaseDate() when $default != null:
-return $default();case _:
+return $default(_that.year,_that.month,_that.day);case _:
   return null;
 
 }
@@ -836,11 +869,18 @@ return $default();case _:
 @JsonSerializable()
 
 class _ReleaseDate implements ReleaseDate {
-  const _ReleaseDate();
+  const _ReleaseDate({this.year, this.month, this.day});
   factory _ReleaseDate.fromJson(Map<String, dynamic> json) => _$ReleaseDateFromJson(json);
 
+@override final  int? year;
+@override final  int? month;
+@override final  int? day;
 
-
+/// Create a copy of ReleaseDate
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReleaseDateCopyWith<_ReleaseDate> get copyWith => __$ReleaseDateCopyWithImpl<_ReleaseDate>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
@@ -849,23 +889,54 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReleaseDate);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReleaseDate&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.day, day) || other.day == day));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,year,month,day);
 
 @override
 String toString() {
-  return 'ReleaseDate()';
+  return 'ReleaseDate(year: $year, month: $month, day: $day)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class _$ReleaseDateCopyWith<$Res> implements $ReleaseDateCopyWith<$Res> {
+  factory _$ReleaseDateCopyWith(_ReleaseDate value, $Res Function(_ReleaseDate) _then) = __$ReleaseDateCopyWithImpl;
+@override @useResult
+$Res call({
+ int? year, int? month, int? day
+});
 
 
+
+
+}
+/// @nodoc
+class __$ReleaseDateCopyWithImpl<$Res>
+    implements _$ReleaseDateCopyWith<$Res> {
+  __$ReleaseDateCopyWithImpl(this._self, this._then);
+
+  final _ReleaseDate _self;
+  final $Res Function(_ReleaseDate) _then;
+
+/// Create a copy of ReleaseDate
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? year = freezed,Object? month = freezed,Object? day = freezed,}) {
+  return _then(_ReleaseDate(
+year: freezed == year ? _self.year : year // ignore: cast_nullable_to_non_nullable
+as int?,month: freezed == month ? _self.month : month // ignore: cast_nullable_to_non_nullable
+as int?,day: freezed == day ? _self.day : day // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+
+}
 
 
 /// @nodoc

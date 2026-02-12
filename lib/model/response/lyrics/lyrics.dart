@@ -48,9 +48,24 @@ abstract class StructuredLyric with _$StructuredLyric {
 
 @freezed
 abstract class Line with _$Line {
-  const factory Line({int? start, String? value}) = _Line;
+  const factory Line({int? start, @LineValueConvert() List<String>? value}) =
+      _Line;
 
   factory Line.fromJson(Map<String, dynamic> json) => _$LineFromJson(json);
+}
+
+class LineValueConvert implements JsonConverter<List<String>, String> {
+  const LineValueConvert();
+
+  @override
+  List<String> fromJson(String json) {
+    return [json];
+  }
+
+  @override
+  String toJson(List<String> object) {
+    return object.join('\n');
+  }
 }
 
 class LinesConvert implements JsonConverter<List<Line>, List<dynamic>> {
@@ -63,13 +78,17 @@ class LinesConvert implements JsonConverter<List<Line>, List<dynamic>> {
     final List<Line> mergedMap = [];
 
     for (var item in rawLines) {
+      if (item['value'] == null || item['value'] == '') {
+        continue;
+      }
       final idx = mergedMap.indexWhere((e) => e.start == item['start']);
       if (idx == -1) {
         mergedMap.add(Line.fromJson(item));
       } else {
         mergedMap[idx] = Line(
           start: mergedMap[idx].start,
-          value: '${mergedMap[idx].start} ${item['value']}',
+          value: List<String>.from(mergedMap[idx].value ?? [])
+            ..add(item['value']),
         );
       }
     }

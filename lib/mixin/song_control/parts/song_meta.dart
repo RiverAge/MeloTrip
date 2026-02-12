@@ -24,7 +24,7 @@ class _SongMeta extends StatelessWidget {
                 },
                 leading: const Icon(Icons.group),
                 title: Text(
-                  '${AppLocalizations.of(context)!.artist}:${artists[0].name}',
+                  '${AppLocalizations.of(context)!.artist}: ${artists[0].name}',
                 ),
               ),
             if (artists.length > 1)
@@ -59,30 +59,30 @@ class _SongMeta extends StatelessWidget {
               },
               leading: const Icon(Icons.album_outlined),
               title: Text(
-                '${AppLocalizations.of(context)!.album}：${song.album}',
+                '${AppLocalizations.of(context)!.album}: ${song.album}',
               ),
             ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.access_time),
-              title: Text(
-                '${AppLocalizations.of(context)!.songMetaDuration}: ${durationFormatter(song.duration)}',
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.disc_full_outlined),
-              title: Text(
-                '${AppLocalizations.of(context)!.songMetaFormat}: ${song.suffix}',
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.high_quality_outlined),
-              title: Text(
-                '${AppLocalizations.of(context)!.songMetaBitRate}: ${song.bitRate}K',
-              ),
-            ),
+            // const Divider(),
+            // ListTile(
+            //   leading: const Icon(Icons.access_time),
+            //   title: Text(
+            //     '${AppLocalizations.of(context)!.songMetaDuration}: ${durationFormatter(song.duration)}',
+            //   ),
+            // ),
+            // const Divider(),
+            // ListTile(
+            //   leading: const Icon(Icons.disc_full_outlined),
+            //   title: Text(
+            //     '${AppLocalizations.of(context)!.songMetaFormat}: ${song.suffix}',
+            //   ),
+            // ),
+            // const Divider(),
+            // ListTile(
+            //   leading: const Icon(Icons.high_quality_outlined),
+            //   title: Text(
+            //     '${AppLocalizations.of(context)!.songMetaBitRate}: ${song.bitRate}K',
+            //   ),
+            // ),
             if (song.genre != null) const Divider(),
             if (song.genre != null)
               ListTile(
@@ -100,36 +100,36 @@ class _SongMeta extends StatelessWidget {
                 ),
               ),
             const Divider(),
-            ListTile(
-              leading: const Icon(Icons.route_outlined),
-              title: Text(
-                '${AppLocalizations.of(context)!.songMetaPath}: ${song.path}',
-              ),
-            ),
-            if (song.samplingRate != null && song.samplingRate != 0)
-              const Divider(),
-            if (song.samplingRate != null && song.samplingRate != 0)
-              ListTile(
-                leading: const Icon(Icons.equalizer_outlined),
-                title: Text(
-                  '${AppLocalizations.of(context)!.songMetaSampling}: ${song.samplingRate}',
-                ),
-              ),
-            if (song.track != null) const Divider(),
+            // ListTile(
+            //   leading: const Icon(Icons.route_outlined),
+            //   title: Text(
+            //     '${AppLocalizations.of(context)!.songMetaPath}: ${song.path}',
+            //   ),
+            // ),
+            // if (song.samplingRate != null && song.samplingRate != 0)
+            //   const Divider(),
+            // if (song.samplingRate != null && song.samplingRate != 0)
+            //   ListTile(
+            //     leading: const Icon(Icons.equalizer_outlined),
+            //     title: Text(
+            //       '${AppLocalizations.of(context)!.songMetaSampling}: ${song.samplingRate}',
+            //     ),
+            //   ),
+            // if (song.track != null) const Divider(),
             if (song.track != null)
               ListTile(
                 leading: const Icon(Icons.disc_full_outlined),
                 title: Text(
-                  '${AppLocalizations.of(context)!.songMetaTrackNumber}: ${song.track}',
+                  '${AppLocalizations.of(context)!.songMetaTrackNumber}: ${song.discNumber}-${song.track}',
                 ),
               ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.pin_outlined),
-              title: Text(
-                '${AppLocalizations.of(context)!.songMetaDiskNumber}: ${song.bpm}',
-              ),
-            ),
+            // const Divider(),
+            // ListTile(
+            //   leading: const Icon(Icons.pin_outlined),
+            //   title: Text(
+            //     '${AppLocalizations.of(context)!.songMetaDiskNumber}: ${song.discNumber}',
+            //   ),
+            // ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.storage_rounded),

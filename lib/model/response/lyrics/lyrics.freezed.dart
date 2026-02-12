@@ -572,7 +572,7 @@ as bool?,
 /// @nodoc
 mixin _$Line {
 
- int? get start; String? get value;
+ int? get start;@LineValueConvert() List<String>? get value;
 /// Create a copy of Line
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -585,12 +585,12 @@ $LineCopyWith<Line> get copyWith => _$LineCopyWithImpl<Line>(this as Line, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Line&&(identical(other.start, start) || other.start == start)&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Line&&(identical(other.start, start) || other.start == start)&&const DeepCollectionEquality().equals(other.value, value));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,start,value);
+int get hashCode => Object.hash(runtimeType,start,const DeepCollectionEquality().hash(value));
 
 @override
 String toString() {
@@ -605,7 +605,7 @@ abstract mixin class $LineCopyWith<$Res>  {
   factory $LineCopyWith(Line value, $Res Function(Line) _then) = _$LineCopyWithImpl;
 @useResult
 $Res call({
- int? start, String? value
+ int? start,@LineValueConvert() List<String>? value
 });
 
 
@@ -626,7 +626,7 @@ class _$LineCopyWithImpl<$Res>
   return _then(_self.copyWith(
 start: freezed == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
 as int?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as String?,
+as List<String>?,
   ));
 }
 
@@ -711,7 +711,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? start,  String? value)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? start, @LineValueConvert()  List<String>? value)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Line() when $default != null:
 return $default(_that.start,_that.value);case _:
@@ -732,7 +732,7 @@ return $default(_that.start,_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? start,  String? value)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? start, @LineValueConvert()  List<String>? value)  $default,) {final _that = this;
 switch (_that) {
 case _Line():
 return $default(_that.start,_that.value);case _:
@@ -752,7 +752,7 @@ return $default(_that.start,_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? start,  String? value)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? start, @LineValueConvert()  List<String>? value)?  $default,) {final _that = this;
 switch (_that) {
 case _Line() when $default != null:
 return $default(_that.start,_that.value);case _:
@@ -767,11 +767,19 @@ return $default(_that.start,_that.value);case _:
 @JsonSerializable()
 
 class _Line implements Line {
-  const _Line({this.start, this.value});
+  const _Line({this.start, @LineValueConvert() final  List<String>? value}): _value = value;
   factory _Line.fromJson(Map<String, dynamic> json) => _$LineFromJson(json);
 
 @override final  int? start;
-@override final  String? value;
+ final  List<String>? _value;
+@override@LineValueConvert() List<String>? get value {
+  final value = _value;
+  if (value == null) return null;
+  if (_value is EqualUnmodifiableListView) return _value;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of Line
 /// with the given fields replaced by the non-null parameter values.
@@ -786,12 +794,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Line&&(identical(other.start, start) || other.start == start)&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Line&&(identical(other.start, start) || other.start == start)&&const DeepCollectionEquality().equals(other._value, _value));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,start,value);
+int get hashCode => Object.hash(runtimeType,start,const DeepCollectionEquality().hash(_value));
 
 @override
 String toString() {
@@ -806,7 +814,7 @@ abstract mixin class _$LineCopyWith<$Res> implements $LineCopyWith<$Res> {
   factory _$LineCopyWith(_Line value, $Res Function(_Line) _then) = __$LineCopyWithImpl;
 @override @useResult
 $Res call({
- int? start, String? value
+ int? start,@LineValueConvert() List<String>? value
 });
 
 
@@ -826,8 +834,8 @@ class __$LineCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? start = freezed,Object? value = freezed,}) {
   return _then(_Line(
 start: freezed == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
-as int?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as String?,
+as int?,value: freezed == value ? _self._value : value // ignore: cast_nullable_to_non_nullable
+as List<String>?,
   ));
 }
 
