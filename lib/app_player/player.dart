@@ -28,11 +28,7 @@ class AppPlayer extends BaseAudioHandler {
   final _playQueueSubject = BehaviorSubject<PlayQueue>();
   final _errorSubject = BehaviorSubject<String>();
 
-  StreamSubscription<Duration>? _bufferedSubscription;
   StreamSubscription<Duration>? _positionSubscription;
-  // .seeded(
-  // PlayQueue(songs: [], index: 0),
-  // );
 
   StreamSubscription<void>? _becomingNoisyEventSubscription;
   StreamSubscription<AudioInterruptionEvent>? _interruptionEventSubscription;
@@ -53,20 +49,12 @@ class AppPlayer extends BaseAudioHandler {
   }
 
   void setBackgroundMode(bool isBackground) {
-    log(
-      'setBackgroundMode -> $isBackground ${isBackground ? 'position stream pause' : ''}',
-    );
     if (isBackground) {
       _positionSubscription?.cancel();
-      _bufferedSubscription?.cancel();
       _positionSubscription = null;
-      _bufferedSubscription = null;
     } else {
       _positionSubscription ??= _player.stream.position.listen(
         _postionSubject.add,
-      );
-      _bufferedSubscription ??= _player.stream.buffer.listen(
-        _bufferedPositionSubject.add,
       );
     }
   }
@@ -134,7 +122,6 @@ class AppPlayer extends BaseAudioHandler {
     _becomingNoisyEventSubscription?.cancel();
     _interruptionEventSubscription?.cancel();
 
-    _bufferedSubscription?.cancel();
     _positionSubscription?.cancel();
 
     _player.dispose();

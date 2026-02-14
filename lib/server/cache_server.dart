@@ -36,16 +36,15 @@ void runHttpServer(Map<String, dynamic> args) async {
   final locks = <String, Lock>{};
   // 异步处理请求，非阻塞
   server.listen((HttpRequest request) async {
-    final digest =
-        md5
-            .convert(
-              utf8.encode(
-                _isSubsonicStream(request)
-                    ? _buildSubsonicStreamDigest(request)
-                    : request.uri.toString(),
-              ),
-            )
-            .toString();
+    final digest = md5
+        .convert(
+          utf8.encode(
+            _isSubsonicStream(request)
+                ? _buildSubsonicStreamDigest(request)
+                : request.uri.toString(),
+          ),
+        )
+        .toString();
     final file = File(p.join(dirPath, digest));
     final cacheSize = file.existsSync() ? file.lengthSync() : 0;
     final rangeHeader = request.headers.value('range');
@@ -85,15 +84,16 @@ void runHttpServer(Map<String, dynamic> args) async {
 
       final stream = file.openRead(startByte, endByte + 1);
       request.response
-        ..statusCode =
-            rangeHeader == null ? HttpStatus.ok : HttpStatus.partialContent
+        ..statusCode = rangeHeader == null
+            ? HttpStatus.ok
+            : HttpStatus.partialContent
         ..headers.add(
           'Content-Range',
           'bytes${rangeHeader == null ? '' : ' $startByte-$endByte/$cacheSize'}',
         )
         ..headers.contentLength = endByte - startByte + 1;
       await stream.pipe(request.response);
-      log('缓存命中 ${request.uri.toString()}');
+      // log('缓存命中 ${request.uri.toString()}');
       return;
     }
 
@@ -141,7 +141,7 @@ void runHttpServer(Map<String, dynamic> args) async {
         }
         await raf?.setPosition(streamPointer);
         await raf?.writeFrom(chunks);
-        log('写入缓存data ${request.uri.toString()}');
+        // log('写入缓存data ${request.uri.toString()}');
 
         _saveMetaFile(p.join(metaPath, digest), proxyResponse);
       } finally {

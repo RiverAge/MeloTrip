@@ -15,7 +15,7 @@ class LanguagePage extends StatelessWidget {
       ),
       body: AsyncValueBuilder(
         provider: userConfigProvider,
-        nullableBuilder: (context, config, ref) {
+        builder: (context, config, ref) {
           return ListView(
             children: [
               ListTile(
@@ -25,8 +25,9 @@ class LanguagePage extends StatelessWidget {
                       .setConfiguration(locale: ValueUpdater(null));
                 },
                 title: Text(AppLocalizations.of(context)!.systemDefault),
-                trailing:
-                    config?.locale == null ? const Icon(Icons.check) : null,
+                trailing: config.locale == null
+                    ? const Icon(Icons.check)
+                    : null,
               ),
 
               Divider(),
@@ -40,10 +41,9 @@ class LanguagePage extends StatelessWidget {
                 },
                 title: Text(AppLocalizations.of(context)!.english),
                 subtitle: Text(AppLocalizations.of(context)!.us),
-                trailing:
-                    config?.locale == Locale('en', 'US')
-                        ? const Icon(Icons.check)
-                        : null,
+                trailing: config.locale == Locale('en', 'US')
+                    ? const Icon(Icons.check)
+                    : null,
               ),
               Divider(),
               ListTile(
@@ -56,10 +56,9 @@ class LanguagePage extends StatelessWidget {
                 },
                 title: Text(AppLocalizations.of(context)!.simpleChinese),
                 subtitle: Text(AppLocalizations.of(context)!.cn),
-                trailing:
-                    config?.locale == Locale('zh', 'CN')
-                        ? const Icon(Icons.check)
-                        : null,
+                trailing: config.locale == Locale('zh', 'CN')
+                    ? const Icon(Icons.check)
+                    : null,
               ),
             ],
           );

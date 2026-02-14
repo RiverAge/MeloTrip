@@ -2,7 +2,6 @@ part of '../player.dart';
 
 extension PlayerMediaItem on AppPlayer {
   void _updateCurrentMediaItemButton({Duration? position}) {
-    // final starred = await _isCurrentStarred();
     return playbackState.add(
       playbackState.value.copyWith(
         controls: [

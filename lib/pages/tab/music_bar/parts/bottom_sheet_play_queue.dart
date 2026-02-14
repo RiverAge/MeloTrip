@@ -87,13 +87,13 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   @override
   void initState() {
     super.initState();
-    _setPositionListner();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setPositionListner();
+    });
   }
 
   void _setPositionListner() async {
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    if (player == null) return;
-    final index = player.playQueue.index;
+    final index = widget.playQueue.index;
     if (!_scrollController.hasClients) return;
 
     double targetOffset = index * (72.0 + 0.0);
@@ -101,16 +101,10 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
     // 确保 targetOffset 不会超过 maxScrollExtent
     double finalOffset = targetOffset.clamp(
       0.0,
-      _scrollController.position.maxScrollExtent - 50,
+      _scrollController.position.maxScrollExtent - 23,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(
-        finalOffset,
-        // duration: Duration(seconds: 1),
-        // curve: Curves.linear,
-      );
-    });
+    _scrollController.jumpTo(finalOffset);
   }
 
   @override

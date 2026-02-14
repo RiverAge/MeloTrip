@@ -10,9 +10,10 @@ extension PlayerInit on AppPlayer {
     _player.stream.duration.listen(_durationSubject.add);
     // _player.stream.buffer.listen((_) => _updateCurrentMediaItemButton());
     _positionSubscription = _player.stream.position.listen(_postionSubject.add);
-    _bufferedSubscription = _player.stream.buffer.listen(
-      _bufferedPositionSubject.add,
-    );
+    _player.stream.buffer.listen((duration) {
+      _bufferedPositionSubject.add(duration);
+      _updateCurrentMediaItemButton();
+    });
     _player.stream.playing.listen((data) {
       _updateCurrentMediaItemButton();
       _playingSubject.add(data);
@@ -26,6 +27,7 @@ extension PlayerInit on AppPlayer {
           index: e.index,
         ),
       );
+      // 这里只监听队列不行，队列变了这个state.position没有变为0
       _updateCurrentMediaItemButton();
     });
 
