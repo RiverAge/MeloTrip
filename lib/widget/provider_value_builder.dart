@@ -11,7 +11,6 @@ class AsyncValueBuilder<T> extends StatelessWidget {
     super.key,
     required this.provider,
     this.builder,
-    this.nullableBuilder,
     this.loading,
     this.empty,
   });
@@ -19,8 +18,6 @@ class AsyncValueBuilder<T> extends StatelessWidget {
   final ProviderListenable<AsyncValue<T?>> provider;
 
   final Widget Function(BuildContext context, T data, WidgetRef ref)? builder;
-  final Widget Function(BuildContext context, T? data, WidgetRef ref)?
-  nullableBuilder;
   final Widget Function(BuildContext context, WidgetRef ref)? loading;
   final Widget Function(BuildContext context, WidgetRef ref)? empty;
 
@@ -38,9 +35,7 @@ class AsyncValueBuilder<T> extends StatelessWidget {
             return const _Error();
           },
           data: (value) {
-            if (nullableBuilder != null) {
-              return nullableBuilder!(context, value, ref);
-            } else if (value == null) {
+            if (value == null) {
               return empty != null ? empty!(context, ref) : const NoData();
             } else if (builder != null) {
               return builder!(context, value, ref);

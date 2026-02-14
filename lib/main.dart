@@ -16,6 +16,7 @@ import 'package:melo_trip/pages/initial/initial_page.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -91,14 +92,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             });
           } else {
             final auth = await ref.read(currentUserProvider.future);
-            final subsonicToken = auth?.subsonicToken;
+            final subsonicToken = auth?.token;
             final host = auth?.host;
             if (subsonicToken != null && host != null) {
               options.baseUrl = host;
               options.queryParameters.addAll({
                 'u': auth?.username,
                 't': subsonicToken, // 假设 token 是这样传递
-                's': auth?.subsonicSalt, // 假设 salt 是这样传递
+                's': auth?.salt, // 假设 salt 是这样传递
                 '_': DateTime.now().toIso8601String(),
                 'v': '1.16.1',
                 'c': 'melo_trip',
@@ -142,7 +143,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       final config = await ref.read(userConfigProvider.future);
 
       final url =
-          '$proxyCacheHost/rest/stream?id=${song.id}&u=${auth?.username}&t=${auth?.subsonicToken}&s=${auth?.subsonicSalt}&_=${DateTime.now().toIso8601String()}&f=json&v=1.8.0&c=MeloTrip&maxBitRate=${config?.maxRate}';
+          '$proxyCacheHost/rest/stream?id=${song.id}&u=${auth?.username}&t=${auth?.token}&s=${auth?.salt}&_=${DateTime.now().toIso8601String()}&f=json&v=1.8.0&c=MeloTrip&maxBitRate=${config?.maxRate}';
 
       return Media(url, extras: {'song': song});
     });
@@ -232,7 +233,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
     final song = playQueue.songs[playQueue.index];
     final url =
-        '$proxyCacheHost/rest/getCoverArt?id=${song.id}&u=${auth?.username}&t=${auth?.subsonicToken}&s=${auth?.subsonicSalt}&_=${DateTime.now().toIso8601String()}&f=json&v=1.8.0&c=MeloTrip';
+        '$proxyCacheHost/rest/getCoverArt?id=${song.id}&u=${auth?.username}&t=${auth?.token}&s=${auth?.salt}&_=${DateTime.now().toIso8601String()}&f=json&v=1.8.0&c=MeloTrip';
 
     final duartion = song.duration;
     final item = MediaItem(
@@ -293,27 +294,58 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncValueBuilder(
-      provider: userConfigProvider,
-      nullableBuilder: (context, config, ref) => MaterialApp(
-        scaffoldMessengerKey: _scaffoldMessengerKey,
-        title: 'MeloTrip',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFDB1D5D)),
-        ),
-        themeMode: config?.theme,
-        locale: config?.locale,
-        darkTheme: ThemeData.dark().copyWith(
-          colorScheme: ColorScheme.fromSeed(
-            brightness: Brightness.dark,
-            seedColor: Color(0xFFDB1D5D),
-          ),
-        ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: InitialPage(),
+    final observer = ref.watch(routeObserverProvider);
+    final userConfig = ref.watch(userConfigProvider);
+    final config = userConfig.valueOrNull;
+
+    return MaterialApp(
+      scaffoldMessengerKey: _scaffoldMessengerKey,
+      title: 'MeloTrip',
+      navigatorObservers: [observer],
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFDB1D5D)),
       ),
+      themeMode: config?.theme,
+      locale: config?.locale,
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: Color(0xFFDB1D5D),
+        ),
+      ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: InitialPage(),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return AsyncValueBuilder(
+  //     provider: userConfigProvider,
+  //     nullableBuilder: (context, config, ref) {
+  //       print('nullableBuilder');
+  //       return MaterialApp(
+  //         scaffoldMessengerKey: _scaffoldMessengerKey,
+  //         title: 'MeloTrip',
+  //         theme: ThemeData(
+  //           useMaterial3: true,
+  //           colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFDB1D5D)),
+  //         ),
+  //         themeMode: config?.theme,
+  //         locale: config?.locale,
+  //         darkTheme: ThemeData.dark().copyWith(
+  //           colorScheme: ColorScheme.fromSeed(
+  //             brightness: Brightness.dark,
+  //             seedColor: Color(0xFFDB1D5D),
+  //           ),
+  //         ),
+  //         localizationsDelegates: AppLocalizations.localizationsDelegates,
+  //         supportedLocales: AppLocalizations.supportedLocales,
+  //         home: InitialPage(),
+  //       );
+  //     },
+  //   );
+  // }
 }
