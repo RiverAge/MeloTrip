@@ -1,6 +1,3 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
@@ -17,8 +14,6 @@ import 'package:melo_trip/widget/rating.dart';
 
 part 'parts/album_cover.dart';
 part 'parts/album_info.dart';
-part 'parts/album_play_all.dart';
-part 'parts/blurred_filter.dart';
 part 'parts/list_item.dart';
 part 'parts/list_item_head.dart';
 

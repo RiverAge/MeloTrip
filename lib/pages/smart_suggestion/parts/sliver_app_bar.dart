@@ -32,7 +32,7 @@ class _SliverAppBar extends StatelessWidget {
                   onPressed: () async {
                     await player.setPlaylist(
                       songs: [...songs, ...player.playQueue.songs],
-                      initialId: songs[0].id,
+                      initialId: songs.firstOrNull?.id,
                     );
                     player.play();
                   },

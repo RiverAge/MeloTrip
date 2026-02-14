@@ -12,7 +12,7 @@ _PlayHistory _$PlayHistoryFromJson(Map<String, dynamic> json) => _PlayHistory(
   lastPlayed: (json['last_played'] as num?)?.toInt(),
   isCompleted: json['is_completed'] as String?,
   isSkipped: json['is_skipped'] as String?,
-  userId: json['user_id'] as String?,
+  username: json['username'] as String?,
 );
 
 Map<String, dynamic> _$PlayHistoryToJson(_PlayHistory instance) =>
@@ -22,5 +22,5 @@ Map<String, dynamic> _$PlayHistoryToJson(_PlayHistory instance) =>
       'last_played': instance.lastPlayed,
       'is_completed': instance.isCompleted,
       'is_skipped': instance.isSkipped,
-      'user_id': instance.userId,
+      'username': instance.username,
     };

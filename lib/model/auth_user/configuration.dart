@@ -8,7 +8,7 @@ part 'configuration.g.dart';
 @freezed
 abstract class Configuration with _$Configuration {
   const factory Configuration({
-    @JsonKey(name: 'user_id') String? userId,
+    @JsonKey(name: 'username') String? username,
     @JsonKey(name: 'max_rate') String? maxRate,
     @JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,
     @JsonKey(name: 'recent_searches') String? recentSearches,

@@ -4,20 +4,19 @@ extension PlayerInit on AppPlayer {
   void _init() async {
     _player.stream.completed.listen((_) => _updateCurrentMediaItemButton());
     _player.stream.rate.listen((_) => _updateCurrentMediaItemButton());
+    _player.stream.shuffle.listen(_shuffleSubject.add);
+    _player.stream.volume.listen(_volumeSubject.add);
+    _player.stream.playlistMode.listen(_playlistModeSubject.add);
+    _player.stream.duration.listen(_durationSubject.add);
     // _player.stream.buffer.listen((_) => _updateCurrentMediaItemButton());
     _positionSubscription = _player.stream.position.listen(_postionSubject.add);
     _bufferedSubscription = _player.stream.buffer.listen(
       _bufferedPositionSubject.add,
     );
-    _player.stream.duration.listen(_durationSubject.add);
     _player.stream.playing.listen((data) {
       _updateCurrentMediaItemButton();
       _playingSubject.add(data);
     });
-    _player.stream.playlistMode.listen((data) {
-      _playlistModeSubject.add(data);
-    });
-    _player.stream.volume.listen(_volumeSubject.add);
     _player.stream.playlist.listen((e) {
       _playQueueSubject.add(
         PlayQueue(
@@ -27,6 +26,7 @@ extension PlayerInit on AppPlayer {
           index: e.index,
         ),
       );
+      _updateCurrentMediaItemButton();
     });
 
     _player.stream.log.listen((data) {

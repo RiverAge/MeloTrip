@@ -41,7 +41,8 @@ Future<SubsonicResponse?> lyrics(Ref ref, String? songId) async {
     int score = 0;
     final Set<String> types = {};
     for (var item in entry.value) {
-      final type = (item.lang ?? "").split('-').first.toLowerCase();
+      final type =
+          (item.lang ?? "").split('-').firstOrNull?.toLowerCase() ?? '';
       if (!types.contains(type)) {
         if (type.contains('ori')) {
           score += 10;

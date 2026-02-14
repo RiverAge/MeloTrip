@@ -47,11 +47,7 @@ class ChatApi {
     }
 
     final chunk = ChatCompletionChunk.fromJson(data);
-    final choices = chunk.choices;
-    if (choices == null || choices.isEmpty) {
-      return null;
-    }
-    final title = choices[0].message?.content;
+    final title = chunk.choices?.firstOrNull?.message?.content;
     if (title == null) {
       return null;
     }

@@ -22,10 +22,9 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
         final song = playlist.entry?[idx];
         return PlayQueueBuilder(
           builder: (context, playQueue, ref) {
-            final current =
-                playQueue.index >= playQueue.songs.length
-                    ? null
-                    : playQueue.songs[playQueue.index];
+            final current = playQueue.index >= playQueue.songs.length
+                ? null
+                : playQueue.songs[playQueue.index];
             return AsyncValueBuilder(
               provider: appPlayerHandlerProvider,
               builder: (context, player, _) {
@@ -36,13 +35,28 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
                   },
                   horizontalTitleGap: 2,
                   selected: current?.id == song?.id,
-                  leading: Text(
-                    (idx + 1).toString(),
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  leading: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        (idx + 1).toString(),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        child: ArtworkImage(id: song?.id),
+                      ),
+                    ],
                   ),
                   title: Row(
                     children: [
@@ -54,18 +68,20 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
                             builder: (_, playing) {
                               return current?.id == song?.id && playing
                                   ? SizedBox(
-                                    width: 30,
-                                    child: Image.asset(
-                                      'images/playing.gif',
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                  )
+                                      width: 30,
+                                      child: Image.asset(
+                                        'images/playing.gif',
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                    )
                                   : const SizedBox.shrink();
                             },
                           );
                         },
                       ),
+
                       Expanded(child: Text(song?.title ?? '')),
                     ],
                   ),
@@ -81,8 +97,8 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
                       ),
                       IconButton(
                         icon: const Icon(Icons.more_horiz_rounded),
-                        onPressed:
-                            () => showSongControlSheet(context, song?.id),
+                        onPressed: () =>
+                            showSongControlSheet(context, song?.id),
                       ),
                     ],
                   ),

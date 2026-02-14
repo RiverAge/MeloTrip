@@ -19,7 +19,7 @@ class _CoverLyricsSwitcherState extends State<_CoverLyricsSwitcher> {
       },
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 650),
-        child: _isFront ? _RoundedCover() : const _AnimtedLyrics(),
+        child: _isFront ? _RoundedCover() : _AnimtedLyrics(),
       ),
     );
   }

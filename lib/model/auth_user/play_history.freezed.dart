@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlayHistory {
 
-@JsonKey(name: 'song_id') String? get songId;@JsonKey(name: 'play_count') int? get playCount;@JsonKey(name: 'last_played') int? get lastPlayed;@JsonKey(name: 'is_completed') String? get isCompleted;@JsonKey(name: 'is_skipped') String? get isSkipped;@JsonKey(name: 'user_id') String? get userId;
+@JsonKey(name: 'song_id') String? get songId;@JsonKey(name: 'play_count') int? get playCount;@JsonKey(name: 'last_played') int? get lastPlayed;@JsonKey(name: 'is_completed') String? get isCompleted;@JsonKey(name: 'is_skipped') String? get isSkipped;@JsonKey(name: 'username') String? get username;
 /// Create a copy of PlayHistory
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PlayHistoryCopyWith<PlayHistory> get copyWith => _$PlayHistoryCopyWithImpl<Play
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlayHistory&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.playCount, playCount) || other.playCount == playCount)&&(identical(other.lastPlayed, lastPlayed) || other.lastPlayed == lastPlayed)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isSkipped, isSkipped) || other.isSkipped == isSkipped)&&(identical(other.userId, userId) || other.userId == userId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlayHistory&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.playCount, playCount) || other.playCount == playCount)&&(identical(other.lastPlayed, lastPlayed) || other.lastPlayed == lastPlayed)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isSkipped, isSkipped) || other.isSkipped == isSkipped)&&(identical(other.username, username) || other.username == username));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,songId,playCount,lastPlayed,isCompleted,isSkipped,userId);
+int get hashCode => Object.hash(runtimeType,songId,playCount,lastPlayed,isCompleted,isSkipped,username);
 
 @override
 String toString() {
-  return 'PlayHistory(songId: $songId, playCount: $playCount, lastPlayed: $lastPlayed, isCompleted: $isCompleted, isSkipped: $isSkipped, userId: $userId)';
+  return 'PlayHistory(songId: $songId, playCount: $playCount, lastPlayed: $lastPlayed, isCompleted: $isCompleted, isSkipped: $isSkipped, username: $username)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PlayHistoryCopyWith<$Res>  {
   factory $PlayHistoryCopyWith(PlayHistory value, $Res Function(PlayHistory) _then) = _$PlayHistoryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'play_count') int? playCount,@JsonKey(name: 'last_played') int? lastPlayed,@JsonKey(name: 'is_completed') String? isCompleted,@JsonKey(name: 'is_skipped') String? isSkipped,@JsonKey(name: 'user_id') String? userId
+@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'play_count') int? playCount,@JsonKey(name: 'last_played') int? lastPlayed,@JsonKey(name: 'is_completed') String? isCompleted,@JsonKey(name: 'is_skipped') String? isSkipped,@JsonKey(name: 'username') String? username
 });
 
 
@@ -65,14 +65,14 @@ class _$PlayHistoryCopyWithImpl<$Res>
 
 /// Create a copy of PlayHistory
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? songId = freezed,Object? playCount = freezed,Object? lastPlayed = freezed,Object? isCompleted = freezed,Object? isSkipped = freezed,Object? userId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? songId = freezed,Object? playCount = freezed,Object? lastPlayed = freezed,Object? isCompleted = freezed,Object? isSkipped = freezed,Object? username = freezed,}) {
   return _then(_self.copyWith(
 songId: freezed == songId ? _self.songId : songId // ignore: cast_nullable_to_non_nullable
 as String?,playCount: freezed == playCount ? _self.playCount : playCount // ignore: cast_nullable_to_non_nullable
 as int?,lastPlayed: freezed == lastPlayed ? _self.lastPlayed : lastPlayed // ignore: cast_nullable_to_non_nullable
 as int?,isCompleted: freezed == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as String?,isSkipped: freezed == isSkipped ? _self.isSkipped : isSkipped // ignore: cast_nullable_to_non_nullable
-as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -158,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'play_count')  int? playCount, @JsonKey(name: 'last_played')  int? lastPlayed, @JsonKey(name: 'is_completed')  String? isCompleted, @JsonKey(name: 'is_skipped')  String? isSkipped, @JsonKey(name: 'user_id')  String? userId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'play_count')  int? playCount, @JsonKey(name: 'last_played')  int? lastPlayed, @JsonKey(name: 'is_completed')  String? isCompleted, @JsonKey(name: 'is_skipped')  String? isSkipped, @JsonKey(name: 'username')  String? username)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlayHistory() when $default != null:
-return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,_that.isSkipped,_that.userId);case _:
+return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,_that.isSkipped,_that.username);case _:
   return orElse();
 
 }
@@ -179,10 +179,10 @@ return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'play_count')  int? playCount, @JsonKey(name: 'last_played')  int? lastPlayed, @JsonKey(name: 'is_completed')  String? isCompleted, @JsonKey(name: 'is_skipped')  String? isSkipped, @JsonKey(name: 'user_id')  String? userId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'play_count')  int? playCount, @JsonKey(name: 'last_played')  int? lastPlayed, @JsonKey(name: 'is_completed')  String? isCompleted, @JsonKey(name: 'is_skipped')  String? isSkipped, @JsonKey(name: 'username')  String? username)  $default,) {final _that = this;
 switch (_that) {
 case _PlayHistory():
-return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,_that.isSkipped,_that.userId);case _:
+return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,_that.isSkipped,_that.username);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +199,10 @@ return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'play_count')  int? playCount, @JsonKey(name: 'last_played')  int? lastPlayed, @JsonKey(name: 'is_completed')  String? isCompleted, @JsonKey(name: 'is_skipped')  String? isSkipped, @JsonKey(name: 'user_id')  String? userId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'play_count')  int? playCount, @JsonKey(name: 'last_played')  int? lastPlayed, @JsonKey(name: 'is_completed')  String? isCompleted, @JsonKey(name: 'is_skipped')  String? isSkipped, @JsonKey(name: 'username')  String? username)?  $default,) {final _that = this;
 switch (_that) {
 case _PlayHistory() when $default != null:
-return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,_that.isSkipped,_that.userId);case _:
+return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,_that.isSkipped,_that.username);case _:
   return null;
 
 }
@@ -214,7 +214,7 @@ return $default(_that.songId,_that.playCount,_that.lastPlayed,_that.isCompleted,
 @JsonSerializable()
 
 class _PlayHistory implements PlayHistory {
-  const _PlayHistory({@JsonKey(name: 'song_id') this.songId, @JsonKey(name: 'play_count') this.playCount, @JsonKey(name: 'last_played') this.lastPlayed, @JsonKey(name: 'is_completed') this.isCompleted, @JsonKey(name: 'is_skipped') this.isSkipped, @JsonKey(name: 'user_id') this.userId});
+  const _PlayHistory({@JsonKey(name: 'song_id') this.songId, @JsonKey(name: 'play_count') this.playCount, @JsonKey(name: 'last_played') this.lastPlayed, @JsonKey(name: 'is_completed') this.isCompleted, @JsonKey(name: 'is_skipped') this.isSkipped, @JsonKey(name: 'username') this.username});
   factory _PlayHistory.fromJson(Map<String, dynamic> json) => _$PlayHistoryFromJson(json);
 
 @override@JsonKey(name: 'song_id') final  String? songId;
@@ -222,7 +222,7 @@ class _PlayHistory implements PlayHistory {
 @override@JsonKey(name: 'last_played') final  int? lastPlayed;
 @override@JsonKey(name: 'is_completed') final  String? isCompleted;
 @override@JsonKey(name: 'is_skipped') final  String? isSkipped;
-@override@JsonKey(name: 'user_id') final  String? userId;
+@override@JsonKey(name: 'username') final  String? username;
 
 /// Create a copy of PlayHistory
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayHistory&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.playCount, playCount) || other.playCount == playCount)&&(identical(other.lastPlayed, lastPlayed) || other.lastPlayed == lastPlayed)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isSkipped, isSkipped) || other.isSkipped == isSkipped)&&(identical(other.userId, userId) || other.userId == userId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayHistory&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.playCount, playCount) || other.playCount == playCount)&&(identical(other.lastPlayed, lastPlayed) || other.lastPlayed == lastPlayed)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.isSkipped, isSkipped) || other.isSkipped == isSkipped)&&(identical(other.username, username) || other.username == username));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,songId,playCount,lastPlayed,isCompleted,isSkipped,userId);
+int get hashCode => Object.hash(runtimeType,songId,playCount,lastPlayed,isCompleted,isSkipped,username);
 
 @override
 String toString() {
-  return 'PlayHistory(songId: $songId, playCount: $playCount, lastPlayed: $lastPlayed, isCompleted: $isCompleted, isSkipped: $isSkipped, userId: $userId)';
+  return 'PlayHistory(songId: $songId, playCount: $playCount, lastPlayed: $lastPlayed, isCompleted: $isCompleted, isSkipped: $isSkipped, username: $username)';
 }
 
 
@@ -257,7 +257,7 @@ abstract mixin class _$PlayHistoryCopyWith<$Res> implements $PlayHistoryCopyWith
   factory _$PlayHistoryCopyWith(_PlayHistory value, $Res Function(_PlayHistory) _then) = __$PlayHistoryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'play_count') int? playCount,@JsonKey(name: 'last_played') int? lastPlayed,@JsonKey(name: 'is_completed') String? isCompleted,@JsonKey(name: 'is_skipped') String? isSkipped,@JsonKey(name: 'user_id') String? userId
+@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'play_count') int? playCount,@JsonKey(name: 'last_played') int? lastPlayed,@JsonKey(name: 'is_completed') String? isCompleted,@JsonKey(name: 'is_skipped') String? isSkipped,@JsonKey(name: 'username') String? username
 });
 
 
@@ -274,14 +274,14 @@ class __$PlayHistoryCopyWithImpl<$Res>
 
 /// Create a copy of PlayHistory
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? songId = freezed,Object? playCount = freezed,Object? lastPlayed = freezed,Object? isCompleted = freezed,Object? isSkipped = freezed,Object? userId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? songId = freezed,Object? playCount = freezed,Object? lastPlayed = freezed,Object? isCompleted = freezed,Object? isSkipped = freezed,Object? username = freezed,}) {
   return _then(_PlayHistory(
 songId: freezed == songId ? _self.songId : songId // ignore: cast_nullable_to_non_nullable
 as String?,playCount: freezed == playCount ? _self.playCount : playCount // ignore: cast_nullable_to_non_nullable
 as int?,lastPlayed: freezed == lastPlayed ? _self.lastPlayed : lastPlayed // ignore: cast_nullable_to_non_nullable
 as int?,isCompleted: freezed == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as String?,isSkipped: freezed == isSkipped ? _self.isSkipped : isSkipped // ignore: cast_nullable_to_non_nullable
-as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

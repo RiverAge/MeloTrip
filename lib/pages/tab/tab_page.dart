@@ -5,6 +5,7 @@ import 'package:melo_trip/pages/tab/music_bar/parts/music_bar.dart';
 import 'package:melo_trip/pages/home/home_page.dart';
 import 'package:melo_trip/pages/settings/settings_page.dart';
 import 'package:melo_trip/pages/ai_chat/ai_chat_page.dart';
+import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 
 class TabPage extends ConsumerStatefulWidget {
@@ -15,14 +16,17 @@ class TabPage extends ConsumerStatefulWidget {
 }
 
 class _TablePageState extends ConsumerState<TabPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, RouteAware {
   TabController? _controller;
 
   int _currentIndex = 0;
+  bool _visible = true;
+  RouteObserver<ModalRoute<void>>? _routeObserver;
 
   @override
   void dispose() {
     _controller?.dispose();
+    _routeObserver?.unsubscribe(this);
     super.dispose();
   }
 
@@ -49,7 +53,35 @@ class _TablePageState extends ConsumerState<TabPage>
     _controller?.animateTo(index);
   }
 
-  // int _selectedIndex = 0;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      // 通过 ref.read 获取同一个实例进行订阅
+      _routeObserver = ref.read(routeObserverProvider);
+      _routeObserver?.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPushNext() {
+    if (_visible) {
+      setState(() {
+        _visible = false;
+      });
+    }
+  }
+
+  // 当上面的页面被弹出，当前页面重新显示（Pop 回来了）
+  @override
+  void didPopNext() {
+    if (!_visible) {
+      setState(() {
+        _visible = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +117,7 @@ class _TablePageState extends ConsumerState<TabPage>
     }
 
     return Scaffold(
-      bottomSheet: _currentIndex == 1 && currentLength == 3
+      bottomSheet: (_currentIndex == 1 && currentLength == 3) || !_visible
           ? null
           : const MusicBar(),
       bottomNavigationBar: BottomNavigationBar(

@@ -6,7 +6,7 @@ part of 'app_player.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appPlayerHandlerHash() => r'd3899564a000c58485036a3c827267810d2f052f';
+String _$appPlayerHandlerHash() => r'2a013aad2f4f1548df21998ad31564757c091fc1';
 
 /// See also [AppPlayerHandler].
 @ProviderFor(AppPlayerHandler)

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Configuration {
 
-@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'max_rate') String? get maxRate;@JsonKey(name: 'playlist_mode') PlaylistMode? get playlistMode;@JsonKey(name: 'recent_searches') String? get recentSearches; ThemeMode? get theme;@JsonKey(name: 'ai_api_key') String? get aiApiKey;@JsonKey(name: 'ai_api_url') String? get aiApiUrl;@JsonKey(name: 'ai_model') String? get aiModel;@LocaleConvert() Locale? get locale;@JsonKey(name: 'update_at') int? get updateAt;
+@JsonKey(name: 'username') String? get username;@JsonKey(name: 'max_rate') String? get maxRate;@JsonKey(name: 'playlist_mode') PlaylistMode? get playlistMode;@JsonKey(name: 'recent_searches') String? get recentSearches; ThemeMode? get theme;@JsonKey(name: 'ai_api_key') String? get aiApiKey;@JsonKey(name: 'ai_api_url') String? get aiApiUrl;@JsonKey(name: 'ai_model') String? get aiModel;@LocaleConvert() Locale? get locale;@JsonKey(name: 'update_at') int? get updateAt;
 /// Create a copy of Configuration
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ConfigurationCopyWith<Configuration> get copyWith => _$ConfigurationCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Configuration&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.maxRate, maxRate) || other.maxRate == maxRate)&&(identical(other.playlistMode, playlistMode) || other.playlistMode == playlistMode)&&(identical(other.recentSearches, recentSearches) || other.recentSearches == recentSearches)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.aiApiKey, aiApiKey) || other.aiApiKey == aiApiKey)&&(identical(other.aiApiUrl, aiApiUrl) || other.aiApiUrl == aiApiUrl)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.updateAt, updateAt) || other.updateAt == updateAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Configuration&&(identical(other.username, username) || other.username == username)&&(identical(other.maxRate, maxRate) || other.maxRate == maxRate)&&(identical(other.playlistMode, playlistMode) || other.playlistMode == playlistMode)&&(identical(other.recentSearches, recentSearches) || other.recentSearches == recentSearches)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.aiApiKey, aiApiKey) || other.aiApiKey == aiApiKey)&&(identical(other.aiApiUrl, aiApiUrl) || other.aiApiUrl == aiApiUrl)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.updateAt, updateAt) || other.updateAt == updateAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,maxRate,playlistMode,recentSearches,theme,aiApiKey,aiApiUrl,aiModel,locale,updateAt);
+int get hashCode => Object.hash(runtimeType,username,maxRate,playlistMode,recentSearches,theme,aiApiKey,aiApiUrl,aiModel,locale,updateAt);
 
 @override
 String toString() {
-  return 'Configuration(userId: $userId, maxRate: $maxRate, playlistMode: $playlistMode, recentSearches: $recentSearches, theme: $theme, aiApiKey: $aiApiKey, aiApiUrl: $aiApiUrl, aiModel: $aiModel, locale: $locale, updateAt: $updateAt)';
+  return 'Configuration(username: $username, maxRate: $maxRate, playlistMode: $playlistMode, recentSearches: $recentSearches, theme: $theme, aiApiKey: $aiApiKey, aiApiUrl: $aiApiUrl, aiModel: $aiModel, locale: $locale, updateAt: $updateAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ConfigurationCopyWith<$Res>  {
   factory $ConfigurationCopyWith(Configuration value, $Res Function(Configuration) _then) = _$ConfigurationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'recent_searches') String? recentSearches, ThemeMode? theme,@JsonKey(name: 'ai_api_key') String? aiApiKey,@JsonKey(name: 'ai_api_url') String? aiApiUrl,@JsonKey(name: 'ai_model') String? aiModel,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
+@JsonKey(name: 'username') String? username,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'recent_searches') String? recentSearches, ThemeMode? theme,@JsonKey(name: 'ai_api_key') String? aiApiKey,@JsonKey(name: 'ai_api_url') String? aiApiUrl,@JsonKey(name: 'ai_model') String? aiModel,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
 });
 
 
@@ -65,9 +65,9 @@ class _$ConfigurationCopyWithImpl<$Res>
 
 /// Create a copy of Configuration
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? maxRate = freezed,Object? playlistMode = freezed,Object? recentSearches = freezed,Object? theme = freezed,Object? aiApiKey = freezed,Object? aiApiUrl = freezed,Object? aiModel = freezed,Object? locale = freezed,Object? updateAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? username = freezed,Object? maxRate = freezed,Object? playlistMode = freezed,Object? recentSearches = freezed,Object? theme = freezed,Object? aiApiKey = freezed,Object? aiApiUrl = freezed,Object? aiModel = freezed,Object? locale = freezed,Object? updateAt = freezed,}) {
   return _then(_self.copyWith(
-userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,maxRate: freezed == maxRate ? _self.maxRate : maxRate // ignore: cast_nullable_to_non_nullable
 as String?,playlistMode: freezed == playlistMode ? _self.playlistMode : playlistMode // ignore: cast_nullable_to_non_nullable
 as PlaylistMode?,recentSearches: freezed == recentSearches ? _self.recentSearches : recentSearches // ignore: cast_nullable_to_non_nullable
@@ -162,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'recent_searches')  String? recentSearches,  ThemeMode? theme, @JsonKey(name: 'ai_api_key')  String? aiApiKey, @JsonKey(name: 'ai_api_url')  String? aiApiUrl, @JsonKey(name: 'ai_model')  String? aiModel, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'recent_searches')  String? recentSearches,  ThemeMode? theme, @JsonKey(name: 'ai_api_key')  String? aiApiKey, @JsonKey(name: 'ai_api_url')  String? aiApiUrl, @JsonKey(name: 'ai_model')  String? aiModel, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Configuration() when $default != null:
-return $default(_that.userId,_that.maxRate,_that.playlistMode,_that.recentSearches,_that.theme,_that.aiApiKey,_that.aiApiUrl,_that.aiModel,_that.locale,_that.updateAt);case _:
+return $default(_that.username,_that.maxRate,_that.playlistMode,_that.recentSearches,_that.theme,_that.aiApiKey,_that.aiApiUrl,_that.aiModel,_that.locale,_that.updateAt);case _:
   return orElse();
 
 }
@@ -183,10 +183,10 @@ return $default(_that.userId,_that.maxRate,_that.playlistMode,_that.recentSearch
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'recent_searches')  String? recentSearches,  ThemeMode? theme, @JsonKey(name: 'ai_api_key')  String? aiApiKey, @JsonKey(name: 'ai_api_url')  String? aiApiUrl, @JsonKey(name: 'ai_model')  String? aiModel, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'recent_searches')  String? recentSearches,  ThemeMode? theme, @JsonKey(name: 'ai_api_key')  String? aiApiKey, @JsonKey(name: 'ai_api_url')  String? aiApiUrl, @JsonKey(name: 'ai_model')  String? aiModel, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)  $default,) {final _that = this;
 switch (_that) {
 case _Configuration():
-return $default(_that.userId,_that.maxRate,_that.playlistMode,_that.recentSearches,_that.theme,_that.aiApiKey,_that.aiApiUrl,_that.aiModel,_that.locale,_that.updateAt);case _:
+return $default(_that.username,_that.maxRate,_that.playlistMode,_that.recentSearches,_that.theme,_that.aiApiKey,_that.aiApiUrl,_that.aiModel,_that.locale,_that.updateAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +203,10 @@ return $default(_that.userId,_that.maxRate,_that.playlistMode,_that.recentSearch
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'recent_searches')  String? recentSearches,  ThemeMode? theme, @JsonKey(name: 'ai_api_key')  String? aiApiKey, @JsonKey(name: 'ai_api_url')  String? aiApiUrl, @JsonKey(name: 'ai_model')  String? aiModel, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'recent_searches')  String? recentSearches,  ThemeMode? theme, @JsonKey(name: 'ai_api_key')  String? aiApiKey, @JsonKey(name: 'ai_api_url')  String? aiApiUrl, @JsonKey(name: 'ai_model')  String? aiModel, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Configuration() when $default != null:
-return $default(_that.userId,_that.maxRate,_that.playlistMode,_that.recentSearches,_that.theme,_that.aiApiKey,_that.aiApiUrl,_that.aiModel,_that.locale,_that.updateAt);case _:
+return $default(_that.username,_that.maxRate,_that.playlistMode,_that.recentSearches,_that.theme,_that.aiApiKey,_that.aiApiUrl,_that.aiModel,_that.locale,_that.updateAt);case _:
   return null;
 
 }
@@ -218,10 +218,10 @@ return $default(_that.userId,_that.maxRate,_that.playlistMode,_that.recentSearch
 @JsonSerializable()
 
 class _Configuration implements Configuration {
-  const _Configuration({@JsonKey(name: 'user_id') this.userId, @JsonKey(name: 'max_rate') this.maxRate, @JsonKey(name: 'playlist_mode') this.playlistMode, @JsonKey(name: 'recent_searches') this.recentSearches, this.theme, @JsonKey(name: 'ai_api_key') this.aiApiKey, @JsonKey(name: 'ai_api_url') this.aiApiUrl, @JsonKey(name: 'ai_model') this.aiModel, @LocaleConvert() this.locale, @JsonKey(name: 'update_at') this.updateAt});
+  const _Configuration({@JsonKey(name: 'username') this.username, @JsonKey(name: 'max_rate') this.maxRate, @JsonKey(name: 'playlist_mode') this.playlistMode, @JsonKey(name: 'recent_searches') this.recentSearches, this.theme, @JsonKey(name: 'ai_api_key') this.aiApiKey, @JsonKey(name: 'ai_api_url') this.aiApiUrl, @JsonKey(name: 'ai_model') this.aiModel, @LocaleConvert() this.locale, @JsonKey(name: 'update_at') this.updateAt});
   factory _Configuration.fromJson(Map<String, dynamic> json) => _$ConfigurationFromJson(json);
 
-@override@JsonKey(name: 'user_id') final  String? userId;
+@override@JsonKey(name: 'username') final  String? username;
 @override@JsonKey(name: 'max_rate') final  String? maxRate;
 @override@JsonKey(name: 'playlist_mode') final  PlaylistMode? playlistMode;
 @override@JsonKey(name: 'recent_searches') final  String? recentSearches;
@@ -245,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Configuration&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.maxRate, maxRate) || other.maxRate == maxRate)&&(identical(other.playlistMode, playlistMode) || other.playlistMode == playlistMode)&&(identical(other.recentSearches, recentSearches) || other.recentSearches == recentSearches)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.aiApiKey, aiApiKey) || other.aiApiKey == aiApiKey)&&(identical(other.aiApiUrl, aiApiUrl) || other.aiApiUrl == aiApiUrl)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.updateAt, updateAt) || other.updateAt == updateAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Configuration&&(identical(other.username, username) || other.username == username)&&(identical(other.maxRate, maxRate) || other.maxRate == maxRate)&&(identical(other.playlistMode, playlistMode) || other.playlistMode == playlistMode)&&(identical(other.recentSearches, recentSearches) || other.recentSearches == recentSearches)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.aiApiKey, aiApiKey) || other.aiApiKey == aiApiKey)&&(identical(other.aiApiUrl, aiApiUrl) || other.aiApiUrl == aiApiUrl)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.updateAt, updateAt) || other.updateAt == updateAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,maxRate,playlistMode,recentSearches,theme,aiApiKey,aiApiUrl,aiModel,locale,updateAt);
+int get hashCode => Object.hash(runtimeType,username,maxRate,playlistMode,recentSearches,theme,aiApiKey,aiApiUrl,aiModel,locale,updateAt);
 
 @override
 String toString() {
-  return 'Configuration(userId: $userId, maxRate: $maxRate, playlistMode: $playlistMode, recentSearches: $recentSearches, theme: $theme, aiApiKey: $aiApiKey, aiApiUrl: $aiApiUrl, aiModel: $aiModel, locale: $locale, updateAt: $updateAt)';
+  return 'Configuration(username: $username, maxRate: $maxRate, playlistMode: $playlistMode, recentSearches: $recentSearches, theme: $theme, aiApiKey: $aiApiKey, aiApiUrl: $aiApiUrl, aiModel: $aiModel, locale: $locale, updateAt: $updateAt)';
 }
 
 
@@ -265,7 +265,7 @@ abstract mixin class _$ConfigurationCopyWith<$Res> implements $ConfigurationCopy
   factory _$ConfigurationCopyWith(_Configuration value, $Res Function(_Configuration) _then) = __$ConfigurationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'recent_searches') String? recentSearches, ThemeMode? theme,@JsonKey(name: 'ai_api_key') String? aiApiKey,@JsonKey(name: 'ai_api_url') String? aiApiUrl,@JsonKey(name: 'ai_model') String? aiModel,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
+@JsonKey(name: 'username') String? username,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'recent_searches') String? recentSearches, ThemeMode? theme,@JsonKey(name: 'ai_api_key') String? aiApiKey,@JsonKey(name: 'ai_api_url') String? aiApiUrl,@JsonKey(name: 'ai_model') String? aiModel,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
 });
 
 
@@ -282,9 +282,9 @@ class __$ConfigurationCopyWithImpl<$Res>
 
 /// Create a copy of Configuration
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? maxRate = freezed,Object? playlistMode = freezed,Object? recentSearches = freezed,Object? theme = freezed,Object? aiApiKey = freezed,Object? aiApiUrl = freezed,Object? aiModel = freezed,Object? locale = freezed,Object? updateAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? username = freezed,Object? maxRate = freezed,Object? playlistMode = freezed,Object? recentSearches = freezed,Object? theme = freezed,Object? aiApiKey = freezed,Object? aiApiUrl = freezed,Object? aiModel = freezed,Object? locale = freezed,Object? updateAt = freezed,}) {
   return _then(_Configuration(
-userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,maxRate: freezed == maxRate ? _self.maxRate : maxRate // ignore: cast_nullable_to_non_nullable
 as String?,playlistMode: freezed == playlistMode ? _self.playlistMode : playlistMode // ignore: cast_nullable_to_non_nullable
 as PlaylistMode?,recentSearches: freezed == recentSearches ? _self.recentSearches : recentSearches // ignore: cast_nullable_to_non_nullable

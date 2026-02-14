@@ -24,7 +24,7 @@ class AppPlayerHandler extends _$AppPlayerHandler {
     // 因为设置了 keepAlive: true, 这只会在整个 ProviderScope (即你的App)
     // 被销毁时才会发生，这是执行清理工作的完美时机。
     ref.onDispose(() {
-      audioHandler.stop(); // 或者其他你需要的清理逻辑
+      audioHandler.dispose(); // 或者其他你需要的清理逻辑
       // audio_service 0.18+ 会自动处理 shutdown, 但显式调用 stop() 是个好习惯
     });
 

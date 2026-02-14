@@ -63,7 +63,7 @@ class _MusicControls extends StatelessWidget with SongControl {
                     return SizedBox.shrink();
                   }
                   return Text(
-                    '词 ${{'NetEase': '网易云', 'AM': 'APPLE'}[structuredLyrics[0].lang] ?? '默认'}',
+                    '词 ${{'NetEase': '网易云', 'AM': 'APPLE'}[structuredLyrics.first.lang] ?? '默认'}',
                     style: TextStyle(
                       height: 1.0,
                       fontSize: 12, // 徽章字体可以稍微小一点点，显得更精致

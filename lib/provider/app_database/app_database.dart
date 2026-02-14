@@ -13,22 +13,22 @@ class AppDatabase extends _$AppDatabase {
              last_played INTEGER NOT NULL,
              is_completed TEXT NOT NULL DEFAULT 0,
              is_skipped TEXT NOT NULL DEFAULT 0,
-             user_id TEXT NOT NULL,
-             PRIMARY KEY (song_id, user_id)
+             username TEXT NOT NULL,
+             PRIMARY KEY (song_id, username)
            )
          ''';
   final _createSmartSuggestionSql = '''
            CREATE TABLE smart_suggestion (
              song_id TEXT NOT NULL,
              meta TEXT,
-             user_id TEXT NOT NULL,
+             username TEXT NOT NULL,
              update_at INTEGER NOT NULL,
-             PRIMARY KEY (song_id, user_id)
+             PRIMARY KEY (song_id, username)
            )
          ''';
   final _createUserConfigSql = '''
            CREATE TABLE user_config (
-             user_id TEXT PRIMARY KEY,
+             username TEXT PRIMARY KEY,
              max_rate TEXT DEFAULT 32,
              playlist_mode TEXT DEFAULT loop,
              locale TEXT,
@@ -42,13 +42,9 @@ class AppDatabase extends _$AppDatabase {
          ''';
   final _createCurrentUserSql = '''
            CREATE TABLE current_user (
-             id TEXT PRIMARY KEY,
-             is_admin TEXT,
-             name TEXT NOT NULL,
-             subsonic_salt TEXT NOT NULL,
-             subsonic_token TEXT NOT NULL,
+             salt TEXT NOT NULL,
              token TEXT NOT NULL,
-             username TEXT NOT NULL,
+             username TEXT PRIMARY KEY,
              host TEXT NOT NULL,
              update_at INTEGER NOT NULL
            )
@@ -56,7 +52,7 @@ class AppDatabase extends _$AppDatabase {
   final _createAiChatConversationSql = '''
            CREATE TABLE ai_chat_conversation (
              id TEXT PRIMARY KEY,
-             user_id TEXT NOT NULL,
+             username TEXT NOT NULL,
              title TEXT,
              update_at INTEGER NOT NULL
            )
@@ -84,7 +80,7 @@ class AppDatabase extends _$AppDatabase {
     final path = join(dbPath, 'melo_trip.db');
     final db = await openDatabase(
       path,
-      version: 2,
+      version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(_createPlayHistorySql);
         await db.execute(_createSmartSuggestionSql);
@@ -94,20 +90,20 @@ class AppDatabase extends _$AppDatabase {
         await db.execute(_createAiChatConversationSql);
         await db.execute(_createAiChatMessageSql);
       },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < 2) {
-          await db.execute(
-            'ALTER TABLE user_config ADD COLUMN ai_api_key TEXT',
-          );
-          await db.execute(
-            'ALTER TABLE user_config ADD COLUMN ai_api_url TEXT',
-          );
-          await db.execute('ALTER TABLE user_config ADD COLUMN ai_model TEXT');
+      // onUpgrade: (db, oldVersion, newVersion) async {
+      //   if (oldVersion < 2) {
+      //     await db.execute(
+      //       'ALTER TABLE user_config ADD COLUMN ai_api_key TEXT',
+      //     );
+      //     await db.execute(
+      //       'ALTER TABLE user_config ADD COLUMN ai_api_url TEXT',
+      //     );
+      //     await db.execute('ALTER TABLE user_config ADD COLUMN ai_model TEXT');
 
-          await db.execute(_createAiChatConversationSql);
-          await db.execute(_createAiChatMessageSql);
-        }
-      },
+      //     await db.execute(_createAiChatConversationSql);
+      //     await db.execute(_createAiChatMessageSql);
+      //   }
+      // },
     );
 
     return db;

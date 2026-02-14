@@ -120,76 +120,76 @@ class ArtistDetailPage extends StatelessWidget {
           ),
         );
 
-        return Scaffold(
-          appBar: AppBar(elevation: 3, title: Text(artist.name ?? '')),
-          body: albums == null || albums.isEmpty
-              ? Center(child: Text(AppLocalizations.of(context)!.noDataFound))
-              : GridView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 15,
-                    horizontal: 10,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisSpacing: 20,
-                    crossAxisCount: 3,
-                    childAspectRatio: 0.85,
-                  ),
-                  itemCount: artist.album?.length,
-                  itemBuilder: (_, index) {
-                    final item = albums[index];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => AlbumDetailPage(albumId: item.id),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5),
-                                ),
-                              ),
-                              child: ArtworkImage(
-                                id: item.id,
-                                size: 200,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 2.0,
-                              horizontal: 2,
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  item.name ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 10),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-        );
+        // return Scaffold(
+        //   appBar: AppBar(elevation: 3, title: Text(artist.name ?? '')),
+        //   body: albums == null || albums.isEmpty
+        //       ? Center(child: Text(AppLocalizations.of(context)!.noDataFound))
+        //       : GridView.builder(
+        //           padding: const EdgeInsets.symmetric(
+        //             vertical: 15,
+        //             horizontal: 10,
+        //           ),
+        //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        //             mainAxisSpacing: 20,
+        //             crossAxisCount: 3,
+        //             childAspectRatio: 0.85,
+        //           ),
+        //           itemCount: artist.album?.length,
+        //           itemBuilder: (_, index) {
+        //             final item = albums[index];
+        //             return InkWell(
+        //               onTap: () {
+        //                 Navigator.of(context).push(
+        //                   MaterialPageRoute(
+        //                     builder: (_) => AlbumDetailPage(albumId: item.id),
+        //                   ),
+        //                 );
+        //               },
+        //               child: Column(
+        //                 children: [
+        //                   Expanded(
+        //                     child: Container(
+        //                       clipBehavior: Clip.antiAlias,
+        //                       decoration: const BoxDecoration(
+        //                         borderRadius: BorderRadius.all(
+        //                           Radius.circular(5),
+        //                         ),
+        //                       ),
+        //                       child: ArtworkImage(
+        //                         id: item.id,
+        //                         size: 200,
+        //                         fit: BoxFit.cover,
+        //                       ),
+        //                     ),
+        //                   ),
+        //                   Padding(
+        //                     padding: const EdgeInsets.symmetric(
+        //                       vertical: 2.0,
+        //                       horizontal: 2,
+        //                     ),
+        //                     child: Column(
+        //                       children: [
+        //                         Text(
+        //                           item.name ?? '',
+        //                           overflow: TextOverflow.ellipsis,
+        //                           style: const TextStyle(
+        //                             fontWeight: FontWeight.bold,
+        //                           ),
+        //                         ),
+        //                         Text(
+        //                           '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',
+        //                           overflow: TextOverflow.ellipsis,
+        //                           style: const TextStyle(fontSize: 10),
+        //                         ),
+        //                       ],
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             );
+        //           },
+        //         ),
+        // );
       },
     );
   }

@@ -30,7 +30,7 @@ class ArtworkImage extends ConsumerWidget {
     final auth = ref.watch(currentUserProvider);
     return switch (auth) {
       AsyncData(:final value) => Image.network(
-        '$proxyCacheHost/rest/getCoverArt?id=$artworkId&u=${value?.username}&t=${value?.subsonicToken}&s=${value?.subsonicSalt}&f=json&v=1.8.0&c=MeloTrip&size=${size ?? 100}',
+        '$proxyCacheHost/rest/getCoverArt?id=$artworkId&u=${value?.username}&t=${value?.token}&s=${value?.salt}&f=json&v=1.8.0&c=MeloTrip&size=${size ?? 100}',
         width: width,
         height: height,
         fit: fit,

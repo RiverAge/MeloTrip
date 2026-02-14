@@ -43,7 +43,7 @@ class PlayingPage extends StatelessWidget {
             : playQueue.songs[playQueue.index];
         final effictiveArtist = current?.artists ?? [];
         final effectiveDisplayArtist = effictiveArtist.length > 1
-            ? '${effictiveArtist[0].name}'
+            ? '${effictiveArtist.first.name}'
             : current?.displayArtist;
         return Scaffold(
           // extendBodyBehindAppBar: true,

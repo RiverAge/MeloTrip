@@ -8,7 +8,7 @@ abstract class SmartSuggestion with _$SmartSuggestion {
   const factory SmartSuggestion({
     @JsonKey(name: 'song_id') String? songId,
     @JsonKey(name: 'meta') String? meta,
-    @JsonKey(name: 'user_id') String? userId,
+    @JsonKey(name: 'username') String? useranme,
   }) = _SmartSuggestion;
 
   factory SmartSuggestion.fromJson(Map<String, dynamic> json) =>

@@ -38,13 +38,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void _onLogin() async {
-    // setState(() {
-    //   _loading = true;
-    // });
-    final host =
-        _hostController.text.endsWith('/')
-            ? _hostController.text.substring(0, _hostController.text.length - 1)
-            : _hostController.text;
+    final host = _hostController.text.endsWith('/')
+        ? _hostController.text.substring(0, _hostController.text.length - 1)
+        : _hostController.text;
 
     final navigator = Navigator.of(context);
     setState(() {
@@ -70,31 +66,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       ),
       (_) => false,
     );
-    // final res = await Http.post<Map<String, dynamic>>(
-    //   '$host/auth/login',
-    //   data: {
-    //     'username': _unameController.text,
-    //     'password': _pwdController.text,
-    //   },
-    // );
-    // final data = res?.data;
-    // if (data != null) {
-    //   final auth = Auth.fromJson({...data, 'host': host});
-    //   final u = await User.instance;
-    //   u.update(auth);
-    //   navigator.pushAndRemoveUntil(
-    //     PageRouteBuilder(
-    //       pageBuilder: (context, animation1, animation2) => const InitialPage(),
-    //       transitionDuration: Duration.zero,
-    //       reverseTransitionDuration: Duration.zero,
-    //     ),
-    //     (_) => false,
-    //   );
-    // } else {
-    //   setState(() {
-    //     _loading = false;
-    //   });
-    // }
   }
 
   @override
@@ -123,8 +94,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: TextField(
                   controller: _unameController,
                   decoration: InputDecoration(
-                    hintText:
-                        AppLocalizations.of(context)!.loginInputPasswordHint,
+                    hintText: AppLocalizations.of(
+                      context,
+                    )!.loginInputPasswordHint,
                     icon: const Icon(Icons.person_outline),
                   ),
                 ),
@@ -135,8 +107,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 textInputAction: TextInputAction.done,
                 onSubmitted: _loading ? null : (_) => _onLogin(),
                 decoration: InputDecoration(
-                  hintText:
-                      AppLocalizations.of(context)!.loginInputPasswordHint,
+                  hintText: AppLocalizations.of(
+                    context,
+                  )!.loginInputPasswordHint,
                   icon: const Icon(Icons.lock_outline),
                 ),
               ),
@@ -147,10 +120,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: _loading ? null : _onLogin,
-                        child:
-                            _loading
-                                ? const FixedCenterCircular(size: 15)
-                                : Text(AppLocalizations.of(context)!.login),
+                        child: _loading
+                            ? const FixedCenterCircular(size: 15)
+                            : Text(AppLocalizations.of(context)!.login),
                       ),
                     ),
                   ],

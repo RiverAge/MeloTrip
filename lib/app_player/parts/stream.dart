@@ -9,5 +9,6 @@ extension PlayerStream on AppPlayer {
   Stream<PlaylistMode> get playlistModeStream => _playlistModeSubject.stream;
   Stream<PlayQueue> get playQueueStream => _playQueueSubject.stream;
   Stream<double> get volumeStream => _volumeSubject.stream;
+  Stream<bool> get shuffleStream => _shuffleSubject.stream;
   Stream<String> get errorStream => _errorSubject.stream;
 }

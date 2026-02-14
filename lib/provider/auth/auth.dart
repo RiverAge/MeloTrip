@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
+import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_database/app_database.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
@@ -19,11 +25,7 @@ class CurrentUser extends _$CurrentUser {
         return null;
       } else {
         return AuthUser.fromJson({
-          'id': rows.first['id'],
-          'isAdmin': rows.first['is_admin'] == '1',
-          'name': rows.first['name'],
-          'subsonicSalt': rows.first['subsonic_salt'],
-          'subsonicToken': rows.first['subsonic_token'],
+          'salt': rows.first['salt'],
           'token': rows.first['token'],
           'username': rows.first['username'],
           'host': rows.first['host'],
@@ -31,6 +33,21 @@ class CurrentUser extends _$CurrentUser {
       }
     });
   }
+}
+
+/// 生成随机盐 (Salt)
+String _generateSalt() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  return List.generate(
+    10,
+    (index) => chars[Random().nextInt(chars.length)],
+  ).join();
+}
+
+/// 生成 Token: md5(password + salt)
+String _generateToken(String password, String salt) {
+  var bytes = utf8.encode(password + salt); // 将 密码+盐 转为字节
+  return md5.convert(bytes).toString(); // 计算 MD5 并转为十六进制字符串
 }
 
 @riverpod
@@ -43,32 +60,47 @@ Future<AuthUser?> login(
   final api = await ref.read(apiProvider.future);
 
   try {
-    final res = await api.post<Map<String, dynamic>>(
-      '$host/auth/login',
-      data: {'username': username, 'password': password},
+    final salt = _generateSalt();
+    final token = _generateToken(password, salt);
+    final res = await api.get<Map<String, dynamic>>(
+      '$host/rest/ping.view',
+      queryParameters: {
+        'u': username,
+        't': token, // 假设 token 是这样传递
+        's': salt, // 假设 salt 是这样传递
+        '_': DateTime.now().toIso8601String(),
+        'v': '1.16.1',
+        'c': 'melo_trip',
+        'f': 'json',
+      },
     );
 
     final data = res.data;
     if (data != null) {
-      final auth = AuthUser.fromJson({...data, 'host': host});
-      final db = await ref.read(appDatabaseProvider.future);
-      await db.transaction((tnx) async {
-        await tnx.insert('current_user', {
-          'id': auth.id,
-          'is_admin': auth.isAdmin == true ? '1' : '0',
-          'name': auth.name,
-          'subsonic_salt': auth.subsonicSalt,
-          'subsonic_token': auth.subsonicToken,
-          'token': auth.token,
-          'username': auth.username,
-          'host': auth.host,
-          'update_at': DateTime.now().millisecondsSinceEpoch,
-        }, conflictAlgorithm: ConflictAlgorithm.replace);
-      });
-      ref.invalidate(currentUserProvider);
-      ref.invalidate(userConfigProvider);
-      return auth;
+      final subsonicResponse = SubsonicResponse.fromJson(data);
+      if (subsonicResponse.subsonicResponse?.status == 'ok') {
+        final auth = AuthUser.fromJson({
+          'salt': salt,
+          'token': token,
+          'username': username,
+          'host': host,
+        });
+        final db = await ref.read(appDatabaseProvider.future);
+        await db.transaction((tnx) async {
+          await tnx.insert('current_user', {
+            'salt': auth.salt,
+            'token': auth.token,
+            'username': auth.username,
+            'host': auth.host,
+            'update_at': DateTime.now().millisecondsSinceEpoch,
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        });
+        ref.invalidate(currentUserProvider);
+        ref.invalidate(userConfigProvider);
+        return auth;
+      }
     }
+
     return null;
   } catch (e) {
     return null;

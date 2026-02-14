@@ -15,9 +15,9 @@ class SmartSuggestion extends _$SmartSuggestion {
   Future<List<SongEntity>?> build() async {
     final auth = await ref.read(currentUserProvider.future);
     final db = await ref.read(appDatabaseProvider.future);
-    final userId = auth?.id;
+    final username = auth?.username;
 
-    if (userId == null) {
+    if (username == null) {
       return null;
     }
 
@@ -30,15 +30,15 @@ class SmartSuggestion extends _$SmartSuggestion {
           LEFT JOIN
             play_history AS ph
           ON
-            ss.song_id = ph.song_id AND ss.user_id = ph.user_id
+            ss.song_id = ph.song_id AND ss.username = ph.username
           WHERE
-            ss.user_id = ?
+            ss.username = ?
             AND (ph.is_skipped IS NULL OR ph.is_skipped != 1)
           ORDER BY
             ss.update_at DESC
           LIMIT 100
         ''',
-      [userId],
+      [username],
     ); //
     if (result.isEmpty) return null;
     final suggestionSongs = result.toList().map(
@@ -55,20 +55,20 @@ class SmartSuggestion extends _$SmartSuggestion {
     final auth = await ref.read(currentUserProvider.future);
     final db = await ref.read(appDatabaseProvider.future);
     final songId = song.id;
-    final userId = auth?.id;
+    final username = auth?.username;
 
-    if (songId != null && userId != null) {
+    if (songId != null && username != null) {
       await db.transaction((tnx) async {
         final existing = await tnx.query(
           'play_history',
-          where: 'song_id = ? AND user_id = ?',
-          whereArgs: [songId, userId],
+          where: 'song_id = ? AND username = ?',
+          whereArgs: [songId, username],
         );
         final now = DateTime.now().millisecondsSinceEpoch;
         if (existing.isEmpty) {
           await tnx.insert('play_history', {
             'song_id': songId,
-            'user_id': userId,
+            'username': username,
             'is_completed': isComplted == true ? '1' : '0',
             'is_skipped': isSkipped == true ? '1' : '0',
             'play_count': 1,
@@ -84,8 +84,8 @@ class SmartSuggestion extends _$SmartSuggestion {
               'is_skipped': isSkipped == true ? '1' : '0',
               'last_played': now,
             },
-            where: 'song_id = ? AND user_id = ?',
-            whereArgs: [songId, userId],
+            where: 'song_id = ? AND username = ?',
+            whereArgs: [songId, username],
           );
         }
       });
@@ -104,8 +104,8 @@ class SmartSuggestion extends _$SmartSuggestion {
     final artist = song.artist;
 
     final auth = await ref.read(currentUserProvider.future);
-    final userId = auth?.id;
-    if (songId == null || userId == null) return;
+    final username = auth?.username;
+    if (songId == null || username == null) return;
     final api = await ref.read(apiProvider.future);
 
     // 2. Fetch from 3 sources in parallel
@@ -134,7 +134,7 @@ class SmartSuggestion extends _$SmartSuggestion {
     final allSongs = <SongEntity>{};
 
     // Process results
-    final similarSongsResData = results[0].data;
+    final similarSongsResData = results.firstOrNull?.data;
     if (similarSongsResData != null) {
       allSongs.addAll(
         SubsonicResponse.fromJson(
@@ -191,7 +191,7 @@ class SmartSuggestion extends _$SmartSuggestion {
         'song_id': song.id,
         'meta': jsonEncode(song.toJson()),
         'update_at': now,
-        'user_id': userId,
+        'username': username,
       }, conflictAlgorithm: ConflictAlgorithm.replace);
     }
     await batch.commit(noResult: true);

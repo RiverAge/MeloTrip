@@ -3,15 +3,15 @@ import 'package:sqflite/sqflite.dart';
 
 class ChatCoversationDb {
   Database db;
-  String userId;
-  ChatCoversationDb({required this.db, required this.userId});
+  String username;
+  ChatCoversationDb({required this.db, required this.username});
 
   Future<List<ChatCoversation>> getAllCoversation() async {
     return await db.transaction((tnx) async {
       final conversationRows = await tnx.query(
         'ai_chat_conversation',
-        where: 'user_id = ?',
-        whereArgs: [userId],
+        where: 'username = ?',
+        whereArgs: [username],
         orderBy: 'update_at desc',
       );
       return conversationRows.map((e) => ChatCoversation.fromJson(e)).toList();
@@ -22,7 +22,7 @@ class ChatCoversationDb {
     return db.transaction((tnx) async {
       await tnx.insert('ai_chat_conversation', {
         'id': c.id,
-        'user_id': userId,
+        'username': username,
         'title': c.title,
         'update_at': DateTime.now().millisecondsSinceEpoch,
       }, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -46,13 +46,13 @@ class ChatCoversationDb {
     return await db.transaction((tnx) async {
       final conversationRows = await tnx.query(
         'ai_chat_conversation',
-        where: 'user_id = ?',
-        whereArgs: [userId],
+        where: 'username = ?',
+        whereArgs: [username],
         orderBy: 'update_at desc',
       );
 
       if (conversationRows.isNotEmpty) {
-        final item = Map<String, dynamic>.of(conversationRows[0]);
+        final item = Map<String, dynamic>.of(conversationRows.first);
         final messageRows = await tnx.query(
           'ai_chat_message',
           where: 'conversation_id = ?',

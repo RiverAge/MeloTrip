@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthUser {
 
- String? get id; bool? get isAdmin; String? get name; String? get subsonicSalt; String? get subsonicToken; String? get token; String? get username; String? get host;
+ String? get salt; String? get token; String? get username; String? get host;
 /// Create a copy of AuthUser
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AuthUserCopyWith<AuthUser> get copyWith => _$AuthUserCopyWithImpl<AuthUser>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthUser&&(identical(other.id, id) || other.id == id)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.name, name) || other.name == name)&&(identical(other.subsonicSalt, subsonicSalt) || other.subsonicSalt == subsonicSalt)&&(identical(other.subsonicToken, subsonicToken) || other.subsonicToken == subsonicToken)&&(identical(other.token, token) || other.token == token)&&(identical(other.username, username) || other.username == username)&&(identical(other.host, host) || other.host == host));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthUser&&(identical(other.salt, salt) || other.salt == salt)&&(identical(other.token, token) || other.token == token)&&(identical(other.username, username) || other.username == username)&&(identical(other.host, host) || other.host == host));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,isAdmin,name,subsonicSalt,subsonicToken,token,username,host);
+int get hashCode => Object.hash(runtimeType,salt,token,username,host);
 
 @override
 String toString() {
-  return 'AuthUser(id: $id, isAdmin: $isAdmin, name: $name, subsonicSalt: $subsonicSalt, subsonicToken: $subsonicToken, token: $token, username: $username, host: $host)';
+  return 'AuthUser(salt: $salt, token: $token, username: $username, host: $host)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AuthUserCopyWith<$Res>  {
   factory $AuthUserCopyWith(AuthUser value, $Res Function(AuthUser) _then) = _$AuthUserCopyWithImpl;
 @useResult
 $Res call({
- String? id, bool? isAdmin, String? name, String? subsonicSalt, String? subsonicToken, String? token, String? username, String? host
+ String? salt, String? token, String? username, String? host
 });
 
 
@@ -65,13 +65,9 @@ class _$AuthUserCopyWithImpl<$Res>
 
 /// Create a copy of AuthUser
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? isAdmin = freezed,Object? name = freezed,Object? subsonicSalt = freezed,Object? subsonicToken = freezed,Object? token = freezed,Object? username = freezed,Object? host = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? salt = freezed,Object? token = freezed,Object? username = freezed,Object? host = freezed,}) {
   return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,isAdmin: freezed == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
-as bool?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,subsonicSalt: freezed == subsonicSalt ? _self.subsonicSalt : subsonicSalt // ignore: cast_nullable_to_non_nullable
-as String?,subsonicToken: freezed == subsonicToken ? _self.subsonicToken : subsonicToken // ignore: cast_nullable_to_non_nullable
+salt: freezed == salt ? _self.salt : salt // ignore: cast_nullable_to_non_nullable
 as String?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,host: freezed == host ? _self.host : host // ignore: cast_nullable_to_non_nullable
@@ -160,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  bool? isAdmin,  String? name,  String? subsonicSalt,  String? subsonicToken,  String? token,  String? username,  String? host)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? salt,  String? token,  String? username,  String? host)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AuthUser() when $default != null:
-return $default(_that.id,_that.isAdmin,_that.name,_that.subsonicSalt,_that.subsonicToken,_that.token,_that.username,_that.host);case _:
+return $default(_that.salt,_that.token,_that.username,_that.host);case _:
   return orElse();
 
 }
@@ -181,10 +177,10 @@ return $default(_that.id,_that.isAdmin,_that.name,_that.subsonicSalt,_that.subso
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  bool? isAdmin,  String? name,  String? subsonicSalt,  String? subsonicToken,  String? token,  String? username,  String? host)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? salt,  String? token,  String? username,  String? host)  $default,) {final _that = this;
 switch (_that) {
 case _AuthUser():
-return $default(_that.id,_that.isAdmin,_that.name,_that.subsonicSalt,_that.subsonicToken,_that.token,_that.username,_that.host);case _:
+return $default(_that.salt,_that.token,_that.username,_that.host);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +197,10 @@ return $default(_that.id,_that.isAdmin,_that.name,_that.subsonicSalt,_that.subso
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  bool? isAdmin,  String? name,  String? subsonicSalt,  String? subsonicToken,  String? token,  String? username,  String? host)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? salt,  String? token,  String? username,  String? host)?  $default,) {final _that = this;
 switch (_that) {
 case _AuthUser() when $default != null:
-return $default(_that.id,_that.isAdmin,_that.name,_that.subsonicSalt,_that.subsonicToken,_that.token,_that.username,_that.host);case _:
+return $default(_that.salt,_that.token,_that.username,_that.host);case _:
   return null;
 
 }
@@ -216,14 +212,10 @@ return $default(_that.id,_that.isAdmin,_that.name,_that.subsonicSalt,_that.subso
 @JsonSerializable()
 
 class _AuthUser implements AuthUser {
-  const _AuthUser({this.id, this.isAdmin, this.name, this.subsonicSalt, this.subsonicToken, this.token, this.username, this.host});
+  const _AuthUser({this.salt, this.token, this.username, this.host});
   factory _AuthUser.fromJson(Map<String, dynamic> json) => _$AuthUserFromJson(json);
 
-@override final  String? id;
-@override final  bool? isAdmin;
-@override final  String? name;
-@override final  String? subsonicSalt;
-@override final  String? subsonicToken;
+@override final  String? salt;
 @override final  String? token;
 @override final  String? username;
 @override final  String? host;
@@ -241,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthUser&&(identical(other.id, id) || other.id == id)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.name, name) || other.name == name)&&(identical(other.subsonicSalt, subsonicSalt) || other.subsonicSalt == subsonicSalt)&&(identical(other.subsonicToken, subsonicToken) || other.subsonicToken == subsonicToken)&&(identical(other.token, token) || other.token == token)&&(identical(other.username, username) || other.username == username)&&(identical(other.host, host) || other.host == host));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthUser&&(identical(other.salt, salt) || other.salt == salt)&&(identical(other.token, token) || other.token == token)&&(identical(other.username, username) || other.username == username)&&(identical(other.host, host) || other.host == host));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,isAdmin,name,subsonicSalt,subsonicToken,token,username,host);
+int get hashCode => Object.hash(runtimeType,salt,token,username,host);
 
 @override
 String toString() {
-  return 'AuthUser(id: $id, isAdmin: $isAdmin, name: $name, subsonicSalt: $subsonicSalt, subsonicToken: $subsonicToken, token: $token, username: $username, host: $host)';
+  return 'AuthUser(salt: $salt, token: $token, username: $username, host: $host)';
 }
 
 
@@ -261,7 +253,7 @@ abstract mixin class _$AuthUserCopyWith<$Res> implements $AuthUserCopyWith<$Res>
   factory _$AuthUserCopyWith(_AuthUser value, $Res Function(_AuthUser) _then) = __$AuthUserCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, bool? isAdmin, String? name, String? subsonicSalt, String? subsonicToken, String? token, String? username, String? host
+ String? salt, String? token, String? username, String? host
 });
 
 
@@ -278,13 +270,9 @@ class __$AuthUserCopyWithImpl<$Res>
 
 /// Create a copy of AuthUser
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? isAdmin = freezed,Object? name = freezed,Object? subsonicSalt = freezed,Object? subsonicToken = freezed,Object? token = freezed,Object? username = freezed,Object? host = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? salt = freezed,Object? token = freezed,Object? username = freezed,Object? host = freezed,}) {
   return _then(_AuthUser(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,isAdmin: freezed == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
-as bool?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,subsonicSalt: freezed == subsonicSalt ? _self.subsonicSalt : subsonicSalt // ignore: cast_nullable_to_non_nullable
-as String?,subsonicToken: freezed == subsonicToken ? _self.subsonicToken : subsonicToken // ignore: cast_nullable_to_non_nullable
+salt: freezed == salt ? _self.salt : salt // ignore: cast_nullable_to_non_nullable
 as String?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,host: freezed == host ? _self.host : host // ignore: cast_nullable_to_non_nullable

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 
@@ -46,17 +47,10 @@ class _SingleLineAnimatedLyrics
   }
 
   void _lyricsOfLine(List<Line> lines, Duration position) {
-    if (lines.isEmpty) {
-      return;
-    }
-    int currentLineIdx = lines.indexWhere(
-      (e) => (e.start ?? -1) > position.inMilliseconds,
+    final currentLineIdx = indexOfLyrics(
+      sortedLyrics: lines,
+      position: position,
     );
-    currentLineIdx = currentLineIdx == 0 ? 1 : currentLineIdx;
-    if (currentLineIdx == -1) {
-      currentLineIdx = lines.length;
-    }
-    currentLineIdx -= 1;
     if (currentLineIdx != _currentLineIdx) {
       setState(() {
         // 控制首次出现不是以动画的效果
@@ -121,8 +115,9 @@ class _TweenAnimationBuilder extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
+                      // 偏爱歌词同一个时间轴三行
                       for (final (index, line)
-                          in (prevLine.value ?? []).indexed)
+                          in (prevLine.value?.take(2) ?? []).indexed)
                         Opacity(
                           opacity: index == 0 ? 1 : 0.5,
                           child: Text(
@@ -149,7 +144,8 @@ class _TweenAnimationBuilder extends StatelessWidget {
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
                       for (final (index, line)
-                          in (currentLine.value ?? []).indexed)
+                          // 偏爱歌词同一个时间轴三行
+                          in (currentLine.value?.take(2) ?? []).indexed)
                         Opacity(
                           opacity: index == 0 ? 1 : 0.5,
                           child: Text(

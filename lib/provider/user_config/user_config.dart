@@ -19,27 +19,27 @@ class UserConfig extends _$UserConfig {
   Future<Configuration?> build() async {
     final db = await ref.read(appDatabaseProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
-    if (authUser?.id == null) return null;
+    if (authUser?.username == null) return null;
 
     return db.transaction((tnx) async {
       final countResult = await tnx.query(
         'user_config',
         columns: ['count(*) as count'],
-        where: 'user_id = ?',
-        whereArgs: [authUser?.id],
+        where: 'username = ?',
+        whereArgs: [authUser?.username],
       );
       final int count = Sqflite.firstIntValue(countResult) ?? 0;
       if (count == 0) {
         await tnx.insert('user_config', {
-          'user_id': authUser?.id,
+          'username': authUser?.username,
           'update_at': DateTime.now().millisecondsSinceEpoch,
         });
       }
 
       final rows = await tnx.query(
         'user_config',
-        where: 'user_id = ?',
-        whereArgs: [authUser?.id],
+        where: 'username = ?',
+        whereArgs: [authUser?.username],
       );
 
       if (rows.isNotEmpty) {
@@ -62,7 +62,7 @@ class UserConfig extends _$UserConfig {
   }) async {
     final db = await ref.read(appDatabaseProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
-    if (authUser?.id == null) return;
+    if (authUser?.username == null) return;
 
     Map<String, Object?> values = {};
     if (maxRate != null) {
@@ -97,8 +97,8 @@ class UserConfig extends _$UserConfig {
       await tnx.update(
         'user_config',
         values,
-        where: 'user_id = ?',
-        whereArgs: [authUser?.id],
+        where: 'username = ?',
+        whereArgs: [authUser?.username],
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     });

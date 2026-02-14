@@ -15,7 +15,10 @@ class _SliverBackground extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Expanded(
-                  child: ArtworkImage(fit: BoxFit.cover, id: songIds[0]),
+                  child: ArtworkImage(
+                    fit: BoxFit.cover,
+                    id: songIds.firstOrNull,
+                  ),
                 ),
                 Expanded(
                   child: ArtworkImage(fit: BoxFit.cover, id: songIds[1]),

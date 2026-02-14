@@ -7,7 +7,7 @@ part of 'chat_session.dart';
 // **************************************************************************
 
 String _$allChatCoversationsHash() =>
-    r'a25c88ea371c72d3afc5f774b2f9c9f0c58f890c';
+    r'd4d83d01d207b550c9268cf9c0bb84cd90a97087';
 
 /// See also [allChatCoversations].
 @ProviderFor(allChatCoversations)
@@ -27,7 +27,7 @@ final allChatCoversationsProvider =
 typedef AllChatCoversationsRef =
     AutoDisposeFutureProviderRef<List<ChatCoversation>>;
 String _$removeChatCoversationByIdHash() =>
-    r'5200c5d39a24f3a4c5bcca320c6685bcad49bb58';
+    r'997cd19f81fb471a2c41cb70121172256a34fd8a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -174,7 +174,7 @@ class _RemoveChatCoversationByIdProviderElement
       (origin as RemoveChatCoversationByIdProvider).coversationId;
 }
 
-String _$chatSessionHash() => r'a0c3e4c2f19be62a403b2c197ce1ddbf01c324bb';
+String _$chatSessionHash() => r'a77aad3cfa46254eeab86a2578446aaef5f43870';
 
 /// See also [ChatSession].
 @ProviderFor(ChatSession)

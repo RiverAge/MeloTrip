@@ -17,10 +17,10 @@ Future<List<ChatCoversation>> allChatCoversations(Ref ref) async {
   final db = await ref.read(appDatabaseProvider.future);
   final authUser = await ref.read(currentUserProvider.future);
 
-  final userId = authUser?.id;
-  if (userId == null) return [];
+  final username = authUser?.username;
+  if (username == null) return [];
 
-  final cr = ChatCoversationDb(db: db, userId: userId);
+  final cr = ChatCoversationDb(db: db, username: username);
 
   return cr.getAllCoversation();
 }
@@ -33,10 +33,10 @@ Future<void> removeChatCoversationById(
   final db = await ref.read(appDatabaseProvider.future);
   final authUser = await ref.read(currentUserProvider.future);
 
-  final userId = authUser?.id;
-  if (userId == null) return;
+  final username = authUser?.username;
+  if (username == null) return;
 
-  final cr = ChatCoversationDb(db: db, userId: userId);
+  final cr = ChatCoversationDb(db: db, username: username);
   await cr.removeCoversation(coversationId: coversationId);
   ref.invalidate(allChatCoversationsProvider);
 }
@@ -49,8 +49,8 @@ class ChatSession extends _$ChatSession {
      * 用户推出处理
      */
     final cu = ref.watch(currentUserProvider);
-    final userId = cu.valueOrNull?.id;
-    if (userId == null) {
+    final username = cu.valueOrNull?.username;
+    if (username == null) {
       _cancelToken?.cancel('ERR_USER_LOGGED_OUT');
       return ChatCoversation.create();
     }
@@ -62,10 +62,10 @@ class ChatSession extends _$ChatSession {
     final db = await ref.read(appDatabaseProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
 
-    final userId = authUser?.id;
-    if (userId == null) return null;
+    final username = authUser?.username;
+    if (username == null) return null;
 
-    final cr = ChatCoversationDb(db: db, userId: userId);
+    final cr = ChatCoversationDb(db: db, username: username);
 
     if (conversationId == null) {
       state = ChatCoversation.create();
@@ -84,15 +84,15 @@ class ChatSession extends _$ChatSession {
     final db = await ref.read(appDatabaseProvider.future);
     final uc = await ref.read(userConfigProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
-    final userId = authUser?.id;
+    final username = authUser?.username;
     final model = uc?.aiModel;
 
-    if (userId == null || model == null) {
+    if (username == null || model == null) {
       return;
     }
 
     final acr = ChatApi(api: api);
-    final cr = ChatCoversationDb(db: db, userId: userId);
+    final cr = ChatCoversationDb(db: db, username: username);
 
     state = state.copyWith(
       messages: [

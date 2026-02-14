@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SmartSuggestion {
 
-@JsonKey(name: 'song_id') String? get songId;@JsonKey(name: 'meta') String? get meta;@JsonKey(name: 'user_id') String? get userId;
+@JsonKey(name: 'song_id') String? get songId;@JsonKey(name: 'meta') String? get meta;@JsonKey(name: 'username') String? get useranme;
 /// Create a copy of SmartSuggestion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SmartSuggestionCopyWith<SmartSuggestion> get copyWith => _$SmartSuggestionCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SmartSuggestion&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.meta, meta) || other.meta == meta)&&(identical(other.userId, userId) || other.userId == userId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SmartSuggestion&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.meta, meta) || other.meta == meta)&&(identical(other.useranme, useranme) || other.useranme == useranme));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,songId,meta,userId);
+int get hashCode => Object.hash(runtimeType,songId,meta,useranme);
 
 @override
 String toString() {
-  return 'SmartSuggestion(songId: $songId, meta: $meta, userId: $userId)';
+  return 'SmartSuggestion(songId: $songId, meta: $meta, useranme: $useranme)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SmartSuggestionCopyWith<$Res>  {
   factory $SmartSuggestionCopyWith(SmartSuggestion value, $Res Function(SmartSuggestion) _then) = _$SmartSuggestionCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'meta') String? meta,@JsonKey(name: 'user_id') String? userId
+@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'meta') String? meta,@JsonKey(name: 'username') String? useranme
 });
 
 
@@ -65,11 +65,11 @@ class _$SmartSuggestionCopyWithImpl<$Res>
 
 /// Create a copy of SmartSuggestion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? songId = freezed,Object? meta = freezed,Object? userId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? songId = freezed,Object? meta = freezed,Object? useranme = freezed,}) {
   return _then(_self.copyWith(
 songId: freezed == songId ? _self.songId : songId // ignore: cast_nullable_to_non_nullable
 as String?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
-as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,useranme: freezed == useranme ? _self.useranme : useranme // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -155,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'meta')  String? meta, @JsonKey(name: 'user_id')  String? userId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'meta')  String? meta, @JsonKey(name: 'username')  String? useranme)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SmartSuggestion() when $default != null:
-return $default(_that.songId,_that.meta,_that.userId);case _:
+return $default(_that.songId,_that.meta,_that.useranme);case _:
   return orElse();
 
 }
@@ -176,10 +176,10 @@ return $default(_that.songId,_that.meta,_that.userId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'meta')  String? meta, @JsonKey(name: 'user_id')  String? userId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'meta')  String? meta, @JsonKey(name: 'username')  String? useranme)  $default,) {final _that = this;
 switch (_that) {
 case _SmartSuggestion():
-return $default(_that.songId,_that.meta,_that.userId);case _:
+return $default(_that.songId,_that.meta,_that.useranme);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +196,10 @@ return $default(_that.songId,_that.meta,_that.userId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'meta')  String? meta, @JsonKey(name: 'user_id')  String? userId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'song_id')  String? songId, @JsonKey(name: 'meta')  String? meta, @JsonKey(name: 'username')  String? useranme)?  $default,) {final _that = this;
 switch (_that) {
 case _SmartSuggestion() when $default != null:
-return $default(_that.songId,_that.meta,_that.userId);case _:
+return $default(_that.songId,_that.meta,_that.useranme);case _:
   return null;
 
 }
@@ -211,12 +211,12 @@ return $default(_that.songId,_that.meta,_that.userId);case _:
 @JsonSerializable()
 
 class _SmartSuggestion implements SmartSuggestion {
-  const _SmartSuggestion({@JsonKey(name: 'song_id') this.songId, @JsonKey(name: 'meta') this.meta, @JsonKey(name: 'user_id') this.userId});
+  const _SmartSuggestion({@JsonKey(name: 'song_id') this.songId, @JsonKey(name: 'meta') this.meta, @JsonKey(name: 'username') this.useranme});
   factory _SmartSuggestion.fromJson(Map<String, dynamic> json) => _$SmartSuggestionFromJson(json);
 
 @override@JsonKey(name: 'song_id') final  String? songId;
 @override@JsonKey(name: 'meta') final  String? meta;
-@override@JsonKey(name: 'user_id') final  String? userId;
+@override@JsonKey(name: 'username') final  String? useranme;
 
 /// Create a copy of SmartSuggestion
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SmartSuggestion&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.meta, meta) || other.meta == meta)&&(identical(other.userId, userId) || other.userId == userId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SmartSuggestion&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.meta, meta) || other.meta == meta)&&(identical(other.useranme, useranme) || other.useranme == useranme));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,songId,meta,userId);
+int get hashCode => Object.hash(runtimeType,songId,meta,useranme);
 
 @override
 String toString() {
-  return 'SmartSuggestion(songId: $songId, meta: $meta, userId: $userId)';
+  return 'SmartSuggestion(songId: $songId, meta: $meta, useranme: $useranme)';
 }
 
 
@@ -251,7 +251,7 @@ abstract mixin class _$SmartSuggestionCopyWith<$Res> implements $SmartSuggestion
   factory _$SmartSuggestionCopyWith(_SmartSuggestion value, $Res Function(_SmartSuggestion) _then) = __$SmartSuggestionCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'meta') String? meta,@JsonKey(name: 'user_id') String? userId
+@JsonKey(name: 'song_id') String? songId,@JsonKey(name: 'meta') String? meta,@JsonKey(name: 'username') String? useranme
 });
 
 
@@ -268,11 +268,11 @@ class __$SmartSuggestionCopyWithImpl<$Res>
 
 /// Create a copy of SmartSuggestion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? songId = freezed,Object? meta = freezed,Object? userId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? songId = freezed,Object? meta = freezed,Object? useranme = freezed,}) {
   return _then(_SmartSuggestion(
 songId: freezed == songId ? _self.songId : songId // ignore: cast_nullable_to_non_nullable
 as String?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
-as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,useranme: freezed == useranme ? _self.useranme : useranme // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

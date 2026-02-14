@@ -34,8 +34,9 @@ class _InitState extends ConsumerState<InitialPage> {
     final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
     final data = res.data;
     if (data == null) return null;
-    final playQueue =
-        SubsonicResponse.fromJson(data).subsonicResponse?.playQueue;
+    final playQueue = SubsonicResponse.fromJson(
+      data,
+    ).subsonicResponse?.playQueue;
 
     return playQueue;
   }
@@ -47,8 +48,8 @@ class _InitState extends ConsumerState<InitialPage> {
     final authUser = await ref.read(currentUserProvider.future);
 
     // final user = await User.instance;
-    final subsonicSalt = authUser?.subsonicSalt;
-    final subsonicToken = authUser?.subsonicToken;
+    final subsonicSalt = authUser?.salt;
+    final subsonicToken = authUser?.token;
     final host = authUser?.host;
 
     if (subsonicSalt != null && subsonicToken != null && host != null) {

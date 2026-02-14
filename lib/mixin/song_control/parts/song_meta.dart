@@ -18,13 +18,14 @@ class _SongMeta extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => ArtistDetailPage(artistId: artists[0].id),
+                      builder: (_) =>
+                          ArtistDetailPage(artistId: artists.first.id),
                     ),
                   );
                 },
                 leading: const Icon(Icons.group),
                 title: Text(
-                  '${AppLocalizations.of(context)!.artist}: ${artists[0].name}',
+                  '${AppLocalizations.of(context)!.artist}: ${artists.first.name}',
                 ),
               ),
             if (artists.length > 1)

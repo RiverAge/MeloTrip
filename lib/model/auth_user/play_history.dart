@@ -11,7 +11,7 @@ abstract class PlayHistory with _$PlayHistory {
     @JsonKey(name: 'last_played') int? lastPlayed,
     @JsonKey(name: 'is_completed') String? isCompleted,
     @JsonKey(name: 'is_skipped') String? isSkipped,
-    @JsonKey(name: 'user_id') String? userId,
+    @JsonKey(name: 'username') String? username,
   }) = _PlayHistory;
 
   factory PlayHistory.fromJson(Map<String, dynamic> json) =>

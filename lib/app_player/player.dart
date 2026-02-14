@@ -21,6 +21,7 @@ class AppPlayer extends BaseAudioHandler {
   final BehaviorSubject<Duration> _postionSubject = BehaviorSubject<Duration>();
   final _durationSubject = BehaviorSubject<Duration>();
   final _bufferedPositionSubject = BehaviorSubject<Duration>();
+  final _shuffleSubject = BehaviorSubject<bool>();
   final _playingSubject = BehaviorSubject<bool>.seeded(false);
   final _playlistModeSubject = BehaviorSubject<PlaylistMode>();
   final _volumeSubject = BehaviorSubject<double>.seeded(100.0);
@@ -126,6 +127,7 @@ class AppPlayer extends BaseAudioHandler {
     _playingSubject.close();
     _playlistModeSubject.close();
     _volumeSubject.close();
+    _shuffleSubject.close();
     _playQueueSubject.close();
     _errorSubject.close();
 

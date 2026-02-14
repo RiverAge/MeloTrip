@@ -45,7 +45,7 @@ class _SliverAppBar extends StatelessWidget {
                     }
                     await player.setPlaylist(
                       songs: [...effectiveSongs, ...player.playQueue.songs],
-                      initialId: effectiveSongs[0].id,
+                      initialId: effectiveSongs.first.id,
                     );
                     player.play();
                   },
@@ -61,28 +61,7 @@ class _SliverAppBar extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            ArtworkImage(id: playlist.coverArt, fit: BoxFit.cover),
-            Positioned.fill(
-              child: Container(
-                color: Theme.of(
-                  context,
-                ).colorScheme.surface.withValues(alpha: 0.8),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      playlist.comment ?? '',
-                      style: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                      ),
-                    ),
-                    // child: Text(playlist.comment ?? ''),
-                  ),
-                ),
-              ),
-            ),
+            ArtworkImage(id: playlist.coverArt, size: 1000, fit: BoxFit.cover),
           ],
         ),
       ),

@@ -6,7 +6,7 @@ part of 'auth.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginHash() => r'fb426e959428c5089a3e3c086f8df530d37c0b5d';
+String _$loginHash() => r'0b95023255c565864c922925f43fbbf788204130';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -199,7 +199,7 @@ final logoutProvider = AutoDisposeFutureProvider<void>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LogoutRef = AutoDisposeFutureProviderRef<void>;
-String _$currentUserHash() => r'dc6c979290818d9176cf0f37fbf81a612bd585f0';
+String _$currentUserHash() => r'8c1bb12127e1cf51a084648957c730d329dd2e0c';
 
 /// See also [CurrentUser].
 @ProviderFor(CurrentUser)

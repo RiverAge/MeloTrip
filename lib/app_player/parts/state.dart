@@ -13,6 +13,8 @@ extension PlayerState on AppPlayer {
   Track get track => _player.state.track;
   Tracks get tracks => _player.state.tracks;
 
+  bool get shuffle => _player.state.shuffle;
+
   // Future<List<TrackEntity>?> get track async {
   //   final platform = _player.platform;
   //   if (platform is NativePlayer) {

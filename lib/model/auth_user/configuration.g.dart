@@ -8,7 +8,7 @@ part of 'configuration.dart';
 
 _Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
     _Configuration(
-      userId: json['user_id'] as String?,
+      username: json['username'] as String?,
       maxRate: json['max_rate'] as String?,
       playlistMode: $enumDecodeNullable(
         _$PlaylistModeEnumMap,
@@ -25,7 +25,7 @@ _Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ConfigurationToJson(_Configuration instance) =>
     <String, dynamic>{
-      'user_id': instance.userId,
+      'username': instance.username,
       'max_rate': instance.maxRate,
       'playlist_mode': _$PlaylistModeEnumMap[instance.playlistMode],
       'recent_searches': instance.recentSearches,

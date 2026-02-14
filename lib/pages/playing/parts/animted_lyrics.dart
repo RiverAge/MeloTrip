@@ -1,14 +1,53 @@
 part of '../playing_page.dart';
 
-class _AnimtedLyrics extends ConsumerStatefulWidget {
-  const _AnimtedLyrics();
-
+class _AnimtedLyrics extends StatelessWidget {
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AnimtedLyricsState();
+  Widget build(BuildContext context) => PlayQueueBuilder(
+    builder: (context, playQueue, _) {
+      final playQueueIndex = playQueue.index;
+      final songs = playQueue.songs;
+      if (playQueueIndex >= songs.length) {
+        return Center(child: Text(AppLocalizations.of(context)!.noLyricsFound));
+      }
+      final current = playQueue.songs[playQueue.index];
+      final effectiveCurrentId = current.id;
+      if (effectiveCurrentId == null) {
+        return Center(child: Text(AppLocalizations.of(context)!.noLyricsFound));
+      }
+      return AsyncValueBuilder(
+        provider: lyricsProvider(effectiveCurrentId),
+        builder: (context, subsonicLyrics, _) {
+          final lines =
+              subsonicLyrics
+                  .subsonicResponse
+                  ?.lyricsList
+                  ?.structuredLyrics
+                  ?.firstOrNull
+                  ?.line ??
+              [];
+          if (lines.isEmpty) {
+            return Center(
+              child: Text(AppLocalizations.of(context)!.noLyricsFound),
+            );
+          }
+          return _PositionedLyrics(lyricsLines: lines);
+        },
+      );
+    },
+  );
 }
 
-class _AnimtedLyricsState extends ConsumerState<_AnimtedLyrics> {
-  List<Line> _lyric = [];
+class _PositionedLyrics extends ConsumerStatefulWidget {
+  const _PositionedLyrics({required this.lyricsLines});
+
+  final List<Line> lyricsLines;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PositionedLyricsState();
+}
+
+class _PositionedLyricsState extends ConsumerState<_PositionedLyrics> {
   int _currentIndex = -1;
   StreamSubscription<Duration>? _positionStream;
 
@@ -29,98 +68,68 @@ class _AnimtedLyricsState extends ConsumerState<_AnimtedLyrics> {
     final player = await ref.read(appPlayerHandlerProvider.future);
     if (!mounted) return;
     _positionStream = player?.positionStream.listen((position) {
-      int currentLineIdx = _lyric.indexWhere(
-        (e) => (e.start ?? -1) > position.inMilliseconds,
-      );
-      if (currentLineIdx == -1) return;
-      currentLineIdx = (currentLineIdx == 0 ? 1 : currentLineIdx) - 1;
-      if (_currentIndex == currentLineIdx) return;
-      setState(() {
-        _currentIndex = currentLineIdx;
-      });
-
-      final start = _lyric[currentLineIdx].start;
-      if (start == null) return;
-      final gContext = GlobalObjectKey(start).currentContext;
-      if (gContext == null) return;
-      if (!context.mounted) return;
-      Scrollable.ensureVisible(
-        gContext,
-        alignment: 0.5,
-        duration: const Duration(milliseconds: 650),
-      );
+      _scrollLyrics(position: position);
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return PlayQueueBuilder(
-          builder: (context, playQueue, ref) {
-            if (playQueue.index >= playQueue.songs.length) {
-              return Center(
-                child: Text(AppLocalizations.of(context)!.noLyricsFound),
-              );
-            }
+  void _scrollLyrics({required Duration position}) {
+    final currentLineIdx = indexOfLyrics(
+      sortedLyrics: widget.lyricsLines,
+      position: position,
+    );
+    if (_currentIndex == currentLineIdx) return;
+    final animateDuration = _currentIndex == -1
+        ? Duration.zero
+        : Duration(milliseconds: 650);
+    setState(() {
+      _currentIndex = currentLineIdx;
+    });
 
-            final current = playQueue.songs[playQueue.index];
-            return AsyncValueBuilder(
-              provider: lyricsProvider(current.id),
-              builder: (p0, lyrics, ref) {
-                final lyric = lyrics
-                    .subsonicResponse
-                    ?.lyricsList
-                    ?.structuredLyrics
-                    ?.first;
-                final lyricLine = lyric?.line;
-                if (lyric == null ||
-                    lyricLine == null ||
-                    lyricLine.isEmpty == true) {
-                  return Center(
-                    child: Text(AppLocalizations.of(context)!.noLyricsFound),
-                  );
-                }
-                _lyric = lyricLine;
-                return ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      // 这里的 colors 和 stops 是核心
-                      colors: [
-                        Colors.transparent, // 顶部起始点：完全透明
-                        Colors.black, // 顶部淡入结束点：完全不透明
-                        Colors.black, // 底部淡出开始点：完全不透明
-                        Colors.transparent, // 底部终点：完全透明
-                      ],
-                      stops: const [
-                        0.0, // 0% 的位置透明
-                        0.1, // 10% 的位置开始完全显示（你可以根据需要调整这个比例）
-                        0.85, // 85% 的位置开始淡出
-                        1.0, // 100% 的位置完全消失
-                      ],
-                    ).createShader(bounds);
-                  },
-                  // blendMode 必须设为 dstIn，表示只保留渐变色遮盖部分的颜色
-                  blendMode: BlendMode.dstIn,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(height: constraints.maxHeight / 2),
-                        ..._items(_lyric),
-                        SizedBox(height: constraints.maxHeight / 2),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
+    final start = widget.lyricsLines[currentLineIdx].start;
+    if (start == null) return;
+    final gContext = GlobalObjectKey(start).currentContext;
+    if (gContext == null) return;
+    if (!context.mounted) return;
+    Scrollable.ensureVisible(
+      gContext,
+      alignment: 0.5,
+      duration: animateDuration,
     );
   }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => ShaderMask(
+      shaderCallback: (Rect bounds) => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        // 这里的 colors 和 stops 是核心
+        colors: [
+          Colors.transparent, // 顶部起始点：完全透明
+          Colors.black, // 顶部淡入结束点：完全不透明
+          Colors.black, // 底部淡出开始点：完全不透明
+          Colors.transparent, // 底部终点：完全透明
+        ],
+        stops: const [
+          0.0, // 0% 的位置透明
+          0.1, // 10% 的位置开始完全显示（你可以根据需要调整这个比例）
+          0.85, // 85% 的位置开始淡出
+          1.0, // 100% 的位置完全消失
+        ],
+      ).createShader(bounds),
+      // blendMode 必须设为 dstIn，表示只保留渐变色遮盖部分的颜色
+      blendMode: BlendMode.dstIn,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: constraints.maxHeight / 2),
+            ..._items(widget.lyricsLines),
+            SizedBox(height: constraints.maxHeight / 2),
+          ],
+        ),
+      ),
+    ),
+  );
 
   List<Widget> _items(List<Line> lines) {
     return List.generate(lines.length, (idx) {
@@ -129,60 +138,11 @@ class _AnimtedLyricsState extends ConsumerState<_AnimtedLyrics> {
         return SizedBox.shrink(key: GlobalObjectKey(lines[idx].start ?? ''));
       }
 
-      final line = _lyric[idx];
+      final line = lines[idx];
       return _LyricItem(
-        key: GlobalObjectKey(lines[idx].start ?? ''),
+        key: GlobalObjectKey(line.start ?? ''),
         line: line,
         isActive: _currentIndex == idx,
-      );
-
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18),
-        child: ListTile(
-          key: GlobalObjectKey(lines[idx].start ?? ''),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              for (final (index, line) in value.indexed)
-                TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeInOut,
-                  tween: Tween<double>(
-                    begin: 0,
-                    end: _currentIndex == idx ? 1 : 0,
-                  ),
-                  builder: (context, value, child) {
-                    final sigma = 0.8 * (1 - value);
-                    final scale = 1 + 0.2 * value;
-                    return ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaX: sigma,
-                        sigmaY: sigma,
-                      ),
-                      child: Transform.scale(
-                        scale: scale,
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          line,
-                          style: TextStyle(
-                            fontSize: index == 0 ? 16 : 12,
-                            color: _currentIndex == idx
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                            fontWeight: _currentIndex == idx
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-            ],
-          ),
-        ),
       );
     });
   }
