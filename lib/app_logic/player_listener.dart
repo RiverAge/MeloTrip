@@ -14,6 +14,7 @@ extension _PlayerListenerLogic on _MyAppState {
     _playQueueSubscription?.cancel();
     _positionSubscription?.cancel();
     _errorSubscription?.cancel();
+    _nowPlayingTimer?.cancel();
   }
 
   void _setPlayerMediaResolver() async {
@@ -39,16 +40,57 @@ extension _PlayerListenerLogic on _MyAppState {
 
   void _setPlayQueueListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
-    _playQueueSubscription = player?.playQueueStream.listen(
-      (_) => _updateMediaItem(player),
-    );
+    _playQueueSubscription = player?.playQueueStream.listen((queue) async {
+      if (queue.songs.isEmpty) return;
+      final currentSong = queue.songs[queue.index];
+      final currentId = currentSong.id;
+
+      if (_lastProcessedId != currentId) {
+        final api = await ref.read(apiProvider.future);
+        final now = DateTime.now();
+
+        // 1. 尝试结算上一首 (30秒判定)
+        if (_lastProcessedId != null && _lastStartTime != null) {
+          final duration = now.difference(_lastStartTime!);
+          if (duration.inSeconds >= 30) {
+            api.get(
+              '/rest/scrobble',
+              queryParameters: {
+                'id': _lastProcessedId,
+                'time': now.millisecondsSinceEpoch,
+                'submission': true,
+              },
+            );
+          }
+        }
+
+        // 2. 更新状态，并开启“防抖计时器”
+        _lastProcessedId = currentId;
+        _lastStartTime = now;
+
+        // 取消之前的待发送计时器
+        _nowPlayingTimer?.cancel();
+
+        // 延迟 2 秒发送 Now Playing
+        if (currentId != null) {
+          _nowPlayingTimer = Timer(const Duration(seconds: 2), () {
+            api.get(
+              '/rest/scrobble',
+              queryParameters: {'id': currentId, 'submission': false},
+            );
+          });
+        }
+      }
+
+      _updateMediaItem(player);
+    });
   }
 
   void _setPositionListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
-    _positionSubscription = player?.positionStream.listen(
-      (pos) => _updateScrolling(player, pos),
-    );
+    _positionSubscription = player?.positionStream.listen((pos) {
+      // 后台打卡已迁移至 PlayQueue 监听，此处仅保留对空方法的占位或移除
+    });
   }
 
   void _setPlayerErrorListener() async {
@@ -97,45 +139,5 @@ extension _PlayerListenerLogic on _MyAppState {
     player.addMediaItem(item);
     final ids = playQueue.songs.map((e) => 'id=${e.id}').join('&');
     api.get('/rest/savePlayQueue?$ids&current=${item.id}');
-  }
-
-  Future<void> _updateScrolling(AppPlayer player, Duration position) async {
-    if (_nowPlaying && _submission && position.inSeconds < 1) {
-      _nowPlaying = false;
-      _submission = false;
-    } else if (!_nowPlaying && position.inSeconds > 1) {
-      _nowPlaying = true;
-      final playQueue = player.playQueue;
-      if (playQueue.songs.isEmpty) return;
-
-      final api = await ref.read(apiProvider.future);
-      api.get(
-        '/rest/scrobble',
-        queryParameters: {
-          'id': playQueue.songs[playQueue.index].id,
-          'submission': false,
-        },
-      );
-    } else if (!_submission &&
-        position.inSeconds > (player.duration?.inSeconds ?? 0) * 2 / 3) {
-      _submission = true;
-      if (player.playQueue.songs.isEmpty) return;
-
-      final api = await ref.read(apiProvider.future);
-      api.get(
-        '/rest/scrobble',
-        queryParameters: {
-          'id': player.playQueue.songs[player.playQueue.index].id,
-          'time': DateTime.now().millisecondsSinceEpoch,
-          'submission': true,
-        },
-      );
-      ref
-          .read(smartSuggestionProvider.notifier)
-          .playHistory(
-            song: player.playQueue.songs[player.playQueue.index],
-            isComplted: true,
-          );
-    }
   }
 }

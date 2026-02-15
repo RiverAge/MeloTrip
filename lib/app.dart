@@ -12,7 +12,6 @@ import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
-import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 
 part 'app_logic/api_interceptor.dart';
@@ -28,9 +27,10 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey();
 
-  // 状态变量依然保留在 State 类中，以便跨 part 访问
-  bool _nowPlaying = true;
-  bool _submission = true;
+  // 追踪打卡相关的状态
+  String? _lastProcessedId;
+  DateTime? _lastStartTime;
+  Timer? _nowPlayingTimer;
 
   StreamSubscription? _playlistModeSubscription;
   StreamSubscription? _playQueueSubscription;

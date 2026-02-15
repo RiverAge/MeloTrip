@@ -63,7 +63,7 @@ Future<AuthUser?> login(
     final salt = _generateSalt();
     final token = _generateToken(password, salt);
     final res = await api.get<Map<String, dynamic>>(
-      '$host/rest/ping.view',
+      '$host/rest/ping',
       queryParameters: {
         'u': username,
         't': token, // 假设 token 是这样传递
