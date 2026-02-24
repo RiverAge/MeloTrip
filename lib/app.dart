@@ -13,6 +13,7 @@ import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'app_logic/api_interceptor.dart';
 part 'app_logic/player_listener.dart';
@@ -29,12 +30,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   // 追踪打卡相关的状态
   String? _lastProcessedId;
-  DateTime? _lastStartTime;
+  double? _lastSongDuration;
+  Duration _activeDuration = Duration.zero; // 累计播放时长
+  DateTime? _lastStateChangeTime; // 上一次状态（播放/切歌）变换的时间
+  bool _wasPlaying = false; // 上一次的状态记录
   Timer? _nowPlayingTimer;
 
   StreamSubscription? _playlistModeSubscription;
-  StreamSubscription? _playQueueSubscription;
-  StreamSubscription? _positionSubscription;
+  StreamSubscription? _scrobbleSubscription;
   StreamSubscription? _errorSubscription;
 
   @override
