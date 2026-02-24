@@ -6,7 +6,7 @@ import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
 import 'package:melo_trip/pages/smart_suggestion/smart_suggestion_page.dart';
-import 'package:melo_trip/pages/search/search_page.dart';
+import 'package:melo_trip/pages/search_v2/search_page_v2.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';

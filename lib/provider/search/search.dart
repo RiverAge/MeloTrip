@@ -2,23 +2,27 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'search.g.dart';
 
-@riverpod
-Future<SubsonicResponse?> search(Ref ref, String query) async {
-  if (query == '') {
-    return null;
-  }
+// 1. 原始输入词 (V2 使用)
+final searchQueryProvider = StateProvider<String>((ref) => '');
 
-  var didDispose = false;
-  ref.onDispose(() => didDispose = true);
+// 2. 核心搜索结果 Provider (V2 使用)
+final searchResultProvider = FutureProvider<SubsonicResponse?>((ref) async {
+  final query = ref.watch(searchQueryProvider);
+  if (query.isEmpty) return null;
 
-  await Future<void>.delayed(const Duration(milliseconds: 650));
-  if (didDispose) {
-    throw Exception('Cancelled');
-  }
+  await Future.delayed(const Duration(milliseconds: 600));
+  if (ref.read(searchQueryProvider) != query) return null;
+
+  return ref.read(searchProvider(query).future);
+});
+
+// 3. 兼容层 Provider (V1 使用，同时作为 V2 的核心实现)
+final searchProvider = FutureProvider.family<SubsonicResponse?, String>((
+  ref,
+  query,
+) async {
+  if (query.isEmpty) return null;
 
   final cancelToken = CancelToken();
   ref.onDispose(() => cancelToken.cancel());
@@ -32,25 +36,7 @@ Future<SubsonicResponse?> search(Ref ref, String query) async {
 
   final data = res.data;
   if (data != null) {
-    final config = await ref.read(userConfigProvider.future);
-    final effectiveSearches = config?.recentSearches;
-    final recentSearches =
-        effectiveSearches != null && effectiveSearches != ''
-            ? effectiveSearches.split(',')
-            : [];
-    final queryIndex = recentSearches.indexOf(query);
-    if (queryIndex == -1) {
-      recentSearches.insert(0, query);
-    } else {
-      recentSearches.remove(query);
-      recentSearches.insert(0, query);
-    }
-    ref
-        .read(userConfigProvider.notifier)
-        .setConfiguration(
-          recentSearches: ValueUpdater(recentSearches.join(',')),
-        );
     return SubsonicResponse.fromJson(data);
   }
   return null;
-}
+});

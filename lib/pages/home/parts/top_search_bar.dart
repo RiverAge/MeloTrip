@@ -9,7 +9,7 @@ class _TopSeachBar extends StatelessWidget {
       onTap: () {
         Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (_) => const SearchPage()));
+        ).push(MaterialPageRoute(builder: (_) => const SearchPageV2()));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
