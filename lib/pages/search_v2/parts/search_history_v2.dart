@@ -7,16 +7,12 @@ class _SearchHistory extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recentSearchesAsync = ref.watch(
-      userConfigProvider.select(
+    return AsyncValueBuilder<String?>(
+      provider: userConfigProvider.select(
         (v) => v.whenData((config) => config?.recentSearches),
       ),
-    );
-
-    return recentSearchesAsync.when(
-      loading: () => const SizedBox.shrink(),
-      error: (err, stack) => const SizedBox.shrink(),
-      data: (recentStr) {
+      loading: (context, ref) => const SizedBox.shrink(),
+      builder: (context, recentStr, ref) {
         final searches =
             recentStr?.split(',').where((s) => s.isNotEmpty).toList() ?? [];
         if (searches.isEmpty) {

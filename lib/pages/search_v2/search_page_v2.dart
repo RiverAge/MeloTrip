@@ -68,7 +68,6 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
   @override
   Widget build(BuildContext context) {
     final activeQuery = ref.watch(searchQueryProvider);
-    final searchAsync = ref.watch(searchResultProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -103,15 +102,15 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
                 _focusNode.unfocus();
               },
             )
-          : searchAsync.when(
-              loading: () => const Center(
+          : AsyncValueBuilder<SubsonicResponse?>(
+              provider: searchResultProvider,
+              loading: (context, ref) => const Center(
                 child: Padding(
                   padding: EdgeInsets.only(top: 60),
                   child: CircularProgressIndicator(),
                 ),
               ),
-              error: (err, stack) => Center(child: Text(err.toString())),
-              data: (SubsonicResponse? response) {
+              builder: (context, response, ref) {
                 final SearchResult3Entity? searchResult =
                     response?.subsonicResponse?.searchResult3;
                 final List<SongEntity> songs = searchResult?.song ?? [];
