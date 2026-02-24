@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/const/index.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/widget/fixed_center_circular.dart';
 
 class ArtworkImage extends ConsumerWidget {
   const ArtworkImage({
@@ -12,6 +11,8 @@ class ArtworkImage extends ConsumerWidget {
     this.size,
     this.width,
     this.height,
+    this.placeholder,
+    this.errorWidget,
   });
 
   final String? id;
@@ -19,24 +20,66 @@ class ArtworkImage extends ConsumerWidget {
   final int? size;
   final double? width;
   final double? height;
+  final Widget? placeholder;
+  final Widget? errorWidget;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final artworkId = id;
     if (artworkId == null) {
-      return const SizedBox.shrink();
+      return errorWidget ?? _buildPlaceholder(context);
     }
 
     final auth = ref.watch(currentUserProvider);
+    final theme = Theme.of(context);
+
     return switch (auth) {
       AsyncData(:final value) => Image.network(
-        '$proxyCacheHost/rest/getCoverArt?id=$artworkId&u=${value?.username}&t=${value?.token}&s=${value?.salt}&f=json&v=1.8.0&c=MeloTrip&size=${size ?? 100}',
+        '$proxyCacheHost/rest/getCoverArt?id=$artworkId&u=${value?.username}&t=${value?.token}&s=${value?.salt}&f=json&v=1.8.0&c=MeloTrip&size=${size ?? 500}',
         width: width,
         height: height,
         fit: fit,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded || frame != null) {
+            return child;
+          }
+          return placeholder ?? _buildPlaceholder(context);
+        },
+        errorBuilder: (context, error, stackTrace) =>
+            errorWidget ??
+            Container(
+              width: width,
+              height: height,
+              color: theme.colorScheme.surfaceContainerHighest,
+              child: Icon(
+                Icons.broken_image_outlined,
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.5,
+                ),
+                size: 24,
+              ),
+            ),
       ),
-      AsyncError() => const Icon(Icons.error),
-      _ => const FixedCenterCircular(strokeWidth: 1.5),
+      AsyncError() => errorWidget ?? const Icon(Icons.error),
+      _ => placeholder ?? _buildPlaceholder(context),
     };
+  }
+
+  Widget _buildPlaceholder(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+      ),
+      child: Center(
+        child: Icon(
+          Icons.music_note,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+          size: 32,
+        ),
+      ),
+    );
   }
 }

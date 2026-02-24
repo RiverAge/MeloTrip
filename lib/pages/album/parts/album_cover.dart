@@ -8,21 +8,23 @@ class _AlbumCover extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return Container(
+      width: 200,
+      height: 200,
       decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.onSurface.withAlpha(50),
-            blurRadius: 20,
-            offset: Offset(0, 10),
-            spreadRadius: 8,
+            color: colorScheme.shadow.withValues(alpha: 0.15),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+            spreadRadius: -5,
           ),
         ],
       ),
-      width: 150,
-      height: 150,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: ArtworkImage(id: album.id, size: 5000, fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(12),
+        child: ArtworkImage(id: album.id, size: 600, fit: BoxFit.cover),
       ),
     );
   }
