@@ -88,6 +88,7 @@ class _TablePageState extends ConsumerState<TabPage>
     final uc = ref.watch(userConfigProvider);
     final aiApiConfiged = uc.valueOrNull?.aiApiUrl?.isNotEmpty ?? false;
 
+    final l10n = AppLocalizations.of(context)!;
     final items = [
       const BottomNavigationBarItem(
         icon: Icon(Icons.music_note),
@@ -95,12 +96,12 @@ class _TablePageState extends ConsumerState<TabPage>
       ),
       if (aiApiConfiged)
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
-          label: AppLocalizations.of(context)!.aiChat,
+          icon: const Icon(Icons.chat),
+          label: l10n.aiChat,
         ),
       BottomNavigationBarItem(
         icon: const Icon(Icons.settings),
-        label: AppLocalizations.of(context)!.settings,
+        label: l10n.settings,
       ),
     ];
     final tabViews = [

@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/mixin/song_control/song_control.dart';
 import 'package:melo_trip/model/response/album/album.dart';
-import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/album/album_detail_page.dart';
-import 'package:melo_trip/pages/smart_suggestion/smart_suggestion_page.dart';
 import 'package:melo_trip/pages/search_v2/search_page_v2.dart';
 import 'package:melo_trip/provider/album/albums.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
-import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/endof_data.dart';
-import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-part 'parts/smart_suggestion.dart';
 part 'parts/top_search_bar.dart';
 part 'parts/albums.dart';
-// part 'parts/song_controls.dart';
+part 'parts/for_you_placeholder.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _HomePageStage();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
-class _HomePageStage extends State<HomePage>
+class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -35,18 +28,50 @@ class _HomePageStage extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const _TopSeachBar()),
-      body: const SingleChildScrollView(
-        child: Column(
-          children: [
-            _Albums(type: AlumsType.newest),
-            _SmartSuggestion(),
-            _Albums(type: AlumsType.random),
-            EndofData(),
-            SizedBox(height: 100),
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            pinned: false,
+            snap: true,
+            expandedHeight: 120.0,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+              title: Text(
+                l10n.listenNow,
+                style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                  fontSize: 24,
+                ),
+              ),
+              centerTitle: false,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: const _TopSeachBar(),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              const SizedBox(height: 24),
+              _Albums(type: AlumsType.newest, title: l10n.recentAdded),
+              const SizedBox(height: 24),
+              const _ForYouPlaceholder(),
+              const SizedBox(height: 24),
+              _Albums(type: AlumsType.recent, title: l10n.rencentPlayed),
+              const SizedBox(height: 32),
+              const EndofData(),
+              const SizedBox(height: 120),
+            ]),
+          ),
+        ],
       ),
     );
   }

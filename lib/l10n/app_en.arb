@@ -6,6 +6,16 @@
      "description": "Tabbar Settings text"
   },
 
+  "listenNow": "Listen Now",
+  "@listenNow": {
+     "description": "Tabbar Listen Now text"
+  },
+
+  "library": "Library",
+  "@library": {
+     "description": "Tabbar Library text"
+  },
+
   "confirm": "Confirm",
   "@confirm": {
      "description": "Text for confirm button"

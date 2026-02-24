@@ -105,6 +105,18 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// Tabbar Listen Now text
+  ///
+  /// In en, this message translates to:
+  /// **'Listen Now'**
+  String get listenNow;
+
+  /// Tabbar Library text
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get library;
+
   /// Text for confirm button
   ///
   /// In en, this message translates to:

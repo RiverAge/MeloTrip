@@ -5,6 +5,8 @@ class _TopSeachBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: () {
         Navigator.of(
@@ -12,24 +14,33 @@ class _TopSeachBar extends StatelessWidget {
         ).push(MaterialPageRoute(builder: (_) => const SearchPageV2()));
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        height: 48,
         decoration: BoxDecoration(
-          border: Border.all(
-            width: 1,
-            color: Theme.of(context).colorScheme.primary,
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: .5,
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(Icons.search, size: 19),
-            const SizedBox(width: 5),
-            Text(
-              AppLocalizations.of(context)!.searchHint,
-              style: const TextStyle(fontSize: 12),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Icon(
+                Icons.search,
+                size: 20,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                AppLocalizations.of(context)!.searchHint,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: .5,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

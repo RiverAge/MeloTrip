@@ -1,1 +1,6 @@
-{}
+{
+  "zh_CN": [
+    "listenNow",
+    "library"
+  ]
+}

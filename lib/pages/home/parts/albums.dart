@@ -1,114 +1,94 @@
 part of '../home_page.dart';
 
 class _Albums extends StatelessWidget {
-  const _Albums({required this.type});
+  const _Albums({required this.type, required this.title});
+
   final AlumsType type;
+  final String title;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(switch (type) {
-            AlumsType.newest => AppLocalizations.of(context)!.recentAdded,
-            AlumsType.random => AppLocalizations.of(context)!.randomAlbum,
-            AlumsType.recent => AppLocalizations.of(context)!.rencentPlayed,
-          }, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          AsyncValueBuilder(
-            provider: albumsProvider(type),
-            builder: (context, data, ref) {
-              final albums = data.subsonicResponse?.albumList?.album;
-              return SizedBox(
-                height: 150,
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: albums?.length,
-                  itemBuilder: (_, idx) => _itemBuilder(context, albums?[idx]),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _itemBuilder(BuildContext context, AlbumEntity? album) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Stack(
-          children: [
-            InkWell(
-              onTap: () => _onTap(context, album),
-              child: Container(
-                clipBehavior: Clip.antiAlias,
-                width: 150,
-                height: 150,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-                child: ArtworkImage(
-                  fit: BoxFit.cover,
-                  id: album?.id,
-                  size: 200,
-                ),
-              ),
-            ),
-            _positioned(context, album),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(height: 12),
+        AsyncValueBuilder(
+          provider: albumsProvider(type),
+          builder: (context, data, ref) {
+            final albums = data.subsonicResponse?.albumList?.album ?? [];
+            if (albums.isEmpty) return const SizedBox.shrink();
+
+            return SizedBox(
+              height: 200,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                scrollDirection: Axis.horizontal,
+                itemCount: albums.length,
+                itemBuilder: (_, idx) => _itemBuilder(context, albums[idx]),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
 
-  void _onTap(BuildContext context, AlbumEntity? album) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => AlbumDetailPage(albumId: album?.id)),
-    );
-  }
+  Widget _itemBuilder(BuildContext context, AlbumEntity album) {
+    final theme = Theme.of(context);
 
-  Widget _positioned(BuildContext context, AlbumEntity? album) {
-    final color = Theme.of(
-      context,
-    ).colorScheme.onSurfaceVariant.withValues(alpha: 1);
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => AlbumDetailPage(albumId: album.id)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 140,
+          padding: const EdgeInsets.all(4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${album?.name}',
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, height: 1),
+              AspectRatio(
+                aspectRatio: 1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: ArtworkImage(
+                    fit: BoxFit.cover,
+                    id: album.id,
+                    size: 200,
+                  ),
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      '${album?.artist}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: color, fontSize: 10),
-                    ),
+              const SizedBox(height: 8),
+              Text(
+                album.name ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                album.artist ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: .7,
                   ),
-                  Text(
-                    '${album?.songCount}${AppLocalizations.of(context)!.songCountUnit}',
-                    style: TextStyle(fontSize: 10, color: color),
-                  ),
-                ],
+                  fontSize: 11,
+                ),
               ),
             ],
           ),

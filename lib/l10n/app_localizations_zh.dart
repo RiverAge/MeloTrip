@@ -12,6 +12,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings => '设置';
 
   @override
+  String get listenNow => '现在就听';
+
+  @override
+  String get library => '媒体库';
+
+  @override
   String get confirm => '确认';
 
   @override
