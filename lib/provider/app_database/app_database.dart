@@ -17,15 +17,6 @@ class AppDatabase extends _$AppDatabase {
              PRIMARY KEY (song_id, username)
            )
          ''';
-  final _createSmartSuggestionSql = '''
-           CREATE TABLE smart_suggestion (
-             song_id TEXT NOT NULL,
-             meta TEXT,
-             username TEXT NOT NULL,
-             update_at INTEGER NOT NULL,
-             PRIMARY KEY (song_id, username)
-           )
-         ''';
   final _createUserConfigSql = '''
            CREATE TABLE user_config (
              username TEXT PRIMARY KEY,
@@ -83,7 +74,6 @@ class AppDatabase extends _$AppDatabase {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(_createPlayHistorySql);
-        await db.execute(_createSmartSuggestionSql);
         await db.execute(_createUserConfigSql);
         await db.execute(_createCurrentUserSql);
 

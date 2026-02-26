@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/smart_suggestion/smart_suggestion.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'song_detail.g.dart';
@@ -44,10 +43,6 @@ class SongFavorite extends _$SongFavorite {
     final starred = res?.subsonicResponse?.song?.starred;
 
     final api = await ref.read(apiProvider.future);
-
-    if (starred == null && song.id != null) {
-      ref.read(smartSuggestionProvider.notifier).similarSongs(song);
-    }
 
     final ret = await api.get<Map<String, dynamic>>(
       '/rest/${starred != null ? 'un' : ''}star',
