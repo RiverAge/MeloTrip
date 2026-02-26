@@ -63,3 +63,13 @@ Melo Trip.
 `flutter gen-l10n`
 ### 启动闪屏(初次可能需要删除App才能生效)
 `dart run flutter_native_splash:create`
+
+## Current Scope
+
+- AI chat feature has been removed from this app.
+- Home recommended placeholder is intentionally kept.
+
+## Test Baseline
+
+- Run static checks: `flutter analyze`
+- Run widget/provider smoke tests: `flutter test`
