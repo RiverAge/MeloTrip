@@ -32,25 +32,29 @@ class _RoundedCover extends StatelessWidget {
             SizedBox(height: 8),
             _MediaMeta(),
             SizedBox(height: 16),
-            AsyncValueBuilder(
-              provider: lyricsProvider(current.id),
-              loading: (_, _) => const SizedBox.shrink(),
-              builder: (_, lyrics, _) {
-                final lyricsLines = lyrics
-                    .subsonicResponse
-                    ?.lyricsList
-                    ?.structuredLyrics
-                    ?.firstOrNull
-                    ?.line;
-                if (lyricsLines == null) {
-                  return SizedBox.shrink();
-                }
+            // 防止歌词出现被顶上去
+            SizedBox(
+              height: 40,
+              child: AsyncValueBuilder(
+                provider: lyricsProvider(current.id),
+                loading: (_, _) => const SizedBox.shrink(),
+                builder: (_, lyrics, _) {
+                  final lyricsLines = lyrics
+                      .subsonicResponse
+                      ?.lyricsList
+                      ?.structuredLyrics
+                      ?.firstOrNull
+                      ?.line;
+                  if (lyricsLines == null) {
+                    return SizedBox.shrink();
+                  }
 
-                return SingleLineAnimatedLyrics(
-                  lyricsLines: lyricsLines,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                );
-              },
+                  return SingleLineAnimatedLyrics(
+                    lyricsLines: lyricsLines,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                  );
+                },
+              ),
             ),
           ],
         );

@@ -61,12 +61,22 @@ class _HomePageState extends State<HomePage>
           SliverList(
             delegate: SliverChildListDelegate([
               const SizedBox(height: 24),
-              _Albums(type: AlumsType.newest, title: l10n.recentAdded),
-              const SizedBox(height: 24),
+              _Albums(
+                type: AlumsType.newest,
+                title: l10n.recentAdded,
+                layout: AlbumLayout.grid,
+                limit: 4,
+              ),
+              const SizedBox(height: 16),
               const _ForYouPlaceholder(),
-              const SizedBox(height: 24),
-              _Albums(type: AlumsType.recent, title: l10n.rencentPlayed),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
+              _Albums(
+                type: AlumsType.recent,
+                title: l10n.rencentPlayed,
+                layout: AlbumLayout.tile,
+                limit: 5,
+              ),
+              // const SizedBox(height: 16),
               const EndofData(),
               const SizedBox(height: 120),
             ]),
