@@ -13,9 +13,6 @@ abstract class Configuration with _$Configuration {
     @JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,
     @JsonKey(name: 'recent_searches') String? recentSearches,
     ThemeMode? theme,
-    @JsonKey(name: 'ai_api_key') String? aiApiKey,
-    @JsonKey(name: 'ai_api_url') String? aiApiUrl,
-    @JsonKey(name: 'ai_model') String? aiModel,
     @LocaleConvert() Locale? locale,
     @JsonKey(name: 'update_at') int? updateAt,
   }) = _Configuration;

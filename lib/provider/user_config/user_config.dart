@@ -55,9 +55,6 @@ class UserConfig extends _$UserConfig {
     ValueUpdater<String?>? maxRate,
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<Locale?>? locale,
-    ValueUpdater<String?>? aiApiKey,
-    ValueUpdater<String?>? aiApiUrl,
-    ValueUpdater<String?>? aiModel,
     ValueUpdater<String?>? recentSearches,
   }) async {
     final db = await ref.read(appDatabaseProvider.future);
@@ -76,15 +73,6 @@ class UserConfig extends _$UserConfig {
     }
     if (theme != null) {
       values['theme'] = theme.value?.name;
-    }
-    if (aiApiKey != null) {
-      values['ai_api_key'] = aiApiKey.value;
-    }
-    if (aiApiUrl != null) {
-      values['ai_api_url'] = aiApiUrl.value;
-    }
-    if (aiModel != null) {
-      values['ai_model'] = aiModel.value;
     }
     if (recentSearches != null) {
       values['recent_searches'] = recentSearches.value;

@@ -6,7 +6,7 @@ part of 'auth.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginHash() => r'0b95023255c565864c922925f43fbbf788204130';
+String _$loginHash() => r'a2b67028a639fe2fbec4c5960142166cc48053b1';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -7,31 +7,20 @@ extension _ApiInterceptorLogic on _MyAppState {
     api.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          if (options.extra['ai-chat'] == '1') {
-            final uc = await ref.read(userConfigProvider.future);
-            options.baseUrl = uc?.aiApiUrl ?? '';
-            final aiApiKey = uc?.aiApiKey;
-            options.headers.addAll({
-              if (aiApiKey != null && aiApiKey != '')
-                'Authorization': 'Bearer $aiApiKey',
-              'Content-Type': 'application/json',
+          final auth = await ref.read(currentUserProvider.future);
+          final subsonicToken = auth?.token;
+          final host = auth?.host;
+          if (subsonicToken != null && host != null) {
+            options.baseUrl = host;
+            options.queryParameters.addAll({
+              'u': auth?.username,
+              't': subsonicToken,
+              's': auth?.salt,
+              '_': DateTime.now().toIso8601String(),
+              'v': '1.16.1',
+              'c': 'melo_trip',
+              'f': 'json',
             });
-          } else {
-            final auth = await ref.read(currentUserProvider.future);
-            final subsonicToken = auth?.token;
-            final host = auth?.host;
-            if (subsonicToken != null && host != null) {
-              options.baseUrl = host;
-              options.queryParameters.addAll({
-                'u': auth?.username,
-                't': subsonicToken,
-                's': auth?.salt,
-                '_': DateTime.now().toIso8601String(),
-                'v': '1.16.1',
-                'c': 'melo_trip',
-                'f': 'json',
-              });
-            }
           }
           return handler.next(options);
         },

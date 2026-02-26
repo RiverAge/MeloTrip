@@ -4,9 +4,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/tab/music_bar/parts/music_bar.dart';
 import 'package:melo_trip/pages/home/home_page.dart';
 import 'package:melo_trip/pages/settings/settings_page.dart';
-import 'package:melo_trip/pages/ai_chat/ai_chat_page.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
 
 class TabPage extends ConsumerStatefulWidget {
   const TabPage({super.key});
@@ -85,20 +83,12 @@ class _TablePageState extends ConsumerState<TabPage>
 
   @override
   Widget build(BuildContext context) {
-    final uc = ref.watch(userConfigProvider);
-    final aiApiConfiged = uc.valueOrNull?.aiApiUrl?.isNotEmpty ?? false;
-
     final l10n = AppLocalizations.of(context)!;
     final items = [
       const BottomNavigationBarItem(
         icon: Icon(Icons.music_note),
         label: 'MeloTrip',
       ),
-      if (aiApiConfiged)
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.chat),
-          label: l10n.aiChat,
-        ),
       BottomNavigationBarItem(
         icon: const Icon(Icons.settings),
         label: l10n.settings,
@@ -106,7 +96,6 @@ class _TablePageState extends ConsumerState<TabPage>
     ];
     final tabViews = [
       const HomePage(),
-      if (aiApiConfiged) AiChatPage(),
       const SettingsPage(),
     ];
 
@@ -118,9 +107,7 @@ class _TablePageState extends ConsumerState<TabPage>
     }
 
     return Scaffold(
-      bottomSheet: (_currentIndex == 1 && currentLength == 3) || !_visible
-          ? null
-          : const MusicBar(),
+      bottomSheet: !_visible ? null : const MusicBar(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _setTab,

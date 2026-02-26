@@ -5,7 +5,6 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/favorite/favorite_page.dart';
 import 'package:melo_trip/pages/initial/initial_page.dart';
 import 'package:melo_trip/pages/playlist/playlist_page.dart';
-import 'package:melo_trip/pages/settings/ai_config_page.dart';
 import 'package:melo_trip/pages/settings/app_theme_page.dart';
 import 'package:melo_trip/pages/settings/language_page.dart';
 import 'package:melo_trip/pages/settings/music_quality_page.dart';
@@ -76,14 +75,6 @@ class _SettingsPageState extends State<SettingsPage>
                   title: Text(AppLocalizations.of(context)!.myFavorites),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: ((_) => const FavoritePage())),
-                  ),
-                  trailing: const Icon(Icons.arrow_forward),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.smart_toy_rounded),
-                  title: Text(AppLocalizations.of(context)!.aiConfig),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: ((_) => const AiConfigPage())),
                   ),
                   trailing: const Icon(Icons.arrow_forward),
                 ),

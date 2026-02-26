@@ -16,9 +16,6 @@ _Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
       ),
       recentSearches: json['recent_searches'] as String?,
       theme: $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']),
-      aiApiKey: json['ai_api_key'] as String?,
-      aiApiUrl: json['ai_api_url'] as String?,
-      aiModel: json['ai_model'] as String?,
       locale: const LocaleConvert().fromJson(json['locale'] as String?),
       updateAt: (json['update_at'] as num?)?.toInt(),
     );
@@ -30,9 +27,6 @@ Map<String, dynamic> _$ConfigurationToJson(_Configuration instance) =>
       'playlist_mode': _$PlaylistModeEnumMap[instance.playlistMode],
       'recent_searches': instance.recentSearches,
       'theme': _$ThemeModeEnumMap[instance.theme],
-      'ai_api_key': instance.aiApiKey,
-      'ai_api_url': instance.aiApiUrl,
-      'ai_model': instance.aiModel,
       'locale': const LocaleConvert().toJson(instance.locale),
       'update_at': instance.updateAt,
     };

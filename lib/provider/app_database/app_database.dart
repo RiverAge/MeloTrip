@@ -25,9 +25,6 @@ class AppDatabase extends _$AppDatabase {
              locale TEXT,
              recent_searches TEXT,
              theme TEXT DEFAULT system,
-             ai_api_key TEXT, 
-             ai_api_url TEXT, 
-             ai_model TEXT, 
              update_at INTEGER NOT NULL
            )
          ''';
@@ -37,31 +34,6 @@ class AppDatabase extends _$AppDatabase {
              token TEXT NOT NULL,
              username TEXT PRIMARY KEY,
              host TEXT NOT NULL,
-             update_at INTEGER NOT NULL
-           )
-         ''';
-  final _createAiChatConversationSql = '''
-           CREATE TABLE ai_chat_conversation (
-             id TEXT PRIMARY KEY,
-             username TEXT NOT NULL,
-             title TEXT,
-             update_at INTEGER NOT NULL
-           )
-         ''';
-
-  final _createAiChatMessageSql = '''
-           CREATE TABLE ai_chat_message (
-             id TEXT PRIMARY KEY,
-             conversation_id TEXT NOT NULL, 
-             role TEXT,
-             content TEXT,
-             reasoning_content TEXT,
-             model TEXT,
-             reasoning_duration INTEGER,
-             total_duration INTEGER,
-             is_streaming INTEGER,
-             error TEXT,
-             timestamp INTEGER,
              update_at INTEGER NOT NULL
            )
          ''';
@@ -77,23 +49,7 @@ class AppDatabase extends _$AppDatabase {
         await db.execute(_createUserConfigSql);
         await db.execute(_createCurrentUserSql);
 
-        await db.execute(_createAiChatConversationSql);
-        await db.execute(_createAiChatMessageSql);
       },
-      // onUpgrade: (db, oldVersion, newVersion) async {
-      //   if (oldVersion < 2) {
-      //     await db.execute(
-      //       'ALTER TABLE user_config ADD COLUMN ai_api_key TEXT',
-      //     );
-      //     await db.execute(
-      //       'ALTER TABLE user_config ADD COLUMN ai_api_url TEXT',
-      //     );
-      //     await db.execute('ALTER TABLE user_config ADD COLUMN ai_model TEXT');
-
-      //     await db.execute(_createAiChatConversationSql);
-      //     await db.execute(_createAiChatMessageSql);
-      //   }
-      // },
     );
 
     return db;
