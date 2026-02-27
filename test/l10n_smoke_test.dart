@@ -77,10 +77,10 @@ void main() {
       ProviderScope(
         overrides: [
           albumsProvider(
-            AlumsType.newest,
+            .newest,
           ).overrideWith((_) async => null),
           albumsProvider(
-            AlumsType.recent,
+            .recent,
           ).overrideWith((_) async => null),
         ],
         child: MaterialApp(

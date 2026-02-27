@@ -88,7 +88,7 @@ class AppPlayer extends BaseAudioHandler {
 
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
-    _player.setShuffle(shuffleMode != AudioServiceShuffleMode.none);
+    _player.setShuffle(shuffleMode != .none);
   }
 
   @override
@@ -96,12 +96,12 @@ class AppPlayer extends BaseAudioHandler {
 
   @override
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
-    if (repeatMode == AudioServiceRepeatMode.all) {
-      await _player.setPlaylistMode(PlaylistMode.loop);
-    } else if (repeatMode == AudioServiceRepeatMode.none) {
-      await _player.setPlaylistMode(PlaylistMode.none);
-    } else if (repeatMode == AudioServiceRepeatMode.one) {
-      await _player.setPlaylistMode(PlaylistMode.single);
+    if (repeatMode == .all) {
+      await _player.setPlaylistMode(.loop);
+    } else if (repeatMode == .none) {
+      await _player.setPlaylistMode(.none);
+    } else if (repeatMode == .one) {
+      await _player.setPlaylistMode(.single);
     }
   }
 

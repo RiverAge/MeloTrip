@@ -10,10 +10,10 @@ extension PlayerControls on AppPlayer {
     final session = await AudioSession.instance;
     await session.setActive(
       true,
-      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidAudioFocusGainType: .gain,
       androidAudioAttributes: AndroidAudioAttributes(
-        contentType: AndroidAudioContentType.music,
-        usage: AndroidAudioUsage.media,
+        contentType: .music,
+        usage: .media,
       ),
       androidWillPauseWhenDucked: true,
     );

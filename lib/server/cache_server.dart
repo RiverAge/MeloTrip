@@ -100,7 +100,7 @@ void runHttpServer(Map<String, dynamic> args) async {
     final httpClient = HttpClient();
     httpClient.autoUncompress = false;
     final HttpClientRequest proxyRequest = await httpClient.getUrl(
-      Uri.parse('$host${request.uri}'),
+      .parse('$host${request.uri}'),
     );
     proxyRequest.followRedirects = false;
 

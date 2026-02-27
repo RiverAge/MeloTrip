@@ -6,7 +6,7 @@ class _Albums extends StatelessWidget {
   const _Albums({
     required this.type,
     required this.title,
-    this.layout = AlbumLayout.horizontal,
+    this.layout = .horizontal,
     this.limit,
   });
 
@@ -33,7 +33,7 @@ class _Albums extends StatelessWidget {
                   letterSpacing: -0.5,
                 ),
               ),
-              if (layout != AlbumLayout.horizontal)
+              if (layout != .horizontal)
                 TextButton(
                   onPressed: () {},
                   child: Text(
@@ -59,9 +59,9 @@ class _Albums extends StatelessWidget {
             }
 
             return switch (layout) {
-              AlbumLayout.horizontal => _buildHorizontal(context, albums),
-              AlbumLayout.grid => _buildGrid(context, albums),
-              AlbumLayout.tile => _buildTiles(context, albums),
+              .horizontal => _buildHorizontal(context, albums),
+              .grid => _buildGrid(context, albums),
+              .tile => _buildTiles(context, albums),
             };
           },
         ),

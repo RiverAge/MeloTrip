@@ -60,13 +60,13 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     final player = await ref.read(appPlayerHandlerProvider.future);
     switch (state) {
-      case AppLifecycleState.resumed:
+      case .resumed:
         player?.setBackgroundMode(false);
         break;
-      case AppLifecycleState.paused:
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.detached:
-      case AppLifecycleState.hidden:
+      case .paused:
+      case .inactive:
+      case .detached:
+      case .hidden:
         player?.setBackgroundMode(true);
         break;
     }

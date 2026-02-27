@@ -46,7 +46,7 @@ class InitialBootstrapService {
     final token = authUser?.token;
     final host = authUser?.host;
     if (salt == null || token == null || host == null) {
-      return InitialBootstrapResult.loggedOut;
+      return .loggedOut;
     }
 
     final dirPath = await resolveCachePath();
@@ -64,7 +64,7 @@ class InitialBootstrapService {
       await restorePlaylistMode(playlistMode);
     }
 
-    return InitialBootstrapResult.loggedIn;
+    return .loggedIn;
   }
 }
 

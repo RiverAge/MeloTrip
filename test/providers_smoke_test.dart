@@ -23,7 +23,7 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(albumsProvider(AlumsType.newest).future);
+    final result = await container.read(albumsProvider(.newest).future);
     expect(result, isNull);
   });
 
@@ -33,7 +33,7 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(albumsProvider(AlumsType.newest).future);
+    final result = await container.read(albumsProvider(.newest).future);
     final albums = result?.subsonicResponse?.albumList?.album;
     expect(albums, isNotNull);
     expect(albums!.length, 1);

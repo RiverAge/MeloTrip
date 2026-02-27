@@ -52,7 +52,7 @@ void main() {
         host: 'https://example.com',
       ),
       loadConfig: () async => const Configuration(
-        playlistMode: PlaylistMode.loop,
+        playlistMode: .loop,
       ),
       loadPlayQueue: () async => const PlayQueueEntity(
         current: 'song_1',

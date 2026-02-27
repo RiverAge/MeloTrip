@@ -151,7 +151,7 @@ extension _PlayerListenerLogic on _MyAppState {
       duration: durationValue != null
           ? Duration(seconds: durationValue)
           : Duration.zero,
-      artUri: Uri.parse(url),
+      artUri: .parse(url),
     );
 
     player.addMediaItem(item);

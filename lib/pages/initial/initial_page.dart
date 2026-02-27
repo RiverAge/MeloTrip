@@ -25,7 +25,7 @@ class _InitState extends ConsumerState<InitialPage> {
     final result = await bootstrapService.bootstrap();
 
     if (!mounted) return;
-    if (result == InitialBootstrapResult.loggedIn) {
+    if (result == .loggedIn) {
       navigator.pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, _, _) => const TabPage(),

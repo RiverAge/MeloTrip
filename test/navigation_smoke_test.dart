@@ -78,6 +78,6 @@ class _AlwaysLoggedInBootstrap extends InitialBootstrapService {
 
   @override
   Future<InitialBootstrapResult> bootstrap() async {
-    return InitialBootstrapResult.loggedIn;
+    return .loggedIn;
   }
 }

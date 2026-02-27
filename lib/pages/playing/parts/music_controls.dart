@@ -98,20 +98,20 @@ class _MusicControls extends StatelessWidget with SongControl {
                     final playModeSingleText = AppLocalizations.of(
                       context,
                     )!.playModeSingle;
-                    if (player.playlistMode == PlaylistMode.loop) {
-                      player.setPlaylistMode(PlaylistMode.none);
+                    if (player.playlistMode == .loop) {
+                      player.setPlaylistMode(.none);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(
                         _buildSnack(playModeNoneText, size),
                       );
-                    } else if (player.playlistMode == PlaylistMode.none) {
-                      player.setPlaylistMode(PlaylistMode.single);
+                    } else if (player.playlistMode == .none) {
+                      player.setPlaylistMode(.single);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(
                         _buildSnack(playModeSingleText, size),
                       );
-                    } else if (player.playlistMode == PlaylistMode.single) {
-                      player.setPlaylistMode(PlaylistMode.loop);
+                    } else if (player.playlistMode == .single) {
+                      player.setPlaylistMode(.loop);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(
                         _buildSnack(playModeLoopText, size),
@@ -122,9 +122,9 @@ class _MusicControls extends StatelessWidget with SongControl {
                     provider: player.playlistModeStream,
                     builder: (_, playlistMode) {
                       return Icon(switch (playlistMode) {
-                        PlaylistMode.none => Icons.queue_music_outlined,
-                        PlaylistMode.loop => Icons.repeat,
-                        PlaylistMode.single => Icons.repeat_one,
+                        .none => Icons.queue_music_outlined,
+                        .loop => Icons.repeat,
+                        .single => Icons.repeat_one,
                       });
                     },
                   ),
@@ -152,7 +152,7 @@ class _MusicControls extends StatelessWidget with SongControl {
             //   builder: (_, playlistMode, __) {
             //     return IconButton(
             //       onPressed:
-            //           playlistMode == PlaylistMode.single
+            //           playlistMode == .single
             //               ? null
             //               : () async {
             //                 final messenger = ScaffoldMessenger.of(context);

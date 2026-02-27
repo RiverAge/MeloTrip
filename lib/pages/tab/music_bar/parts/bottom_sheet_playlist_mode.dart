@@ -9,21 +9,21 @@ class _BottomSheePlaylistMode extends StatelessWidget {
       builder: (context, player, _) {
         return IconButton(
           onPressed: () {
-            if (player.playlistMode == PlaylistMode.loop) {
-              player.setPlaylistMode(PlaylistMode.none);
-            } else if (player.playlistMode == PlaylistMode.none) {
-              player.setPlaylistMode(PlaylistMode.single);
-            } else if (player.playlistMode == PlaylistMode.single) {
-              player.setPlaylistMode(PlaylistMode.loop);
+            if (player.playlistMode == .loop) {
+              player.setPlaylistMode(.none);
+            } else if (player.playlistMode == .none) {
+              player.setPlaylistMode(.single);
+            } else if (player.playlistMode == .single) {
+              player.setPlaylistMode(.loop);
             }
           },
           icon: AsyncStreamBuilder(
             provider: player.playlistModeStream,
             builder: (_, playlistMode) {
               return Icon(switch (playlistMode) {
-                PlaylistMode.none => Icons.queue_music_outlined,
-                PlaylistMode.loop => Icons.repeat,
-                PlaylistMode.single => Icons.repeat_one_outlined,
+                .none => Icons.queue_music_outlined,
+                .loop => Icons.repeat,
+                .single => Icons.repeat_one_outlined,
               });
             },
           ),
