@@ -4,9 +4,11 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
+import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
 
 class FakeAppPlayerHandler extends AppPlayerHandler {
   @override
@@ -16,6 +18,11 @@ class FakeAppPlayerHandler extends AppPlayerHandler {
 class FakeCurrentUserLoggedOut extends CurrentUser {
   @override
   Future<AuthUser?> build() async => null;
+}
+
+class FakeUserConfigNull extends UserConfig {
+  @override
+  Future<Configuration?> build() async => null;
 }
 
 class FakeApiNull extends Api {

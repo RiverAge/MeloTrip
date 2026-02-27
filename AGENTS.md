@@ -21,6 +21,13 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - `withValues(alpha: )` is the recommended replacement
 - This applies to all Color objects in the codebase
 
+### Dart Wildcard Parameters
+
+- When intentionally ignoring parameters, use `_` wildcard names.
+- In the same parameter list, repeated `_` is valid and preferred:
+  - Good: `(_, _) { ... }`
+  - Avoid: `(_, __) { ... }` (triggers `unnecessary_underscores` lint)
+
 ## File Editing Safety
 
 ### 1) Encoding and BOM Safety (must follow)
