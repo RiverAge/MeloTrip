@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/pages/login/login_page.dart';
-import 'package:melo_trip/pages/tab/tab_page.dart';
 import 'package:melo_trip/pages/initial/initial_bootstrap_service.dart';
+import 'package:melo_trip/pages/initial/startup_navigator.dart';
 
 class InitialPage extends ConsumerStatefulWidget {
   const InitialPage({super.key});
@@ -13,41 +11,58 @@ class InitialPage extends ConsumerStatefulWidget {
 }
 
 class _InitState extends ConsumerState<InitialPage> {
+  ProviderSubscription<AsyncValue<InitialBootstrapResult>>? _bootstrapSub;
+  var _navigationHandled = false;
+
   @override
   void initState() {
     super.initState();
-    _init();
+    _bootstrapSub = ref.listenManual<AsyncValue<InitialBootstrapResult>>(
+      initialBootstrapResultProvider,
+      (_, next) {
+        next.whenData(_handleBootstrapResult);
+      },
+      fireImmediately: true,
+    );
   }
 
-  void _init() async {
-    final navigator = Navigator.of(context);
-    final bootstrapService = ref.read(initialBootstrapServiceProvider);
-    final result = await bootstrapService.bootstrap();
+  void _handleBootstrapResult(InitialBootstrapResult result) {
+    if (!mounted || _navigationHandled) return;
+    _navigationHandled = true;
 
-    if (!mounted) return;
-    if (result == .loggedIn) {
-      navigator.pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, _, _) => const TabPage(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-        (route) => false,
-      );
-      FlutterNativeSplash.remove();
-    } else {
-      FlutterNativeSplash.remove();
-      navigator.pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, _, _) => const LoginPage(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-        (route) => false,
-      );
-    }
+    final startupNavigator = ref.read(startupNavigatorProvider);
+    startupNavigator.navigate(context, result);
   }
 
   @override
-  Widget build(BuildContext context) => const Scaffold();
+  void dispose() {
+    _bootstrapSub?.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisSize: .min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: _retryBootstrap,
+                child: const Text('Retry startup'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _retryBootstrap() {
+    if (_navigationHandled) return;
+    ref.invalidate(initialBootstrapResultProvider);
+  }
 }
