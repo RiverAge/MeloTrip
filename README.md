@@ -73,3 +73,16 @@ Melo Trip.
 
 - Run static checks: `flutter analyze`
 - Run widget/provider smoke tests: `flutter test`
+
+### Baseline Coverage
+
+- Localization delegates can load.
+- Home recommended placeholder remains visible.
+- Route observer provider can be created.
+- Supported locales include `en` and `zh_CN`.
+- Home localization keys exist in both `en` and `zh_CN`.
+- `InitialPage` routes to `LoginPage` when user is logged out.
+- `albumsProvider` handles null payloads.
+- `albumsProvider` parses album list payloads.
+- `scanStatusProvider` handles null payloads.
+- `scanStatusProvider` parses status payloads.
