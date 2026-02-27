@@ -69,6 +69,12 @@ void main() {
     expect(observer, isA<RouteObserver<ModalRoute<void>>>());
   });
 
+  test('Supported locales include en and zh_CN', () {
+    final locales = AppLocalizations.supportedLocales;
+    expect(locales, contains(const Locale('en')));
+    expect(locales, contains(const Locale('zh', 'CN')));
+  });
+
   testWidgets('Home localization keys exist in en and zh_CN', (
     WidgetTester tester,
   ) async {
@@ -197,6 +203,7 @@ class _FakeApiAlbumList extends Api {
     return dio;
   }
 }
+
 
 class _StaticJsonAdapter implements HttpClientAdapter {
   _StaticJsonAdapter(this.json);
