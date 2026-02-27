@@ -8,12 +8,14 @@ class _Albums extends StatelessWidget {
     required this.title,
     this.layout = .horizontal,
     this.limit,
+    this.onViewAll,
   });
 
   final AlumsType type;
   final String title;
   final AlbumLayout layout;
   final int? limit;
+  final VoidCallback? onViewAll;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,9 @@ class _Albums extends StatelessWidget {
                   letterSpacing: -0.5,
                 ),
               ),
-              if (layout != .horizontal)
+              if (layout != .horizontal && onViewAll != null)
                 TextButton(
-                  onPressed: () {},
+                  onPressed: onViewAll,
                   child: Text(
                     AppLocalizations.of(context)!.viewAll,
                     style: TextStyle(
@@ -139,11 +141,7 @@ class _Albums extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: ArtworkImage(
-                      fit: .cover,
-                      id: album.id,
-                      size: 300,
-                    ),
+                    child: ArtworkImage(fit: .cover, id: album.id, size: 300),
                   ),
                 ),
               ),
@@ -205,10 +203,7 @@ class _Albums extends StatelessWidget {
                 children: [
                   Text(
                     album.name ?? '',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: .w600,
-                    ),
+                    style: const TextStyle(fontSize: 15, fontWeight: .w600),
                     maxLines: 1,
                     overflow: .ellipsis,
                   ),
