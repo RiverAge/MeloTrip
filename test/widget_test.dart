@@ -16,6 +16,7 @@ import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
+import 'package:melo_trip/provider/scan_status/scan_status.dart';
 
 void main() {
   testWidgets('Localization delegates load', (WidgetTester tester) async {
@@ -165,6 +166,27 @@ void main() {
     expect(albums!.length, 1);
     expect(albums.first.name, 'Test Album');
   });
+
+  test('scanStatusProvider handles null API payload', () async {
+    final container = ProviderContainer(
+      overrides: [apiProvider.overrideWith(_FakeApiNull.new)],
+    );
+    addTearDown(container.dispose);
+
+    final result = await container.read(scanStatusProvider.future);
+    expect(result, isNull);
+  });
+
+  test('scanStatusProvider parses status payload', () async {
+    final container = ProviderContainer(
+      overrides: [apiProvider.overrideWith(_FakeApiScanStatus.new)],
+    );
+    addTearDown(container.dispose);
+
+    final result = await container.read(scanStatusProvider.future);
+    expect(result?.subsonicResponse?.status, 'ok');
+    expect(result?.subsonicResponse?.version, '1.2.3');
+  });
 }
 
 class _FakeAppPlayerHandler extends AppPlayerHandler {
@@ -198,6 +220,20 @@ class _FakeApiAlbumList extends Api {
             {'id': '1', 'name': 'Test Album', 'artist': 'Tester'},
           ],
         },
+      },
+    });
+    return dio;
+  }
+}
+
+class _FakeApiScanStatus extends Api {
+  @override
+  Future<Dio> build() async {
+    final dio = Dio();
+    dio.httpClientAdapter = _StaticJsonAdapter({
+      'subsonic-response': {
+        'status': 'ok',
+        'version': '1.2.3',
       },
     });
     return dio;
