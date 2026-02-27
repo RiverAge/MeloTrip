@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
@@ -26,6 +27,7 @@ class InitialBootstrapService {
     required this.startCacheServer,
     required this.restorePlaylist,
     required this.restorePlaylistMode,
+    this.bootstrapTimeout = const Duration(seconds: 8),
   });
 
   final Future<AuthUser?> Function() loadAuthUser;
@@ -39,8 +41,19 @@ class InitialBootstrapService {
   })
   restorePlaylist;
   final Future<void> Function(PlaylistMode mode) restorePlaylistMode;
+  final Duration bootstrapTimeout;
 
   Future<InitialBootstrapResult> bootstrap() async {
+    try {
+      return await _bootstrapInternal().timeout(bootstrapTimeout);
+    } on TimeoutException {
+      return .loggedOut;
+    } catch (_) {
+      return .loggedOut;
+    }
+  }
+
+  Future<InitialBootstrapResult> _bootstrapInternal() async {
     final authUser = await loadAuthUser();
     final salt = authUser?.salt;
     final token = authUser?.token;

@@ -84,4 +84,42 @@ void main() {
     expect(restoredInitialId, 'song_1');
     expect(restoredMode, PlaylistMode.loop);
   });
+
+  test('bootstrap returns loggedOut when startup throws', () async {
+    final service = InitialBootstrapService(
+      loadAuthUser: () async => throw StateError('boom'),
+      loadConfig: () async => null,
+      loadPlayQueue: () async => null,
+      resolveCachePath: () async => 'unused',
+      startCacheServer: (_, _) {},
+      restorePlaylist: ({required songs, initialId}) async {},
+      restorePlaylistMode: (_) async {},
+    );
+
+    final result = await service.bootstrap();
+    expect(result, InitialBootstrapResult.loggedOut);
+  });
+
+  test('bootstrap returns loggedOut on timeout', () async {
+    final service = InitialBootstrapService(
+      loadAuthUser: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        return const AuthUser(
+          salt: 'salt',
+          token: 'token',
+          host: 'https://example.com',
+        );
+      },
+      loadConfig: () async => null,
+      loadPlayQueue: () async => null,
+      resolveCachePath: () async => '/tmp/cache',
+      startCacheServer: (_, _) {},
+      restorePlaylist: ({required songs, initialId}) async {},
+      restorePlaylistMode: (_) async {},
+      bootstrapTimeout: const Duration(milliseconds: 1),
+    );
+
+    final result = await service.bootstrap();
+    expect(result, InitialBootstrapResult.loggedOut);
+  });
 }
