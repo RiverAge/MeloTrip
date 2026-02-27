@@ -114,17 +114,36 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   }
 
   @override
-  Widget build(BuildContext context) => ListView.separated(
-    padding: EdgeInsets.symmetric(horizontal: 8),
-    controller: _scrollController,
-    itemCount: widget.playQueue.songs.length,
-    separatorBuilder: (context, index) => const Divider(height: 0),
-    itemBuilder: (context, idx) {
-      return _BottomSheetItem(
-        songs: widget.playQueue.songs,
-        currentPlayingIndex: widget.playQueue.index,
-        index: idx,
-      );
-    },
-  );
+  Widget build(BuildContext context) {
+    return AsyncValueBuilder(
+      provider: appPlayerHandlerProvider,
+      builder: (context, player, _) {
+        return AsyncStreamBuilder(
+          provider: player.playingStream,
+          loading: (_) => _buildListView(player: player, playing: false),
+          builder: (_, playing) {
+            return _buildListView(player: player, playing: playing);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildListView({required AppPlayer player, required bool playing}) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      controller: _scrollController,
+      itemExtent: 72,
+      itemCount: widget.playQueue.songs.length,
+      itemBuilder: (context, idx) {
+        return _BottomSheetItem(
+          player: player,
+          songs: widget.playQueue.songs,
+          currentPlayingIndex: widget.playQueue.index,
+          index: idx,
+          isCurrentPlaying: playing && widget.playQueue.index == idx,
+        );
+      },
+    );
+  }
 }
