@@ -13,8 +13,8 @@ class NoData extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: .center,
+        mainAxisAlignment: .center,
         children: [
           Container(
             width: 50,

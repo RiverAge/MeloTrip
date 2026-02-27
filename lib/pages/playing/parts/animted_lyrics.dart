@@ -101,8 +101,8 @@ class _PositionedLyricsState extends ConsumerState<_PositionedLyrics> {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => ShaderMask(
       shaderCallback: (Rect bounds) => LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
+        begin: .topCenter,
+        end: .bottomCenter,
         // 这里的 colors 和 stops 是核心
         colors: [
           Colors.transparent, // 顶部起始点：完全透明
@@ -118,7 +118,7 @@ class _PositionedLyricsState extends ConsumerState<_PositionedLyrics> {
         ],
       ).createShader(bounds),
       // blendMode 必须设为 dstIn，表示只保留渐变色遮盖部分的颜色
-      blendMode: BlendMode.dstIn,
+      blendMode: .dstIn,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -177,7 +177,7 @@ class _LyricItem extends StatelessWidget {
 
                 Widget content = Text(
                   text,
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: TextStyle(
                     fontSize: i == 0 ? 20 : 14,
                     height: 1.5,
@@ -187,8 +187,8 @@ class _LyricItem extends StatelessWidget {
                       value,
                     ),
                     fontWeight: value > 0.5
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                        ? .bold
+                        : .normal,
                   ),
                 );
 

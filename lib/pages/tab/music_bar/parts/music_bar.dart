@@ -85,12 +85,12 @@ class _MusicBarState extends State<MusicBar> {
               contentPadding: EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
               leading: SizedBox(
                 width: 50,
-                child: ArtworkImage(fit: BoxFit.contain, id: current.id),
+                child: ArtworkImage(fit: .contain, id: current.id),
               ),
               title: Text(
                 '${current.title}',
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: .ellipsis,
+                style: const TextStyle(fontWeight: .bold),
               ),
               subtitle: AsyncValueBuilder(
                 provider: lyricsProvider(current.id),
@@ -141,7 +141,7 @@ class _MusicBarState extends State<MusicBar> {
               trailing: LayoutBuilder(
                 builder: (context, dimens) {
                   return Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       AsyncValueBuilder(
                         provider: appPlayerHandlerProvider,
@@ -153,7 +153,7 @@ class _MusicBarState extends State<MusicBar> {
                               return IconButton(
                                 style: IconButton.styleFrom(
                                   tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                      .shrinkWrap,
                                 ),
                                 onPressed: () {
                                   player.playOrPause();
@@ -173,7 +173,7 @@ class _MusicBarState extends State<MusicBar> {
                         style: IconButton.styleFrom(
                           // minimumSize: Size.zero,
                           // padding: const EdgeInsets.all(0),
-                          // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          // tapTargetSize: .shrinkWrap,
                         ),
                         onPressed: () => _onOpenPlayQueue(context),
                         icon: const Icon(Icons.playlist_play_rounded, size: 35),
@@ -254,7 +254,7 @@ class _MusicBarState extends State<MusicBar> {
           provider: player.volumeStream,
           builder: (context, data) {
             return Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 SizedBox(width: 10),
                 Icon(Icons.volume_up, size: 25),

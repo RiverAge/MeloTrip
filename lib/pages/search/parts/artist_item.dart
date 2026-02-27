@@ -10,11 +10,11 @@ class _ArtistItem extends StatelessWidget {
     leading: Container(
       height: 50,
       width: 50,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
-      child: ArtworkImage(id: artist.coverArt, fit: BoxFit.cover),
+      child: ArtworkImage(id: artist.coverArt, fit: .cover),
     ),
     title: Text(artist.name ?? ''),
     subtitle: Text(

@@ -32,21 +32,21 @@ class _SongTileV2 extends ConsumerWidget with SongControl {
               child: SizedBox(
                 width: 48,
                 height: 48,
-                child: ArtworkImage(id: song.coverArt, fit: BoxFit.cover),
+                child: ArtworkImage(id: song.coverArt, fit: .cover),
               ),
             ),
             title: Text(
               song.title ?? '',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: Theme.of(
                 context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+              ).textTheme.bodyLarge?.copyWith(fontWeight: .w600),
             ),
             subtitle: Text(
               '${song.artist ?? ""}${song.album != null ? " · ${song.album}" : ""}',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(
                   context,

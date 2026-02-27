@@ -66,7 +66,7 @@ class _SearchResultListV2 extends StatelessWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w800,
+          fontWeight: .w800,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
         ),
       ),

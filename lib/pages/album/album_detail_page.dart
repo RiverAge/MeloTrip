@@ -92,10 +92,10 @@ class AlbumDetailPage extends StatelessWidget {
                             vertical: 10,
                           ),
                           child: Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: .centerLeft,
                             child: Text(
                               'DISC ${song?.discNumber}',
-                              textAlign: TextAlign.left,
+                              textAlign: .left,
                               style: TextStyle(
                                 color: Theme.of(
                                   context,

@@ -18,19 +18,19 @@ class _SongItem extends StatelessWidget with SongControl {
         leading: Container(
           height: 50,
           width: 50,
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
           ),
-          child: ArtworkImage(id: song.id, fit: BoxFit.cover),
+          child: ArtworkImage(id: song.id, fit: .cover),
         ),
         title: Text(
           '${song.title}',
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          overflow: .ellipsis,
+          style: const TextStyle(fontSize: 14, fontWeight: .bold),
         ),
         subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
@@ -44,7 +44,7 @@ class _SongItem extends StatelessWidget with SongControl {
             ),
             Text(
               '《${song.album}》- ${song.artist}',
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: const TextStyle(fontSize: 12),
             ),
           ],

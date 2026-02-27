@@ -13,7 +13,7 @@ class _SearchHistory extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Text(AppLocalizations.of(context)!.searchHistory),
                 // Icon(Icons.delete)
@@ -44,8 +44,8 @@ class _SearchHistory extends StatelessWidget {
                   return Wrap(
                     spacing: 10.0,
                     runSpacing: 5.0,
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.center,
+                    alignment: .start,
+                    runAlignment: .center,
                     children:
                         effectiveSearches
                             .split(',')

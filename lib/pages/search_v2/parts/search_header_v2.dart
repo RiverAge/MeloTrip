@@ -39,7 +39,7 @@ class _SearchHeaderV2State extends State<_SearchHeaderV2> {
           widget.onSubmitted(val);
         },
         textAlignVertical: TextAlignVertical.center,
-        textInputAction: TextInputAction.search,
+        textInputAction: .search,
         style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
           isDense: true,
@@ -68,9 +68,9 @@ class _SearchHeaderV2State extends State<_SearchHeaderV2> {
               );
             },
           ),
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
+          border: .none,
+          enabledBorder: .none,
+          focusedBorder: .none,
         ),
       ),
     );

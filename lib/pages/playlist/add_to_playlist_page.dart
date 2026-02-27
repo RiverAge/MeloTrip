@@ -101,16 +101,16 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
                 },
                 secondary: Container(
                   width: 50,
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: .antiAlias,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   child: ArtworkImage(id: item.coverArt),
                 ),
-                title: Text(item.name ?? '', overflow: TextOverflow.clip),
+                title: Text(item.name ?? '', overflow: .clip),
                 subtitle: Text(
                   '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.comment ?? ''}',
-                  overflow: TextOverflow.clip,
+                  overflow: .clip,
                 ),
                 value: _current?.id == item.id,
               );

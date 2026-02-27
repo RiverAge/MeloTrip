@@ -41,12 +41,12 @@ class ArtistDetailPage extends StatelessWidget {
                     StretchMode.blurBackground,
                     StretchMode.fadeTitle,
                   ],
-                  collapseMode: CollapseMode.parallax,
+                  collapseMode: .parallax,
                   title: Text(artist.name ?? ''),
                   background: ArtworkImage(
                     id: artist.coverArt,
                     size: 5000,
-                    fit: BoxFit.cover,
+                    fit: .cover,
                   ),
                 ),
               ),
@@ -75,7 +75,7 @@ class ArtistDetailPage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Container(
-                                clipBehavior: Clip.antiAlias,
+                                clipBehavior: .antiAlias,
                                 decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(5),
@@ -84,7 +84,7 @@ class ArtistDetailPage extends StatelessWidget {
                                 child: ArtworkImage(
                                   id: item.id,
                                   size: 200,
-                                  fit: BoxFit.cover,
+                                  fit: .cover,
                                 ),
                               ),
                             ),
@@ -97,14 +97,14 @@ class ArtistDetailPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     item.name ?? '',
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: .ellipsis,
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: .bold,
                                     ),
                                   ),
                                   Text(
                                     '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: .ellipsis,
                                     style: const TextStyle(fontSize: 10),
                                   ),
                                 ],
@@ -149,7 +149,7 @@ class ArtistDetailPage extends StatelessWidget {
         //                 children: [
         //                   Expanded(
         //                     child: Container(
-        //                       clipBehavior: Clip.antiAlias,
+        //                       clipBehavior: .antiAlias,
         //                       decoration: const BoxDecoration(
         //                         borderRadius: BorderRadius.all(
         //                           Radius.circular(5),
@@ -158,7 +158,7 @@ class ArtistDetailPage extends StatelessWidget {
         //                       child: ArtworkImage(
         //                         id: item.id,
         //                         size: 200,
-        //                         fit: BoxFit.cover,
+        //                         fit: .cover,
         //                       ),
         //                     ),
         //                   ),
@@ -171,14 +171,14 @@ class ArtistDetailPage extends StatelessWidget {
         //                       children: [
         //                         Text(
         //                           item.name ?? '',
-        //                           overflow: TextOverflow.ellipsis,
+        //                           overflow: .ellipsis,
         //                           style: const TextStyle(
-        //                             fontWeight: FontWeight.bold,
+        //                             fontWeight: .bold,
         //                           ),
         //                         ),
         //                         Text(
         //                           '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',
-        //                           overflow: TextOverflow.ellipsis,
+        //                           overflow: .ellipsis,
         //                           style: const TextStyle(fontSize: 10),
         //                         ),
         //                       ],

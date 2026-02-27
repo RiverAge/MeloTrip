@@ -56,7 +56,7 @@ class PlayingPage extends StatelessWidget {
                   current?.title ?? '-',
                   style: const TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 SizedBox(height: 2),
@@ -69,12 +69,12 @@ class PlayingPage extends StatelessWidget {
                         context,
                       ).colorScheme.onSurface.withAlpha(127),
                     ),
-                    textAlign: TextAlign.left,
+                    textAlign: .left,
                   ),
                 if (effictiveArtist.length > 2)
                   Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .end,
                     children: [
                       Text(
                         '${effictiveArtist[0].name} ${effictiveArtist[1].name}',
@@ -98,7 +98,7 @@ class PlayingPage extends StatelessWidget {
             ),
             // title: Text(
             //   current?.title ?? '',
-            //   style: const TextStyle(fontWeight: FontWeight.bold),
+            //   style: const TextStyle(fontWeight: .bold),
             // ),
             actions: [
               AsyncValueBuilder(

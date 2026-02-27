@@ -72,7 +72,7 @@ class _TimerAxisState extends State<_TimerAxis> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(
                 durationFormatter(sCurrent),

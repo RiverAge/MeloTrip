@@ -11,11 +11,11 @@ class _ForYouPlaceholder extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text(
             l10n.guessYouLike,
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 17, fontWeight: .bold),
           ),
           const SizedBox(height: 12),
           Container(
@@ -26,8 +26,8 @@ class _ForYouPlaceholder extends StatelessWidget {
                   theme.colorScheme.primaryContainer,
                   theme.colorScheme.secondaryContainer,
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: .topLeft,
+                end: .bottomRight,
               ),
               borderRadius: BorderRadius.circular(16),
             ),
@@ -35,13 +35,13 @@ class _ForYouPlaceholder extends StatelessWidget {
               children: [
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       Text(
                         l10n.recommendedToday,
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: .w900,
                           color: theme.colorScheme.onPrimaryContainer,
                         ),
                       ),
@@ -64,7 +64,7 @@ class _ForYouPlaceholder extends StatelessWidget {
                     color: theme.colorScheme.onPrimaryContainer.withValues(
                       alpha: 0.1,
                     ),
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   child: Icon(
                     Icons.auto_awesome,

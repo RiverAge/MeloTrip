@@ -26,7 +26,7 @@ class _SongTitle extends StatelessWidget {
                       Container(
                         width: 35,
                         margin: const EdgeInsets.only(right: 10),
-                        clipBehavior: Clip.antiAlias,
+                        clipBehavior: .antiAlias,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),

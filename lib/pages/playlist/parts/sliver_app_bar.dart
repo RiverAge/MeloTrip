@@ -15,8 +15,8 @@ class _SliverAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         expandedTitleScale: 1.3,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: .spaceBetween,
+          crossAxisAlignment: .center,
           children: [
             playlist.public == true
                 ? const Icon(Icons.public_outlined, size: 20)
@@ -59,9 +59,9 @@ class _SliverAppBar extends StatelessWidget {
           ],
         ),
         background: Stack(
-          fit: StackFit.expand,
+          fit: .expand,
           children: [
-            ArtworkImage(id: playlist.coverArt, size: 1000, fit: BoxFit.cover),
+            ArtworkImage(id: playlist.coverArt, size: 1000, fit: .cover),
           ],
         ),
       ),

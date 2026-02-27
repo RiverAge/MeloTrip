@@ -15,7 +15,7 @@ class _AlbumItem extends StatelessWidget {
     leading: Container(
       height: 50,
       width: 50,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
@@ -23,15 +23,15 @@ class _AlbumItem extends StatelessWidget {
     ),
     title: Text(
       '${album.name}',
-      overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      overflow: .ellipsis,
+      style: const TextStyle(fontSize: 14, fontWeight: .bold),
     ),
     subtitle: Row(
       children: [
         _Tag(text: durationFormatter(album.duration ?? 0)),
         Expanded(
           child: Text(
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             '${album.artist} ${album.songCount}${AppLocalizations.of(context)!.songCountUnit} ${album.year ?? ''}',
             style: const TextStyle(fontSize: 12),
           ),

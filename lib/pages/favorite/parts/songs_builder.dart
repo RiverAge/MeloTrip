@@ -17,9 +17,9 @@ class _SongsBuilder extends StatelessWidget {
             itemBuilder: (_, index) {
               final song = effectiveSongs[index];
               return ListTile(
-                title: Text(song.title ?? '', overflow: TextOverflow.ellipsis),
+                title: Text(song.title ?? '', overflow: .ellipsis),
                 subtitle: Text(
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                     '${song.album} - ${song.artist} - ${durationFormatter(song.duration)}',
                     style: TextStyle(
                         color: Theme.of(context)
@@ -29,7 +29,7 @@ class _SongsBuilder extends StatelessWidget {
                         fontSize: 12)),
                 leading: Container(
                     width: 50,
-                    clipBehavior: Clip.antiAlias,
+                    clipBehavior: .antiAlias,
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: ArtworkImage(id: song.id)),

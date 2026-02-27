@@ -50,19 +50,19 @@ class _SearchbarState extends State<_Searchbar> {
               },
               focusNode: widget.focusNode,
               cursorHeight: 17,
-              textInputAction: TextInputAction.search,
+              textInputAction: .search,
               decoration: InputDecoration(
                 isDense: true,
                 // icon: Icon(Icons.search),
                 hintText: AppLocalizations.of(context)!.searchHint,
-                border: InputBorder.none,
+                border: .none,
               ),
             ),
           ),
           IconButton(
             constraints: BoxConstraints(),
             padding: EdgeInsets.zero,
-            style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            style: ButtonStyle(tapTargetSize: .shrinkWrap),
             onPressed: () {
               widget.controller.text = '';
               widget.focusNode.requestFocus();

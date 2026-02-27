@@ -24,9 +24,9 @@ class _AlbumsBuilder extends StatelessWidget {
                   ),
                 );
               },
-              title: Text(album.name ?? '', overflow: TextOverflow.ellipsis),
+              title: Text(album.name ?? '', overflow: .ellipsis),
               subtitle: Text(
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 '${album.songCount}${AppLocalizations.of(context)!.songCountUnit} - ${album.artist}',
                 style: TextStyle(
                   color: Theme.of(
@@ -37,7 +37,7 @@ class _AlbumsBuilder extends StatelessWidget {
               ),
               leading: Container(
                 width: 50,
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: .antiAlias,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),

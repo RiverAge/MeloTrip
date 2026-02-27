@@ -28,6 +28,16 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - Good: `(_, _) { ... }`
   - Avoid: `(_, __) { ... }` (triggers `unnecessary_underscores` lint)
 
+### Dart Dot Shorthand
+
+- Prefer dot shorthand when the context type is clear and compile-safe.
+- Good examples:
+  - Enum values: `mainAxisSize: .min`, `playlistMode == .loop`
+  - Static members with clear context: `Uri uri = .parse(url)`
+- Do not force replacement where context type does not own the member.
+  - Keep full form for common cases like `Icons.*` and `Colors.*`
+- Always validate with `flutter analyze` after bulk replacements.
+
 ## File Editing Safety
 
 ### 1) Encoding and BOM Safety (must follow)

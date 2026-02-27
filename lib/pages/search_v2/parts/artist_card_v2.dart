@@ -37,21 +37,21 @@ class _ArtistCardV2 extends StatelessWidget {
                   id: artist.coverArt,
                   width: 56,
                   height: 56,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       artist.name ?? '',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(

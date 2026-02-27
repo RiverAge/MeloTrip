@@ -137,7 +137,7 @@ void runHttpServer(Map<String, dynamic> args) async {
       try {
         final contentLength = _getContentLength(proxyResponse);
         if (contentLength != 0 && request.response.statusCode < 300) {
-          raf = await file.open(mode: FileMode.append);
+          raf = await file.open(mode: .append);
         }
         await raf?.setPosition(streamPointer);
         await raf?.writeFrom(chunks);

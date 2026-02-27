@@ -11,7 +11,7 @@ class SingleLineAnimatedLyrics extends ConsumerStatefulWidget {
   const SingleLineAnimatedLyrics({
     super.key,
     required this.lyricsLines,
-    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.crossAxisAlignment = .start,
   });
   final List<Line> lyricsLines;
   final CrossAxisAlignment crossAxisAlignment;
@@ -112,7 +112,7 @@ class _TweenAnimationBuilder extends StatelessWidget {
                 child: Opacity(
                   opacity: 1 - value,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: .center,
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
                       // 偏爱歌词同一个时间轴三行
@@ -140,7 +140,7 @@ class _TweenAnimationBuilder extends StatelessWidget {
                 child: Opacity(
                   opacity: value,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: .center,
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
                       for (final (index, line)

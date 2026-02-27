@@ -52,8 +52,8 @@ class _ColoredContainerState extends ConsumerState<_ColoredContainer>
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: .topLeft,
+                end: .bottomRight,
                 colors: [
                   color.withAlpha(
                     (255 - _animationController.value * 255).toInt(),

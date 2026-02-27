@@ -101,7 +101,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       locale: config?.locale,
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
+          brightness: .dark,
           seedColor: const Color(0xFFDB1D5D),
         ),
       ),

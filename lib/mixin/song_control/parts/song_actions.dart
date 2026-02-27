@@ -37,14 +37,14 @@ class _SongActions extends StatelessWidget {
             provider: appPlayerHandlerProvider,
             builder: (context, player, _) {
               return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: .spaceAround,
                 children: [
                   AsyncStreamBuilder(
                     provider: player.playingStream,
                     builder: (_, playing) {
                       final isCurrentPlaying = playing && isCurrent;
                       return Column(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           IconButton(
                             onPressed: () {
@@ -74,7 +74,7 @@ class _SongActions extends StatelessWidget {
                   ),
                   // }),
                   Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       IconButton(
                         onPressed: onToggleFavorite,
@@ -93,7 +93,7 @@ class _SongActions extends StatelessWidget {
                   ),
                   if (!isCurrent && !isNext)
                     Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         IconButton(
                           onPressed: () {
@@ -104,13 +104,13 @@ class _SongActions extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.playNext,
                           style: TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
+                          textAlign: .center,
                         ),
                       ],
                     ),
                   if (indexOfSong == -1)
                     Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         IconButton(
                           onPressed: () {
@@ -121,13 +121,13 @@ class _SongActions extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.addToPlayQueue,
                           style: TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
+                          textAlign: .center,
                         ),
                       ],
                     ),
                   if (indexOfSong != -1 && !isCurrent)
                     Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         IconButton(
                           onPressed: () {
@@ -138,13 +138,13 @@ class _SongActions extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.removeFromPlayQueue,
                           style: TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
+                          textAlign: .center,
                         ),
                       ],
                     ),
 
                   Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       IconButton(
                         onPressed: () {
@@ -159,7 +159,7 @@ class _SongActions extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.addToPlaylist,
                         style: TextStyle(fontSize: 12),
-                        textAlign: TextAlign.center,
+                        textAlign: .center,
                       ),
                     ],
                   ),

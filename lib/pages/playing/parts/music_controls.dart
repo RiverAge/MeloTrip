@@ -6,7 +6,7 @@ class _MusicControls extends StatelessWidget with SongControl {
   SnackBar _buildSnack(String text, Size size) {
     // return SnackBar(
     //   content: Text(text),
-    //   behavior: SnackBarBehavior.floating,
+    //   behavior: .floating,
     //   margin: EdgeInsets.only(bottom: 205, left: 10, right: 10),
     // );
     final padding = (size.width - 100) / 2;
@@ -15,10 +15,10 @@ class _MusicControls extends StatelessWidget with SongControl {
       elevation: 0,
       content: Text(
         text,
-        textAlign: TextAlign.center, // 文字居中
+        textAlign: .center, // 文字居中
         style: const TextStyle(color: Colors.white),
       ),
-      behavior: SnackBarBehavior.floating, // 设置为悬浮模式
+      behavior: .floating, // 设置为悬浮模式
       margin: EdgeInsets.only(bottom: bottom, left: padding, right: padding),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25), // 圆角，做成胶囊形状
@@ -26,7 +26,7 @@ class _MusicControls extends StatelessWidget with SongControl {
       duration: const Duration(seconds: 2), // 停留时间
       backgroundColor: Colors.black87.withAlpha(178), // 半透明背景
       // content: Text(playModeNoneText),
-      // behavior: SnackBarBehavior.floating,
+      // behavior: .floating,
       // margin: EdgeInsets.only(
       //   bottom: height - 250,
       //   left: 10,
@@ -44,7 +44,7 @@ class _MusicControls extends StatelessWidget with SongControl {
             ? null
             : playQueue.songs[playQueue.index];
         return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
@@ -67,14 +67,14 @@ class _MusicControls extends StatelessWidget with SongControl {
                     style: TextStyle(
                       height: 1.0,
                       fontSize: 12, // 徽章字体可以稍微小一点点，显得更精致
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                       color: color,
                     ),
                     // 使用 strutStyle 强制统一行高行为
                     textHeightBehavior: const TextHeightBehavior(
                       applyHeightToFirstAscent: false,
                       applyHeightToLastDescent: false,
-                      leadingDistribution: TextLeadingDistribution.even,
+                      leadingDistribution: .even,
                     ),
                   );
                 },
@@ -166,10 +166,10 @@ class _MusicControls extends StatelessWidget with SongControl {
             //                 messenger.showSnackBar(
             //                   SnackBar(
             //                     content: Text(
-            //                       textAlign: TextAlign.center,
+            //                       textAlign: .center,
             //                       '随机${player.shuffleModeEnabled ? '开启' : '关闭'}',
             //                     ),
-            //                     behavior: SnackBarBehavior.floating,
+            //                     behavior: .floating,
             //                     margin: EdgeInsets.only(
             //                       bottom: height - 150,
             //                       left: 10,

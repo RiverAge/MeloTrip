@@ -36,21 +36,21 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
                   horizontalTitleGap: 2,
                   selected: current?.id == song?.id,
                   leading: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       Text(
                         (idx + 1).toString(),
                         style: const TextStyle(
                           fontSize: 15,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
+                          fontStyle: .italic,
+                          fontWeight: .bold,
                         ),
                       ),
                       Container(
                         width: 40,
                         height: 40,
                         margin: const EdgeInsets.symmetric(horizontal: 10),
-                        clipBehavior: Clip.antiAlias,
+                        clipBehavior: .antiAlias,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
@@ -89,7 +89,7 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
                     '${song?.artist} ${durationFormatter(song?.duration)}',
                   ),
                   trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.delete_outline_outlined),

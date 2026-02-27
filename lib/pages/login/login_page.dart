@@ -104,7 +104,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               TextField(
                 controller: _pwdController,
                 obscureText: true,
-                textInputAction: TextInputAction.done,
+                textInputAction: .done,
                 onSubmitted: _loading ? null : (_) => _onLogin(),
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(

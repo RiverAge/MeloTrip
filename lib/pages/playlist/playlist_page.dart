@@ -83,16 +83,16 @@ class _PlaylistPageState extends State<PlaylistPage> {
                     ),
                 leading: Container(
                   width: 50,
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: .antiAlias,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   child: ArtworkImage(id: item.coverArt),
                 ),
-                title: Text(item.name ?? '', overflow: TextOverflow.clip),
+                title: Text(item.name ?? '', overflow: .clip),
                 subtitle: Text(
                   '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.public == true ? AppLocalizations.of(context)!.playlistIsPublic : ''} ${item.comment ?? ''}',
-                  overflow: TextOverflow.clip,
+                  overflow: .clip,
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline_outlined),

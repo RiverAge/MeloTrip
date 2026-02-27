@@ -57,7 +57,7 @@ class _RotateCoverState extends ConsumerState<_RotateCover>
           return ClipOval(
             child: ArtworkImage(
               id: 'mf-${current.id}',
-              fit: BoxFit.cover,
+              fit: .cover,
               width: 300,
               height: 300,
               size: 300,

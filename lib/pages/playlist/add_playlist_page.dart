@@ -70,7 +70,7 @@ class _AddPlaylistPageState extends State<AddPlaylistPage> {
               builder: (context, ref, child) {
                 return ElevatedButton(
                   style: ButtonStyle(
-                    shape: WidgetStateProperty.all(
+                    shape: .all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),

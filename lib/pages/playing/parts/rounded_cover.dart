@@ -12,7 +12,7 @@ class _RoundedCover extends StatelessWidget {
 
         final current = playQueue.songs[playQueue.index];
         return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.08),
@@ -22,7 +22,7 @@ class _RoundedCover extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   child: ArtworkImage(
                     id: 'mf-${current.id}',
-                    fit: BoxFit.cover,
+                    fit: .cover,
                     size: 5000,
                   ),
                 ),
@@ -51,7 +51,7 @@ class _RoundedCover extends StatelessWidget {
 
                   return SingleLineAnimatedLyrics(
                     lyricsLines: lyricsLines,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: .center,
                   );
                 },
               ),

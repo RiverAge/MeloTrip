@@ -28,15 +28,15 @@ class _BottomSheetItem extends StatelessWidget {
           },
           contentPadding: EdgeInsets.symmetric(horizontal: 8),
           leading: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Text(
                 (index + 1).toString().padLeft(2, ' '),
                 style: TextStyle(
                   fontWeight: currentPlayingIndex == index
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                  fontStyle: FontStyle.italic,
+                      ? .bold
+                      : .normal,
+                  fontStyle: .italic,
                   fontSize: 17,
                 ),
               ),
@@ -70,7 +70,7 @@ class _BottomSheetItem extends StatelessWidget {
                 width: 40,
                 height: 40,
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: .antiAlias,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
@@ -85,14 +85,14 @@ class _BottomSheetItem extends StatelessWidget {
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.onSurfaceVariant,
               fontWeight: currentPlayingIndex == index
-                  ? FontWeight.bold
-                  : FontWeight.normal,
+                  ? .bold
+                  : .normal,
             ),
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
           subtitle: Text(
             '${songs[index]?.artist} - ${songs[index]?.album}',
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             style: TextStyle(
               color: currentPlayingIndex == index
                   ? Theme.of(context).colorScheme.primary

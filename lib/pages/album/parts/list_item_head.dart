@@ -25,13 +25,13 @@ class ListItemHead extends StatelessWidget {
               ),
               SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: .spaceAround,
                 children: [
                   Column(
                     children: [
                       Text(
                         '${album.songCount}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: .bold),
                       ),
                       Text('歌曲', style: TextStyle(fontSize: 12)),
                     ],
@@ -40,7 +40,7 @@ class ListItemHead extends StatelessWidget {
                     children: [
                       Text(
                         durationFormatter(album.duration),
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: .bold),
                       ),
                       Text('时长', style: TextStyle(fontSize: 12)),
                     ],
@@ -49,7 +49,7 @@ class ListItemHead extends StatelessWidget {
                     children: [
                       Text(
                         '${album.releaseDate?.year != null ? '${album.releaseDate?.year}${album.releaseDate?.month != null ? '-${album.releaseDate?.month}' : ''}${album.releaseDate?.day != null ? '-${album.releaseDate?.day}' : ''}' : album.year}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: .bold),
                       ),
                       Text('发行日期', style: TextStyle(fontSize: 12)),
                     ],

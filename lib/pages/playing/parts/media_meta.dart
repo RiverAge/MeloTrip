@@ -43,8 +43,8 @@ class _MediaMeta extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: .min,
+            mainAxisAlignment: .center,
             children: [
               // Codec 徽章 (如 ALAC)
               _buildBadge(track.codec?.toUpperCase() ?? '-', contentColor),
@@ -65,13 +65,13 @@ class _MediaMeta extends StatelessWidget {
                 style: TextStyle(
                   height: 1.0,
                   fontSize: 12,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   color: contentColor.withAlpha(180),
                 ),
                 textHeightBehavior: const TextHeightBehavior(
                   applyHeightToFirstAscent: false,
                   applyHeightToLastDescent: false,
-                  leadingDistribution: TextLeadingDistribution.even,
+                  leadingDistribution: .even,
                 ),
               ),
             ],
@@ -110,13 +110,13 @@ class _MediaMeta extends StatelessWidget {
         style: TextStyle(
           height: 1.0,
           fontSize: 10, // 徽章字体可以稍微小一点点，显得更精致
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           color: color,
         ),
         textHeightBehavior: const TextHeightBehavior(
           applyHeightToFirstAscent: false,
           applyHeightToLastDescent: false,
-          leadingDistribution: TextLeadingDistribution.even,
+          leadingDistribution: .even,
         ),
       ),
     );

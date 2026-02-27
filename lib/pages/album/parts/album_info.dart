@@ -10,14 +10,14 @@ class _AlbumInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .start,
         children: [
-          Text(album.name ?? '', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(album.name ?? '', style: TextStyle(fontWeight: .bold)),
           SizedBox(height: 4),
           Text(
             album.artist ?? '',
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             maxLines: 1,
           ),
           SizedBox(height: 4),
@@ -29,15 +29,15 @@ class _AlbumInfo extends StatelessWidget {
     // child: DefaultTextStyle(
     // style: const TextStyle(fontSize: 15),
     // child: Column(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //   crossAxisAlignment: .start,
+    //   mainAxisAlignment: .spaceAround,
     //   children: [
     //     Expanded(
     //       child: Text(
     //         album.name ?? '',
     //         style: TextStyle(
     //           color: Theme.of(context).colorScheme.onSurface,
-    //           fontWeight: FontWeight.bold,
+    //           fontWeight: .bold,
     //         ),
     //       ),
     //     ),
@@ -46,7 +46,7 @@ class _AlbumInfo extends StatelessWidget {
     //         Expanded(
     //           child: Text(
     //             album.artist ?? '',
-    //             overflow: TextOverflow.ellipsis,
+    //             overflow: .ellipsis,
     //             maxLines: 1,
     //             style: TextStyle(
     //               color: Theme.of(context).colorScheme.onSurface,

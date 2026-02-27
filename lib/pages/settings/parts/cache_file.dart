@@ -14,7 +14,7 @@ class _CacheFileState extends State<_CacheFile> {
       provider: cachedFileSizeProvider,
       builder: (_, data, ref) {
         return Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [Text('${(data / 1024 / 1024).toInt()}M')],
         );
       },

@@ -24,7 +24,7 @@ class _AlbumCover extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
-        child: ArtworkImage(id: album.id, size: 600, fit: BoxFit.cover),
+        child: ArtworkImage(id: album.id, size: 600, fit: .cover),
       ),
     );
   }

@@ -11,7 +11,7 @@ class _PlayerControls extends StatelessWidget {
       provider: appPlayerHandlerProvider,
       builder: (context, player, _) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             IconButton(
               onPressed: () {

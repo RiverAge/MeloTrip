@@ -37,21 +37,21 @@ class _AlbumCardV2 extends StatelessWidget {
                   id: album.coverArt,
                   width: 56,
                   height: 56,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       album.name ?? '',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -63,7 +63,7 @@ class _AlbumCardV2 extends StatelessWidget {
                         fontSize: 12,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
                   ],
                 ),

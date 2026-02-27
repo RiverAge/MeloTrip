@@ -13,13 +13,13 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
             ? null
             : playQueue.songs[playQueue.index];
         return Wrap(
-          alignment: WrapAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          alignment: .start,
+          // mainAxisAlignment: .spaceBetween,
           children: [
             Text(
               ' ${current?.album ?? ''}',
               style: const TextStyle(fontSize: 17),
-              textAlign: TextAlign.left,
+              textAlign: .left,
             ),
 
             // Expanded(
@@ -29,9 +29,9 @@ class _ArtistAndAlbum extends StatelessWidget with SongControl {
             //         ' ${current?.album ?? ''}',
             //         style: const TextStyle(
             //           fontSize: 17,
-            //           fontWeight: FontWeight.bold,
+            //           fontWeight: .bold,
             //         ),
-            //         textAlign: TextAlign.left,
+            //         textAlign: .left,
             //       ),
             //     ],
             //   ),
