@@ -300,6 +300,80 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noLyricsFound => 'No Lyrics Found';
 
   @override
+  String get albumHeaderSongs => 'Songs';
+
+  @override
+  String get albumHeaderDuration => 'Duration';
+
+  @override
+  String get albumHeaderReleaseDate => 'Release Date';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get retryStartup => 'Retry startup';
+
+  @override
+  String get checkForUpdates => 'Check for updates';
+
+  @override
+  String get noUpdateTitle => 'No update';
+
+  @override
+  String upToDateMessage(String currentVersionName, int currentVersionCode) {
+    return 'Current version $currentVersionName ($currentVersionCode) is up to date.';
+  }
+
+  @override
+  String get updateAvailableTitle => 'Update available';
+
+  @override
+  String updateCurrentVersion(String versionName, int versionCode) {
+    return 'Current: $versionName ($versionCode)';
+  }
+
+  @override
+  String updateLatestVersion(String versionName, int versionCode) {
+    return 'Latest: $versionName ($versionCode)';
+  }
+
+  @override
+  String updateSizeMb(String sizeMb) {
+    return 'Size: $sizeMb MB';
+  }
+
+  @override
+  String get updateNow => 'Update now';
+
+  @override
+  String updateCheckFailed(String error) {
+    return 'Update check failed: $error';
+  }
+
+  @override
+  String get otaAndroidOnly => 'OTA update is only supported on Android';
+
+  @override
+  String get updateDownloadingPackage => 'Downloading update package...';
+
+  @override
+  String get updateOpeningInstaller =>
+      'Download complete. Opening installer...';
+
+  @override
+  String get updateInstallerFinished => 'Installer flow finished.';
+
+  @override
+  String get updateInstallPermissionDenied =>
+      'Install permission denied. Please allow unknown app installs.';
+
+  @override
+  String updateFailed(String error) {
+    return 'Update failed: $error';
+  }
+
+  @override
   String get unknownError => 'Unknown Error';
 
   @override

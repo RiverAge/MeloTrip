@@ -300,6 +300,78 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noLyricsFound => '无歌词';
 
   @override
+  String get albumHeaderSongs => '歌曲';
+
+  @override
+  String get albumHeaderDuration => '时长';
+
+  @override
+  String get albumHeaderReleaseDate => '发行日期';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get retryStartup => '重试启动';
+
+  @override
+  String get checkForUpdates => '检查更新';
+
+  @override
+  String get noUpdateTitle => '无更新';
+
+  @override
+  String upToDateMessage(String currentVersionName, int currentVersionCode) {
+    return '当前版本 $currentVersionName ($currentVersionCode) 已是最新版本。';
+  }
+
+  @override
+  String get updateAvailableTitle => '发现新版本';
+
+  @override
+  String updateCurrentVersion(String versionName, int versionCode) {
+    return '当前：$versionName ($versionCode)';
+  }
+
+  @override
+  String updateLatestVersion(String versionName, int versionCode) {
+    return '最新：$versionName ($versionCode)';
+  }
+
+  @override
+  String updateSizeMb(String sizeMb) {
+    return '大小：$sizeMb MB';
+  }
+
+  @override
+  String get updateNow => '立即更新';
+
+  @override
+  String updateCheckFailed(String error) {
+    return '检查更新失败：$error';
+  }
+
+  @override
+  String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
+
+  @override
+  String get updateDownloadingPackage => '正在下载更新包...';
+
+  @override
+  String get updateOpeningInstaller => '下载完成，正在打开安装器...';
+
+  @override
+  String get updateInstallerFinished => '安装流程已结束。';
+
+  @override
+  String get updateInstallPermissionDenied => '安装权限被拒绝，请允许安装未知应用。';
+
+  @override
+  String updateFailed(String error) {
+    return '更新失败：$error';
+  }
+
+  @override
   String get unknownError => '未知错误';
 
   @override
@@ -600,6 +672,78 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get noLyricsFound => '无歌词';
+
+  @override
+  String get albumHeaderSongs => '歌曲';
+
+  @override
+  String get albumHeaderDuration => '时长';
+
+  @override
+  String get albumHeaderReleaseDate => '发行日期';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get retryStartup => '重试启动';
+
+  @override
+  String get checkForUpdates => '检查更新';
+
+  @override
+  String get noUpdateTitle => '无更新';
+
+  @override
+  String upToDateMessage(String currentVersionName, int currentVersionCode) {
+    return '当前版本 $currentVersionName ($currentVersionCode) 已是最新版本。';
+  }
+
+  @override
+  String get updateAvailableTitle => '发现新版本';
+
+  @override
+  String updateCurrentVersion(String versionName, int versionCode) {
+    return '当前：$versionName ($versionCode)';
+  }
+
+  @override
+  String updateLatestVersion(String versionName, int versionCode) {
+    return '最新：$versionName ($versionCode)';
+  }
+
+  @override
+  String updateSizeMb(String sizeMb) {
+    return '大小：$sizeMb MB';
+  }
+
+  @override
+  String get updateNow => '立即更新';
+
+  @override
+  String updateCheckFailed(String error) {
+    return '检查更新失败：$error';
+  }
+
+  @override
+  String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
+
+  @override
+  String get updateDownloadingPackage => '正在下载更新包...';
+
+  @override
+  String get updateOpeningInstaller => '下载完成，正在打开安装器...';
+
+  @override
+  String get updateInstallerFinished => '安装流程已结束。';
+
+  @override
+  String get updateInstallPermissionDenied => '安装权限被拒绝，请允许安装未知应用。';
+
+  @override
+  String updateFailed(String error) {
+    return '更新失败：$error';
+  }
 
   @override
   String get unknownError => '未知错误';

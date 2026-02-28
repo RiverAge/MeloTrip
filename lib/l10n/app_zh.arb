@@ -145,4 +145,86 @@
 
     "unknownError": "未知错误",
     "encounterUnknownError": "遇到未知错误"
+,
+    "checkForUpdates": "检查更新",
+    "noUpdateTitle": "无更新",
+    "upToDateMessage": "当前版本 {currentVersionName} ({currentVersionCode}) 已是最新版本。",
+    "@upToDateMessage": {
+        "placeholders": {
+            "currentVersionName": {
+                "type": "String",
+                "example": "1.0.0"
+            },
+            "currentVersionCode": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "updateAvailableTitle": "发现新版本",
+    "updateCurrentVersion": "当前：{versionName} ({versionCode})",
+    "@updateCurrentVersion": {
+        "placeholders": {
+            "versionName": {
+                "type": "String",
+                "example": "1.0.0"
+            },
+            "versionCode": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
+    "updateLatestVersion": "最新：{versionName} ({versionCode})",
+    "@updateLatestVersion": {
+        "placeholders": {
+            "versionName": {
+                "type": "String",
+                "example": "1.0.1"
+            },
+            "versionCode": {
+                "type": "int",
+                "example": "2"
+            }
+        }
+    },
+    "updateSizeMb": "大小：{sizeMb} MB",
+    "@updateSizeMb": {
+        "placeholders": {
+            "sizeMb": {
+                "type": "String",
+                "example": "79.2"
+            }
+        }
+    },
+    "updateNow": "立即更新",
+    "updateCheckFailed": "检查更新失败：{error}",
+    "@updateCheckFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String",
+                "example": "network timeout"
+            }
+        }
+    },
+    "otaAndroidOnly": "仅支持 Android 平台 OTA 更新",
+    "updateDownloadingPackage": "正在下载更新包...",
+    "updateOpeningInstaller": "下载完成，正在打开安装器...",
+    "updateInstallerFinished": "安装流程已结束。",
+    "updateInstallPermissionDenied": "安装权限被拒绝，请允许安装未知应用。",
+    "updateFailed": "更新失败：{error}",
+    "@updateFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String",
+                "example": "checksum mismatch"
+            }
+        }
+    }
+,
+    "albumHeaderSongs": "歌曲",
+    "albumHeaderDuration": "时长",
+    "albumHeaderReleaseDate": "发行日期",
+    "retry": "重试",
+    "retryStartup": "重试启动"
 }

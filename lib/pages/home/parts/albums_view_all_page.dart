@@ -136,7 +136,10 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            TextButton(onPressed: _loadMore, child: const Text('Retry')),
+            TextButton(
+              onPressed: _loadMore,
+              child: Text(AppLocalizations.of(context)!.retry),
+            ),
           ],
         ),
       ),

@@ -33,7 +33,10 @@ class ListItemHead extends StatelessWidget {
                         '${album.songCount}',
                         style: TextStyle(fontWeight: .bold),
                       ),
-                      Text('歌曲', style: TextStyle(fontSize: 12)),
+                      Text(
+                        AppLocalizations.of(context)!.albumHeaderSongs,
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ],
                   ),
                   Column(
@@ -42,7 +45,10 @@ class ListItemHead extends StatelessWidget {
                         durationFormatter(album.duration),
                         style: TextStyle(fontWeight: .bold),
                       ),
-                      Text('时长', style: TextStyle(fontSize: 12)),
+                      Text(
+                        AppLocalizations.of(context)!.albumHeaderDuration,
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ],
                   ),
                   Column(
@@ -51,7 +57,10 @@ class ListItemHead extends StatelessWidget {
                         '${album.releaseDate?.year != null ? '${album.releaseDate?.year}${album.releaseDate?.month != null ? '-${album.releaseDate?.month}' : ''}${album.releaseDate?.day != null ? '-${album.releaseDate?.day}' : ''}' : album.year}',
                         style: TextStyle(fontWeight: .bold),
                       ),
-                      Text('发行日期', style: TextStyle(fontSize: 12)),
+                      Text(
+                        AppLocalizations.of(context)!.albumHeaderReleaseDate,
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ],
                   ),
                 ],

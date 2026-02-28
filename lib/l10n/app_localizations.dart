@@ -669,6 +669,126 @@ abstract class AppLocalizations {
   /// **'No Lyrics Found'**
   String get noLyricsFound;
 
+  /// Album header metric label for song count
+  ///
+  /// In en, this message translates to:
+  /// **'Songs'**
+  String get albumHeaderSongs;
+
+  /// Album header metric label for total duration
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get albumHeaderDuration;
+
+  /// Album header metric label for release date
+  ///
+  /// In en, this message translates to:
+  /// **'Release Date'**
+  String get albumHeaderReleaseDate;
+
+  /// Generic retry action text
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// Retry action text shown on startup page
+  ///
+  /// In en, this message translates to:
+  /// **'Retry startup'**
+  String get retryStartup;
+
+  /// Settings action text for checking app updates
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get checkForUpdates;
+
+  /// Dialog title shown when app is already latest
+  ///
+  /// In en, this message translates to:
+  /// **'No update'**
+  String get noUpdateTitle;
+
+  /// Dialog content shown when app is already latest
+  ///
+  /// In en, this message translates to:
+  /// **'Current version {currentVersionName} ({currentVersionCode}) is up to date.'**
+  String upToDateMessage(String currentVersionName, int currentVersionCode);
+
+  /// Dialog title when a newer version is available
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailableTitle;
+
+  /// Current app version line in update dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Current: {versionName} ({versionCode})'**
+  String updateCurrentVersion(String versionName, int versionCode);
+
+  /// Latest app version line in update dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Latest: {versionName} ({versionCode})'**
+  String updateLatestVersion(String versionName, int versionCode);
+
+  /// Update package size in MB
+  ///
+  /// In en, this message translates to:
+  /// **'Size: {sizeMb} MB'**
+  String updateSizeMb(String sizeMb);
+
+  /// Button text to start OTA update
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get updateNow;
+
+  /// Snackbar text when update check request fails
+  ///
+  /// In en, this message translates to:
+  /// **'Update check failed: {error}'**
+  String updateCheckFailed(String error);
+
+  /// Snackbar text for non-Android platforms
+  ///
+  /// In en, this message translates to:
+  /// **'OTA update is only supported on Android'**
+  String get otaAndroidOnly;
+
+  /// Snackbar text while downloading OTA package
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading update package...'**
+  String get updateDownloadingPackage;
+
+  /// Snackbar text after download completes
+  ///
+  /// In en, this message translates to:
+  /// **'Download complete. Opening installer...'**
+  String get updateOpeningInstaller;
+
+  /// Snackbar text when installer returns done state
+  ///
+  /// In en, this message translates to:
+  /// **'Installer flow finished.'**
+  String get updateInstallerFinished;
+
+  /// Snackbar text when install permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Install permission denied. Please allow unknown app installs.'**
+  String get updateInstallPermissionDenied;
+
+  /// Snackbar text for OTA download/install failures
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed: {error}'**
+  String updateFailed(String error);
+
   /// Generic error message when an unknown error occurs
   ///
   /// In en, this message translates to:

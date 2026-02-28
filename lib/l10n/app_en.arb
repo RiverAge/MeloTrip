@@ -443,6 +443,135 @@
    "@noLyricsFound": {
       "description": "Lyrics of Song could not be found"
    },
+   "albumHeaderSongs": "Songs",
+   "@albumHeaderSongs": {
+      "description": "Album header metric label for song count"
+   },
+   "albumHeaderDuration": "Duration",
+   "@albumHeaderDuration": {
+      "description": "Album header metric label for total duration"
+   },
+   "albumHeaderReleaseDate": "Release Date",
+   "@albumHeaderReleaseDate": {
+      "description": "Album header metric label for release date"
+   },
+   "retry": "Retry",
+   "@retry": {
+      "description": "Generic retry action text"
+   },
+   "retryStartup": "Retry startup",
+   "@retryStartup": {
+      "description": "Retry action text shown on startup page"
+   },
+
+   "checkForUpdates": "Check for updates",
+   "@checkForUpdates": {
+      "description": "Settings action text for checking app updates"
+   },
+   "noUpdateTitle": "No update",
+   "@noUpdateTitle": {
+      "description": "Dialog title shown when app is already latest"
+   },
+   "upToDateMessage": "Current version {currentVersionName} ({currentVersionCode}) is up to date.",
+   "@upToDateMessage": {
+      "description": "Dialog content shown when app is already latest",
+      "placeholders": {
+         "currentVersionName": {
+            "type": "String",
+            "example": "1.0.0"
+         },
+         "currentVersionCode": {
+            "type": "int",
+            "example": "1"
+         }
+      }
+   },
+   "updateAvailableTitle": "Update available",
+   "@updateAvailableTitle": {
+      "description": "Dialog title when a newer version is available"
+   },
+   "updateCurrentVersion": "Current: {versionName} ({versionCode})",
+   "@updateCurrentVersion": {
+      "description": "Current app version line in update dialog",
+      "placeholders": {
+         "versionName": {
+            "type": "String",
+            "example": "1.0.0"
+         },
+         "versionCode": {
+            "type": "int",
+            "example": "1"
+         }
+      }
+   },
+   "updateLatestVersion": "Latest: {versionName} ({versionCode})",
+   "@updateLatestVersion": {
+      "description": "Latest app version line in update dialog",
+      "placeholders": {
+         "versionName": {
+            "type": "String",
+            "example": "1.0.1"
+         },
+         "versionCode": {
+            "type": "int",
+            "example": "2"
+         }
+      }
+   },
+   "updateSizeMb": "Size: {sizeMb} MB",
+   "@updateSizeMb": {
+      "description": "Update package size in MB",
+      "placeholders": {
+         "sizeMb": {
+            "type": "String",
+            "example": "79.2"
+         }
+      }
+   },
+   "updateNow": "Update now",
+   "@updateNow": {
+      "description": "Button text to start OTA update"
+   },
+   "updateCheckFailed": "Update check failed: {error}",
+   "@updateCheckFailed": {
+      "description": "Snackbar text when update check request fails",
+      "placeholders": {
+         "error": {
+            "type": "String",
+            "example": "network timeout"
+         }
+      }
+   },
+   "otaAndroidOnly": "OTA update is only supported on Android",
+   "@otaAndroidOnly": {
+      "description": "Snackbar text for non-Android platforms"
+   },
+   "updateDownloadingPackage": "Downloading update package...",
+   "@updateDownloadingPackage": {
+      "description": "Snackbar text while downloading OTA package"
+   },
+   "updateOpeningInstaller": "Download complete. Opening installer...",
+   "@updateOpeningInstaller": {
+      "description": "Snackbar text after download completes"
+   },
+   "updateInstallerFinished": "Installer flow finished.",
+   "@updateInstallerFinished": {
+      "description": "Snackbar text when installer returns done state"
+   },
+   "updateInstallPermissionDenied": "Install permission denied. Please allow unknown app installs.",
+   "@updateInstallPermissionDenied": {
+      "description": "Snackbar text when install permission is denied"
+   },
+   "updateFailed": "Update failed: {error}",
+   "@updateFailed": {
+      "description": "Snackbar text for OTA download/install failures",
+      "placeholders": {
+         "error": {
+            "type": "String",
+            "example": "checksum mismatch"
+         }
+      }
+   },
 
    "unknownError": "Unknown Error",
    "@unknownError": {

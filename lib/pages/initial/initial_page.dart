@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/initial/initial_bootstrap_service.dart';
 import 'package:melo_trip/pages/initial/startup_navigator.dart';
 
@@ -52,7 +53,7 @@ class _InitState extends ConsumerState<InitialPage> {
               const SizedBox(height: 12),
               TextButton(
                 onPressed: _retryBootstrap,
-                child: const Text('Retry startup'),
+                child: Text(AppLocalizations.of(context)!.retryStartup),
               ),
             ],
           ),
