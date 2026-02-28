@@ -123,73 +123,10 @@ jobs:
           METADATA -->
           EOF
 
-      - name: Create/Update Gitea Release and Upload APK
-        env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [[ -z "${GITEA_TOKEN:-}" ]]; then
-            echo "Missing secret: GITEA_TOKEN"
-            exit 1
-          fi
-
-          api_url="${GITEA_API_URL:-${GITHUB_API_URL:-}}"
-          repo="${GITHUB_REPOSITORY:-${GITEA_REPOSITORY:-}}"
-          tag="${GITHUB_REF_NAME:-${GITEA_REF_NAME:-}}"
-
-          if [[ -z "${api_url}" || -z "${repo}" ]]; then
-            echo "Missing required env vars: API URL or repository"
-            exit 1
-          fi
-
-          if [[ -z "${tag}" ]]; then
-            tag="$(git tag --points-at HEAD | head -n1)"
-          fi
-          if [[ -z "${tag}" ]]; then
-            echo "Unable to determine tag name"
-            exit 1
-          fi
-
-          release_body="$(cat release-body.md)"
-          release_name="${tag}"
-
-          release_json="$(curl -fsS \
-            -H "Authorization: token ${GITEA_TOKEN}" \
-            -H "Accept: application/json" \
-            "${api_url}/repos/${repo}/releases/tags/${tag}" || true)"
-
-          if [[ -n "${release_json}" ]]; then
-            release_id="$(python3 -c "import json,sys; print(json.loads(sys.stdin.read())['id'])" <<< "${release_json}")"
-            curl -fsS -X PATCH \
-              -H "Authorization: token ${GITEA_TOKEN}" \
-              -H "Content-Type: application/json" \
-              -d "$(python3 -c "import json,sys; print(json.dumps({'name': sys.argv[1], 'body': sys.argv[2], 'draft': False, 'prerelease': False}))" "${release_name}" "${release_body}")" \
-              "${api_url}/repos/${repo}/releases/${release_id}" >/dev/null
-          else
-            created="$(curl -fsS -X POST \
-              -H "Authorization: token ${GITEA_TOKEN}" \
-              -H "Content-Type: application/json" \
-              -d "$(python3 -c "import json,sys; print(json.dumps({'tag_name': sys.argv[1], 'name': sys.argv[1], 'body': sys.argv[2], 'draft': False, 'prerelease': False}))" "${tag}" "${release_body}")" \
-              "${api_url}/repos/${repo}/releases")"
-            release_id="$(python3 -c "import json,sys; print(json.loads(sys.stdin.read())['id'])" <<< "${created}")"
-          fi
-
-          asset_name="$(basename "$APK_PATH")"
-          assets_json="$(curl -fsS \
-            -H "Authorization: token ${GITEA_TOKEN}" \
-            -H "Accept: application/json" \
-            "${api_url}/repos/${repo}/releases/${release_id}/assets")"
-          asset_id="$(python3 -c "import json,sys; a=json.loads(sys.stdin.read()); m=[x['id'] for x in a if x.get('name')==sys.argv[1]]; print(m[0] if m else '')" "${asset_name}" <<< "${assets_json}")"
-          if [[ -n "${asset_id}" ]]; then
-            curl -fsS -X DELETE \
-              -H "Authorization: token ${GITEA_TOKEN}" \
-              "${api_url}/repos/${repo}/releases/${release_id}/assets/${asset_id}" >/dev/null
-          fi
-
-          curl -fsS -X POST \
-            -H "Authorization: token ${GITEA_TOKEN}" \
-            -H "Content-Type: application/vnd.android.package-archive" \
-            --data-binary @"${APK_PATH}" \
-            "${api_url}/repos/${repo}/releases/${release_id}/assets?name=${asset_name}" >/dev/null
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-${{ github.ref_name }}
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            release-body.md
