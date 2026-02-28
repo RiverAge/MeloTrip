@@ -358,6 +358,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateDownloadingPackage => 'Downloading update package...';
 
   @override
+  String get updateStageDownloading => 'Downloading package';
+
+  @override
+  String get updateStageVerifying => 'Verifying package';
+
+  @override
+  String get updateStageOpeningInstaller => 'Opening installer';
+
+  @override
+  String updateProgressLine(String downloaded, String total, int percent) {
+    return '$downloaded / $total ($percent%)';
+  }
+
+  @override
+  String updateSpeedLine(String speed) {
+    return 'Speed: $speed';
+  }
+
+  @override
+  String updateEtaLine(String eta) {
+    return 'ETA: $eta';
+  }
+
+  @override
   String get updateOpeningInstaller =>
       'Download complete. Opening installer...';
 

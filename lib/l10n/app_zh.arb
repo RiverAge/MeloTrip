@@ -208,8 +208,44 @@
         }
     },
     "otaAndroidOnly": "仅支持 Android 平台 OTA 更新",
-    "updateDownloadingPackage": "正在下载更新包...",
-    "updateOpeningInstaller": "下载完成，正在打开安装器...",
+        "updateStageDownloading": "正在下载更新包",
+    "updateStageVerifying": "正在校验安装包",
+    "updateStageOpeningInstaller": "正在打开安装器",
+    "updateProgressLine": "{downloaded} / {total} ({percent}%)",
+    "@updateProgressLine": {
+        "placeholders": {
+            "downloaded": {
+                "type": "String",
+                "example": "12.4 MB"
+            },
+            "total": {
+                "type": "String",
+                "example": "80.0 MB"
+            },
+            "percent": {
+                "type": "int",
+                "example": "15"
+            }
+        }
+    },
+    "updateSpeedLine": "速度：{speed}",
+    "@updateSpeedLine": {
+        "placeholders": {
+            "speed": {
+                "type": "String",
+                "example": "1.2 MB/s"
+            }
+        }
+    },
+    "updateEtaLine": "预计剩余：{eta}",
+    "@updateEtaLine": {
+        "placeholders": {
+            "eta": {
+                "type": "String",
+                "example": "1m 20s"
+            }
+        }
+    },    "updateOpeningInstaller": "下载完成，正在打开安装器...",
     "updateInstallerFinished": "安装流程已结束。",
     "updateInstallPermissionDenied": "安装权限被拒绝，请允许安装未知应用。",
     "updateFailed": "更新失败：{error}",

@@ -113,18 +113,24 @@ class AppUpdateService {
 
   Future<File> downloadAndVerifyApk({
     required AppUpdateInfo update,
-    void Function(double progress)? onProgress,
+    void Function(int received, int total, double progress)? onProgress,
+    void Function(UpdateDownloadStage stage)? onStageChanged,
   }) {
     if (update.downloadUrl.isEmpty) {
       throw StateError('Download URL is empty.');
     }
 
-    return _downloadAndVerifyApk(update: update, onProgress: onProgress);
+    return _downloadAndVerifyApk(
+      update: update,
+      onProgress: onProgress,
+      onStageChanged: onStageChanged,
+    );
   }
 
   Future<File> _downloadAndVerifyApk({
     required AppUpdateInfo update,
-    void Function(double progress)? onProgress,
+    void Function(int received, int total, double progress)? onProgress,
+    void Function(UpdateDownloadStage stage)? onStageChanged,
   }) async {
     final dir = await getTemporaryDirectory();
     final filePath = p.join(
@@ -136,6 +142,7 @@ class AppUpdateService {
       await file.delete();
     }
 
+    onStageChanged?.call(UpdateDownloadStage.downloading);
     await Dio().download(
       update.downloadUrl,
       filePath,
@@ -147,11 +154,13 @@ class AppUpdateService {
         },
       ),
       onReceiveProgress: (received, total) {
-        if (total <= 0) {
-          onProgress?.call(0);
+        final effectiveTotal = total > 0 ? total : update.fileSize;
+        if (effectiveTotal <= 0) {
+          onProgress?.call(received, 0, 0);
           return;
         }
-        onProgress?.call(received / total);
+        final progress = (received / effectiveTotal).clamp(0, 1).toDouble();
+        onProgress?.call(received, effectiveTotal, progress);
       },
     );
 
@@ -165,6 +174,7 @@ class AppUpdateService {
       );
     }
 
+    onStageChanged?.call(UpdateDownloadStage.verifying);
     final checksum = update.sha256.trim().toLowerCase();
     if (checksum.isNotEmpty) {
       final digest = await sha256.bind(file.openRead()).first;
@@ -177,3 +187,5 @@ class AppUpdateService {
     return file;
   }
 }
+
+enum UpdateDownloadStage { downloading, verifying }

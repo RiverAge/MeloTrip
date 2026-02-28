@@ -765,6 +765,42 @@ abstract class AppLocalizations {
   /// **'Downloading update package...'**
   String get updateDownloadingPackage;
 
+  /// Update tile stage text while package is downloading
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading package'**
+  String get updateStageDownloading;
+
+  /// Update tile stage text while package is being verified
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying package'**
+  String get updateStageVerifying;
+
+  /// Update tile stage text while opening installer
+  ///
+  /// In en, this message translates to:
+  /// **'Opening installer'**
+  String get updateStageOpeningInstaller;
+
+  /// Update tile progress detail line
+  ///
+  /// In en, this message translates to:
+  /// **'{downloaded} / {total} ({percent}%)'**
+  String updateProgressLine(String downloaded, String total, int percent);
+
+  /// Update tile download speed line
+  ///
+  /// In en, this message translates to:
+  /// **'Speed: {speed}'**
+  String updateSpeedLine(String speed);
+
+  /// Update tile remaining time line
+  ///
+  /// In en, this message translates to:
+  /// **'ETA: {eta}'**
+  String updateEtaLine(String eta);
+
   /// Snackbar text after download completes
   ///
   /// In en, this message translates to:

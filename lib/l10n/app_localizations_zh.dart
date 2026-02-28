@@ -355,7 +355,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
 
   @override
-  String get updateDownloadingPackage => '正在下载更新包...';
+  String get updateDownloadingPackage => 'Downloading update package...';
+
+  @override
+  String get updateStageDownloading => '正在下载更新包';
+
+  @override
+  String get updateStageVerifying => '正在校验安装包';
+
+  @override
+  String get updateStageOpeningInstaller => '正在打开安装器';
+
+  @override
+  String updateProgressLine(String downloaded, String total, int percent) {
+    return '$downloaded / $total ($percent%)';
+  }
+
+  @override
+  String updateSpeedLine(String speed) {
+    return '速度：$speed';
+  }
+
+  @override
+  String updateEtaLine(String eta) {
+    return '预计剩余：$eta';
+  }
 
   @override
   String get updateOpeningInstaller => '下载完成，正在打开安装器...';
@@ -729,7 +753,28 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
 
   @override
-  String get updateDownloadingPackage => '正在下载更新包...';
+  String get updateStageDownloading => '正在下载更新包';
+
+  @override
+  String get updateStageVerifying => '正在校验安装包';
+
+  @override
+  String get updateStageOpeningInstaller => '正在打开安装器';
+
+  @override
+  String updateProgressLine(String downloaded, String total, int percent) {
+    return '$downloaded / $total ($percent%)';
+  }
+
+  @override
+  String updateSpeedLine(String speed) {
+    return '速度：$speed';
+  }
+
+  @override
+  String updateEtaLine(String eta) {
+    return '预计剩余：$eta';
+  }
 
   @override
   String get updateOpeningInstaller => '下载完成，正在打开安装器...';

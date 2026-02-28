@@ -550,6 +550,56 @@
    "@updateDownloadingPackage": {
       "description": "Snackbar text while downloading OTA package"
    },
+   "updateStageDownloading": "Downloading package",
+   "@updateStageDownloading": {
+      "description": "Update tile stage text while package is downloading"
+   },
+   "updateStageVerifying": "Verifying package",
+   "@updateStageVerifying": {
+      "description": "Update tile stage text while package is being verified"
+   },
+   "updateStageOpeningInstaller": "Opening installer",
+   "@updateStageOpeningInstaller": {
+      "description": "Update tile stage text while opening installer"
+   },
+   "updateProgressLine": "{downloaded} / {total} ({percent}%)",
+   "@updateProgressLine": {
+      "description": "Update tile progress detail line",
+      "placeholders": {
+         "downloaded": {
+            "type": "String",
+            "example": "12.4 MB"
+         },
+         "total": {
+            "type": "String",
+            "example": "80.0 MB"
+         },
+         "percent": {
+            "type": "int",
+            "example": "15"
+         }
+      }
+   },
+   "updateSpeedLine": "Speed: {speed}",
+   "@updateSpeedLine": {
+      "description": "Update tile download speed line",
+      "placeholders": {
+         "speed": {
+            "type": "String",
+            "example": "1.2 MB/s"
+         }
+      }
+   },
+   "updateEtaLine": "ETA: {eta}",
+   "@updateEtaLine": {
+      "description": "Update tile remaining time line",
+      "placeholders": {
+         "eta": {
+            "type": "String",
+            "example": "1m 20s"
+         }
+      }
+   },
    "updateOpeningInstaller": "Download complete. Opening installer...",
    "@updateOpeningInstaller": {
       "description": "Snackbar text after download completes"
