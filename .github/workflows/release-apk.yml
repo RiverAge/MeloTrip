@@ -31,8 +31,8 @@ jobs:
 
       - name: Prepare Android signing files
         run: |
-          mkdir -p android/keystore
-          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | tr -d '\r\n' | base64 -d > android/keystore/melotrip-release.jks
+          mkdir -p android/app/keystore
+          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | tr -d '\r\n' | base64 -d > android/app/keystore/melotrip-release.jks
           cat > android/key.properties <<EOF
           storeFile=keystore/melotrip-release.jks
           storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
