@@ -108,7 +108,6 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
             ),
             if (_isLoading && _albums.isNotEmpty)
               const LinearProgressIndicator(minHeight: 2),
-            if (!_hasMore && _albums.isNotEmpty) const EndofData(),
           ],
         ),
       ),
