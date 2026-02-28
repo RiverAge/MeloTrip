@@ -27,16 +27,15 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/cirruslabs/flutter:beta
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: beta
-          cache: true
+      - name: Show Flutter version
+        run: flutter --version
 
       - name: Install dependencies
         run: flutter pub get

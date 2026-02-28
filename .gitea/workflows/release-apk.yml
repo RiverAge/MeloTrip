@@ -12,6 +12,8 @@ concurrency:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/cirruslabs/flutter:beta
 
     env:
       APK_PATH: build/app/outputs/flutter-apk/app-release.apk
@@ -20,13 +22,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.41.0-0.2.pre"
-          channel: beta
-          cache: true
-          cache-key: flutter-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+      - name: Show Flutter version
+        run: flutter --version
 
       - name: Install dependencies
         run: flutter pub get
