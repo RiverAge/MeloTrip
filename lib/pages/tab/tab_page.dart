@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/pages/tab/music_bar/parts/music_bar.dart';
 import 'package:melo_trip/pages/home/home_page.dart';
 import 'package:melo_trip/pages/settings/settings_page.dart';
+import 'package:melo_trip/pages/tab/music_bar/parts/music_bar.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 
 class TabPage extends ConsumerStatefulWidget {
@@ -16,15 +16,56 @@ class TabPage extends ConsumerStatefulWidget {
 class _TablePageState extends ConsumerState<TabPage>
     with TickerProviderStateMixin, RouteAware {
   TabController? _controller;
-
   int _currentIndex = 0;
   bool _visible = true;
-  RouteObserver<ModalRoute<void>>? _routeObserver;
+  RouteObserver<PageRoute<dynamic>>? _routeObserver;
+  PageRoute<dynamic>? _subscribedRoute;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    final pageRoute = route is PageRoute<dynamic> ? route : null;
+    if (pageRoute == null) return;
+
+    final observer = ref.read(routeObserverProvider);
+    final shouldResubscribe =
+        _routeObserver != observer || _subscribedRoute != pageRoute;
+
+    if (shouldResubscribe) {
+      if (_routeObserver != null && _subscribedRoute != null) {
+        _routeObserver?.unsubscribe(this);
+      }
+      _routeObserver = observer;
+      _subscribedRoute = pageRoute;
+      _routeObserver?.subscribe(this, pageRoute);
+    }
+  }
+
+  @override
+  void didPushNext() {
+    if (_visible) {
+      setState(() {
+        _visible = false;
+      });
+    }
+  }
+
+  @override
+  void didPopNext() {
+    if (!_visible) {
+      setState(() {
+        _visible = true;
+      });
+    }
+  }
 
   @override
   void dispose() {
     _controller?.dispose();
-    _routeObserver?.unsubscribe(this);
+    if (_routeObserver != null && _subscribedRoute != null) {
+      _routeObserver?.unsubscribe(this);
+    }
     super.dispose();
   }
 
@@ -52,36 +93,6 @@ class _TablePageState extends ConsumerState<TabPage>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final route = ModalRoute.of(context);
-    if (route != null) {
-      // 通过 ref.read 获取同一个实例进行订阅
-      _routeObserver = ref.read(routeObserverProvider);
-      _routeObserver?.subscribe(this, route);
-    }
-  }
-
-  @override
-  void didPushNext() {
-    if (_visible) {
-      setState(() {
-        _visible = false;
-      });
-    }
-  }
-
-  // 当上面的页面被弹出，当前页面重新显示（Pop 回来了）
-  @override
-  void didPopNext() {
-    if (!_visible) {
-      setState(() {
-        _visible = true;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final items = [
@@ -94,10 +105,7 @@ class _TablePageState extends ConsumerState<TabPage>
         label: l10n.settings,
       ),
     ];
-    final tabViews = [
-      const HomePage(),
-      const SettingsPage(),
-    ];
+    final tabViews = [const HomePage(), const SettingsPage()];
 
     final currentLength = items.length;
     final controllerLength = _controller?.length;

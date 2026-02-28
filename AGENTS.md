@@ -38,6 +38,14 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - Keep full form for common cases like `Icons.*` and `Colors.*`
 - Always validate with `flutter analyze` after bulk replacements.
 
+### App Update Versioning (must follow)
+
+- This project uses app update metadata based on `pubspec.yaml` `version` (`versionName+versionCode`).
+- For every releasable change, bump both parts together:
+  - `versionName` (before `+`) must increase (e.g. `1.0.0` -> `1.0.1`)
+  - `versionCode` (after `+`) must increase monotonically (e.g. `+1` -> `+2`)
+- Never reuse or decrease `versionCode`, otherwise update checks may fail or skip updates.
+
 ## File Editing Safety
 
 ### 1) Encoding and BOM Safety (must follow)
