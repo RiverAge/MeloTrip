@@ -4,21 +4,9 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "lib/**"
-      - "test/**"
-      - "pubspec.yaml"
-      - "pubspec.lock"
-      - "analysis_options.yaml"
-      - ".gitea/workflows/flutter-ci.yml"
   pull_request:
-    paths:
-      - "lib/**"
-      - "test/**"
-      - "pubspec.yaml"
-      - "pubspec.lock"
-      - "analysis_options.yaml"
-      - ".gitea/workflows/flutter-ci.yml"
+    branches:
+      - master
 
 concurrency:
   group: flutter-ci-${{ github.workflow }}-${{ github.ref }}
