@@ -17,6 +17,8 @@ jobs:
 
     env:
       APK_PATH: build/app/outputs/flutter-apk/app-release.apk
+      PUB_HOSTED_URL: https://pub.flutter-io.cn
+      FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
 
     steps:
       - name: Checkout
@@ -27,6 +29,9 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Use Gradle mirror
+        run: sed -i "s/services.gradle.org\\/distributions/mirrors.cloud.tencent.com\\/gradle/g" android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Prepare Android signing files
         run: |
