@@ -31,7 +31,43 @@ jobs:
         run: flutter pub get
 
       - name: Use Gradle mirror
-        run: sed -i "s/services.gradle.org\\/distributions/mirrors.cloud.tencent.com\\/gradle/g" android/gradle/wrapper/gradle-wrapper.properties
+        run: |
+          sed -i "s/services.gradle.org\\/distributions/mirrors.cloud.tencent.com\\/gradle/g" android/gradle/wrapper/gradle-wrapper.properties
+          mkdir -p ~/.gradle
+          cat > ~/.gradle/init.gradle <<'EOF'
+          def urlMappings = [
+            "https://repo.maven.apache.org/maven2": "https://mirrors.tencent.com/nexus/repository/maven-public/",
+            "https://dl.google.com/dl/android/maven2": "https://mirrors.tencent.com/nexus/repository/maven-public/",
+            "https://plugins.gradle.org/m2": "https://mirrors.tencent.com/nexus/repository/gradle-plugins/"
+          ]
+
+          def enableMirror = { RepositoryHandler repos ->
+            repos.all { repo ->
+              if (repo instanceof MavenArtifactRepository) {
+                def originalUrl = repo.url.toString().replaceAll('/$', '')
+                def mirrored = urlMappings[originalUrl]
+                if (mirrored != null) {
+                  logger.lifecycle("Repository[${repo.url}] is mirrored to ${mirrored}")
+                  repo.setUrl(mirrored)
+                }
+              }
+            }
+          }
+
+          gradle.allprojects { p ->
+            p.buildscript {
+              repositories { enableMirror(delegate) }
+            }
+            p.repositories { enableMirror(delegate) }
+          }
+
+          settingsEvaluated { s ->
+            enableMirror(s.pluginManagement.repositories)
+            if (s.hasProperty("dependencyResolutionManagement")) {
+              enableMirror(s.dependencyResolutionManagement.repositories)
+            }
+          }
+          EOF
 
       - name: Prepare Android signing files
         run: |
