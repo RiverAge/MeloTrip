@@ -43,8 +43,34 @@ jobs:
       - name: Build release APK
         run: flutter build apk --release
 
+      - name: Generate release metadata block
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          apk_path="build/app/outputs/flutter-apk/app-release.apk"
+          app_version="$(awk '/^version:/{print $2; exit}' pubspec.yaml | tr -d '\r')"
+          version_core="${app_version%%+*}"
+          build_number="0"
+          if [[ "$app_version" == *"+"* ]]; then
+            build_number="${app_version#*+}"
+          fi
+
+          sha256="$(sha256sum "$apk_path" | awk '{print $1}')"
+          size="$(stat -c%s "$apk_path")"
+
+          cat > release-body.md <<EOF
+          <!-- METADATA
+          Version: ${version_core}
+          Build: ${build_number}
+          SHA256: ${sha256}
+          Size: ${size}
+          METADATA -->
+          EOF
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: build/app/outputs/flutter-apk/app-release.apk
+          body_path: release-body.md
           generate_release_notes: true
