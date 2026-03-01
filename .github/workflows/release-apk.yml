@@ -26,18 +26,17 @@ jobs:
           flutter-version: "3.41.0-0.2.pre"
           channel: beta
           cache: true
-          cache-key: flutter-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+          cache-key: flutter-${{ runner.os }}-3.41.0-0.2.pre
 
       - name: Setup Gradle Cache
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Cache pub packages
-        uses: actions/cache@v4
         with:
-          path: ~/.pub-cache
-          key: pub-cache-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
-          restore-keys: |
-            pub-cache-${{ runner.os }}-
+          cache-read-only: false
+          cache-write-only: false
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            wrapper
 
       - name: Install dependencies
         run: flutter pub get

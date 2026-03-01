@@ -14,7 +14,7 @@ class UpdateFlowState {
     this.totalBytes = 0,
     this.downloadBytesPerSecond = 0,
     this.etaSeconds,
-    this.stage = UpdateUiStage.idle,
+    this.stage = .idle,
   });
 
   final bool isChecking;
@@ -95,20 +95,21 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
       totalBytes: update.fileSize,
       downloadBytesPerSecond: 0,
       clearEtaSeconds: true,
-      stage: UpdateUiStage.downloading,
+      stage: .downloading,
     );
     var lastReceived = 0;
     DateTime? lastTick;
+    DateTime? lastUiTick;
     try {
       final apkFile = await _service.downloadAndVerifyApk(
         update: update,
         onStageChanged: (stage) {
-          if (stage == UpdateDownloadStage.downloading) {
-            state = state.copyWith(stage: UpdateUiStage.downloading);
+          if (stage == .downloading) {
+            state = state.copyWith(stage: .downloading);
             return;
           }
           state = state.copyWith(
-            stage: UpdateUiStage.verifying,
+            stage: .verifying,
             downloadBytesPerSecond: 0,
             clearEtaSeconds: true,
           );
@@ -121,16 +122,26 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
             final deltaMs = now.difference(lastTick!).inMilliseconds;
             final deltaBytes = received - lastReceived;
             if (deltaMs > 0 && deltaBytes >= 0) {
-              speed = deltaBytes / (deltaMs / 1000);
+              final instantSpeed = deltaBytes / (deltaMs / 1000);
+              speed = speed <= 0
+                  ? instantSpeed
+                  : speed * 0.75 + instantSpeed * 0.25;
             }
           }
-          final eta = speed > 0 && total > 0
+          final rawEta = speed > 0 && total > 0
               ? ((total - received).clamp(0, total) / speed).ceil()
               : null;
+          final eta = rawEta == null ? null : ((rawEta / 5).round() * 5);
           lastTick = now;
           lastReceived = received;
-          state = state.copyWith(downloadProgressPercent: percent);
+          final shouldThrottle =
+              lastUiTick != null &&
+              now.difference(lastUiTick!).inMilliseconds < 300 &&
+              (percent - state.downloadProgressPercent).abs() < 0.2;
+          if (shouldThrottle) return;
+          lastUiTick = now;
           state = state.copyWith(
+            downloadProgressPercent: percent,
             downloadedBytes: received,
             totalBytes: total > 0 ? total : update.fileSize,
             downloadBytesPerSecond: speed,
@@ -141,10 +152,12 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
       );
       state = state.copyWith(
         downloadProgressPercent: 100,
-        downloadedBytes: state.totalBytes > 0 ? state.totalBytes : update.fileSize,
+        downloadedBytes: state.totalBytes > 0
+            ? state.totalBytes
+            : update.fileSize,
       );
       state = state.copyWith(
-        stage: UpdateUiStage.openingInstaller,
+        stage: .openingInstaller,
         downloadBytesPerSecond: 0,
         clearEtaSeconds: true,
       );
@@ -155,7 +168,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
     } finally {
       state = state.copyWith(
         isUpdating: false,
-        stage: UpdateUiStage.idle,
+        stage: .idle,
         downloadBytesPerSecond: 0,
         clearEtaSeconds: true,
       );

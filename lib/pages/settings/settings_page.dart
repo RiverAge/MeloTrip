@@ -95,7 +95,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                   leading: const Icon(Icons.system_update_alt),
                   title: Text(AppLocalizations.of(context)!.checkForUpdates),
                   subtitle: updateState.isUpdating
-                      ? Text(_buildUpdateSubtitle(context, updateState))
+                      ? Text(
+                          _buildUpdateSubtitle(context, updateState),
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                        )
                       : null,
                   onTap: (updateState.isChecking || updateState.isUpdating)
                       ? null
@@ -107,9 +111,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : updateState.isUpdating
-                      ? Text(
-                          '${updateState.downloadProgressPercent.toStringAsFixed(1)}%',
-                        )
+                      ? const SizedBox.shrink()
                       : const Icon(Icons.arrow_forward),
                 ),
               ],
@@ -291,50 +293,34 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
 
   String _buildUpdateSubtitle(BuildContext context, UpdateFlowState state) {
     final l10n = AppLocalizations.of(context)!;
-    final stage = switch (state.stage) {
-      UpdateUiStage.idle => '',
-      UpdateUiStage.downloading => l10n.updateStageDownloading,
-      UpdateUiStage.verifying => l10n.updateStageVerifying,
-      UpdateUiStage.openingInstaller => l10n.updateStageOpeningInstaller,
-    };
-    final progressLine = l10n.updateProgressLine(
-      _formatBytes(state.downloadedBytes),
-      _formatBytes(state.totalBytes),
-      state.downloadProgressPercent.round(),
-    );
+    if (state.stage == .verifying) {
+      return l10n.updateStageVerifying;
+    }
+    if (state.stage == .openingInstaller) {
+      return l10n.updateStageOpeningInstaller;
+    }
+
+    final percent = '${state.downloadProgressPercent.toStringAsFixed(0)}%';
+    final size =
+        '${_formatBytes(state.downloadedBytes)}/${_formatBytes(state.totalBytes)}';
     final speed = state.downloadBytesPerSecond > 0
-        ? l10n.updateSpeedLine(
-            '${_formatBytes(state.downloadBytesPerSecond.round())}/s',
-          )
+        ? '${_formatBytes(state.downloadBytesPerSecond.round())}/s'
         : '';
-    final eta = state.etaSeconds == null
-        ? ''
-        : l10n.updateEtaLine(_formatEta(state.etaSeconds!));
-    final parts = <String>[stage, progressLine, speed, eta]
+    final parts = <String>[percent, size, speed]
       ..removeWhere((it) => it.isEmpty);
-    return parts.join('\n');
+    return parts.join(' | ');
   }
 
   String _formatBytes(int bytes) {
-    if (bytes <= 0) return '0 B';
+    if (bytes <= 0) return '0B';
     const kb = 1024.0;
     const mb = kb * 1024;
     if (bytes >= mb) {
-      return '${(bytes / mb).toStringAsFixed(1)} MB';
+      return '${(bytes / mb).toStringAsFixed(0)}M';
     }
     if (bytes >= kb) {
-      return '${(bytes / kb).toStringAsFixed(1)} KB';
+      return '${(bytes / kb).toStringAsFixed(0)}K';
     }
-    return '$bytes B';
-  }
-
-  String _formatEta(int seconds) {
-    if (seconds <= 0) return '0s';
-    final d = Duration(seconds: seconds);
-    if (d.inMinutes >= 1) {
-      final remainSeconds = d.inSeconds % 60;
-      return '${d.inMinutes}m ${remainSeconds}s';
-    }
-    return '${d.inSeconds}s';
+    return '${bytes}B';
   }
 }
