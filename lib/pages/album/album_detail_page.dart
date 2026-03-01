@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
@@ -33,85 +34,102 @@ class AlbumDetailPage extends StatelessWidget {
         if (album == null) {
           return const NoData();
         }
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(album.name ?? ''),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  ref
-                      .read(albumFavoriteProvider.notifier)
-                      .toggleFavorite(album);
-                },
-                icon: album.starred != null
-                    ? const Icon(Icons.favorite, color: Colors.red)
-                    : const Icon(Icons.favorite_outline),
-              ),
-            ],
-          ),
-          body:
-              // _SliverAppBar(
-              //   album: album,
-              //   onToggleFavorite: () {
-              //     ref
-              //         .read(albumFavoriteProvider.notifier)
-              //         .toggleFavorite(album);
-              //   },
-              //   onUpdateRating: (rating) {
-              //     ref
-              //         .read(albumRatingProvider.notifier)
-              //         .updateRating(album.id, rating);
-              //   },
-              // // ),
-              // SliverToBoxAdapter(
-              //   child: SizedBox(
-              //     height: (DividerTheme.of(context).space ?? 16) / 2,
-              //   ),
-              // ),
-              ListView.builder(
-                itemCount: (album.song?.length ?? 0) + 1,
-                itemBuilder: (_, idx) {
-                  if (idx == 0) {
-                    return ListItemHead(
-                      album: album,
-                      onUpdateRating: (rating) {
-                        ref
-                            .read(albumRatingProvider.notifier)
-                            .updateRating(album.id, rating);
-                      },
-                    );
-                  }
-                  final index = idx - 1;
-                  final song = album.song?[index];
-                  return Column(
-                    children: [
-                      if (index == 0 ||
-                          album.song?[index - 1].discNumber != song?.discNumber)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          child: Align(
-                            alignment: .centerLeft,
-                            child: Text(
-                              'DISC ${song?.discNumber}',
-                              textAlign: .left,
-                              style: TextStyle(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withAlpha(100),
-                              ),
-                            ),
-                          ),
-                        ),
-                      _ListItem(song: song, idx: idx),
-                    ],
-                  );
-                },
-              ),
+        return AsyncValueBuilder(
+          provider: appPlayerHandlerProvider,
+          builder: (context, player, _) {
+            return PlayQueueBuilder(
+              builder: (context, playQueue, _) {
+                final currentSong = playQueue.index >= playQueue.songs.length
+                    ? null
+                    : playQueue.songs[playQueue.index];
+                return AsyncStreamBuilder(
+                  provider: player.playingStream,
+                  loading: (_) => _buildPage(
+                    context: context,
+                    ref: ref,
+                    album: album,
+                    player: player,
+                    currentSongId: currentSong?.id,
+                    isPlaying: false,
+                  ),
+                  builder: (_, playing) => _buildPage(
+                    context: context,
+                    ref: ref,
+                    album: album,
+                    player: player,
+                    currentSongId: currentSong?.id,
+                    isPlaying: playing,
+                  ),
+                );
+              },
+            );
+          },
         );
       },
+    );
+  }
+
+  Widget _buildPage({
+    required BuildContext context,
+    required WidgetRef ref,
+    required AlbumEntity album,
+    required AppPlayer player,
+    required String? currentSongId,
+    required bool isPlaying,
+  }) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(album.name ?? ''),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(albumFavoriteProvider.notifier).toggleFavorite(album);
+            },
+            icon: album.starred != null
+                ? const Icon(Icons.favorite, color: Colors.red)
+                : const Icon(Icons.favorite_outline),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: (album.song?.length ?? 0) + 1,
+        itemBuilder: (_, idx) {
+          if (idx == 0) {
+            return ListItemHead(
+              album: album,
+              onUpdateRating: (rating) {
+                ref.read(albumRatingProvider.notifier).updateRating(album.id, rating);
+              },
+            );
+          }
+          final index = idx - 1;
+          final song = album.song?[index];
+          return Column(
+            children: [
+              if (index == 0 || album.song?[index - 1].discNumber != song?.discNumber)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  child: Align(
+                    alignment: .centerLeft,
+                    child: Text(
+                      'DISC ${song?.discNumber}',
+                      textAlign: .left,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
+                      ),
+                    ),
+                  ),
+                ),
+              _ListItem(
+                song: song,
+                idx: idx,
+                player: player,
+                isCurrentPlaying: currentSongId == song?.id && isPlaying,
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

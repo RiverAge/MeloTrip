@@ -81,3 +81,13 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Only update source files, then regenerate:
   - l10n: `flutter gen-l10n`
   - codegen: `dart run build_runner build --delete-conflicting-outputs`
+
+## Command Execution (Sandbox/Escalation)
+
+- When running `flutter` / `dart` commands under escalation, prefer generic command forms and avoid appending specific file paths when possible.
+- Preferred examples:
+  - `flutter analyze`
+  - `flutter test`
+  - `dart analyze`
+- Use file-specific forms only when necessary for focused debugging (for example: isolating a single failing test).
+- After completing code changes, run `flutter analyze` by default. If it cannot be run, explicitly report why.
