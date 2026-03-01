@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
@@ -45,9 +46,15 @@ class PlayingPage extends StatelessWidget {
             ? '${effictiveArtist.first.name}'
             : current?.displayArtist;
         return Scaffold(
-          // extendBodyBehindAppBar: true,
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.dark,
+            ),
             centerTitle: true,
             scrolledUnderElevation: 0,
             title: Column(
@@ -128,6 +135,30 @@ class PlayingPage extends StatelessWidget {
             children: [
               _CoverBackground(),
               _BlurFilter(),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: IgnorePointer(
+                  child: Container(
+                    height:
+                        MediaQuery.paddingOf(context).top +
+                        kToolbarHeight +
+                        8,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: .topCenter,
+                        end: .bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.35),
+                          Colors.black.withValues(alpha: 0.18),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 children: [
                   // SizedBox(height: AppBar().preferredSize.height),

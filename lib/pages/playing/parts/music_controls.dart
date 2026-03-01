@@ -35,31 +35,31 @@ class _MusicControls extends StatelessWidget with SongControl {
             return Row(
               mainAxisAlignment: .center,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: color),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: AsyncValueBuilder(
-                    provider: lyricsProvider(current?.id),
-                    loading: (_, _) => const SizedBox.shrink(),
-                    builder: (_, lyrics, _) {
-                      final structuredLyrics =
-                          lyrics.subsonicResponse?.lyricsList?.structuredLyrics ??
-                          [];
-                      if (structuredLyrics.isEmpty) {
-                        return SizedBox.shrink();
-                      }
-                      final sourceLabel = switch (structuredLyrics.first.lang) {
-                        'NetEase' => 'NETEASE',
-                        'AM' => 'APPLE',
-                        _ => 'DEFAULT',
-                      };
-                      return Text(
+                AsyncValueBuilder(
+                  provider: lyricsProvider(current?.id),
+                  loading: (_, _) => const SizedBox.shrink(),
+                  builder: (_, lyrics, _) {
+                    final structuredLyrics =
+                        lyrics.subsonicResponse?.lyricsList?.structuredLyrics ??
+                        [];
+                    if (structuredLyrics.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    final sourceLabel = switch (structuredLyrics.first.lang) {
+                      'NetEase' => 'NETEASE',
+                      'AM' => 'APPLE',
+                      _ => 'DEFAULT',
+                    };
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.5, color: color),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
                         AppLocalizations.of(context)!.lyricsSource(sourceLabel),
                         style: TextStyle(
                           height: 1.0,
@@ -72,9 +72,9 @@ class _MusicControls extends StatelessWidget with SongControl {
                           applyHeightToLastDescent: false,
                           leadingDistribution: .even,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 10),
                 IconButton(
