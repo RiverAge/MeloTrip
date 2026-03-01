@@ -61,10 +61,7 @@ class PlayingPage extends StatelessWidget {
               children: [
                 Text(
                   current?.title ?? '-',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: .bold,
-                  ),
+                  style: const TextStyle(fontSize: 18, fontWeight: .bold),
                 ),
                 SizedBox(height: 2),
                 if (effictiveArtist.length <= 2)
@@ -142,9 +139,7 @@ class PlayingPage extends StatelessWidget {
                 child: IgnorePointer(
                   child: Container(
                     height:
-                        MediaQuery.paddingOf(context).top +
-                        kToolbarHeight +
-                        8,
+                        MediaQuery.paddingOf(context).top + kToolbarHeight + 8,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: .topCenter,
@@ -159,16 +154,19 @@ class PlayingPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  // SizedBox(height: AppBar().preferredSize.height),
-                  Expanded(child: _CoverLyricsSwitcher()),
-                  _ArtistAndAlbum(),
-                  _TimerAxis(),
-                  _PlayerControls(),
-                  _MusicControls(),
-                  SizedBox(height: 18),
-                ],
+              SafeArea(
+                top: true,
+                bottom: false,
+                child: Column(
+                  children: [
+                    Expanded(child: _CoverLyricsSwitcher()),
+                    _ArtistAndAlbum(),
+                    _TimerAxis(),
+                    _PlayerControls(),
+                    _MusicControls(),
+                    SizedBox(height: 18),
+                  ],
+                ),
               ),
             ],
           ),

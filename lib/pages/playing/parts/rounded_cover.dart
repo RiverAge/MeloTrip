@@ -3,21 +3,21 @@ part of '../playing_page.dart';
 class _RoundedCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
         if (playQueue.index >= playQueue.songs.length) {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         }
 
         final current = playQueue.songs[playQueue.index];
         return Column(
-          mainAxisAlignment: .center,
           children: [
+            const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.08),
               child: AspectRatio(
-                aspectRatio: 1 / 1, // 强制保持 1:1 正方形
+                aspectRatio: 1,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: ArtworkImage(
@@ -28,34 +28,32 @@ class _RoundedCover extends StatelessWidget {
                 ),
               ),
             ),
-
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             _MediaMeta(),
-            SizedBox(height: 16),
-            // 防止歌词出现被顶上去
-            SizedBox(
-              height: 40,
-              child: AsyncValueBuilder(
-                provider: lyricsProvider(current.id),
-                loading: (_, _) => const SizedBox.shrink(),
-                builder: (_, lyrics, _) {
-                  final lyricsLines = lyrics
-                      .subsonicResponse
-                      ?.lyricsList
-                      ?.structuredLyrics
-                      ?.firstOrNull
-                      ?.line;
-                  if (lyricsLines == null) {
-                    return SizedBox.shrink();
-                  }
-
-                  return SingleLineAnimatedLyrics(
+            const SizedBox(height: 10),
+            AsyncValueBuilder(
+              provider: lyricsProvider(current.id),
+              loading: (_, _) => const SizedBox.shrink(),
+              builder: (_, lyrics, _) {
+                final lyricsLines = lyrics
+                    .subsonicResponse
+                    ?.lyricsList
+                    ?.structuredLyrics
+                    ?.firstOrNull
+                    ?.line;
+                if (lyricsLines == null) {
+                  return const SizedBox.shrink();
+                }
+                return SizedBox(
+                  height: 40,
+                  child: SingleLineAnimatedLyrics(
                     lyricsLines: lyricsLines,
                     crossAxisAlignment: .center,
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
+            const Spacer(),
           ],
         );
       },
