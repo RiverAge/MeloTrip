@@ -669,6 +669,12 @@ abstract class AppLocalizations {
   /// **'No Lyrics Found'**
   String get noLyricsFound;
 
+  /// Lyrics source badge text
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics {source}'**
+  String lyricsSource(String source);
+
   /// Album header metric label for song count
   ///
   /// In en, this message translates to:

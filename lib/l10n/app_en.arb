@@ -443,6 +443,16 @@
    "@noLyricsFound": {
       "description": "Lyrics of Song could not be found"
    },
+   "lyricsSource": "Lyrics {source}",
+   "@lyricsSource": {
+      "description": "Lyrics source badge text",
+      "placeholders": {
+         "source": {
+            "type": "String",
+            "example": "NETEASE"
+         }
+      }
+   },
    "albumHeaderSongs": "Songs",
    "@albumHeaderSongs": {
       "description": "Album header metric label for song count"

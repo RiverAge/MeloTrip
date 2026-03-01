@@ -41,4 +41,17 @@ void main() {
       1,
     );
   });
+
+  test('playing page subscription count regression guard', () {
+    final musicControls = _readFile('lib/pages/playing/parts/music_controls.dart');
+    final timerAxis = _readFile('lib/pages/playing/parts/timer_axis.dart');
+    final playerControls = _readFile('lib/pages/playing/parts/player_controls.dart');
+
+    expect(_countPattern(musicControls, 'appPlayerHandlerProvider'), 1);
+    expect(_countPattern(musicControls, 'provider:\\s*player\\.playlistModeStream'), 1);
+    expect(_countPattern(timerAxis, 'appPlayerHandlerProvider'), 1);
+    expect(_countPattern(timerAxis, 'provider:\\s*player\\.durationStream'), 1);
+    expect(_countPattern(playerControls, 'appPlayerHandlerProvider'), 1);
+    expect(_countPattern(playerControls, 'provider:\\s*player\\.playingStream'), 1);
+  });
 }

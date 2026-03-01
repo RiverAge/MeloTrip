@@ -18,27 +18,22 @@ class _TimerAxisState extends State<_TimerAxis> {
     final sCurrent = position?.inSeconds ?? 0;
     final sTotal = duration?.inSeconds ?? 0;
     final sBuffer = bufferedPosition?.inSeconds ?? 0;
-    final sBufferPercent = sBuffer / sTotal;
-    final double value = sTotal == 0 ? 0 : sCurrent / sTotal;
-    // 拖动滑动条时播放器会出现电流音，
-    // 只有停止拖动滚动条才能调用seek
+    final sBufferPercent = sTotal == 0 ? 0.0 : sBuffer / sTotal;
+    final value = sTotal == 0 ? 0.0 : sCurrent / sTotal;
     final effectiveValue = _isSliding ? _slidigValue : value;
+
     return Column(
       children: [
         SliderTheme(
-          data: SliderThemeData(
+          data: const SliderThemeData(
             padding: EdgeInsets.only(left: 25, right: 25, top: 4),
-            trackHeight: 4.0, // 稍微加粗一点点，更有质感
-            // 1. 定制滑块形状：平时让它小一点，甚至可以自定义成一个小竖线
-            thumbShape: const RoundSliderThumbShape(
-              enabledThumbRadius: 6.0, // 缩小到 6，显得精致
-              pressedElevation: 9.0, // 按下时放大，提供反馈
+            trackHeight: 4.0,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: 6.0,
+              pressedElevation: 9.0,
             ),
-
-            // 2. 去掉滑块周围的“光晕” (Overlay)，或者让它更淡
-            overlayShape: const RoundSliderOverlayShape(overlayRadius: 16.0),
-
-            trackShape: const RoundedRectSliderTrackShape(),
+            overlayShape: RoundSliderOverlayShape(overlayRadius: 16.0),
+            trackShape: RoundedRectSliderTrackShape(),
           ),
           child: Slider(
             onChangeStart: (val) {
@@ -58,14 +53,8 @@ class _TimerAxisState extends State<_TimerAxis> {
               setState(() {
                 _slidigValue = val;
               });
-              // player.seek(Duration(seconds: (sTotal * value).toInt()));
             },
-            secondaryTrackValue: sTotal == 0
-                ? 0
-                : sBufferPercent > 1
-                ? 1
-                : sBufferPercent,
-            // 20240829会有超过1的情况
+            secondaryTrackValue: sBufferPercent > 1 ? 1 : sBufferPercent,
             value: effectiveValue > 1 ? 1 : effectiveValue,
           ),
         ),
@@ -123,18 +112,17 @@ class _TimerAxisState extends State<_TimerAxis> {
 
   @override
   Widget build(BuildContext context) {
-    // 这里just_audio偶尔无法获取duration，这里使用后端返回的数据
-    return PlayQueueBuilder(
-      builder: (context, playQueue, ref) {
-        if (playQueue.index >= playQueue.songs.length) {
-          return const SizedBox.shrink();
-        }
+    return AsyncValueBuilder(
+      provider: appPlayerHandlerProvider,
+      builder: (context, player, _) {
+        return PlayQueueBuilder(
+          builder: (context, playQueue, ref) {
+            if (playQueue.index >= playQueue.songs.length) {
+              return const SizedBox.shrink();
+            }
 
-        final current = playQueue.songs[playQueue.index];
-        final serverDuration = Duration(seconds: current.duration ?? 0);
-        return AsyncValueBuilder(
-          provider: appPlayerHandlerProvider,
-          builder: (context, player, _) {
+            final current = playQueue.songs[playQueue.index];
+            final serverDuration = Duration(seconds: current.duration ?? 0);
             return AsyncStreamBuilder(
               provider: player.durationStream,
               emptyBuilder: (_) =>
