@@ -58,146 +58,119 @@ class _MusicBarState extends State<MusicBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          child: _ColoredContainer(),
-        ),
-        PlayQueueBuilder(
-          builder: (_, playQueue, ref) {
-            if (playQueue.index >= playQueue.songs.length) {
-              return ListTile(
-                leading: SizedBox(
-                  width: 50,
-                  child: Image.asset('images/navidrome.png'),
-                ),
-                title: const Text('MeloTrip'),
-                subtitle: const Text('Elevate with the Symphony'),
-              );
-            }
-            final current = playQueue.songs[playQueue.index];
-            return ListTile(
-              onTap: () => _onOpenPlaying(context),
-              contentPadding: EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
-              leading: SizedBox(
-                width: 50,
-                child: ArtworkImage(fit: .contain, id: current.id),
-              ),
-              title: Text(
-                '${current.title}',
-                overflow: .ellipsis,
-                style: const TextStyle(fontWeight: .bold),
-              ),
-              subtitle: AsyncValueBuilder(
-                provider: lyricsProvider(current.id),
-                loading: (_, _) => const SizedBox.shrink(),
-                builder: (_, lyrics, _) {
-                  final lines = lyrics
-                      .subsonicResponse
-                      ?.lyricsList
-                      ?.structuredLyrics
-                      ?.firstOrNull
-                      ?.line;
+    return AsyncValueBuilder(
+      provider: appPlayerHandlerProvider,
+      builder: (context, player, _) {
+        return Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              child: _ColoredContainer(),
+            ),
+            PlayQueueBuilder(
+              builder: (_, playQueue, ref) {
+                if (playQueue.index >= playQueue.songs.length) {
+                  return ListTile(
+                    leading: SizedBox(
+                      width: 50,
+                      child: Image.asset('images/navidrome.png'),
+                    ),
+                    title: const Text('MeloTrip'),
+                    subtitle: const Text('Elevate with the Symphony'),
+                  );
+                }
+                final current = playQueue.songs[playQueue.index];
+                return ListTile(
+                  onTap: () => _onOpenPlaying(context),
+                  contentPadding: EdgeInsetsDirectional.only(
+                    start: 16.0,
+                    end: 8.0,
+                  ),
+                  leading: SizedBox(
+                    width: 50,
+                    child: ArtworkImage(fit: .contain, id: current.id),
+                  ),
+                  title: Text(
+                    '${current.title}',
+                    overflow: .ellipsis,
+                    style: const TextStyle(fontWeight: .bold),
+                  ),
+                  subtitle: AsyncValueBuilder(
+                    provider: lyricsProvider(current.id),
+                    loading: (_, _) => const SizedBox.shrink(),
+                    builder: (_, lyrics, _) {
+                      final lines = lyrics
+                          .subsonicResponse
+                          ?.lyricsList
+                          ?.structuredLyrics
+                          ?.firstOrNull
+                          ?.line;
 
-                  if (lines == null) {
-                    return SizedBox.shrink();
-                  }
+                      if (lines == null) {
+                        return SizedBox.shrink();
+                      }
 
-                  return SingleLineAnimatedLyrics(lyricsLines: lines);
-                  // return AsyncValueBuilder(
-                  //   provider: appPlayerHandlerProvider,
-                  //   builder: (context, player, _) {
-                  //     return AsyncStreamBuilder(
-                  //       loading: (_) => const SizedBox.shrink(),
-                  //       provider: player.positionStream,
-                  //       builder: (_, position) {
-                  //         final structuredLyrics = lyrics
-                  //             .subsonicResponse
-                  //             ?.lyricsList
-                  //             ?.structuredLyrics;
-                  //         if (structuredLyrics == null ||
-                  //             structuredLyrics.isEmpty) {
-                  //           return SizedBox.shrink();
-                  //         }
-                  //         final lines = structuredLyrics[0].line;
-                  //         if (lines == null || structuredLyrics.isEmpty) {
-                  //           return SizedBox.shrink();
-                  //         }
-
-                  //         return SingleLineAnimatedLyrics(
-                  //           lyricsLines: lines,
-                  //           position: position,
-                  //         );
-                  //       },
-                  //     );
-                  //   },
-                  // );
-                },
-              ),
-              trailing: LayoutBuilder(
-                builder: (context, dimens) {
-                  return Row(
-                    mainAxisSize: .min,
-                    children: [
-                      AsyncValueBuilder(
-                        provider: appPlayerHandlerProvider,
-                        builder: (context, player, _) {
-                          return AsyncStreamBuilder(
+                      return SingleLineAnimatedLyrics(lyricsLines: lines);
+                    },
+                  ),
+                  trailing: LayoutBuilder(
+                    builder: (context, dimens) {
+                      return Row(
+                        mainAxisSize: .min,
+                        children: [
+                          AsyncStreamBuilder(
                             provider: player.playingStream,
                             loading: (_) => const SizedBox.shrink(),
-                            builder: (context, data) {
+                            builder: (context, playing) {
                               return IconButton(
                                 style: IconButton.styleFrom(
-                                  tapTargetSize:
-                                      .shrinkWrap,
+                                  tapTargetSize: .shrinkWrap,
                                 ),
                                 onPressed: () {
                                   player.playOrPause();
                                 },
                                 icon: Icon(
-                                  data
+                                  playing
                                       ? Icons.pause_rounded
                                       : Icons.play_arrow_rounded,
                                   size: 35,
                                 ),
                               );
                             },
-                          );
-                        },
-                      ),
-                      IconButton(
-                        style: IconButton.styleFrom(
-                          // minimumSize: Size.zero,
-                          // padding: const EdgeInsets.all(0),
-                          // tapTargetSize: .shrinkWrap,
-                        ),
-                        onPressed: () => _onOpenPlayQueue(context),
-                        icon: const Icon(Icons.playlist_play_rounded, size: 35),
-                      ),
-                      if (dimens.maxWidth >= 600) _volumeBuilder(),
-                    ],
-                  );
-                },
-              ),
-            );
-          },
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 2,
-          child: _durationBulder(),
-        ),
-      ],
+                          ),
+                          IconButton(
+                            style: IconButton.styleFrom(),
+                            onPressed: () => _onOpenPlayQueue(context),
+                            icon: const Icon(
+                              Icons.playlist_play_rounded,
+                              size: 35,
+                            ),
+                          ),
+                          if (dimens.maxWidth >= 600) _volumeBuilder(player),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 2,
+              child: _durationBulder(player),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _durationBulder() {
+  Widget _durationBulder(AppPlayer player) {
     // 这里just_audio偶尔无法获取duration，这里使用后端返回的数据
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
@@ -207,20 +180,15 @@ class _MusicBarState extends State<MusicBar> {
         final current = playQueue.songs[playQueue.index];
         final serverDuration = Duration(seconds: current.duration ?? 0);
 
-        return AsyncValueBuilder(
-          provider: appPlayerHandlerProvider,
-          builder: (context, player, _) {
-            return AsyncStreamBuilder(
-              loading: (context) => const SizedBox.shrink(),
-              provider: player.durationStream,
-              emptyBuilder: (_) =>
-                  _positionBuilder(duration: serverDuration, player: player),
-              builder: (_, duration) => _positionBuilder(
-                duration: duration ?? serverDuration,
-                player: player,
-              ),
-            );
-          },
+        return AsyncStreamBuilder(
+          loading: (context) => const SizedBox.shrink(),
+          provider: player.durationStream,
+          emptyBuilder: (_) =>
+              _positionBuilder(duration: serverDuration, player: player),
+          builder: (_, duration) => _positionBuilder(
+            duration: duration ?? serverDuration,
+            player: player,
+          ),
         );
       },
     );
@@ -245,37 +213,32 @@ class _MusicBarState extends State<MusicBar> {
     );
   }
 
-  Widget _volumeBuilder() {
-    return AsyncValueBuilder(
-      provider: appPlayerHandlerProvider,
-      builder: (context, player, _) {
-        return AsyncStreamBuilder(
-          loading: (_) => const SizedBox.shrink(),
-          provider: player.volumeStream,
-          builder: (context, data) {
-            return Row(
-              mainAxisSize: .min,
-              children: [
-                SizedBox(width: 10),
-                Icon(Icons.volume_up, size: 25),
-                SliderTheme(
-                  data: SliderThemeData(
-                    trackHeight: 2,
-                    overlayShape: SliderComponentShape.noOverlay,
-                    thumbShape: SliderComponentShape.noOverlay,
-                  ),
-                  child: Slider(
-                    value: data,
-                    min: 0.0,
-                    max: 100.0,
-                    onChanged: (value) {
-                      player.setVolume(value);
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
+  Widget _volumeBuilder(AppPlayer player) {
+    return AsyncStreamBuilder(
+      loading: (_) => const SizedBox.shrink(),
+      provider: player.volumeStream,
+      builder: (context, data) {
+        return Row(
+          mainAxisSize: .min,
+          children: [
+            SizedBox(width: 10),
+            Icon(Icons.volume_up, size: 25),
+            SliderTheme(
+              data: SliderThemeData(
+                trackHeight: 2,
+                overlayShape: SliderComponentShape.noOverlay,
+                thumbShape: SliderComponentShape.noOverlay,
+              ),
+              child: Slider(
+                value: data,
+                min: 0.0,
+                max: 100.0,
+                onChanged: (value) {
+                  player.setVolume(value);
+                },
+              ),
+            ),
+          ],
         );
       },
     );

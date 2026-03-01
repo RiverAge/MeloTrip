@@ -6,6 +6,7 @@ Melo Trip.
 
 ## TODO
 
+1. [Testing debt] Stabilize `album_detail_page_test.dart` without relying on `AppPlayer` extension internals (prefer injectable player abstraction or integration-level coverage).
 1. ~~登录超时~~
 1. 用户信息等一些基本信息的保持（如何优雅的访问）
 1. ~~高斯模糊~~

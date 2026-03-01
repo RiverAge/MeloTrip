@@ -2,80 +2,83 @@ part of 'music_bar.dart';
 
 class _BottomSheetPlayQueue extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => SafeArea(
-    child: Column(
-      children: [
-        GestureHint(),
-        Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).colorScheme.outlineVariant,
-                width: 1,
+  Widget build(BuildContext context) => AsyncValueBuilder(
+    provider: appPlayerHandlerProvider,
+    builder: (context, player, _) => SafeArea(
+      child: Column(
+        children: [
+          GestureHint(),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                  width: 1,
+                ),
               ),
             ),
-          ),
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 0),
-          child: Row(
-            children: [
-              Expanded(child: _BottomSheetTitle()),
-              _BottomSheePlaylistMode(),
-              _BottomSheetShuffleMode(),
-              AsyncValueBuilder(
-                provider: appPlayerHandlerProvider,
-                builder: (context, player, ref) {
-                  final playQueue = player.playQueue;
-                  if (playQueue.songs.isEmpty) {
-                    return SizedBox.shrink();
-                  }
-                  return IconButton(
-                    onPressed: () async {
-                      final navigator = Navigator.of(context);
-                      final messager = ScaffoldMessenger.of(context);
-                      final localizations = AppLocalizations.of(context);
-                      await player.setPlaylist(songs: []);
-                      navigator.pop();
-                      messager.showSnackBar(
-                        SnackBar(
-                          duration: Duration(seconds: 6),
-                          content: Text(localizations!.deleted),
-                          action: SnackBarAction(
-                            label: localizations.revoke,
-                            onPressed: () {
-                              player.setPlaylist(
-                                songs: playQueue.songs,
-                                initialId: playQueue.songs[playQueue.index].id,
-                              );
-                            },
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 0),
+            child: Row(
+              children: [
+                Expanded(child: _BottomSheetTitle()),
+                _BottomSheePlaylistMode(),
+                _BottomSheetShuffleMode(),
+                Builder(
+                  builder: (context) {
+                    final playQueue = player.playQueue;
+                    if (playQueue.songs.isEmpty) {
+                      return SizedBox.shrink();
+                    }
+                    return IconButton(
+                      onPressed: () async {
+                        final navigator = Navigator.of(context);
+                        final messager = ScaffoldMessenger.of(context);
+                        final localizations = AppLocalizations.of(context);
+                        await player.setPlaylist(songs: []);
+                        navigator.pop();
+                        messager.showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 6),
+                            content: Text(localizations!.deleted),
+                            action: SnackBarAction(
+                              label: localizations.revoke,
+                              onPressed: () {
+                                player.setPlaylist(
+                                  songs: playQueue.songs,
+                                  initialId: playQueue.songs[playQueue.index].id,
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.clear_all_outlined),
-                  );
-                },
-              ),
-            ],
+                        );
+                      },
+                      icon: Icon(Icons.clear_all_outlined),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: PlayQueueBuilder(
-            builder: (_, playQueue, _) {
-              if (playQueue.songs.isEmpty) {
-                return NoData();
-              }
-              return _PlayQueueListView(playQueue: playQueue);
-            },
+          Expanded(
+            child: PlayQueueBuilder(
+              builder: (_, playQueue, _) {
+                if (playQueue.songs.isEmpty) {
+                  return NoData();
+                }
+                return _PlayQueueListView(playQueue: playQueue, player: player);
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
 
 class _PlayQueueListView extends ConsumerStatefulWidget {
-  const _PlayQueueListView({required this.playQueue});
+  const _PlayQueueListView({required this.playQueue, required this.player});
   final PlayQueue playQueue;
+  final AppPlayer player;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -115,16 +118,11 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncValueBuilder(
-      provider: appPlayerHandlerProvider,
-      builder: (context, player, _) {
-        return AsyncStreamBuilder(
-          provider: player.playingStream,
-          loading: (_) => _buildListView(player: player, playing: false),
-          builder: (_, playing) {
-            return _buildListView(player: player, playing: playing);
-          },
-        );
+    return AsyncStreamBuilder(
+      provider: widget.player.playingStream,
+      loading: (_) => _buildListView(player: widget.player, playing: false),
+      builder: (_, playing) {
+        return _buildListView(player: widget.player, playing: playing);
       },
     );
   }
