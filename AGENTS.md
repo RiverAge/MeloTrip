@@ -47,7 +47,7 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - `versionCode` (after `+`) must increase monotonically (e.g. `+1` -> `+2`)
 - Never reuse or decrease `versionCode`, otherwise update checks may fail or skip updates.
 - Release semantic (must follow):
-  - Formal release trigger phrase: only treat `按照发版流程发布` as a formal release request.
+  - Formal release trigger phrase: only treat `部署更新` as a formal release request.
   - `推送更新` means normal push only (no automatic version bump, no automatic tag creation).
   - Default release flow (strict order):
     1) Update app version in `pubspec.yaml` (`versionName+versionCode`)
