@@ -45,11 +45,18 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - `versionName` (before `+`) must increase (e.g. `1.0.0` -> `1.0.1`)
   - `versionCode` (after `+`) must increase monotonically (e.g. `+1` -> `+2`)
 - Never reuse or decrease `versionCode`, otherwise update checks may fail or skip updates.
-- Release semantic (must follow): when shipping an update, execute in this order:
-  - Update app version in `pubspec.yaml` (`versionName+versionCode`)
-  - Create tag
-  - Commit changes
-  - Push (branch and tag)
+- Release semantic (must follow):
+  - Formal release trigger phrase: only treat `按照发版流程发布` as a formal release request.
+  - `推送更新` means normal push only (no automatic version bump, no automatic tag creation).
+  - Default release flow (strict order):
+    1) Update app version in `pubspec.yaml` (`versionName+versionCode`)
+    2) Create tag
+    3) Commit changes
+    4) Push branch and tag
+  - If user does not provide target version/tag:
+    - Bump patch and build by +1 (example: `1.0.2+3` -> `1.0.3+4`)
+    - Use next sequential tag from existing tags (example: `v0.0.8` -> `v0.0.9`)
+  - If push fails, do not rewrite history or delete local tag/commit; report error and keep local state.
 
 ## File Editing Safety
 
