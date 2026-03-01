@@ -45,6 +45,11 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - `versionName` (before `+`) must increase (e.g. `1.0.0` -> `1.0.1`)
   - `versionCode` (after `+`) must increase monotonically (e.g. `+1` -> `+2`)
 - Never reuse or decrease `versionCode`, otherwise update checks may fail or skip updates.
+- Release semantic (must follow): when shipping an update, execute in this order:
+  - Update app version in `pubspec.yaml` (`versionName+versionCode`)
+  - Create tag
+  - Commit changes
+  - Push (branch and tag)
 
 ## File Editing Safety
 
