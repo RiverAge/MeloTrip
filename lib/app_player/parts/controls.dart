@@ -1,12 +1,13 @@
 part of '../player.dart';
 
 extension PlayerControls on AppPlayer {
-  Future<void> setShuffleModeEnabled(bool enabled) async =>
-      _player.setShuffle(enabled);
-  Future<void> setPlaylistMode(PlaylistMode loopMode) async =>
-      _player.setPlaylistMode(loopMode);
+  Future<void> setShuffleModeEnabled(bool enabled) =>
+      _runSerialized(() => _player.setShuffle(enabled));
 
-  Future<void> playOrPause() async {
+  Future<void> setPlaylistMode(PlaylistMode loopMode) =>
+      _runSerialized(() => _player.setPlaylistMode(loopMode));
+
+  Future<void> playOrPause() => _runSerialized(() async {
     final session = await AudioSession.instance;
     await session.setActive(
       true,
@@ -17,8 +18,8 @@ extension PlayerControls on AppPlayer {
       ),
       androidWillPauseWhenDucked: true,
     );
-    return _player.playOrPause();
-  }
+    await _player.playOrPause();
+  });
 
   Future<void> setVolume(double volume) async => _player.setVolume(volume);
 

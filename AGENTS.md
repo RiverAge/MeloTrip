@@ -53,7 +53,7 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
     1) Update app version in `pubspec.yaml` (`versionName+versionCode`)
     2) Create tag
     3) Commit changes
-    4) Push branch and tag
+    4) Push branch and tags (prefer `git push origin --tags` to avoid per-tag command variance)
   - If user does not provide target version/tag:
     - Bump patch and build by +1 (example: `1.0.2+3` -> `1.0.3+4`)
     - Use next sequential tag from existing tags (example: `v0.0.8` -> `v0.0.9`)
@@ -91,3 +91,9 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - `dart analyze`
 - Use file-specific forms only when necessary for focused debugging (for example: isolating a single failing test).
 - After completing code changes, run `flutter analyze` by default. If it cannot be run, explicitly report why.
+
+## Testing Expectations
+
+- After refactoring or modifying code, always do regression validation (at least run `flutter test` when feasible).
+- For changed logic, add or update targeted tests for that area whenever reasonably possible, not only rely on existing tests.
+- If a targeted test cannot be added (environment/framework limits or high setup cost), explicitly document why in the handoff.
