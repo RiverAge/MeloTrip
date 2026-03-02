@@ -18,8 +18,15 @@ import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'parts/sidebar.dart';
+part 'parts/sidebar_search_button.dart';
+part 'parts/nav_tile.dart';
+part 'parts/playlist_tile.dart';
+part 'parts/sidebar_server_card.dart';
 part 'parts/window_bar.dart';
 part 'parts/player_bar.dart';
+part 'parts/progress_bar.dart';
+part 'parts/volume_bar.dart';
+part 'parts/queue_sheet.dart';
 
 class DesktopTabPage extends ConsumerStatefulWidget {
   const DesktopTabPage({super.key});
