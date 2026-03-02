@@ -25,11 +25,11 @@ extension PlayerQueue on AppPlayer {
   }
 
   Future<int> _insertToNextInternal(SongEntity song) async {
-    final index = playQueue.songs.indexWhere((e) => e.id == song.id);
-    if (index != -1) {
-      return index;
+    final dstIndex = resolveInsertToNextIndex(playQueue: playQueue, song: song);
+    final isExisting = playQueue.songs.indexWhere((e) => e.id == song.id) != -1;
+    if (isExisting) {
+      return dstIndex;
     }
-    final dstIndex = playQueue.songs.isEmpty ? 0 : playQueue.index + 1;
     final effectiveMediaResolver = _mediaResolver;
     if (effectiveMediaResolver != null) {
       final media = await effectiveMediaResolver(song);
@@ -65,4 +65,22 @@ extension PlayerQueue on AppPlayer {
       }
     });
   }
+}
+
+int resolveInsertToNextIndex({
+  required PlayQueue playQueue,
+  required SongEntity song,
+}) {
+  final existingIndex = playQueue.songs.indexWhere((e) => e.id == song.id);
+  if (existingIndex != -1) {
+    return existingIndex;
+  }
+  final nextIndex = playQueue.index + 1;
+  if (nextIndex < 0) {
+    return 0;
+  }
+  if (nextIndex > playQueue.songs.length) {
+    return playQueue.songs.length;
+  }
+  return playQueue.songs.isEmpty ? 0 : nextIndex;
 }
