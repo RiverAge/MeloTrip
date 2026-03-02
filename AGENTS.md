@@ -64,8 +64,8 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - `推送更新` means normal push only (no automatic version bump, no automatic tag creation).
   - Default release flow (strict order):
     1) Update app version in `pubspec.yaml` (`versionName+versionCode`)
-    2) Create tag
-    3) Commit changes
+    2) Commit changes
+    3) Create tag (must point to the release commit from step 2)
     4) Push branch and tags (prefer `git push origin --tags` to avoid per-tag command variance)
   - If user does not provide target version/tag:
     - Bump patch and build by +1 (example: `1.0.2+3` -> `1.0.3+4`)
