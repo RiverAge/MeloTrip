@@ -1,5 +1,23 @@
 part of 'music_bar.dart';
 
+double? computePlayQueueJumpOffset({
+  required int index,
+  required int songCount,
+  required double maxScrollExtent,
+  double itemExtent = 72.0,
+  double edgePadding = 23.0,
+}) {
+  if (index < 0 || index >= songCount || !maxScrollExtent.isFinite) {
+    return null;
+  }
+  final safeMaxOffset = (maxScrollExtent - edgePadding).clamp(
+    0.0,
+    double.infinity,
+  );
+  final targetOffset = index * itemExtent;
+  return targetOffset.clamp(0.0, safeMaxOffset).toDouble();
+}
+
 class _BottomSheetPlayQueue extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AsyncValueBuilder(
@@ -88,6 +106,7 @@ class _PlayQueueListView extends ConsumerStatefulWidget {
 
 class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -97,20 +116,24 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   }
 
   void _setPositionListener() {
-    final index = widget.playQueue.index;
-    if (!_scrollController.hasClients ||
-        _scrollController.position.maxScrollExtent < 23) {
+    if (!_scrollController.hasClients) {
       return;
     }
 
-    double targetOffset = index * (72.0 + 0.0);
-
-    // 2. 核心：取 理论值 和 最大可滚动范围 之间的最小值
-    // 确保 targetOffset 不会超过 maxScrollExtent
-    double finalOffset = targetOffset.clamp(
-      0.0,
-      _scrollController.position.maxScrollExtent - 23,
+    final finalOffset = computePlayQueueJumpOffset(
+      index: widget.playQueue.index,
+      songCount: widget.playQueue.songs.length,
+      maxScrollExtent: _scrollController.position.maxScrollExtent,
     );
+
+    if (finalOffset == null) {
+      debugPrint(
+        'PlayQueue jump skipped: index=${widget.playQueue.index}, '
+        'count=${widget.playQueue.songs.length}, '
+        'max=${_scrollController.position.maxScrollExtent}',
+      );
+      return;
+    }
 
     _scrollController.jumpTo(finalOffset);
   }
