@@ -51,56 +51,63 @@ extension PlayerInit on AppPlayer {
   }
 
   void handleInterruptionEvent(AudioInterruptionEvent event) {
-    if (event.begin) {
-      switch (event.type) {
-        case AudioInterruptionType.duck:
-          _duckingTimeout?.cancel();
-          _volumeBeforeDucking ??= volume;
-          _animateVolume(volume / 2);
+    final decision = resolveInterruptionDecision(
+      type: event.type,
+      isBegin: event.begin,
+      isPlaying: playing,
+      playbackState: _playbackInterruptionState,
+      duckingState: _duckingState,
+    );
 
-          _duckingTimeout = Timer(const Duration(seconds: 30), () {
-            if (_volumeBeforeDucking != null) {
-              final originalVolume = _volumeBeforeDucking!;
-              _animateVolume(originalVolume).then((_) {
-                if (_volumeBeforeDucking == originalVolume) {
-                  _volumeBeforeDucking = null;
-                }
-              });
-            }
-          });
-          _playInterrupted = false;
-          break;
-        case AudioInterruptionType.pause:
-        case AudioInterruptionType.unknown:
-          if (playing) {
-            pause();
-            _playInterrupted = true;
-          }
-          break;
-      }
-    } else {
-      switch (event.type) {
-        case AudioInterruptionType.duck:
-          _duckingTimeout?.cancel();
-          if (_volumeBeforeDucking != null) {
-            final originalVolume = _volumeBeforeDucking!;
-            _animateVolume(originalVolume).then((_) {
-              if (_volumeBeforeDucking == originalVolume) {
-                _volumeBeforeDucking = null;
-              }
-            });
-          }
-          _playInterrupted = false;
-          break;
-        case AudioInterruptionType.pause:
-          if (_playInterrupted) play();
-          _playInterrupted = false;
-          break;
-        case AudioInterruptionType.unknown:
-          _playInterrupted = false;
-          break;
-      }
+    if (decision.beginDucking) {
+      _handleDuckingBegin();
     }
+    if (decision.endDucking) {
+      _handleDuckingEnd();
+    }
+    if (decision.pausePlayback) {
+      pause();
+    }
+    if (decision.resumePlayback) {
+      play();
+    }
+
+    _playbackInterruptionState = decision.nextPlaybackState;
+    _duckingState = decision.nextDuckingState;
+  }
+
+  void _handleDuckingBegin() {
+    _duckingTimeout?.cancel();
+    if (_duckingState == .normal) {
+      _volumeBeforeDucking = volume;
+    }
+    _duckingState = .ducking;
+    _animateVolume(volume / 2);
+
+    _duckingTimeout = Timer(const Duration(seconds: 30), () {
+      if (_duckingState == .ducking) {
+        _restoreVolumeAfterDucking();
+      }
+    });
+  }
+
+  void _handleDuckingEnd() {
+    _duckingTimeout?.cancel();
+    _restoreVolumeAfterDucking();
+  }
+
+  void _restoreVolumeAfterDucking() {
+    final originalVolume = _volumeBeforeDucking;
+    if (originalVolume == null) {
+      _duckingState = .normal;
+      return;
+    }
+    _animateVolume(originalVolume).then((_) {
+      if (_volumeBeforeDucking == originalVolume) {
+        _volumeBeforeDucking = null;
+        _duckingState = .normal;
+      }
+    });
   }
 
   Future<void> _animateVolume(double target) {

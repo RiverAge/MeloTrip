@@ -5,6 +5,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/command_serializer.dart';
+import 'package:melo_trip/app_player/interruption_state.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:rxdart/rxdart.dart';
@@ -59,7 +60,9 @@ class AppPlayer extends BaseAudioHandler {
     }
   }
 
-  bool _playInterrupted = false;
+  PlaybackInterruptionState _playbackInterruptionState =
+      .normal;
+  DuckingState _duckingState = .normal;
   Timer? _volumeAnimationTimer;
   double? _volumeBeforeDucking;
   Timer? _duckingTimeout;
