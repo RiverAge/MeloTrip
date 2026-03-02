@@ -22,20 +22,41 @@ extension PlayerControls on AppPlayer {
   });
 
   Future<void> playOrToggleFromSongTap(SongEntity song) async {
-    final playQueue = this.playQueue;
-    final currentSong = playQueue.index >= playQueue.songs.length
-        ? null
-        : playQueue.songs[playQueue.index];
-    if (currentSong?.id == song.id) {
-      await playOrPause();
-    } else {
-      await insertAndPlay(song);
-    }
+    await dispatchSongTapPlayback(
+      playQueue: playQueue,
+      song: song,
+      onToggleCurrent: playOrPause,
+      onPlayTarget: insertAndPlay,
+    );
   }
 
   Future<void> setVolume(double volume) async => _player.setVolume(volume);
 
   Future<void> addMediaItem(MediaItem? item) async {
     mediaItem.add(item);
+  }
+}
+
+bool isCurrentSongTap({
+  required PlayQueue playQueue,
+  required SongEntity song,
+}) {
+  final currentIndex = playQueue.index;
+  if (currentIndex < 0 || currentIndex >= playQueue.songs.length) {
+    return false;
+  }
+  return playQueue.songs[currentIndex].id == song.id;
+}
+
+Future<void> dispatchSongTapPlayback({
+  required PlayQueue playQueue,
+  required SongEntity song,
+  required Future<void> Function() onToggleCurrent,
+  required Future<void> Function(SongEntity song) onPlayTarget,
+}) async {
+  if (isCurrentSongTap(playQueue: playQueue, song: song)) {
+    await onToggleCurrent();
+  } else {
+    await onPlayTarget(song);
   }
 }
