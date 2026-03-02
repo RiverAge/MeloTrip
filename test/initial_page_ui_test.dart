@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
-import 'package:melo_trip/pages/initial/initial_bootstrap_service.dart';
-import 'package:melo_trip/pages/initial/initial_page.dart';
-import 'package:melo_trip/pages/login/login_page.dart';
+import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
+import 'package:melo_trip/pages/shared/initial/initial_page.dart';
+import 'package:melo_trip/pages/shared/login/login_page.dart';
 
 void main() {
   Widget buildApp(List<Override> overrides) {

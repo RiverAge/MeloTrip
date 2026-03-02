@@ -6,7 +6,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/const/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/pages/initial/initial_page.dart';
+import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';

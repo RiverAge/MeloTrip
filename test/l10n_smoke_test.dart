@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/pages/home/home_page.dart';
+import 'package:melo_trip/pages/mobile/home/home_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 
 void main() {

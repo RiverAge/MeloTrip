@@ -4,7 +4,7 @@ import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/model/response/play_queue/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/pages/initial/initial_bootstrap_service.dart';
+import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
 
 void main() {
   test('bootstrap returns loggedOut when auth is missing', () async {

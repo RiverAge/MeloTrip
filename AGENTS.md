@@ -32,12 +32,25 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 
 - Must use dot shorthand when the context type is clear and compile-safe.
 - Good examples:
-  - Enum values: `mainAxisSize: .min`, `playlistMode == .loop`
-  - Static members with clear context: `Uri uri = .parse(url)`
+- Enum values: `mainAxisSize: .min`, `playlistMode == .loop`
+- Static members with clear context: `Uri uri = .parse(url)`
 - Full qualifier is allowed only when dot shorthand would fail compile or reduce readability in that exact expression.
 - Do not force replacement where context type does not own the member.
-  - Keep full form for common cases like `Icons.*` and `Colors.*`
+- Keep full form for common cases like `Icons.*` and `Colors.*`
 - Always validate with `flutter analyze` after bulk replacements.
+
+### Dart Import Path Style (must follow)
+
+- **Always use `package:melo_trip/...` imports** for all project-internal imports
+- **Do NOT use relative imports** (like `import 'file.dart'` or `import '../dir/file.dart'`)
+- `package:` imports are required for:
+  - All internal project files (e.g., `package:melo_trip/pages/...`, `package:melo_trip/provider/...`)
+  - External packages (e.g., `package:flutter/material.dart`)
+- Examples:
+  - Good: `import 'package:melo_trip/pages/shared/initial/initial_page.dart';`
+  - Good: `import 'package:melo_trip/provider/auth/auth.dart';`
+  - Wrong: `import '../../shared/initial/initial_page.dart';`
+  - Wrong: `import 'package:melo_trip/pages/shared/initial/initial_page.dart';` (when in same directory)
 
 ### App Update Versioning (must follow)
 

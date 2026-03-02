@@ -13,9 +13,9 @@ String _readFile(String relativePath) {
 
 void main() {
   test('music bar subscription count regression guard', () {
-    final musicBar = _readFile('lib/pages/tab/music_bar/parts/music_bar.dart');
+    final musicBar = _readFile('lib/pages/mobile/music_bar/parts/music_bar.dart');
     final bottomSheet = _readFile(
-      'lib/pages/tab/music_bar/parts/bottom_sheet_play_queue.dart',
+      'lib/pages/mobile/music_bar/parts/bottom_sheet_play_queue.dart',
     );
 
     expect(_countPattern(musicBar, 'appPlayerHandlerProvider'), 1);
@@ -28,9 +28,9 @@ void main() {
   });
 
   test('list item pages avoid nested player provider reads', () {
-    final albumListItem = _readFile('lib/pages/album/parts/list_item.dart');
+    final albumListItem = _readFile('lib/pages/mobile/album/parts/list_item.dart');
     final playlistBuilder = _readFile(
-      'lib/pages/playlist/parts/playlist_detail_builder.dart',
+      'lib/pages/mobile/playlist/parts/playlist_detail_builder.dart',
     );
 
     expect(_countPattern(albumListItem, 'appPlayerHandlerProvider'), 0);
@@ -43,9 +43,13 @@ void main() {
   });
 
   test('playing page subscription count regression guard', () {
-    final musicControls = _readFile('lib/pages/playing/parts/music_controls.dart');
-    final timerAxis = _readFile('lib/pages/playing/parts/timer_axis.dart');
-    final playerControls = _readFile('lib/pages/playing/parts/player_controls.dart');
+    final musicControls = _readFile(
+      'lib/pages/mobile/playing/parts/music_controls.dart',
+    );
+    final timerAxis = _readFile('lib/pages/mobile/playing/parts/timer_axis.dart');
+    final playerControls = _readFile(
+      'lib/pages/mobile/playing/parts/player_controls.dart',
+    );
 
     expect(_countPattern(musicControls, 'appPlayerHandlerProvider'), 1);
     expect(_countPattern(musicControls, 'provider:\\s*player\\.playlistModeStream'), 1);
