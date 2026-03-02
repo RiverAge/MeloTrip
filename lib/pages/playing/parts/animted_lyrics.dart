@@ -54,7 +54,7 @@ class _PositionedLyricsState extends ConsumerState<_PositionedLyrics> {
   @override
   void initState() {
     super.initState();
-    _setPositionListner();
+    _setPositionListener();
   }
 
   @override
@@ -63,7 +63,7 @@ class _PositionedLyricsState extends ConsumerState<_PositionedLyrics> {
     super.dispose();
   }
 
-  void _setPositionListner() async {
+  void _setPositionListener() async {
     if (_positionStream != null) return;
     final player = await ref.read(appPlayerHandlerProvider.future);
     if (!mounted) return;

@@ -21,7 +21,7 @@ class _RotateCoverState extends ConsumerState<_RotateCover>
   @override
   void initState() {
     super.initState();
-    _setStreamListner();
+    _setStreamListener();
   }
 
   @override
@@ -31,7 +31,7 @@ class _RotateCoverState extends ConsumerState<_RotateCover>
     super.dispose();
   }
 
-  void _setStreamListner() async {
+  void _setStreamListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
     _playingStream = player?.playingStream.listen((playing) {
       if (playing) {

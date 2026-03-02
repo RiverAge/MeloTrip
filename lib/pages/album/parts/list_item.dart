@@ -18,16 +18,7 @@ class _ListItem extends StatelessWidget with SongControl {
       onTap: () {
         final sLocal = song;
         if (sLocal == null) return;
-        final playQueue = player.playQueue;
-        final currentSong =
-            playQueue.index >= playQueue.songs.length
-                ? null
-                : playQueue.songs[playQueue.index];
-        if (currentSong?.id == sLocal.id) {
-          player.playOrPause();
-        } else {
-          player.insertAndPlay(sLocal);
-        }
+        player.playOrToggleFromSongTap(sLocal);
       },
       horizontalTitleGap: 2,
       selected: isCurrentPlaying,

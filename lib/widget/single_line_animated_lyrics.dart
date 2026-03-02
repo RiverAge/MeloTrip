@@ -29,7 +29,7 @@ class _SingleLineAnimatedLyrics
   @override
   void initState() {
     super.initState();
-    _setPositionListner();
+    _setPositionListener();
   }
 
   @override
@@ -38,7 +38,7 @@ class _SingleLineAnimatedLyrics
     super.dispose();
   }
 
-  void _setPositionListner() async {
+  void _setPositionListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
     if (!mounted) return;
     _positionStream = player?.positionStream.listen((position) {

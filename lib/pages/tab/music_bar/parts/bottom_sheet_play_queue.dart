@@ -92,11 +92,11 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _setPositionListner();
+      _setPositionListener();
     });
   }
 
-  void _setPositionListner() {
+  void _setPositionListener() {
     final index = widget.playQueue.index;
     if (!_scrollController.hasClients ||
         _scrollController.position.maxScrollExtent < 23) {

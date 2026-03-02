@@ -64,16 +64,7 @@ class _SongTileV2 extends ConsumerWidget with SongControl {
               ),
             ),
             onTap: () async {
-              final playQueue = player.playQueue;
-              final currentSong =
-                  playQueue.index >= playQueue.songs.length
-                      ? null
-                      : playQueue.songs[playQueue.index];
-              if (currentSong?.id == song.id) {
-                await player.playOrPause();
-              } else {
-                await player.insertAndPlay(song);
-              }
+              await player.playOrToggleFromSongTap(song);
             },
           ),
         );

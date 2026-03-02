@@ -6,14 +6,14 @@ extension PlayerQueue on AppPlayer {
     String? initialId,
   }) {
     return _runSerialized(() async {
-      final filterdSongs = songs
+      final filteredSongs = songs
           .where((e) => e.id != '' && e.id != null)
           .toList();
-      final initialIndex = filterdSongs.indexWhere((e) => e.id == initialId);
+      final initialIndex = filteredSongs.indexWhere((e) => e.id == initialId);
       final effectiveMediaResolver = _mediaResolver;
       if (effectiveMediaResolver != null) {
         final playable = await Future.wait(
-          filterdSongs.map((e) => effectiveMediaResolver(e)).toList(),
+          filteredSongs.map((e) => effectiveMediaResolver(e)).toList(),
         );
         final effectiveInitialIndex = initialIndex == -1 ? 0 : initialIndex;
         await _player.open(

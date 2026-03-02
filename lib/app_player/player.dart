@@ -18,7 +18,7 @@ part 'parts/controls.dart';
 
 class AppPlayer extends BaseAudioHandler {
   final _player = Player();
-  final BehaviorSubject<Duration> _postionSubject = BehaviorSubject<Duration>();
+  final BehaviorSubject<Duration> _positionSubject = BehaviorSubject<Duration>();
   final _durationSubject = BehaviorSubject<Duration>();
   final _bufferedPositionSubject = BehaviorSubject<Duration>();
   final _shuffleSubject = BehaviorSubject<bool>();
@@ -33,10 +33,10 @@ class AppPlayer extends BaseAudioHandler {
   StreamSubscription<void>? _becomingNoisyEventSubscription;
   StreamSubscription<AudioInterruptionEvent>? _interruptionEventSubscription;
 
-  AppPlayer._interal() {
+  AppPlayer._internal() {
     _init();
   }
-  static final AppPlayer _instance = AppPlayer._interal();
+  static final AppPlayer _instance = AppPlayer._internal();
 
   factory AppPlayer() {
     return _instance;
@@ -54,7 +54,7 @@ class AppPlayer extends BaseAudioHandler {
       _positionSubscription = null;
     } else {
       _positionSubscription ??= _player.stream.position.listen(
-        _postionSubject.add,
+        _positionSubject.add,
       );
     }
   }
@@ -127,7 +127,7 @@ class AppPlayer extends BaseAudioHandler {
   }
 
   void dispose() {
-    _postionSubject.close();
+    _positionSubject.close();
     _durationSubject.close();
     _bufferedPositionSubject.close();
     _playingSubject.close();

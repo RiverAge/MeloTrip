@@ -21,6 +21,18 @@ extension PlayerControls on AppPlayer {
     await _player.playOrPause();
   });
 
+  Future<void> playOrToggleFromSongTap(SongEntity song) async {
+    final playQueue = this.playQueue;
+    final currentSong = playQueue.index >= playQueue.songs.length
+        ? null
+        : playQueue.songs[playQueue.index];
+    if (currentSong?.id == song.id) {
+      await playOrPause();
+    } else {
+      await insertAndPlay(song);
+    }
+  }
+
   Future<void> setVolume(double volume) async => _player.setVolume(volume);
 
   Future<void> addMediaItem(MediaItem? item) async {

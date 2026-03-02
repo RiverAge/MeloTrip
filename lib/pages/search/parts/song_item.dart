@@ -12,16 +12,7 @@ class _SongItem extends StatelessWidget with SongControl {
       return ListTile(
         onTap: () async {
           final navigator = Navigator.of(context);
-          final playQueue = player.playQueue;
-          final currentSong =
-              playQueue.index >= playQueue.songs.length
-                  ? null
-                  : playQueue.songs[playQueue.index];
-          if (currentSong?.id == song.id) {
-            await player.playOrPause();
-          } else {
-            await player.insertAndPlay(song);
-          }
+          await player.playOrToggleFromSongTap(song);
           navigator.pop();
         },
         leading: Container(

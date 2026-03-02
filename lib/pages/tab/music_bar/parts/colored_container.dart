@@ -19,10 +19,10 @@ class _ColoredContainerState extends ConsumerState<_ColoredContainer>
   void initState() {
     super.initState();
 
-    _setStreamListner();
+    _setStreamListener();
   }
 
-  void _setStreamListner() async {
+  void _setStreamListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
     _playingStream = player?.playingStream.listen((playing) {
       if (playing) {

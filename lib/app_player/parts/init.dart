@@ -9,7 +9,7 @@ extension PlayerInit on AppPlayer {
     _player.stream.playlistMode.listen(_playlistModeSubject.add);
     _player.stream.duration.listen(_durationSubject.add);
     // _player.stream.buffer.listen((_) => _updateCurrentMediaItemButton());
-    _positionSubscription = _player.stream.position.listen(_postionSubject.add);
+    _positionSubscription = _player.stream.position.listen(_positionSubject.add);
     _player.stream.buffer.listen((duration) {
       _bufferedPositionSubject.add(duration);
       _updateCurrentMediaItemButton();
