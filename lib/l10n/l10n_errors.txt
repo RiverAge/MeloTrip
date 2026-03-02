@@ -1,9 +1,1 @@
-{
-  "zh": [
-    "updateDownloadingPackage"
-  ],
-
-  "zh_CN": [
-    "updateDownloadingPackage"
-  ]
-}
+{}

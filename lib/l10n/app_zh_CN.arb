@@ -216,7 +216,8 @@
         }
     },
     "otaAndroidOnly": "仅支持 Android 平台 OTA 更新",
-        "updateStageDownloading": "正在下载更新包",
+    "updateDownloadingPackage": "正在下载更新包...",
+    "updateStageDownloading": "正在下载更新包",
     "updateStageVerifying": "正在校验安装包",
     "updateStageOpeningInstaller": "正在打开安装器",
     "updateProgressLine": "{downloaded} / {total} ({percent}%)",

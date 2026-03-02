@@ -360,7 +360,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
 
   @override
-  String get updateDownloadingPackage => 'Downloading update package...';
+  String get updateDownloadingPackage => '正在下载更新包...';
 
   @override
   String get updateStageDownloading => '正在下载更新包';
@@ -761,6 +761,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
+
+  @override
+  String get updateDownloadingPackage => '正在下载更新包...';
 
   @override
   String get updateStageDownloading => '正在下载更新包';
