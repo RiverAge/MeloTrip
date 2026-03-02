@@ -6,8 +6,9 @@ extension PlayerQueue on AppPlayer {
     String? initialId,
   }) {
     return _runSerialized(() async {
-      final filterdSongs =
-          songs.where((e) => e.id != '' && e.id != null).toList();
+      final filterdSongs = songs
+          .where((e) => e.id != '' && e.id != null)
+          .toList();
       final initialIndex = filterdSongs.indexWhere((e) => e.id == initialId);
       final effectiveMediaResolver = _mediaResolver;
       if (effectiveMediaResolver != null) {
@@ -24,6 +25,10 @@ extension PlayerQueue on AppPlayer {
   }
 
   Future<int> _insertToNextInternal(SongEntity song) async {
+    final index = playQueue.songs.indexWhere((e) => e.id == song.id);
+    if (index != -1) {
+      return index;
+    }
     final dstIndex = playQueue.songs.isEmpty ? 0 : playQueue.index + 1;
     final effectiveMediaResolver = _mediaResolver;
     if (effectiveMediaResolver != null) {

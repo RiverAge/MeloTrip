@@ -45,7 +45,8 @@ class _BottomSheetPlayQueue extends StatelessWidget {
                               onPressed: () {
                                 player.setPlaylist(
                                   songs: playQueue.songs,
-                                  initialId: playQueue.songs[playQueue.index].id,
+                                  initialId:
+                                      playQueue.songs[playQueue.index].id,
                                 );
                               },
                             ),
@@ -95,11 +96,15 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
     });
   }
 
-  void _setPositionListner() async {
+  void _setPositionListner() {
     final index = widget.playQueue.index;
-    if (!_scrollController.hasClients) return;
+    if (!_scrollController.hasClients ||
+        _scrollController.position.maxScrollExtent < 23) {
+      return;
+    }
 
     double targetOffset = index * (72.0 + 0.0);
+
     // 2. 核心：取 理论值 和 最大可滚动范围 之间的最小值
     // 确保 targetOffset 不会超过 maxScrollExtent
     double finalOffset = targetOffset.clamp(

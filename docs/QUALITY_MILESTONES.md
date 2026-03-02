@@ -45,3 +45,7 @@ Scope: Reduce paper cuts and increase confidence.
 2. Existing user databases may still contain the old `smart_suggestion` table.
 3. AI chat feature has been removed (code and UI).
 4. AI-related localization keys have been removed from ARB source files.
+5. `media_kit` upstream issue tracking:
+   - Symptom: after `play -> pause -> jump(n)`, playback may auto-resume and briefly blip previous track.
+   - Decision (2026-03-02): do not add local workaround for now.
+   - Follow-up trigger: re-test immediately when a new `media_kit` version lands and update status.

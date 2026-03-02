@@ -62,7 +62,16 @@ class _PlaylistDetailBuilder extends StatelessWidget with SongControl {
         return ListTile(
           onTap: () {
             if (song == null) return;
-            player.insertAndPlay(song);
+            final playQueue = player.playQueue;
+            final currentSong =
+                playQueue.index >= playQueue.songs.length
+                    ? null
+                    : playQueue.songs[playQueue.index];
+            if (currentSong?.id == song.id) {
+              player.playOrPause();
+            } else {
+              player.insertAndPlay(song);
+            }
           },
           horizontalTitleGap: 2,
           selected: isCurrentPlaying,
