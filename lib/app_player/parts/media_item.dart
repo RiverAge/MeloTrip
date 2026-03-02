@@ -1,6 +1,10 @@
 part of '../player.dart';
 
 extension PlayerMediaItem on AppPlayer {
+  void _syncMediaItem(PlayQueue playQueue) {
+    mediaItem.add(buildMediaItemFromPlayQueue(playQueue: playQueue));
+  }
+
   void _updateCurrentMediaItemButton({Duration? position}) {
     return playbackState.add(
       playbackState.value.copyWith(
@@ -28,4 +32,29 @@ extension PlayerMediaItem on AppPlayer {
       ),
     );
   }
+}
+
+MediaItem buildMediaItemFromPlayQueue({
+  required PlayQueue playQueue,
+}) {
+  if (playQueue.index < 0 || playQueue.index >= playQueue.songs.length) {
+    return const MediaItem(
+      id: '-1',
+      album: 'MeloTrip',
+      title: 'MeloTrip',
+      artist: 'MeloTrip',
+      duration: Duration.zero,
+      playable: false,
+    );
+  }
+
+  final song = playQueue.songs[playQueue.index];
+  final durationValue = song.duration;
+  return MediaItem(
+    id: song.id ?? '-1',
+    album: song.album,
+    title: song.title ?? '',
+    artist: song.artist,
+    duration: durationValue != null ? Duration(seconds: durationValue) : Duration.zero,
+  );
 }

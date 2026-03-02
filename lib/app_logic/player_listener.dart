@@ -83,7 +83,7 @@ extension _PlayerListenerLogic on _MyAppState {
             _lastSongDuration = currentSong.duration?.toDouble();
             _activeDuration = Duration.zero;
             _nowPlayingTimer?.cancel();
-            _updateMediaItem(player);
+            _savePlayQueue(player, api);
           }
 
           // 更新状态，供下一段计时使用
@@ -118,44 +118,14 @@ extension _PlayerListenerLogic on _MyAppState {
     );
   }
 
-  Future<void> _updateMediaItem(AppPlayer player) async {
+  void _savePlayQueue(AppPlayer player, dynamic api) {
     final playQueue = player.playQueue;
-    final noTitle = AppLocalizations.of(context)?.noTitle;
-    final api = await ref.read(apiProvider.future);
-
     if (playQueue.index >= playQueue.songs.length) {
-      const item = MediaItem(
-        id: '-1',
-        album: 'MeloTrip',
-        title: 'MeloTrip',
-        artist: 'MeloTrip',
-        duration: Duration.zero,
-        playable: false,
-      );
-      player.addMediaItem(item);
       api.get('/rest/savePlayQueue');
       return;
     }
-
-    final auth = await ref.read(currentUserProvider.future);
-    final song = playQueue.songs[playQueue.index];
-    final url =
-        '$proxyCacheHost/rest/getCoverArt?id=${song.id}&u=${auth?.username}&t=${auth?.token}&s=${auth?.salt}&_=${DateTime.now().toIso8601String()}&f=json&v=1.8.0&c=MeloTrip';
-
-    final durationValue = song.duration;
-    final item = MediaItem(
-      id: song.id ?? '-1',
-      album: song.album,
-      title: song.title ?? noTitle ?? '',
-      artist: song.artist,
-      duration: durationValue != null
-          ? Duration(seconds: durationValue)
-          : Duration.zero,
-      artUri: .parse(url),
-    );
-
-    player.addMediaItem(item);
+    final currentSong = playQueue.songs[playQueue.index];
     final ids = playQueue.songs.map((e) => 'id=${e.id}').join('&');
-    api.get('/rest/savePlayQueue?$ids&current=${item.id}');
+    api.get('/rest/savePlayQueue?$ids&current=${currentSong.id}');
   }
 }
