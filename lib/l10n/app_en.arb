@@ -218,6 +218,10 @@
    "@rencentPlayed": {
       "description": "Recently Played songs of user"
    },
+   "mostPlayed": "Most Played",
+   "@mostPlayed": {
+      "description": "Most played albums section title"
+   },
 
    "recommendedToday": "Recommended Today",
    "@recommendedToday": {

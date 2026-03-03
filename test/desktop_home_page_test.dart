@@ -75,6 +75,7 @@ Future<void> _pumpDesktopHome(
   required SubsonicResponse random,
   required SubsonicResponse recent,
   required SubsonicResponse newest,
+  required SubsonicResponse frequent,
   required SubsonicResponse detail,
 }) async {
   tester.view.devicePixelRatio = 1;
@@ -92,6 +93,7 @@ Future<void> _pumpDesktopHome(
         albumsProvider(.random).overrideWith((_) async => random),
         albumsProvider(.recent).overrideWith((_) async => recent),
         albumsProvider(.newest).overrideWith((_) async => newest),
+        albumsProvider(.frequent).overrideWith((_) async => frequent),
         albumDetailProvider('album-1').overrideWith((_) async => detail),
       ],
       child: MaterialApp(
@@ -141,6 +143,7 @@ void main() {
       random: _albumListResponse([randomAlbum]),
       recent: _albumListResponse(recentAlbums),
       newest: _albumListResponse(newestAlbums),
+      frequent: _albumListResponse(newestAlbums),
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -182,6 +185,7 @@ void main() {
       random: _albumListResponse([randomAlbum]),
       recent: _albumListResponse(recentAlbums),
       newest: _albumListResponse([randomAlbum]),
+      frequent: _albumListResponse([randomAlbum]),
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -204,6 +208,7 @@ void main() {
       random: _albumListResponse(const []),
       recent: _albumListResponse(const []),
       newest: _albumListResponse(const []),
+      frequent: _albumListResponse(const []),
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Empty Detail',
@@ -240,6 +245,7 @@ void main() {
       random: _albumListResponse([randomAlbum]),
       recent: _albumListResponse(recentAlbums),
       newest: _albumListResponse([randomAlbum]),
+      frequent: _albumListResponse([randomAlbum]),
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',

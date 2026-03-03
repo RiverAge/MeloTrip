@@ -103,12 +103,6 @@ class _DesktopSidebar extends ConsumerWidget {
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 8),
-                      Icon(
-                        Icons.list_rounded,
-                        size: 16,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
                     ],
                   ),
                   children: [

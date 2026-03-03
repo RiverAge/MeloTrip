@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,16 +27,28 @@ class DesktopHomePage extends ConsumerWidget {
     return CustomScrollView(
       slivers: [
         const SliverPadding(
-          padding: EdgeInsets.fromLTRB(25, 20, 25, 15),
+          padding: EdgeInsets.fromLTRB(25, 20, 25, 30),
           sliver: SliverToBoxAdapter(child: _DesktopHero()),
         ),
         const SliverPadding(
-          padding: EdgeInsets.fromLTRB(25, 0, 25, 20),
+          padding: EdgeInsets.fromLTRB(25, 0, 25, 30),
           sliver: SliverToBoxAdapter(child: _DesktopGenreSection()),
         ),
-        _DesktopAlbumSection(title: l10n.rencentPlayed, type: .recent),
-        _DesktopAlbumSection(title: l10n.recentAdded, type: .newest),
-        _DesktopAlbumSection(title: l10n.randomAlbum, type: .random),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
+          sliver: _DesktopAlbumSection(
+            title: l10n.rencentPlayed,
+            type: .recent,
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
+          sliver: _DesktopAlbumSection(title: l10n.recentAdded, type: .newest),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
+          sliver: _DesktopAlbumSection(title: l10n.mostPlayed, type: .frequent),
+        ),
         const SliverToBoxAdapter(child: SizedBox(height: 120)),
       ],
     );

@@ -26,14 +26,6 @@ class _SectionHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          if (onViewAll != null) ...[
-            const SizedBox(width: 8),
-            Icon(
-              Icons.refresh_rounded,
-              size: 14,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .5),
-            ),
-          ],
           const Spacer(),
           if (onViewAll != null)
             TextButton(

@@ -152,6 +152,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rencentPlayed => 'Recently Played';
 
   @override
+  String get mostPlayed => 'Most Played';
+
+  @override
   String get recommendedToday => 'Recommended Today';
 
   @override

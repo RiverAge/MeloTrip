@@ -381,6 +381,12 @@ abstract class AppLocalizations {
   /// **'Recently Played'**
   String get rencentPlayed;
 
+  /// Most played albums section title
+  ///
+  /// In en, this message translates to:
+  /// **'Most Played'**
+  String get mostPlayed;
+
   /// Title of recommended songs for today
   ///
   /// In en, this message translates to:

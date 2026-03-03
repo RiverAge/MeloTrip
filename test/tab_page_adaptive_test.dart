@@ -25,8 +25,10 @@ void main() {
       ProviderScope(
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
+          albumsProvider(.random).overrideWith((_) async => null),
           albumsProvider(.newest).overrideWith((_) async => null),
           albumsProvider(.recent).overrideWith((_) async => null),
+          albumsProvider(.frequent).overrideWith((_) async => null),
           playlistsProvider.overrideWith(FakePlaylists.new),
         ],
         child: MaterialApp(

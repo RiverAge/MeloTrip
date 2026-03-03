@@ -152,6 +152,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rencentPlayed => '近期播放';
 
   @override
+  String get mostPlayed => '播放最多';
+
+  @override
   String get recommendedToday => '今日推荐';
 
   @override
@@ -583,6 +586,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get rencentPlayed => '近期播放';
+
+  @override
+  String get mostPlayed => '播放最多';
 
   @override
   String get recommendedToday => '今日推荐';

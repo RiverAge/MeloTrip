@@ -213,40 +213,51 @@ class _DesktopPlayerBar extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 320),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            // Top Row: Rating
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: List.generate(
-                                5,
-                                (index) => Icon(
-                                  Icons.star_outline_rounded,
-                                  size: 14,
-                                  color: iconMutedColor,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            // Bottom Row: Favorite + Volume
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final compact = constraints.maxWidth < 220;
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  iconSize: 20,
-                                  tooltip: l10n.favorite,
-                                  icon: Icon(
-                                    Icons.favorite_border_rounded,
-                                    color: iconMutedColor,
+                                if (!compact) ...[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: List.generate(
+                                      5,
+                                      (index) => Icon(
+                                        Icons.star_outline_rounded,
+                                        size: 14,
+                                        color: iconMutedColor,
+                                      ),
+                                    ),
                                   ),
+                                  const SizedBox(height: 8),
+                                ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      iconSize: 20,
+                                      visualDensity: .compact,
+                                      constraints: const BoxConstraints.tightFor(
+                                        width: 34,
+                                        height: 34,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      tooltip: l10n.favorite,
+                                      icon: Icon(
+                                        Icons.favorite_border_rounded,
+                                        color: iconMutedColor,
+                                      ),
+                                    ),
+                                    _DesktopVolumeBar(compact: compact),
+                                  ],
                                 ),
-                                const _DesktopVolumeBar(),
                               ],
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -277,17 +288,14 @@ class _PlayerBarArtworkState extends State<_PlayerBarArtwork> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: widget.onTap,
-        child: Hero(
-          tag: 'player_cover',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: ArtworkImage(
-              id: widget.id,
-              width: 46,
-              height: 46,
-              size: 200,
-              fit: BoxFit.cover,
-            ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: ArtworkImage(
+            id: widget.id,
+            width: 46,
+            height: 46,
+            size: 200,
+            fit: BoxFit.cover,
           ),
         ),
       ),

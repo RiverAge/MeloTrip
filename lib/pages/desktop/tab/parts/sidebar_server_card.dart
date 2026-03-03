@@ -7,6 +7,10 @@ class _SidebarServerCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final scanStatus = ref.watch(scanStatusProvider);
+    final isOnline =
+        scanStatus.asData?.value?.subsonicResponse?.status == 'ok';
+    final statusText = isOnline ? l10n.serverOnline : l10n.serverOffline;
     return AsyncValueBuilder(
       provider: currentUserProvider,
       loading: (_, _) => const SizedBox.shrink(),
@@ -44,7 +48,7 @@ class _SidebarServerCard extends ConsumerWidget {
                       style: const TextStyle(fontWeight: .w700, fontSize: 13),
                     ),
                     Text(
-                      '${user.username ?? '-'} · ${l10n.serverStatus}',
+                      '${user.username ?? '-'} · $statusText',
                       maxLines: 1,
                       overflow: .ellipsis,
                       style: TextStyle(

@@ -1,7 +1,9 @@
 part of '../tab_page.dart';
 
 class _DesktopVolumeBar extends ConsumerWidget {
-  const _DesktopVolumeBar();
+  const _DesktopVolumeBar({this.compact = false});
+
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,10 +27,10 @@ class _DesktopVolumeBar extends ConsumerWidget {
                   volume < 0.1
                       ? Icons.volume_off_rounded
                       : Icons.volume_up_rounded,
-                  size: 16,
+                  size: compact ? 14 : 16,
                 ),
                 SizedBox(
-                  width: 120,
+                  width: compact ? 86 : 120,
                   child: SliderTheme(
                     data: SliderThemeData(
                       trackHeight: 2,

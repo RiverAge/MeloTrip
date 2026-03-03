@@ -1,6 +1,6 @@
 part of '../tab_page.dart';
 
-class _NavTile extends StatelessWidget {
+class _NavTile extends StatefulWidget {
   const _NavTile({
     required this.title,
     required this.icon,
@@ -14,29 +14,50 @@ class _NavTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_NavTile> createState() => _NavTileState();
+}
+
+class _NavTileState extends State<_NavTile> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final activeColor = colorScheme.primary.withValues(alpha: .2);
+    final hoverColor = colorScheme.primary.withValues(alpha: .1);
+    final hoverBorder = colorScheme.outlineVariant.withValues(alpha: .45);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
-      child: Tooltip(
-        message: title,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.onTap,
           borderRadius: BorderRadius.circular(8),
-          child: Ink(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 140),
+            curve: Curves.easeOutCubic,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: selected
+              color: widget.selected
                   ? activeColor
+                  : _hovered
+                  ? hoverColor
                   : colorScheme.surface.withValues(alpha: 0),
               borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: widget.selected || _hovered
+                    ? hoverBorder
+                    : Colors.transparent,
+              ),
             ),
             child: Row(
               children: [
-                Icon(icon, size: 18),
+                Icon(widget.icon, size: 18),
                 const SizedBox(width: 10),
-                Text(title),
+                Text(widget.title),
               ],
             ),
           ),

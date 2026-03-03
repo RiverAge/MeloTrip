@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'albums.g.dart';
 
-enum AlumsType { random, newest, recent }
+enum AlumsType { random, newest, recent, frequent }
 
 @riverpod
 Future<SubsonicResponse?> albums(Ref ref, AlumsType type) async {
