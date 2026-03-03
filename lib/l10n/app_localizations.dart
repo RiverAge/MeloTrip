@@ -507,6 +507,12 @@ abstract class AppLocalizations {
   /// **'My Favorites'**
   String get myFavorites;
 
+  /// Tooltip and hint for desktop features not implemented yet
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get featureComingSoon;
+
   /// play queue
   ///
   /// In en, this message translates to:

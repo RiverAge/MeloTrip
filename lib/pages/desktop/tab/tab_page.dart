@@ -6,13 +6,13 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/home/home_page.dart';
+import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/search/search_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
-import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
@@ -27,6 +27,9 @@ part 'parts/nav_tile.dart';
 part 'parts/playlist_tile.dart';
 part 'parts/sidebar_server_card.dart';
 part 'parts/player_bar.dart';
+part 'parts/player_bar_left.dart';
+part 'parts/player_bar_center.dart';
+part 'parts/player_bar_actions.dart';
 part 'parts/progress_bar.dart';
 part 'parts/volume_bar.dart';
 part 'parts/queue_sheet.dart';
@@ -38,63 +41,13 @@ class DesktopTabPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DesktopTabPageState();
 }
 
-class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
-    with RouteAware {
+class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
   static const _desktopBreakpoint = 1280.0;
 
   int _desktopIndex = 0;
-  bool _visible = true;
   bool _showFullPlayer = false; // 控制详情页显示的局部状态
-  RouteObserver<PageRoute<dynamic>>? _routeObserver;
-  final GlobalKey<NavigatorState> contentNavigatorKey = GlobalKey<NavigatorState>();
-  PageRoute<dynamic>? _subscribedRoute;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final route = ModalRoute.of(context);
-    final pageRoute = route is PageRoute<dynamic> ? route : null;
-    if (pageRoute == null) return;
-
-    final observer = ref.read(routeObserverProvider);
-    final shouldResubscribe =
-        _routeObserver != observer || _subscribedRoute != pageRoute;
-
-    if (shouldResubscribe) {
-      if (_routeObserver != null && _subscribedRoute != null) {
-        _routeObserver?.unsubscribe(this);
-      }
-      _routeObserver = observer;
-      _subscribedRoute = pageRoute;
-      _routeObserver?.subscribe(this, pageRoute);
-    }
-  }
-
-  @override
-  void didPushNext() {
-    if (_visible) {
-      setState(() {
-        _visible = false;
-      });
-    }
-  }
-
-  @override
-  void didPopNext() {
-    if (!_visible) {
-      setState(() {
-        _visible = true;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    if (_routeObserver != null && _subscribedRoute != null) {
-      _routeObserver?.unsubscribe(this);
-    }
-    super.dispose();
-  }
+  final GlobalKey<NavigatorState> contentNavigatorKey =
+      GlobalKey<NavigatorState>();
 
   void _setDesktopTab(int index) {
     if (_desktopIndex == index) {
@@ -176,10 +129,12 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
+                              begin: .topCenter,
+                              end: .bottomCenter,
                               colors: [
-                                Theme.of(context).colorScheme.surfaceContainerHigh,
+                                Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHigh,
                                 Theme.of(context).colorScheme.surface,
                               ],
                             ),
@@ -200,10 +155,24 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
                                   page = const DesktopHomePage();
                               }
                               return PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => page,
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return FadeTransition(opacity: animation, child: child);
-                                },
+                                pageBuilder:
+                                    (
+                                      context,
+                                      animation,
+                                      secondaryAnimation,
+                                    ) => page,
+                                transitionsBuilder:
+                                    (
+                                      context,
+                                      animation,
+                                      secondaryAnimation,
+                                      child,
+                                    ) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      );
+                                    },
                                 settings: settings,
                               );
                             },
@@ -216,16 +185,17 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
                   if (_showFullPlayer)
                     Positioned.fill(
                       child: DesktopFullPlayerPage(
-                        onDismiss: () => setState(() => _showFullPlayer = false),
+                        onDismiss: () =>
+                            setState(() => _showFullPlayer = false),
                       ),
                     ),
                 ],
               ),
             ),
-            if (_visible)
-              _DesktopPlayerBar(
-                onToggleFullPlayer: () => setState(() => _showFullPlayer = !_showFullPlayer),
-              ),
+            _DesktopPlayerBar(
+              onToggleFullPlayer: () =>
+                  setState(() => _showFullPlayer = !_showFullPlayer),
+            ),
           ],
         ),
       ),

@@ -3,6 +3,11 @@ part of '../home_page.dart';
 class _DesktopAlbumSection extends ConsumerWidget {
   const _DesktopAlbumSection({required this.title, required this.type});
 
+  static const _cardWidth = 160.0;
+  static const _cardGap = 18.0;
+  static const _metaBlockHeight = 52.0;
+  static const _cardHeight = _cardWidth + _metaBlockHeight;
+
   final String title;
   final AlumsType type;
 
@@ -10,11 +15,11 @@ class _DesktopAlbumSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverToBoxAdapter(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _SectionHeader(title: title, onViewAll: () {}),
           SizedBox(
-            height: 212,
+            height: _cardHeight,
             child: AsyncValueBuilder(
               provider: albumsProvider(type),
               loading: (_, _) => const Center(
@@ -29,9 +34,9 @@ class _DesktopAlbumSection extends ConsumerWidget {
                   itemCount: albums.length,
                   itemBuilder: (_, index) {
                     return Padding(
-                      padding: const EdgeInsets.only(right: 18),
+                      padding: const EdgeInsets.only(right: _cardGap),
                       child: SizedBox(
-                        width: 160,
+                        width: _cardWidth,
                         child: _DesktopAlbumCard(album: albums[index]),
                       ),
                     );

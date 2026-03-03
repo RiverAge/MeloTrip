@@ -1,3 +1,5 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -262,5 +264,126 @@ void main() {
 
     expect(find.byType(DesktopAlbumDetailPage), findsOneWidget);
     expect(find.text('Song 1'), findsOneWidget);
+  });
+
+  testWidgets('DesktopHomePage genre tiles use click cursor on hover area', (
+    tester,
+  ) async {
+    final randomAlbum = _album(
+      id: 'album-1',
+      name: 'Hero Album',
+      artist: 'Hero Artist',
+      genre: 'Hero Genre',
+    );
+    final recentAlbums = List.generate(
+      5,
+      (index) => _album(
+        id: 'genre-$index',
+        name: 'Genre Album $index',
+        artist: 'Genre Artist $index',
+        genre: 'Genre-$index',
+      ),
+    );
+
+    await _pumpDesktopHome(
+      tester,
+      random: _albumListResponse([randomAlbum]),
+      recent: _albumListResponse(recentAlbums),
+      newest: _albumListResponse([randomAlbum]),
+      frequent: _albumListResponse([randomAlbum]),
+      detail: _albumDetailResponse(
+        albumId: 'album-1',
+        albumName: 'Hero Album',
+        artist: 'Hero Artist',
+        songs: [_song(id: 'song-1', title: 'Song 1')],
+      ),
+    );
+
+    final tileMouseRegion = find.ancestor(
+      of: find.text('Genre-0'),
+      matching: find.byType(MouseRegion),
+    );
+    expect(tileMouseRegion, findsWidgets);
+
+    final clickRegions = tester
+        .widgetList<MouseRegion>(tileMouseRegion)
+        .where((it) => it.cursor == SystemMouseCursors.click);
+    expect(clickRegions.isNotEmpty, isTrue);
+  });
+
+  testWidgets('DesktopHomePage section scroll buttons use click cursor', (
+    tester,
+  ) async {
+    final randomAlbum = _album(
+      id: 'album-1',
+      name: 'Hero Album',
+      artist: 'Hero Artist',
+      genre: 'Hero Genre',
+    );
+
+    await _pumpDesktopHome(
+      tester,
+      random: _albumListResponse([randomAlbum]),
+      recent: _albumListResponse([randomAlbum]),
+      newest: _albumListResponse([randomAlbum]),
+      frequent: _albumListResponse([randomAlbum]),
+      detail: _albumDetailResponse(
+        albumId: 'album-1',
+        albumName: 'Hero Album',
+        artist: 'Hero Artist',
+        songs: [_song(id: 'song-1', title: 'Song 1')],
+      ),
+    );
+
+    final backButtonRegion = find.ancestor(
+      of: find.byIcon(Icons.arrow_back_ios_new_rounded).first,
+      matching: find.byType(MouseRegion),
+    );
+    expect(backButtonRegion, findsWidgets);
+    final hasClickCursor = tester
+        .widgetList<MouseRegion>(backButtonRegion)
+        .any((it) => it.cursor == SystemMouseCursors.click);
+    expect(hasClickCursor, isTrue);
+  });
+
+  testWidgets('DesktopHomePage album hover action buttons use click cursor', (
+    tester,
+  ) async {
+    final randomAlbum = _album(
+      id: 'album-1',
+      name: 'Hero Album',
+      artist: 'Hero Artist',
+      genre: 'Hero Genre',
+    );
+
+    await _pumpDesktopHome(
+      tester,
+      random: _albumListResponse([randomAlbum]),
+      recent: _albumListResponse([randomAlbum]),
+      newest: _albumListResponse([randomAlbum]),
+      frequent: _albumListResponse([randomAlbum]),
+      detail: _albumDetailResponse(
+        albumId: 'album-1',
+        albumName: 'Hero Album',
+        artist: 'Hero Artist',
+        songs: [_song(id: 'song-1', title: 'Song 1')],
+      ),
+    );
+
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(mouse.removePointer);
+    await mouse.addPointer();
+    await mouse.moveTo(tester.getCenter(find.text('Hero Album').first));
+    await tester.pumpAndSettle();
+
+    final shuffleActionRegion = find.ancestor(
+      of: find.byIcon(Icons.shuffle_rounded).first,
+      matching: find.byType(MouseRegion),
+    );
+    expect(shuffleActionRegion, findsWidgets);
+    final hasClickCursor = tester
+        .widgetList<MouseRegion>(shuffleActionRegion)
+        .any((it) => it.cursor == SystemMouseCursors.click);
+    expect(hasClickCursor, isTrue);
   });
 }

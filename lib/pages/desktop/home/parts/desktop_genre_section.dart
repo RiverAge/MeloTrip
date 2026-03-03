@@ -25,7 +25,7 @@ class _DesktopGenreSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         _SectionHeader(title: l10n.songMetaGenre),
         AsyncValueBuilder(
@@ -90,58 +90,55 @@ class _GenreTileState extends State<_GenreTile> {
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
-      child: GestureDetector(
-        onTap: () {},
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          decoration: BoxDecoration(
+      child: AnimatedContainer(
+        duration: DesktopMotionTokens.medium,
+        curve: DesktopMotionTokens.standardCurve,
+        decoration: BoxDecoration(
+          color: _isHovering
+              ? colorScheme.surfaceContainerHighest.withValues(alpha: .82)
+              : colorScheme.surfaceContainerHigh.withValues(alpha: .72),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
             color: _isHovering
-                ? colorScheme.surfaceContainerHighest.withValues(alpha: .82)
-                : colorScheme.surfaceContainerHigh.withValues(alpha: .72),
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(
-              color: _isHovering
-                  ? colorScheme.outline.withValues(alpha: .32)
-                  : colorScheme.outlineVariant.withValues(alpha: .2),
-            ),
-            boxShadow: _isHovering
-                ? [
-                    BoxShadow(
-                      color: theme.shadowColor.withValues(alpha: .14),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ]
-                : [],
+                ? colorScheme.outline.withValues(alpha: .32)
+                : colorScheme.outlineVariant.withValues(alpha: .2),
           ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final stripWidth = constraints.maxWidth * .1;
-              return Row(
-                children: [
-                  Container(
-                    width: stripWidth,
-                    color: widget.color.withValues(alpha: .9),
+          boxShadow: _isHovering
+              ? [
+                  BoxShadow(
+                    color: theme.shadowColor.withValues(alpha: .14),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Text(
-                        widget.genre,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                        ),
+                ]
+              : [],
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final stripWidth = constraints.maxWidth * .1;
+            return Row(
+              children: [
+                Container(
+                  width: stripWidth,
+                  color: widget.color.withValues(alpha: .9),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: Text(
+                      widget.genre,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: .w700,
+                        fontSize: 13,
                       ),
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

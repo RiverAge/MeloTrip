@@ -40,7 +40,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
               PlaybackArtworkBackground(
                 artworkId: 'mf-${current.id}',
                 size: 2200,
-                fit: BoxFit.cover,
+                fit: .cover,
               ),
               const PlaybackBlurOverlay(
                 blurSigma: 30,
@@ -85,7 +85,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                     .toDouble();
 
                             return Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: .center,
                               children: [
                                 Expanded(
                                   flex: isNarrow ? 2 : 3,
@@ -105,9 +105,9 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                             ),
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  .center,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                                  .center,
                                               children: [
                                                 Container(
                                                   width: coverSize,
@@ -157,14 +157,14 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                         color:
                                                             colorScheme.onSurface,
                                                         fontWeight:
-                                                            FontWeight.w900,
+                                                            .w900,
                                                         fontSize: isNarrow
                                                             ? 20
                                                             : 28,
                                                       ),
                                                   maxLines: 3,
                                                   overflow:
-                                                      TextOverflow.visible,
+                                                      .visible,
                                                 ),
                                                 const SizedBox(height: 12),
                                                 Text(
@@ -177,14 +177,14 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                         color: colorScheme.onSurface
                                                             .withValues(alpha: .74),
                                                         fontWeight:
-                                                            FontWeight.w500,
+                                                            .w500,
                                                         fontSize: isNarrow
                                                             ? 14
                                                             : 17,
                                                       ),
                                                   maxLines: 3,
                                                   overflow:
-                                                      TextOverflow.visible,
+                                                      .visible,
                                                 ),
                                                 const SizedBox(height: 24),
                                                 const PlaybackMediaMetaBadge(),

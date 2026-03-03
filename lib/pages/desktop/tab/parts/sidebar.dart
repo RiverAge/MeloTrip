@@ -16,14 +16,83 @@ class _DesktopSidebar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    void onUnavailableTap() {
+      final messenger = ScaffoldMessenger.maybeOf(context);
+      messenger?.hideCurrentSnackBar();
+      messenger?.showSnackBar(
+        SnackBar(
+          content: Text(l10n.featureComingSoon),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
+
+    final libraryItems = <_SidebarNavItem>[
+      _SidebarNavItem(
+        index: 0,
+        title: l10n.listenNow,
+        icon: Icons.home_rounded,
+        onTap: () => onSelected(0),
+      ),
+      _SidebarNavItem(
+        index: 2,
+        title: l10n.myFavorites,
+        icon: Icons.favorite_outline_rounded,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+      _SidebarNavItem(
+        index: 3,
+        title: l10n.album,
+        icon: Icons.album_outlined,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+      _SidebarNavItem(
+        index: 4,
+        title: l10n.song,
+        icon: Icons.music_note_outlined,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+      _SidebarNavItem(
+        index: 5,
+        title: l10n.artist,
+        icon: Icons.people_outline_rounded,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+      _SidebarNavItem(
+        index: 6,
+        title: l10n.songMetaGenre,
+        icon: Icons.flag_outlined,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+      _SidebarNavItem(
+        index: 7,
+        title: l10n.songMetaPath,
+        icon: Icons.folder_open_outlined,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+      _SidebarNavItem(
+        index: 8,
+        title: l10n.playlist,
+        icon: Icons.radio_outlined,
+        onTap: onUnavailableTap,
+        tooltip: l10n.featureComingSoon,
+      ),
+    ];
+
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 260),
-      curve: Curves.easeOutCubic,
+      duration: DesktopMotionTokens.slow,
+      curve: DesktopMotionTokens.standardCurve,
       width: compact ? 220 : 260,
       color: theme.colorScheme.surfaceContainer,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _SidebarSearchButton(l10n: l10n),
           const SizedBox(height: 12),
@@ -33,78 +102,21 @@ class _DesktopSidebar extends ConsumerWidget {
               children: [
                 _SidebarSection(
                   title: l10n.library,
-                  showToggle: true,
-                  children: [
-                    _NavTile(
-                      title: l10n.listenNow,
-                      icon: Icons.home_rounded,
-                      selected: currentIndex == 0,
-                      onTap: () => onSelected(0),
-                    ),
-                    _NavTile(
-                      title: l10n.myFavorites,
-                      icon: Icons.favorite_outline_rounded,
-                      selected: currentIndex == 2,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.album,
-                      icon: Icons.album_outlined,
-                      selected: currentIndex == 3,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.song,
-                      icon: Icons.music_note_outlined,
-                      selected: currentIndex == 4,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.artist,
-                      icon: Icons.people_outline_rounded,
-                      selected: currentIndex == 5,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.artist,
-                      icon: Icons.person_outline_rounded,
-                      selected: currentIndex == 6,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.songMetaGenre,
-                      icon: Icons.flag_outlined,
-                      selected: currentIndex == 7,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.songMetaPath,
-                      icon: Icons.folder_open_outlined,
-                      selected: currentIndex == 8,
-                      onTap: () {},
-                    ),
-                    _NavTile(
-                      title: l10n.playlist,
-                      icon: Icons.radio_outlined,
-                      selected: currentIndex == 9,
-                      onTap: () {},
-                    ),
-                  ],
+                  children: libraryItems
+                      .map(
+                        (item) => _NavTile(
+                          title: item.title,
+                          icon: item.icon,
+                          selected: currentIndex == item.index,
+                          onTap: item.onTap,
+                          tooltip: item.tooltip,
+                        ),
+                      )
+                      .toList(),
                 ),
                 const SizedBox(height: 16),
                 _SidebarSection(
                   title: l10n.myPlaylist,
-                  showToggle: true,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.add_rounded,
-                        size: 16,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ],
-                  ),
                   children: [
                     AsyncValueBuilder(
                       provider: playlistsProvider,
@@ -146,25 +158,37 @@ class _DesktopSidebar extends ConsumerWidget {
   }
 }
 
+class _SidebarNavItem {
+  const _SidebarNavItem({
+    required this.index,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+    this.tooltip,
+  });
+
+  final int index;
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? tooltip;
+}
+
 
 class _SidebarSection extends StatelessWidget {
   const _SidebarSection({
     required this.title,
     required this.children,
-    this.showToggle = false,
-    this.trailing,
   });
 
   final String title;
   final List<Widget> children;
-  final bool showToggle;
-  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -174,22 +198,13 @@ class _SidebarSection extends StatelessWidget {
                 child: Text(
                   title,
                   style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
+                    fontWeight: .w900,
                     color: theme.colorScheme.onSurfaceVariant.withValues(
                       alpha: .7,
                     ),
                   ),
                 ),
               ),
-              ?trailing,
-              if (showToggle) ...[
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  size: 16,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
-                ),
-              ],
             ],
           ),
         ),

@@ -20,10 +20,13 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: DesktopMotionTokens.medium,
     );
     _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+      CurvedAnimation(
+        parent: _controller,
+        curve: DesktopMotionTokens.standardCurve,
+      ),
     );
   }
 
@@ -84,7 +87,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
         },
         borderRadius: BorderRadius.circular(6),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             AspectRatio(
               aspectRatio: 1,
@@ -106,14 +109,14 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
                       borderRadius: BorderRadius.circular(5),
                       child: ArtworkImage(
                         id: widget.album.id,
-                        fit: BoxFit.cover,
+                        fit: .cover,
                         size: 400,
                       ),
                     ),
                   ),
                   AnimatedOpacity(
                     opacity: _isHovering ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 200),
+                    duration: DesktopMotionTokens.medium,
                     child: Container(
                       decoration: BoxDecoration(
                         color: overlayBackground,
@@ -125,7 +128,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
                         child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: .spaceBetween,
                               children: [
                                 IconButton(
                                   onPressed: () {},
@@ -138,7 +141,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
                                         : overlayForeground,
                                     size: 20,
                                   ),
-                                  visualDensity: VisualDensity.compact,
+                                  visualDensity: .compact,
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                 ),
@@ -147,7 +150,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
                             ),
                             const Spacer(),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: .center,
                               children: [
                                 _ActionCircle(
                                   onPressed: () {},
@@ -176,7 +179,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
                             ),
                             const Spacer(),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: .spaceBetween,
                               children: [
                                 Icon(
                                   Icons.expand_more_rounded,
@@ -202,9 +205,9 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
             Text(
               widget.album.name ?? '-',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: .w700,
                 fontSize: 14,
               ),
             ),
@@ -212,7 +215,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
             Text(
               widget.album.artist ?? '-',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .6),
                 fontSize: 12,
@@ -233,7 +236,7 @@ class _RatingStars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: List.generate(5, (index) {
         return Icon(
           index < (rating / 2).ceil() ? Icons.star_rounded : Icons.star_border_rounded,
@@ -266,15 +269,18 @@ class _ActionCircle extends StatelessWidget {
       color: background,
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onPressed,
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: Icon(
-            icon,
-            size: size * 0.6,
-            color: foreground,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: InkWell(
+          onTap: onPressed,
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Icon(
+              icon,
+              size: size * 0.6,
+              color: foreground,
+            ),
           ),
         ),
       ),

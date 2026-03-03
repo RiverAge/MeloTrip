@@ -215,6 +215,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get myFavorites => '我的收藏';
 
   @override
+  String get featureComingSoon => '即将支持';
+
+  @override
   String get playQueue => '播放队列';
 
   @override
@@ -649,6 +652,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get myFavorites => '我的收藏';
+
+  @override
+  String get featureComingSoon => '即将支持';
 
   @override
   String get playQueue => '播放队列';

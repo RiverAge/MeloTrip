@@ -53,7 +53,7 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: .end,
                             crossAxisAlignment: .start,
                             children: [
                               Text(

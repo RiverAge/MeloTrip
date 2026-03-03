@@ -309,6 +309,10 @@
   "@myFavorites": {
     "description": "My Favorite songs, artists or albums"
   },
+  "featureComingSoon": "Coming soon",
+  "@featureComingSoon": {
+    "description": "Tooltip and hint for desktop features not implemented yet"
+  },
 
   "playQueue": "Play Queue",
   "@playQueue": {

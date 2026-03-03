@@ -215,6 +215,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myFavorites => 'My Favorites';
 
   @override
+  String get featureComingSoon => 'Coming soon';
+
+  @override
   String get playQueue => 'Play Queue';
 
   @override

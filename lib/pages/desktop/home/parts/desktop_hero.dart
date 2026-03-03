@@ -42,7 +42,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                   children: [
                     Opacity(
                       opacity: 0.6,
-                      child: ArtworkImage(id: album.id, fit: BoxFit.cover, size: 800),
+                      child: ArtworkImage(id: album.id, fit: .cover, size: 800),
                     ),
                     BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
@@ -52,8 +52,8 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [strongOverlay, weakOverlay],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.topRight,
+                          begin: .bottomLeft,
+                          end: .topRight,
                         ),
                       ),
                     ),
@@ -82,15 +82,15 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                           const SizedBox(width: 40),
                           Expanded(
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: .center,
+                              crossAxisAlignment: .start,
                               children: [
                                 Text(
                                   album.name ?? '-',
                                   maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                  overflow: .ellipsis,
                                   style: theme.textTheme.displaySmall?.copyWith(
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: .w900,
                                     color: textColor,
                                     letterSpacing: -1.2,
                                   ),
@@ -100,7 +100,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                                   album.artist ?? '-',
                                   style: theme.textTheme.headlineSmall?.copyWith(
                                     color: textColor.withValues(alpha: .9),
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: .w600,
                                   ),
                                 ),
                                 const SizedBox(height: 6),

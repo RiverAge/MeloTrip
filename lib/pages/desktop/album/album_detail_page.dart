@@ -100,14 +100,14 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
         duration: const Duration(milliseconds: 200),
         child: Text(
           widget.album.name ?? '',
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: .bold),
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
           children: [
-            ArtworkImage(id: widget.album.id, fit: BoxFit.cover, size: 800),
+            ArtworkImage(id: widget.album.id, fit: .cover, size: 800),
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
               child: Container(
@@ -117,7 +117,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 80, 40, 40),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: .end,
                 children: [
                   Container(
                     width: 200,
@@ -140,9 +140,9 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                   const SizedBox(width: 40),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .start,
+                      mainAxisAlignment: .end,
+                      mainAxisSize: .min,
                       children: [
                         Text(
                           l10n.album,
@@ -150,7 +150,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                             color: theme.colorScheme.onSurfaceVariant.withValues(
                               alpha: .85,
                             ),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -158,9 +158,9 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                           child: Text(
                             widget.album.name ?? '-',
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                             style: theme.textTheme.displaySmall?.copyWith(
-                              fontWeight: FontWeight.w900,
+                              fontWeight: .w900,
                               letterSpacing: -1.2,
                               fontSize: 36,
                             ),
@@ -172,7 +172,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                         Text(
                           widget.album.artist ?? '-',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: .w600,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -264,7 +264,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
             Row(
               children: [
                 SizedBox(width: 38, child: Icon(Icons.music_note_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
-                Text(l10n.song.toUpperCase(), style: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                Text(l10n.song.toUpperCase(), style: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 11, fontWeight: .bold, letterSpacing: 1)),
                 const Spacer(),
                 Icon(Icons.access_time_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
                 const SizedBox(width: 48),
@@ -302,9 +302,9 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
       padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
       sliver: SliverToBoxAdapter(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
-            Text(l10n.recommendedToday, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900, fontSize: 24)),
+            Text(l10n.recommendedToday, style: theme.textTheme.titleLarge?.copyWith(fontWeight: .w900, fontSize: 24)),
             const SizedBox(height: 16),
             SizedBox(
               height: 240,
@@ -394,9 +394,9 @@ class _TrackListTile extends StatelessWidget {
               child: Text(
                 song.title ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: TextStyle(
-                  fontWeight: FontWeight.w600, 
+                  fontWeight: .w600, 
                   fontSize: 14,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -434,15 +434,15 @@ class _MiniAlbumCard extends StatelessWidget {
       child: SizedBox(
         width: 150,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: ArtworkImage(id: album.id, size: 300, width: 150, height: 150, fit: BoxFit.cover),
+              child: ArtworkImage(id: album.id, size: 300, width: 150, height: 150, fit: .cover),
             ),
             const SizedBox(height: 8),
-            Text(album.name ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
-            Text(album.artist ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            Text(album.name ?? '', maxLines: 1, overflow: .ellipsis, style: TextStyle(fontWeight: .bold, color: theme.colorScheme.onSurface)),
+            Text(album.artist ?? '', maxLines: 1, overflow: .ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             Text('${album.year ?? ""}', style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7))),
           ],
         ),
