@@ -11,10 +11,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final strongOverlay = colorScheme.scrim.withValues(alpha: .5);
-    final weakOverlay = colorScheme.scrim.withValues(alpha: .12);
-    final textColor = colorScheme.onSurface;
+    final textColor = theme.colorScheme.onSurface;
     return AsyncValueBuilder(
       provider: albumsProvider(AlumsType.random),
       loading: (_, _) => const SizedBox(height: 280),
@@ -40,22 +37,12 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Opacity(
-                      opacity: 0.6,
-                      child: ArtworkImage(id: album.id, fit: .cover, size: 800),
+                    PlaybackArtworkBackground(
+                      artworkId: album.id,
+                      size: 1400,
                     ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                      child: Container(color: colorScheme.surface.withValues(alpha: 0)),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [strongOverlay, weakOverlay],
-                          begin: .bottomLeft,
-                          end: .topRight,
-                        ),
-                      ),
+                    const PlaybackBlurOverlay(
+                      surfaceAlpha: .34,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),

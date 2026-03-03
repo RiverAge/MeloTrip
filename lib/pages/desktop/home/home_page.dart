@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
@@ -6,6 +5,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
+import 'package:melo_trip/pages/shared/player/playback_background.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
