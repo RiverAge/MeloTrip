@@ -126,7 +126,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.3),
+                          color: theme.shadowColor.withValues(alpha: 0.3),
                           blurRadius: 40,
                           offset: const Offset(0, 15),
                         ),

@@ -39,6 +39,14 @@ Scope: Reduce paper cuts and increase confidence.
 3. Stop hand-editing l10n generated files; only edit `.arb`.
 4. Add tests for auth, search, and play-queue flows.
 
+## M4 - Desktop Platform Enhancements
+
+Scope: Improve desktop-native experience and parity.
+
+1. Add Windows desktop lyrics overlay (always-on-top, transparent window, optional click-through).
+2. Sync desktop lyrics with current playback progress and structured lyrics timing.
+3. Add settings toggles for desktop lyrics visibility, lock position, and font/opacity.
+
 ## Notes
 
 1. The `smart_suggestion` feature was removed but the placeholder UI remains.

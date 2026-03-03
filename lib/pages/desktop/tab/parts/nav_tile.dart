@@ -15,9 +15,8 @@ class _NavTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = Theme.of(
-      context,
-    ).colorScheme.primary.withValues(alpha: .2);
+    final colorScheme = Theme.of(context).colorScheme;
+    final activeColor = colorScheme.primary.withValues(alpha: .2);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
       child: Tooltip(
@@ -28,7 +27,9 @@ class _NavTile extends StatelessWidget {
           child: Ink(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: selected ? activeColor : Colors.transparent,
+              color: selected
+                  ? activeColor
+                  : colorScheme.surface.withValues(alpha: 0),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

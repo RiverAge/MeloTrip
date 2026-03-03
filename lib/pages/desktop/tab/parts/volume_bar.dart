@@ -9,14 +9,18 @@ class _DesktopVolumeBar extends ConsumerWidget {
       provider: appPlayerHandlerProvider,
       loading: (_, _) => const SizedBox.shrink(),
       empty: (_, _) => const SizedBox.shrink(),
-      builder: (_, player, _) {
+      builder: (_, handler, _) {
+        final player = handler as AppPlayer?;
+        final stream = player?.volumeStream;
+        if (stream == null) return const SizedBox.shrink();
         return AsyncStreamBuilder(
-          provider: player.volumeStream,
+          provider: stream,
           loading: (_) => const SizedBox.shrink(),
-          builder: (_, volume) {
+          builder: (_, volumeValue) {
+            final volume = volumeValue as double? ?? 0.0;
             return Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Spacer(),
                 Icon(
                   volume < 0.1
                       ? Icons.volume_off_rounded
@@ -27,21 +31,23 @@ class _DesktopVolumeBar extends ConsumerWidget {
                   width: 120,
                   child: SliderTheme(
                     data: SliderThemeData(
-                      trackHeight: 3,
+                      trackHeight: 2,
                       activeTrackColor: Theme.of(context).colorScheme.primary,
                       inactiveTrackColor: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withValues(alpha: .22),
+                      ).colorScheme.onSurface.withValues(alpha: .12),
                       overlayShape: SliderComponentShape.noOverlay,
                       thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 5,
+                        enabledThumbRadius: 4,
+                        elevation: 0,
+                        pressedElevation: 0,
                       ),
                     ),
                     child: Slider(
                       value: volume,
                       min: 0,
                       max: 100,
-                      onChanged: player.setVolume,
+                      onChanged: (v) => player?.setVolume(v),
                     ),
                   ),
                 ),

@@ -1,4 +1,5 @@
-part of 'index.dart';
+import 'package:melo_trip/model/response/lyrics/lyrics.dart';
+
 
 int indexOfLyrics({
   required List<Line> sortedLyrics,

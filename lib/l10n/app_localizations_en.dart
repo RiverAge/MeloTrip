@@ -69,6 +69,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pause => 'Pause';
 
   @override
+  String get previousSong => 'Previous';
+
+  @override
+  String get nextSong => 'Next';
+
+  @override
   String get yes => 'Yes';
 
   @override
@@ -407,4 +413,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get encounterUnknownError => 'Encounter Unknown Error';
+
+  @override
+  String get noSongPlaying => 'No song playing';
+
+  @override
+  String get audioChannelStereo => 'STEREO';
+
+  @override
+  String get audioChannelMono => 'MONO';
+
+  @override
+  String audioChannelCount(int count) {
+    return '${count}CH';
+  }
+
+  @override
+  String audioSampleRateKHz(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String audioBitrateKbps(String value) {
+    return '$value kbps';
+  }
 }

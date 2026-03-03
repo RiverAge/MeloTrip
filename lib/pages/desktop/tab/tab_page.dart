@@ -9,20 +9,20 @@ import 'package:melo_trip/pages/desktop/home/home_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/search/search_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
 
 part 'parts/sidebar.dart';
 part 'parts/sidebar_search_button.dart';
 part 'parts/nav_tile.dart';
 part 'parts/playlist_tile.dart';
 part 'parts/sidebar_server_card.dart';
-part 'parts/window_bar.dart';
 part 'parts/player_bar.dart';
 part 'parts/progress_bar.dart';
 part 'parts/volume_bar.dart';
@@ -41,7 +41,9 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
 
   int _desktopIndex = 0;
   bool _visible = true;
+  bool _showFullPlayer = false; // 控制详情页显示的局部状态
   RouteObserver<PageRoute<dynamic>>? _routeObserver;
+  final GlobalKey<NavigatorState> contentNavigatorKey = GlobalKey<NavigatorState>();
   PageRoute<dynamic>? _subscribedRoute;
 
   @override
@@ -92,27 +94,43 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
   }
 
   void _setDesktopTab(int index) {
-    if (_desktopIndex == index) return;
+    if (_desktopIndex == index) {
+      // 如果点击的是当前已选中的 Tab，则尝试将其内部导航退回到首页
+      contentNavigatorKey.currentState?.popUntil((route) => route.isFirst);
+      return;
+    }
     setState(() {
       _desktopIndex = index;
     });
+
+    // 使用局部导航器切换根页面，并清空该 Tab 之前的导航历史
+    final routeName = _getRouteName(index);
+    contentNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+      routeName,
+      (route) => false,
+    );
+  }
+
+  String _getRouteName(int index) {
+    switch (index) {
+      case 0:
+        return '/';
+      case 1:
+        return '/settings';
+      default:
+        return '/';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final desktopTabViews = [
-      const DesktopHomePage(),
-      const DesktopSettingsPage(),
-    ];
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= _desktopBreakpoint;
         return _buildLargeScaffold(
           key: const ValueKey('desktop-layout'),
           l10n: l10n,
-          tabViews: desktopTabViews,
           isDesktop: isDesktop,
           currentIndex: _desktopIndex,
         );
@@ -123,7 +141,6 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
   Widget _buildLargeScaffold({
     required Key key,
     required AppLocalizations l10n,
-    required List<Widget> tabViews,
     required bool isDesktop,
     required int currentIndex,
   }) {
@@ -135,44 +152,77 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
         bottom: false,
         child: Column(
           children: [
-            const _DesktopWindowBar(),
             Expanded(
-              child: Row(
+              child: Stack(
                 children: [
-                  _DesktopSidebar(
-                    currentIndex: currentIndex,
-                    onSelected: _setDesktopTab,
-                    l10n: l10n,
-                    compact: !isDesktop,
-                  ),
-                  VerticalDivider(
-                    width: 1,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withValues(alpha: .35),
-                  ),
-                  Expanded(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Theme.of(context).colorScheme.surfaceContainerHigh,
-                            Theme.of(context).colorScheme.surface,
-                          ],
+                  Row(
+                    children: [
+                      _DesktopSidebar(
+                        currentIndex: currentIndex,
+                        onSelected: _setDesktopTab,
+                        l10n: l10n,
+                        compact: !isDesktop,
+                      ),
+                      VerticalDivider(
+                        width: 1,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outlineVariant.withValues(alpha: .35),
+                      ),
+                      Expanded(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Theme.of(context).colorScheme.surfaceContainerHigh,
+                                Theme.of(context).colorScheme.surface,
+                              ],
+                            ),
+                          ),
+                          child: Navigator(
+                            key: contentNavigatorKey,
+                            initialRoute: '/',
+                            onGenerateRoute: (settings) {
+                              Widget page;
+                              switch (settings.name) {
+                                case '/':
+                                  page = const DesktopHomePage();
+                                  break;
+                                case '/settings':
+                                  page = const DesktopSettingsPage();
+                                  break;
+                                default:
+                                  page = const DesktopHomePage();
+                              }
+                              return PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => page,
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  return FadeTransition(opacity: animation, child: child);
+                                },
+                                settings: settings,
+                              );
+                            },
+                          ),
                         ),
                       ),
-                      child: IndexedStack(
-                        index: currentIndex,
-                        children: tabViews,
+                    ],
+                  ),
+                  // 全量播放器遮挡层
+                  if (_showFullPlayer)
+                    Positioned.fill(
+                      child: DesktopFullPlayerPage(
+                        onDismiss: () => setState(() => _showFullPlayer = false),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
-            if (_visible) const _DesktopPlayerBar(),
+            if (_visible)
+              _DesktopPlayerBar(
+                onToggleFullPlayer: () => setState(() => _showFullPlayer = !_showFullPlayer),
+              ),
           ],
         ),
       ),

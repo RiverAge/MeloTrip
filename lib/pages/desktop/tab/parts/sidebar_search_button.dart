@@ -8,7 +8,7 @@ class _SidebarSearchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
@@ -20,7 +20,7 @@ class _SidebarSearchButton extends StatelessWidget {
         height: 38,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: isDark ? Colors.white.withValues(alpha: .06) : Colors.black.withValues(alpha: .04),
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: .62),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -33,11 +33,13 @@ class _SidebarSearchButton extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                '搜索',
+                l10n.searchHint,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .6),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: .6,
+                  ),
                 ),
               ),
             ),

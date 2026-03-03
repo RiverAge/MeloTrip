@@ -69,6 +69,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pause => '暂停';
 
   @override
+  String get previousSong => '上一首';
+
+  @override
+  String get nextSong => '下一首';
+
+  @override
   String get yes => '是';
 
   @override
@@ -405,6 +411,30 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get encounterUnknownError => '遇到未知错误';
+
+  @override
+  String get noSongPlaying => '当前没有播放歌曲';
+
+  @override
+  String get audioChannelStereo => '立体声';
+
+  @override
+  String get audioChannelMono => '单声道';
+
+  @override
+  String audioChannelCount(int count) {
+    return '$count声道';
+  }
+
+  @override
+  String audioSampleRateKHz(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String audioBitrateKbps(String value) {
+    return '$value kbps';
+  }
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -472,6 +502,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get pause => '暂停';
 
   @override
+  String get previousSong => '上一首';
+
+  @override
+  String get nextSong => '下一首';
+
+  @override
   String get yes => '是';
 
   @override
@@ -808,4 +844,28 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get encounterUnknownError => '遇到未知错误';
+
+  @override
+  String get noSongPlaying => '当前没有播放歌曲';
+
+  @override
+  String get audioChannelStereo => '立体声';
+
+  @override
+  String get audioChannelMono => '单声道';
+
+  @override
+  String audioChannelCount(int count) {
+    return '$count声道';
+  }
+
+  @override
+  String audioSampleRateKHz(String value) {
+    return '$value kHz';
+  }
+
+  @override
+  String audioBitrateKbps(String value) {
+    return '$value kbps';
+  }
 }

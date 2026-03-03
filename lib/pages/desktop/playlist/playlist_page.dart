@@ -17,7 +17,7 @@ class DesktopPlaylistsPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
         title: Text(l10n.myPlaylist),
       ),
       body: AsyncValueBuilder(

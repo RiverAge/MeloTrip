@@ -219,6 +219,18 @@ abstract class AppLocalizations {
   /// **'Pause'**
   String get pause;
 
+  /// Tooltip for previous song button
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previousSong;
+
+  /// Tooltip for next song button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextSong;
+
   /// Text for yes
   ///
   /// In en, this message translates to:
@@ -842,6 +854,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Encounter Unknown Error'**
   String get encounterUnknownError;
+
+  /// Desktop full player text when there is no active track
+  ///
+  /// In en, this message translates to:
+  /// **'No song playing'**
+  String get noSongPlaying;
+
+  /// Audio channel label for stereo output
+  ///
+  /// In en, this message translates to:
+  /// **'STEREO'**
+  String get audioChannelStereo;
+
+  /// Audio channel label for mono output
+  ///
+  /// In en, this message translates to:
+  /// **'MONO'**
+  String get audioChannelMono;
+
+  /// Audio channel label for multi-channel output
+  ///
+  /// In en, this message translates to:
+  /// **'{count}CH'**
+  String audioChannelCount(int count);
+
+  /// Audio sample rate string in kHz
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kHz'**
+  String audioSampleRateKHz(String value);
+
+  /// Audio bitrate string in kbps
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kbps'**
+  String audioBitrateKbps(String value);
 }
 
 class _AppLocalizationsDelegate

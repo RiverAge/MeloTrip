@@ -21,8 +21,10 @@
     "logout": "退出登录",
     "logoutDialogConfirm": "确认退出登录？",
 
-    "play": "播放",
-    "pause": "暂停",
+  "play": "播放",
+  "pause": "暂停",
+  "previousSong": "上一首",
+  "nextSong": "下一首",
 
     "yes": "是",
     "no": "否",
@@ -152,7 +154,37 @@
       }
     },
     "unknownError": "未知错误",
-    "encounterUnknownError": "遇到未知错误"
+    "encounterUnknownError": "遇到未知错误",
+    "noSongPlaying": "当前没有播放歌曲",
+    "audioChannelStereo": "立体声",
+    "audioChannelMono": "单声道",
+    "audioChannelCount": "{count}声道",
+    "@audioChannelCount": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "6"
+            }
+        }
+    },
+    "audioSampleRateKHz": "{value} kHz",
+    "@audioSampleRateKHz": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "44.1"
+            }
+        }
+    },
+    "audioBitrateKbps": "{value} kbps",
+    "@audioBitrateKbps": {
+        "placeholders": {
+            "value": {
+                "type": "String",
+                "example": "320"
+            }
+        }
+    }
 ,
     "checkForUpdates": "检查更新",
     "noUpdateTitle": "无更新",

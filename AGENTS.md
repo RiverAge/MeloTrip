@@ -21,6 +21,15 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - `withValues(alpha: )` is the recommended replacement
 - This applies to all Color objects in the codebase
 
+### Theme Color Rule (must follow)
+
+- UI semantic colors must come from `Theme.of(context).colorScheme` (or `textTheme` derived colors).
+- Do NOT hardcode fixed UI colors such as `Colors.white`, `Colors.black`, `Colors.white54`, `Colors.redAccent`, or `Color(0x...)` for normal widgets.
+- Prefer theme-derived variants with alpha, e.g. `colorScheme.onSurfaceVariant.withValues(alpha: 0.7)`.
+- Allowed exceptions:
+  - Brand assets/colors explicitly required by product design (must be documented inline).
+  - Non-UI/debug/demo-only code not visible to end users.
+
 ### Dart Wildcard Parameters
 
 - When intentionally ignoring parameters, use `_` wildcard names.
@@ -51,6 +60,19 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - Good: `import 'package:melo_trip/provider/auth/auth.dart';`
   - Wrong: `import '../../shared/initial/initial_page.dart';`
   - Wrong: `import 'package:melo_trip/pages/shared/initial/initial_page.dart';` (when in same directory)
+
+### Text Localization Rule (must follow)
+
+- User-facing text must be localized via l10n (`.arb` + `AppLocalizations`).
+- Do NOT hardcode visible copy in Dart widgets/pages (titles, labels, hints, toasts, dialog content, etc.).
+- Exception: technical/internal-only strings not shown to end users (e.g., logs, debug keys, route IDs).
+
+### File Size Rule (must follow)
+
+- Avoid oversized source files; split by feature/section into parts/widgets/services.
+- Preferred threshold: keep Dart files under 300 lines.
+- Hard limit: files above 500 lines must be refactored before merge unless explicitly approved.
+- For large UI pages, extract reusable sections into `parts/` with clear ownership.
 
 ### App Update Versioning (must follow)
 

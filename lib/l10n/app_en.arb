@@ -87,11 +87,19 @@
 
   "play": "Play",
   "@play": {
-     "description": "Button text for play action"
+    "description": "Button text for play action"
   },
   "pause": "Pause",
   "@pause": {
-     "description": "Button text for pause action"
+    "description": "Button text for pause action"
+  },
+  "previousSong": "Previous",
+  "@previousSong": {
+    "description": "Tooltip for previous song button"
+  },
+  "nextSong": "Next",
+  "@nextSong": {
+    "description": "Tooltip for next song button"
   },
 
   "yes": "Yes",
@@ -641,5 +649,47 @@
    "encounterUnknownError": "Encounter Unknown Error",
    "@encounterUnknownError": {
       "description": "Message when an unknown error is encountered during the process"
+   },
+   "noSongPlaying": "No song playing",
+   "@noSongPlaying": {
+      "description": "Desktop full player text when there is no active track"
+   },
+   "audioChannelStereo": "STEREO",
+   "@audioChannelStereo": {
+      "description": "Audio channel label for stereo output"
+   },
+   "audioChannelMono": "MONO",
+   "@audioChannelMono": {
+      "description": "Audio channel label for mono output"
+   },
+   "audioChannelCount": "{count}CH",
+   "@audioChannelCount": {
+      "description": "Audio channel label for multi-channel output",
+      "placeholders": {
+         "count": {
+            "type": "int",
+            "example": "6"
+         }
+      }
+   },
+   "audioSampleRateKHz": "{value} kHz",
+   "@audioSampleRateKHz": {
+      "description": "Audio sample rate string in kHz",
+      "placeholders": {
+         "value": {
+            "type": "String",
+            "example": "44.1"
+         }
+      }
+   },
+   "audioBitrateKbps": "{value} kbps",
+   "@audioBitrateKbps": {
+      "description": "Audio bitrate string in kbps",
+      "placeholders": {
+         "value": {
+            "type": "String",
+            "example": "320"
+         }
+      }
    }
 }

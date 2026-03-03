@@ -21,7 +21,7 @@ class DesktopSettingsPage extends ConsumerWidget {
       slivers: [
         SliverAppBar.large(
           title: Text(l10n.settings),
-          surfaceTintColor: Colors.transparent,
+          surfaceTintColor: theme.colorScheme.surface.withValues(alpha: 0),
         ),
         SliverToBoxAdapter(
           child: Padding(
