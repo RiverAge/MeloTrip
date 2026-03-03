@@ -122,14 +122,38 @@ class _DesktopPlayerBar extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                            iconSize: 20,
-                            tooltip: l10n.shuffleOn,
-                            onPressed: () => player.setShuffleModeEnabled(true),
-                            icon: Icon(
-                              Icons.shuffle_outlined,
-                              color: iconMutedColor,
-                            ),
+                          AsyncStreamBuilder(
+                            provider: player.playlistModeStream,
+                            builder: (_, playlistMode) {
+                              final shuffleDisabled = playlistMode == .single;
+                              return AsyncStreamBuilder(
+                                provider: player.shuffleStream,
+                                builder: (_, shuffleEnabled) {
+                                  final shuffleTooltip = shuffleDisabled
+                                      ? '${l10n.shuffleOff} · ${l10n.playModeSingle}'
+                                      : (shuffleEnabled
+                                          ? l10n.shuffleOn
+                                          : l10n.shuffleOff);
+                                  return IconButton(
+                                    iconSize: 20,
+                                    tooltip: shuffleTooltip,
+                                    onPressed: shuffleDisabled
+                                        ? null
+                                        : () => player.setShuffleModeEnabled(
+                                            !shuffleEnabled,
+                                          ),
+                                    icon: Icon(
+                                      shuffleEnabled
+                                          ? Icons.shuffle_on_rounded
+                                          : Icons.shuffle_rounded,
+                                      color: shuffleEnabled
+                                          ? colorScheme.primary
+                                          : iconMutedColor,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                           const SizedBox(width: 16),
                           IconButton(
@@ -163,14 +187,42 @@ class _DesktopPlayerBar extends StatelessWidget {
                             icon: const Icon(Icons.skip_next_rounded),
                           ),
                           const SizedBox(width: 16),
-                          IconButton(
-                            iconSize: 20,
-                            tooltip: l10n.playModeLoop,
-                            onPressed: () => player.setPlaylistMode(.loop),
-                            icon: Icon(
-                              Icons.repeat_rounded,
-                              color: iconMutedColor,
-                            ),
+                          AsyncStreamBuilder(
+                            provider: player.playlistModeStream,
+                            builder: (_, playlistMode) {
+                              final (icon, tooltip, color) = switch (playlistMode) {
+                                .none => (
+                                    Icons.queue_music_outlined,
+                                    l10n.playModeNone,
+                                    iconMutedColor,
+                                  ),
+                                .loop => (
+                                    Icons.repeat_rounded,
+                                    l10n.playModeLoop,
+                                    colorScheme.primary,
+                                  ),
+                                .single => (
+                                    Icons.repeat_one_rounded,
+                                    l10n.playModeSingle,
+                                    colorScheme.primary,
+                                  ),
+                              };
+
+                              return IconButton(
+                                iconSize: 20,
+                                tooltip: tooltip,
+                                onPressed: () {
+                                  if (playlistMode == .loop) {
+                                    player.setPlaylistMode(.none);
+                                  } else if (playlistMode == .none) {
+                                    player.setPlaylistMode(.single);
+                                  } else {
+                                    player.setPlaylistMode(.loop);
+                                  }
+                                },
+                                icon: Icon(icon, color: color),
+                              );
+                            },
                           ),
                           const SizedBox(width: 16),
                           IconButton(
@@ -221,37 +273,79 @@ class _DesktopPlayerBar extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 if (!compact) ...[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: List.generate(
-                                      5,
-                                      (index) => Icon(
-                                        Icons.star_outline_rounded,
-                                        size: 14,
-                                        color: iconMutedColor,
-                                      ),
-                                    ),
+                                  Consumer(
+                                    builder: (context, ref, _) {
+                                      final detail = ref.watch(
+                                        songDetailProvider(current?.id),
+                                      );
+                                      final effectiveSong =
+                                          detail.asData?.value?.subsonicResponse?.song ??
+                                          current;
+                                      final rating = effectiveSong?.userRating ?? 0;
+                                      return Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Tooltip(
+                                            message: '$rating/5',
+                                            child: Rating(
+                                              rating: rating,
+                                              onRating: (value) {
+                                                ref
+                                                    .read(songRatingProvider.notifier)
+                                                    .updateRating(current?.id, value);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   ),
                                   const SizedBox(height: 8),
                                 ],
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      iconSize: 20,
-                                      visualDensity: .compact,
-                                      constraints: const BoxConstraints.tightFor(
-                                        width: 34,
-                                        height: 34,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      tooltip: l10n.favorite,
-                                      icon: Icon(
-                                        Icons.favorite_border_rounded,
-                                        color: iconMutedColor,
-                                      ),
+                                    Consumer(
+                                      builder: (context, ref, _) {
+                                        final detail = ref.watch(
+                                          songDetailProvider(current?.id),
+                                        );
+                                        final effectiveSong =
+                                            detail.asData?.value?.subsonicResponse?.song ??
+                                            current;
+                                        final isStarred =
+                                            effectiveSong?.starred != null;
+                                        return IconButton(
+                                          onPressed: current == null
+                                              ? null
+                                              : () {
+                                                  ref
+                                                      .read(songFavoriteProvider.notifier)
+                                                      .toggleFavorite(current);
+                                                },
+                                          iconSize: 20,
+                                          visualDensity: .compact,
+                                          constraints:
+                                              const BoxConstraints.tightFor(
+                                                width: 34,
+                                                height: 34,
+                                              ),
+                                          padding: EdgeInsets.zero,
+                                          tooltip: isStarred
+                                              ? l10n.unfavorite
+                                              : l10n.favorite,
+                                          icon: Icon(
+                                            isStarred
+                                                ? Icons.favorite_rounded
+                                                : Icons.favorite_border_rounded,
+                                            color: isStarred
+                                                ? colorScheme.primary
+                                                : iconMutedColor,
+                                          ),
+                                        );
+                                      },
                                     ),
+                                    const SizedBox(width: 8),
                                     _DesktopVolumeBar(compact: compact),
                                   ],
                                 ),

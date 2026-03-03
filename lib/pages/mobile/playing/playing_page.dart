@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,8 +6,10 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/mobile/song_control/song_control.dart';
-import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/pages/mobile/playlist/add_to_playlist_page.dart';
+import 'package:melo_trip/pages/shared/player/animated_lyrics_panel.dart';
+import 'package:melo_trip/pages/shared/player/playback_background.dart';
+import 'package:melo_trip/pages/shared/player/playback_media_meta_badge.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';

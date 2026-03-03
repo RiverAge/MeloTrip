@@ -5,14 +5,11 @@ class _BlurFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.surface;
     return Positioned.fill(
-      child: Container(
-        color: color.withValues(alpha: .35),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
-          child: Container(),
-        ),
+      child: PlaybackBlurOverlay(
+        blurSigma: 30,
+        surfaceAlpha: .35,
+        useVignette: false,
       ),
     );
   }

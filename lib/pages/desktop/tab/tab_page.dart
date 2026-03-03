@@ -14,9 +14,11 @@ import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
+import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:melo_trip/widget/rating.dart';
 import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
 
 part 'parts/sidebar.dart';

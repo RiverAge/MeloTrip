@@ -1,20 +1,15 @@
-import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/app_player/player.dart';
-import 'package:melo_trip/helper/index.dart';
-import 'package:melo_trip/model/response/lyrics/lyrics.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/shared/player/animated_lyrics_panel.dart';
+import 'package:melo_trip/pages/shared/player/playback_media_meta_badge.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/pages/shared/player/playback_background.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
-import 'package:melo_trip/l10n/app_localizations.dart';
 
-part 'parts/media_meta.dart';
 part 'parts/desktop_lyrics.dart';
-part 'parts/lyric_item_horizontal.dart';
 
 class DesktopFullPlayerPage extends ConsumerWidget {
   const DesktopFullPlayerPage({super.key, required this.onDismiss});
@@ -42,12 +37,15 @@ class DesktopFullPlayerPage extends ConsumerWidget {
           return Stack(
             fit: StackFit.expand,
             children: [
-              ArtworkImage(id: current.id, fit: BoxFit.cover, size: 800),
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-                child: Container(
-                  color: colorScheme.scrim.withValues(alpha: .4),
-                ),
+              PlaybackArtworkBackground(
+                artworkId: 'mf-${current.id}',
+                size: 2200,
+                fit: BoxFit.cover,
+              ),
+              const PlaybackBlurOverlay(
+                blurSigma: 30,
+                surfaceAlpha: .34,
+                useVignette: true,
               ),
               SafeArea(
                 child: Column(
@@ -81,7 +79,10 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                             final isNarrow =
                                 constraints.maxWidth < 900 ||
                                 constraints.maxHeight < 600;
-                            final coverSize = isNarrow ? 240.0 : 320.0;
+                            final coverSize =
+                                (constraints.biggest.shortestSide * .52)
+                                    .clamp(320.0, 520.0)
+                                    .toDouble();
 
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,18 +115,22 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                          12,
+                                                          16,
                                                         ),
+                                                    border: Border.all(
+                                                      color: colorScheme.onSurface
+                                                          .withValues(alpha: .12),
+                                                    ),
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: theme.shadowColor
                                                             .withValues(
-                                                              alpha: .5,
+                                                              alpha: .35,
                                                             ),
-                                                        blurRadius: 30,
+                                                        blurRadius: 24,
                                                         offset: const Offset(
                                                           0,
-                                                          15,
+                                                          12,
                                                         ),
                                                       ),
                                                     ],
@@ -141,7 +146,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                     ),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 32),
+                                                const SizedBox(height: 48),
                                                 Text(
                                                   current.title ?? '-',
                                                   textAlign: TextAlign.center,
@@ -169,8 +174,8 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                       .textTheme
                                                       .titleMedium
                                                       ?.copyWith(
-                                                        color: colorScheme
-                                                            .onSurfaceVariant,
+                                                        color: colorScheme.onSurface
+                                                            .withValues(alpha: .74),
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontSize: isNarrow
@@ -182,7 +187,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                       TextOverflow.visible,
                                                 ),
                                                 const SizedBox(height: 24),
-                                                const _DesktopMediaMeta(),
+                                                const PlaybackMediaMetaBadge(),
                                               ],
                                             ),
                                           ),
