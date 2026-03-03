@@ -513,6 +513,60 @@ abstract class AppLocalizations {
   /// **'Coming soon'**
   String get featureComingSoon;
 
+  /// Desktop floating lyrics settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop Lyrics'**
+  String get desktopLyrics;
+
+  /// Desktop lyrics enabled switch description
+  ///
+  /// In en, this message translates to:
+  /// **'Enable floating desktop lyrics'**
+  String get desktopLyricsEnabled;
+
+  /// Desktop lyrics click-through mode setting
+  ///
+  /// In en, this message translates to:
+  /// **'Click-through window'**
+  String get desktopLyricsClickThrough;
+
+  /// Desktop lyrics font size setting
+  ///
+  /// In en, this message translates to:
+  /// **'Font size'**
+  String get desktopLyricsFontSize;
+
+  /// Desktop lyrics opacity setting
+  ///
+  /// In en, this message translates to:
+  /// **'Opacity'**
+  String get desktopLyricsOpacity;
+
+  /// Desktop lyrics stroke width setting
+  ///
+  /// In en, this message translates to:
+  /// **'Stroke width'**
+  String get desktopLyricsStrokeWidth;
+
+  /// Desktop lyrics text color setting
+  ///
+  /// In en, this message translates to:
+  /// **'Text color'**
+  String get desktopLyricsTextColor;
+
+  /// Desktop lyrics shadow color setting
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow color'**
+  String get desktopLyricsShadowColor;
+
+  /// Desktop lyrics stroke color setting
+  ///
+  /// In en, this message translates to:
+  /// **'Stroke color'**
+  String get desktopLyricsStrokeColor;
+
   /// play queue
   ///
   /// In en, this message translates to:

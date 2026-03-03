@@ -36,11 +36,17 @@ void main() {
     );
 
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byIcon(Icons.logout_rounded),
+      240,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.byType(GridView), findsOneWidget);
     expect(find.byIcon(Icons.contrast_rounded), findsOneWidget);
     expect(find.byIcon(Icons.high_quality_rounded), findsOneWidget);
     expect(find.byIcon(Icons.language_rounded), findsOneWidget);
-    expect(find.byType(FilledButton), findsOneWidget);
+    expect(find.byIcon(Icons.logout_rounded), findsOneWidget);
   });
 
   testWidgets('DesktopSettingsPage logout opens dialog and can cancel', (
@@ -68,7 +74,13 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(FilledButton));
+    await tester.scrollUntilVisible(
+      find.byIcon(Icons.logout_rounded),
+      240,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.logout_rounded));
     await tester.pumpAndSettle();
 
     expect(find.byType(AlertDialog), findsOneWidget);

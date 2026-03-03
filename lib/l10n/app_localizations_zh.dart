@@ -218,6 +218,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get featureComingSoon => '即将支持';
 
   @override
+  String get desktopLyrics => '桌面歌词';
+
+  @override
+  String get desktopLyricsEnabled => '启用桌面悬浮歌词';
+
+  @override
+  String get desktopLyricsClickThrough => '窗口点击穿透';
+
+  @override
+  String get desktopLyricsFontSize => '字体大小';
+
+  @override
+  String get desktopLyricsOpacity => '透明度';
+
+  @override
+  String get desktopLyricsStrokeWidth => '描边宽度';
+
+  @override
+  String get desktopLyricsTextColor => '文字颜色';
+
+  @override
+  String get desktopLyricsShadowColor => '阴影颜色';
+
+  @override
+  String get desktopLyricsStrokeColor => '描边颜色';
+
+  @override
   String get playQueue => '播放队列';
 
   @override
@@ -655,6 +682,33 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get featureComingSoon => '即将支持';
+
+  @override
+  String get desktopLyrics => '桌面歌词';
+
+  @override
+  String get desktopLyricsEnabled => '启用桌面悬浮歌词';
+
+  @override
+  String get desktopLyricsClickThrough => '窗口点击穿透';
+
+  @override
+  String get desktopLyricsFontSize => '字体大小';
+
+  @override
+  String get desktopLyricsOpacity => '透明度';
+
+  @override
+  String get desktopLyricsStrokeWidth => '描边宽度';
+
+  @override
+  String get desktopLyricsTextColor => '文字颜色';
+
+  @override
+  String get desktopLyricsShadowColor => '阴影颜色';
+
+  @override
+  String get desktopLyricsStrokeColor => '描边颜色';
 
   @override
   String get playQueue => '播放队列';

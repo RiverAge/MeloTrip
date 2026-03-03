@@ -313,6 +313,42 @@
   "@featureComingSoon": {
     "description": "Tooltip and hint for desktop features not implemented yet"
   },
+  "desktopLyrics": "Desktop Lyrics",
+  "@desktopLyrics": {
+    "description": "Desktop floating lyrics settings section title"
+  },
+  "desktopLyricsEnabled": "Enable floating desktop lyrics",
+  "@desktopLyricsEnabled": {
+    "description": "Desktop lyrics enabled switch description"
+  },
+  "desktopLyricsClickThrough": "Click-through window",
+  "@desktopLyricsClickThrough": {
+    "description": "Desktop lyrics click-through mode setting"
+  },
+  "desktopLyricsFontSize": "Font size",
+  "@desktopLyricsFontSize": {
+    "description": "Desktop lyrics font size setting"
+  },
+  "desktopLyricsOpacity": "Opacity",
+  "@desktopLyricsOpacity": {
+    "description": "Desktop lyrics opacity setting"
+  },
+  "desktopLyricsStrokeWidth": "Stroke width",
+  "@desktopLyricsStrokeWidth": {
+    "description": "Desktop lyrics stroke width setting"
+  },
+  "desktopLyricsTextColor": "Text color",
+  "@desktopLyricsTextColor": {
+    "description": "Desktop lyrics text color setting"
+  },
+  "desktopLyricsShadowColor": "Shadow color",
+  "@desktopLyricsShadowColor": {
+    "description": "Desktop lyrics shadow color setting"
+  },
+  "desktopLyricsStrokeColor": "Stroke color",
+  "@desktopLyricsStrokeColor": {
+    "description": "Desktop lyrics stroke color setting"
+  },
 
   "playQueue": "Play Queue",
   "@playQueue": {

@@ -218,6 +218,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get featureComingSoon => 'Coming soon';
 
   @override
+  String get desktopLyrics => 'Desktop Lyrics';
+
+  @override
+  String get desktopLyricsEnabled => 'Enable floating desktop lyrics';
+
+  @override
+  String get desktopLyricsClickThrough => 'Click-through window';
+
+  @override
+  String get desktopLyricsFontSize => 'Font size';
+
+  @override
+  String get desktopLyricsOpacity => 'Opacity';
+
+  @override
+  String get desktopLyricsStrokeWidth => 'Stroke width';
+
+  @override
+  String get desktopLyricsTextColor => 'Text color';
+
+  @override
+  String get desktopLyricsShadowColor => 'Shadow color';
+
+  @override
+  String get desktopLyricsStrokeColor => 'Stroke color';
+
+  @override
   String get playQueue => 'Play Queue';
 
   @override

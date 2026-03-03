@@ -90,6 +90,15 @@
     "unfavorite": "取消收藏",
     "myFavorites": "我的收藏",
     "featureComingSoon": "即将支持",
+    "desktopLyrics": "桌面歌词",
+    "desktopLyricsEnabled": "启用桌面悬浮歌词",
+    "desktopLyricsClickThrough": "窗口点击穿透",
+    "desktopLyricsFontSize": "字体大小",
+    "desktopLyricsOpacity": "透明度",
+    "desktopLyricsStrokeWidth": "描边宽度",
+    "desktopLyricsTextColor": "文字颜色",
+    "desktopLyricsShadowColor": "阴影颜色",
+    "desktopLyricsStrokeColor": "描边颜色",
 
 
     "playQueue": "播放队列",

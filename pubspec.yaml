@@ -58,6 +58,8 @@ dependencies:
   flutter_native_splash: ^2.4.6
   update_installer:
     path: plugins/update_installer
+  desktop_lyrics:
+    path: plugins/desktop_lyrics
 
 dev_dependencies:
   flutter_test:

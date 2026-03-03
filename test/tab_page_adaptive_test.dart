@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
+import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/pages/shared/initial/tab_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
@@ -69,7 +70,7 @@ void main() {
     await tester.tap(find.text('Settings').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('Logout'), findsOneWidget);
+    expect(find.byType(DesktopSettingsPage), findsOneWidget);
   });
 
   testWidgets('Desktop unavailable sidebar tile shows coming-soon hint', (

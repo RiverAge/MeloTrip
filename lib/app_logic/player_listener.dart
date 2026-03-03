@@ -6,13 +6,17 @@ extension _PlayerListenerLogic on _MyAppState {
     _setScrobbleListener();
     _setPlaylistModeListener();
     _setPlayerErrorListener();
+    _setDesktopLyricsListeners();
   }
 
   void _cancelPlayerSubscriptions() {
     _playlistModeSubscription?.cancel();
     _scrobbleSubscription?.cancel();
     _errorSubscription?.cancel();
+    _desktopLyricsTrackSubscription?.cancel();
+    _desktopLyricsProgressSubscription?.cancel();
     _nowPlayingTimer?.cancel();
+    unawaited(ref.read(desktopLyricsServiceProvider).dispose());
   }
 
   void _setPlayerMediaResolver() async {
@@ -115,6 +119,74 @@ extension _PlayerListenerLogic on _MyAppState {
     final player = await ref.read(appPlayerHandlerProvider.future);
     _errorSubscription = player?.errorStream.listen(
       (err) => _onErrorScanfoldMessage(errorMsg: err),
+    );
+  }
+
+  void _setDesktopLyricsListeners() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    if (player == null) return;
+
+    final lyricsService = ref.read(desktopLyricsServiceProvider);
+    await _syncDesktopLyricsConfig();
+    String? lastSongId;
+
+    _desktopLyricsTrackSubscription = player.playQueueStream.listen((queue) async {
+      if (queue.songs.isEmpty || queue.index < 0 || queue.index >= queue.songs.length) {
+        await lyricsService.hide();
+        return;
+      }
+
+      final song = queue.songs[queue.index];
+      if (song.id == lastSongId) return;
+      lastSongId = song.id;
+
+      final lyricsResponse = await ref.read(lyricsProvider(song.id).future);
+      final lines =
+          lyricsResponse?.subsonicResponse?.lyricsList?.structuredLyrics?.firstOrNull?.line ??
+          const <Line>[];
+      final lyricLines = lines
+          .map(
+            (line) => DesktopLyricsLine(
+              startMs: line.start ?? 0,
+              values: line.value ?? const <String>[],
+            ),
+          )
+          .toList();
+
+      await lyricsService.updateTrack(
+        songId: song.id,
+        title: song.title,
+        artist: song.displayArtist,
+        lines: lyricLines,
+      );
+      await lyricsService.show();
+    });
+
+    _desktopLyricsProgressSubscription = CombineLatestStream.combine2(
+      player.positionStream,
+      player.durationStream,
+      (position, duration) => (position, duration),
+    ).listen((data) async {
+      await lyricsService.updateProgress(
+        position: data.$1,
+        duration: data.$2,
+      );
+    });
+  }
+
+  Future<void> _syncDesktopLyricsConfig() async {
+    final service = ref.read(desktopLyricsServiceProvider);
+    await service.updateConfig(
+      const DesktopLyricsConfig(
+      enabled: true,
+      clickThrough: false,
+      fontSize: 34,
+      opacity: .93,
+      textColorArgb: 0xFFF2F2F8,
+      shadowColorArgb: 0xFF121214,
+      strokeColorArgb: 0x00000000,
+      strokeWidth: 0,
+      ),
     );
   }
 
