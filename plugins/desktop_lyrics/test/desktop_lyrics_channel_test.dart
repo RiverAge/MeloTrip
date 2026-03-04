@@ -24,7 +24,7 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('setEnabled uses updateConfig and dispose call', () async {
+  test('setEnabled uses setConfig path and dispose call', () async {
     final lyrics = DesktopLyrics(channel: channel);
     await lyrics.setEnabled(false);
     await lyrics.setEnabled(true);
