@@ -549,6 +549,12 @@ abstract class AppLocalizations {
   /// **'Stroke width'**
   String get desktopLyricsStrokeWidth;
 
+  /// Desktop lyrics font weight setting
+  ///
+  /// In en, this message translates to:
+  /// **'Font weight'**
+  String get desktopLyricsFontWeight;
+
   /// Desktop lyrics text color setting
   ///
   /// In en, this message translates to:
@@ -566,6 +572,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stroke color'**
   String get desktopLyricsStrokeColor;
+
+  /// Desktop lyrics background color setting
+  ///
+  /// In en, this message translates to:
+  /// **'Background color'**
+  String get desktopLyricsBackgroundColor;
+
+  /// Desktop lyrics background opacity setting
+  ///
+  /// In en, this message translates to:
+  /// **'Background opacity'**
+  String get desktopLyricsBackgroundOpacity;
+
+  /// Desktop lyrics text gradient enable switch
+  ///
+  /// In en, this message translates to:
+  /// **'Enable text gradient'**
+  String get desktopLyricsGradientEnabled;
+
+  /// Desktop lyrics text gradient start color
+  ///
+  /// In en, this message translates to:
+  /// **'Gradient start'**
+  String get desktopLyricsGradientStartColor;
+
+  /// Desktop lyrics text gradient end color
+  ///
+  /// In en, this message translates to:
+  /// **'Gradient end'**
+  String get desktopLyricsGradientEndColor;
+
+  /// Desktop lyrics text alignment label
+  ///
+  /// In en, this message translates to:
+  /// **'Text alignment'**
+  String get desktopLyricsTextAlign;
+
+  /// Desktop lyrics text section title
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get desktopLyricsSectionText;
+
+  /// Desktop lyrics background section title
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get desktopLyricsSectionBackground;
+
+  /// Desktop lyrics gradient section title
+  ///
+  /// In en, this message translates to:
+  /// **'Gradient'**
+  String get desktopLyricsSectionGradient;
+
+  /// Desktop lyrics layout section title
+  ///
+  /// In en, this message translates to:
+  /// **'Layout'**
+  String get desktopLyricsSectionLayout;
+
+  /// Desktop lyrics overlay width
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay width'**
+  String get desktopLyricsOverlayWidth;
+
+  /// Desktop lyrics overlay height
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay height'**
+  String get desktopLyricsOverlayHeight;
+
+  /// Desktop lyrics auto height switch
+  ///
+  /// In en, this message translates to:
+  /// **'Auto height'**
+  String get desktopLyricsAutoHeight;
+
+  /// Desktop lyrics preview section title
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get desktopLyricsSectionPreview;
+
+  /// Hint shown when text gradient overrides plain text color
+  ///
+  /// In en, this message translates to:
+  /// **'Text color is ignored while gradient is enabled.'**
+  String get desktopLyricsGradientOverrideHint;
+
+  /// Desktop lyrics token-by-token preview action
+  ///
+  /// In en, this message translates to:
+  /// **'Play token preview'**
+  String get desktopLyricsTokenPreview;
 
   /// play queue
   ///

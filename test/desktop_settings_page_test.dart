@@ -83,10 +83,22 @@ void main() {
     await tester.tap(find.byIcon(Icons.logout_rounded));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.byType(TextButton), findsNWidgets(2));
+    final dialogFinder = find.byType(AlertDialog);
+    expect(dialogFinder, findsOneWidget);
+    final context = tester.element(dialogFinder);
+    final l10n = AppLocalizations.of(context)!;
+    final cancelFinder = find.descendant(
+      of: dialogFinder,
+      matching: find.text(l10n.cancel),
+    );
+    final confirmFinder = find.descendant(
+      of: dialogFinder,
+      matching: find.text(l10n.confirm),
+    );
+    expect(cancelFinder, findsOneWidget);
+    expect(confirmFinder, findsOneWidget);
 
-    await tester.tap(find.byType(TextButton).first);
+    await tester.tap(cancelFinder);
     await tester.pumpAndSettle();
 
     expect(find.byType(AlertDialog), findsNothing);

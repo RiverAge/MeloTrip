@@ -236,6 +236,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get desktopLyricsStrokeWidth => '描边宽度';
 
   @override
+  String get desktopLyricsFontWeight => '字重';
+
+  @override
   String get desktopLyricsTextColor => '文字颜色';
 
   @override
@@ -243,6 +246,54 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get desktopLyricsStrokeColor => '描边颜色';
+
+  @override
+  String get desktopLyricsBackgroundColor => '背景颜色';
+
+  @override
+  String get desktopLyricsBackgroundOpacity => '背景透明度';
+
+  @override
+  String get desktopLyricsGradientEnabled => '启用文字渐变';
+
+  @override
+  String get desktopLyricsGradientStartColor => '渐变起始颜色';
+
+  @override
+  String get desktopLyricsGradientEndColor => '渐变结束颜色';
+
+  @override
+  String get desktopLyricsTextAlign => '文字对齐';
+
+  @override
+  String get desktopLyricsSectionText => '文字';
+
+  @override
+  String get desktopLyricsSectionBackground => '背景';
+
+  @override
+  String get desktopLyricsSectionGradient => '渐变';
+
+  @override
+  String get desktopLyricsSectionLayout => '布局';
+
+  @override
+  String get desktopLyricsOverlayWidth => '歌词宽度';
+
+  @override
+  String get desktopLyricsOverlayHeight => '歌词高度';
+
+  @override
+  String get desktopLyricsAutoHeight => '自动高度';
+
+  @override
+  String get desktopLyricsSectionPreview => '预览';
+
+  @override
+  String get desktopLyricsGradientOverrideHint => '开启渐变后将忽略文字颜色。';
+
+  @override
+  String get desktopLyricsTokenPreview => '播放逐字预览';
 
   @override
   String get playQueue => '播放队列';
@@ -702,6 +753,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get desktopLyricsStrokeWidth => '描边宽度';
 
   @override
+  String get desktopLyricsFontWeight => '字重';
+
+  @override
   String get desktopLyricsTextColor => '文字颜色';
 
   @override
@@ -709,6 +763,54 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get desktopLyricsStrokeColor => '描边颜色';
+
+  @override
+  String get desktopLyricsBackgroundColor => '背景颜色';
+
+  @override
+  String get desktopLyricsBackgroundOpacity => '背景透明度';
+
+  @override
+  String get desktopLyricsGradientEnabled => '启用文字渐变';
+
+  @override
+  String get desktopLyricsGradientStartColor => '渐变起始颜色';
+
+  @override
+  String get desktopLyricsGradientEndColor => '渐变结束颜色';
+
+  @override
+  String get desktopLyricsTextAlign => '文字对齐';
+
+  @override
+  String get desktopLyricsSectionText => '文字';
+
+  @override
+  String get desktopLyricsSectionBackground => '背景';
+
+  @override
+  String get desktopLyricsSectionGradient => '渐变';
+
+  @override
+  String get desktopLyricsSectionLayout => '布局';
+
+  @override
+  String get desktopLyricsOverlayWidth => '歌词宽度';
+
+  @override
+  String get desktopLyricsOverlayHeight => '歌词高度';
+
+  @override
+  String get desktopLyricsAutoHeight => '自动高度';
+
+  @override
+  String get desktopLyricsSectionPreview => '预览';
+
+  @override
+  String get desktopLyricsGradientOverrideHint => '开启渐变后将忽略文字颜色。';
+
+  @override
+  String get desktopLyricsTokenPreview => '播放逐字预览';
 
   @override
   String get playQueue => '播放队列';

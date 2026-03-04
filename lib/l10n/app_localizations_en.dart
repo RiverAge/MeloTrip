@@ -236,6 +236,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get desktopLyricsStrokeWidth => 'Stroke width';
 
   @override
+  String get desktopLyricsFontWeight => 'Font weight';
+
+  @override
   String get desktopLyricsTextColor => 'Text color';
 
   @override
@@ -243,6 +246,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get desktopLyricsStrokeColor => 'Stroke color';
+
+  @override
+  String get desktopLyricsBackgroundColor => 'Background color';
+
+  @override
+  String get desktopLyricsBackgroundOpacity => 'Background opacity';
+
+  @override
+  String get desktopLyricsGradientEnabled => 'Enable text gradient';
+
+  @override
+  String get desktopLyricsGradientStartColor => 'Gradient start';
+
+  @override
+  String get desktopLyricsGradientEndColor => 'Gradient end';
+
+  @override
+  String get desktopLyricsTextAlign => 'Text alignment';
+
+  @override
+  String get desktopLyricsSectionText => 'Text';
+
+  @override
+  String get desktopLyricsSectionBackground => 'Background';
+
+  @override
+  String get desktopLyricsSectionGradient => 'Gradient';
+
+  @override
+  String get desktopLyricsSectionLayout => 'Layout';
+
+  @override
+  String get desktopLyricsOverlayWidth => 'Overlay width';
+
+  @override
+  String get desktopLyricsOverlayHeight => 'Overlay height';
+
+  @override
+  String get desktopLyricsAutoHeight => 'Auto height';
+
+  @override
+  String get desktopLyricsSectionPreview => 'Preview';
+
+  @override
+  String get desktopLyricsGradientOverrideHint =>
+      'Text color is ignored while gradient is enabled.';
+
+  @override
+  String get desktopLyricsTokenPreview => 'Play token preview';
 
   @override
   String get playQueue => 'Play Queue';

@@ -337,6 +337,10 @@
   "@desktopLyricsStrokeWidth": {
     "description": "Desktop lyrics stroke width setting"
   },
+  "desktopLyricsFontWeight": "Font weight",
+  "@desktopLyricsFontWeight": {
+    "description": "Desktop lyrics font weight setting"
+  },
   "desktopLyricsTextColor": "Text color",
   "@desktopLyricsTextColor": {
     "description": "Desktop lyrics text color setting"
@@ -348,6 +352,70 @@
   "desktopLyricsStrokeColor": "Stroke color",
   "@desktopLyricsStrokeColor": {
     "description": "Desktop lyrics stroke color setting"
+  },
+  "desktopLyricsBackgroundColor": "Background color",
+  "@desktopLyricsBackgroundColor": {
+    "description": "Desktop lyrics background color setting"
+  },
+  "desktopLyricsBackgroundOpacity": "Background opacity",
+  "@desktopLyricsBackgroundOpacity": {
+    "description": "Desktop lyrics background opacity setting"
+  },
+  "desktopLyricsGradientEnabled": "Enable text gradient",
+  "@desktopLyricsGradientEnabled": {
+    "description": "Desktop lyrics text gradient enable switch"
+  },
+  "desktopLyricsGradientStartColor": "Gradient start",
+  "@desktopLyricsGradientStartColor": {
+    "description": "Desktop lyrics text gradient start color"
+  },
+  "desktopLyricsGradientEndColor": "Gradient end",
+  "@desktopLyricsGradientEndColor": {
+    "description": "Desktop lyrics text gradient end color"
+  },
+  "desktopLyricsTextAlign": "Text alignment",
+  "@desktopLyricsTextAlign": {
+    "description": "Desktop lyrics text alignment label"
+  },
+  "desktopLyricsSectionText": "Text",
+  "@desktopLyricsSectionText": {
+    "description": "Desktop lyrics text section title"
+  },
+  "desktopLyricsSectionBackground": "Background",
+  "@desktopLyricsSectionBackground": {
+    "description": "Desktop lyrics background section title"
+  },
+  "desktopLyricsSectionGradient": "Gradient",
+  "@desktopLyricsSectionGradient": {
+    "description": "Desktop lyrics gradient section title"
+  },
+  "desktopLyricsSectionLayout": "Layout",
+  "@desktopLyricsSectionLayout": {
+    "description": "Desktop lyrics layout section title"
+  },
+  "desktopLyricsOverlayWidth": "Overlay width",
+  "@desktopLyricsOverlayWidth": {
+    "description": "Desktop lyrics overlay width"
+  },
+  "desktopLyricsOverlayHeight": "Overlay height",
+  "@desktopLyricsOverlayHeight": {
+    "description": "Desktop lyrics overlay height"
+  },
+  "desktopLyricsAutoHeight": "Auto height",
+  "@desktopLyricsAutoHeight": {
+    "description": "Desktop lyrics auto height switch"
+  },
+  "desktopLyricsSectionPreview": "Preview",
+  "@desktopLyricsSectionPreview": {
+    "description": "Desktop lyrics preview section title"
+  },
+  "desktopLyricsGradientOverrideHint": "Text color is ignored while gradient is enabled.",
+  "@desktopLyricsGradientOverrideHint": {
+    "description": "Hint shown when text gradient overrides plain text color"
+  },
+  "desktopLyricsTokenPreview": "Play token preview",
+  "@desktopLyricsTokenPreview": {
+    "description": "Desktop lyrics token-by-token preview action"
   },
 
   "playQueue": "Play Queue",
