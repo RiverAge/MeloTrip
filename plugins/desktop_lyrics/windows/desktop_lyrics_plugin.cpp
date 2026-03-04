@@ -197,10 +197,8 @@ void DesktopLyricsPlugin::HandleMethodCall(
       result->Success();
       return;
     }
-    const auto title = Utf8ToWide(ReadStringFromMap(*arguments, "title"));
-    const auto artist = Utf8ToWide(ReadStringFromMap(*arguments, "artist"));
     auto lines = ParseLyricsLines(*arguments);
-    overlay_->UpdateTrack(title, artist, lines);
+    overlay_->UpdateTrack(lines);
     result->Success();
     return;
   }
@@ -221,7 +219,9 @@ void DesktopLyricsPlugin::HandleMethodCall(
       return;
     }
     const auto current_line = ParseCurrentLineFromFrame(*arguments);
-    overlay_->UpdateLyricFrame(current_line, 1.0);
+    const double line_progress =
+        std::clamp(ReadDoubleFromMap(*arguments, "lineProgress", 1.0), 0.0, 1.0);
+    overlay_->UpdateLyricFrame(current_line, line_progress);
     result->Success();
     return;
   }

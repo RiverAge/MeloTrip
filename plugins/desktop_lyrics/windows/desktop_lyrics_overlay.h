@@ -2,11 +2,15 @@
 #define FLUTTER_PLUGIN_DESKTOP_LYRICS_OVERLAY_H_
 
 #include <windows.h>
-#include <gdiplus.h>
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
+
+namespace Gdiplus {
+class GraphicsPath;
+}
 
 namespace desktop_lyrics {
 
@@ -25,9 +29,7 @@ class DesktopLyricsOverlay {
   void Hide();
   void Dispose();
 
-  void UpdateTrack(const std::wstring& title,
-                   const std::wstring& artist,
-                   const std::vector<LyricsLineEntry>& lines);
+  void UpdateTrack(const std::vector<LyricsLineEntry>& lines);
   void UpdateProgress(int64_t position_ms, int64_t duration_ms);
   void UpdateLyricFrame(const std::wstring& current_line, double line_progress);
   void UpdateConfig(bool enabled,
@@ -69,13 +71,12 @@ class DesktopLyricsOverlay {
   void ReleaseBackBuffer();
 
   HWND hwnd_ = nullptr;
-  std::wstring title_;
-  std::wstring artist_;
   std::wstring current_line_;
   std::vector<LyricsLineEntry> lines_;
   int64_t position_ms_ = 0;
   int64_t duration_ms_ = 0;
   double frame_line_progress_ = 1.0;
+  bool has_frame_ = false;
   bool enabled_ = true;
   bool click_through_ = false;
   double font_size_ = 38.0;
@@ -115,7 +116,7 @@ class DesktopLyricsOverlay {
   int cached_text_align_ = -1;
   int cached_font_weight_ = -1;
   float cached_font_size_ = 0.0f;
-  Gdiplus::GraphicsPath cached_text_path_;
+  std::unique_ptr<Gdiplus::GraphicsPath> cached_text_path_;
 };
 
 }  // namespace desktop_lyrics

@@ -26,14 +26,29 @@ class DesktopLyricTokenTiming {
 }
 
 @immutable
+class DesktopLyricTimelineToken {
+  const DesktopLyricTimelineToken({
+    required this.text,
+    required this.startMs,
+    required this.endMs,
+  });
+
+  final String text;
+  final int startMs;
+  final int endMs;
+}
+
+@immutable
 class DesktopLyricFrame {
-  const DesktopLyricFrame.line({required this.currentLine, this.lineProgress = 0.0})
+  // `.line` is for static single-line display by default, so progress defaults
+  // to fully visible. Callers can pass a custom value when they need sweeping.
+  const DesktopLyricFrame.line({required this.currentLine, this.lineProgress = 1.0})
     : tokens = const [];
 
   const DesktopLyricFrame.tokenized({
     required this.tokens,
     this.currentLine = '',
-    this.lineProgress = 0.0,
+    this.lineProgress = 1.0,
   });
 
   final String currentLine;
@@ -61,6 +76,32 @@ class DesktopLyricFrame {
       final local = ((normalized - start) / (end - start)).clamp(0.0, 1.0);
       mapped.add(DesktopLyricToken(text: token.text, progress: local));
       elapsed += duration;
+    }
+    return DesktopLyricFrame.tokenized(
+      currentLine: tokens.map((e) => e.text).join(),
+      lineProgress: normalized,
+      tokens: mapped,
+    );
+  }
+
+  factory DesktopLyricFrame.fromKaraokeTimeline({
+    required int positionMs,
+    required List<DesktopLyricTimelineToken> tokens,
+  }) {
+    if (tokens.isEmpty) {
+      return const DesktopLyricFrame.line(currentLine: '', lineProgress: 1.0);
+    }
+    final minStart = tokens.first.startMs;
+    final maxEnd = tokens.last.endMs;
+    final total = (maxEnd - minStart).clamp(1, 1 << 30);
+    final normalized =
+        ((positionMs - minStart) / total).clamp(0.0, 1.0).toDouble();
+    final mapped = <DesktopLyricToken>[];
+    for (final token in tokens) {
+      final denom = (token.endMs - token.startMs).clamp(1, 1 << 30);
+      final local =
+          ((positionMs - token.startMs) / denom).clamp(0.0, 1.0).toDouble();
+      mapped.add(DesktopLyricToken(text: token.text, progress: local));
     }
     return DesktopLyricFrame.tokenized(
       currentLine: tokens.map((e) => e.text).join(),
@@ -157,6 +198,24 @@ class DesktopLyricsConfig {
   final DesktopLyricsBackgroundConfig background;
   final DesktopLyricsGradientConfig gradient;
   final DesktopLyricsLayoutConfig layout;
+
+  DesktopLyricsConfig copyWith({
+    DesktopLyricsInteractionConfig? interaction,
+    DesktopLyricsTextConfig? text,
+    double? opacity,
+    DesktopLyricsBackgroundConfig? background,
+    DesktopLyricsGradientConfig? gradient,
+    DesktopLyricsLayoutConfig? layout,
+  }) {
+    return DesktopLyricsConfig(
+      interaction: interaction ?? this.interaction,
+      text: text ?? this.text,
+      opacity: opacity ?? this.opacity,
+      background: background ?? this.background,
+      gradient: gradient ?? this.gradient,
+      layout: layout ?? this.layout,
+    );
+  }
 }
 
 @immutable
@@ -223,17 +282,22 @@ class DesktopLyrics {
   int _fontWeightValue = FontWeight.w400.value;
   double _overlayWidth = 980.0;
   double _overlayHeight = 160.0;
-  bool _autoOverlayHeight = true;
   bool _perfEnabled = false;
   int _perfTargetFps = 0;
   String _perfMode = 'line';
   bool _perfGradient = false;
   int _perfAttempted = 0;
   int _perfSent = 0;
-  int _perfDropped = 0;
+  int _perfThrottled = 0;
+  int _perfFailed = 0;
   int _perfSampleCount = 0;
   double _perfTotalMs = 0.0;
   DateTime _perfLastLogAt = DateTime.now();
+  static const int _minRenderIntervalMs = 33;
+  static const double _minProgressDelta = 0.01;
+  DateTime _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
+  String _lastRenderLine = '';
+  double _lastRenderProgress = 1.0;
 
   DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
     enabled: _enabled,
@@ -260,36 +324,33 @@ class DesktopLyrics {
 
   Future<void> dispose() async => _invoke('dispose');
 
-  Future<void> updateTrack({
-    String? songId,
-    String? title,
-    String? artist,
-    required List<DesktopLyricsLine> lines,
-  }) async {
-    await _invoke('updateTrack', {
-      'songId': songId,
-      'title': title,
-      'artist': artist,
-      'lines': lines.map((e) => {'start': e.startMs, 'value': e.values}).toList(),
-    });
-  }
-
-  Future<void> updateProgress({
-    required Duration position,
-    required Duration? duration,
-  }) async {
-    await _invoke('updateProgress', {
-      'positionMs': position.inMilliseconds,
-      'durationMs': duration?.inMilliseconds ?? 0,
-    });
-  }
-
   Future<void> render(DesktopLyricFrame frame) async {
+    final currentLine = frame.currentLine.isNotEmpty
+        ? frame.currentLine
+        : frame.tokens.map((e) => e.text).join();
+    final rawProgress = frame.lineProgress;
+    final double currentProgress = rawProgress.isFinite
+        ? rawProgress.clamp(0.0, 1.0).toDouble()
+        : 1.0;
+    final now = DateTime.now();
+    final sameLine = currentLine == _lastRenderLine;
+    final smallDelta =
+        (currentProgress - _lastRenderProgress).abs() < _minProgressDelta;
+    final withinInterval =
+        now.difference(_lastRenderAt).inMilliseconds < _minRenderIntervalMs;
+    if (sameLine && smallDelta && withinInterval) {
+      if (_perfEnabled) _perfThrottled++;
+      return;
+    }
+    _lastRenderAt = now;
+    _lastRenderLine = currentLine;
+    _lastRenderProgress = currentProgress;
+
     _perfAttempted += _perfEnabled ? 1 : 0;
     final sw = _perfEnabled ? (Stopwatch()..start()) : null;
     final result = await _invoke('updateLyricFrame', {
-      'currentLine': frame.currentLine,
-      'lineProgress': frame.lineProgress.clamp(0.0, 1.0),
+      'currentLine': currentLine,
+      'lineProgress': currentProgress,
       'tokens': frame.tokens
           .map((e) => {'text': e.text, 'progress': e.progress.clamp(0.0, 1.0)})
           .toList(),
@@ -299,7 +360,7 @@ class DesktopLyrics {
       _perfSampleCount++;
       _perfTotalMs += sw.elapsedMicroseconds / 1000.0;
       if (result == null) {
-        _perfDropped++;
+        _perfFailed++;
       } else {
         _perfSent++;
       }
@@ -307,12 +368,13 @@ class DesktopLyrics {
       if (now.difference(_perfLastLogAt).inMilliseconds >= 1000) {
         final avg = _perfSampleCount == 0 ? 0.0 : _perfTotalMs / _perfSampleCount;
         debugPrint(
-          'fps(target=$_perfTargetFps attempted=$_perfAttempted sent=$_perfSent drops=$_perfDropped avg=${avg.toStringAsFixed(2)} ms gradient=$_perfGradient mode=$_perfMode)',
+          'fps(target=$_perfTargetFps attempted=$_perfAttempted sent=$_perfSent throttled=$_perfThrottled failed=$_perfFailed avg=${avg.toStringAsFixed(2)} ms gradient=$_perfGradient mode=$_perfMode)',
         );
         _perfLastLogAt = now;
         _perfAttempted = 0;
         _perfSent = 0;
-        _perfDropped = 0;
+        _perfThrottled = 0;
+        _perfFailed = 0;
         _perfSampleCount = 0;
         _perfTotalMs = 0;
       }
@@ -331,7 +393,8 @@ class DesktopLyrics {
     _perfGradient = gradient;
     _perfAttempted = 0;
     _perfSent = 0;
-    _perfDropped = 0;
+    _perfThrottled = 0;
+    _perfFailed = 0;
     _perfSampleCount = 0;
     _perfTotalMs = 0;
     _perfLastLogAt = DateTime.now();
@@ -401,7 +464,6 @@ class DesktopLyrics {
     _fontWeightValue = nextFontWeightValue;
     _overlayWidth = nextOverlayWidth;
     _overlayHeight = nextOverlayHeight;
-    _autoOverlayHeight = nextAutoOverlayHeight;
   }
 
   int _toNativeTextAlign(TextAlign value) {

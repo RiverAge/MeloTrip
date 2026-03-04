@@ -138,12 +138,7 @@ void DesktopLyricsOverlay::Dispose() {
   hwnd_ = nullptr;
 }
 
-void DesktopLyricsOverlay::UpdateTrack(
-    const std::wstring& title,
-    const std::wstring& artist,
-    const std::vector<LyricsLineEntry>& lines) {
-  title_ = title;
-  artist_ = artist;
+void DesktopLyricsOverlay::UpdateTrack(const std::vector<LyricsLineEntry>& lines) {
   lines_ = lines;
   has_frame_ = false;
   position_ms_ = 0;
@@ -151,7 +146,7 @@ void DesktopLyricsOverlay::UpdateTrack(
   current_line_.clear();
   const bool changed = UpdateCurrentLineByPosition();
 
-  if (title_.empty() && artist_.empty() && lines_.empty()) {
+  if (lines_.empty()) {
     Hide();
     return;
   }
@@ -446,7 +441,7 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
       graphics.FillPath(&bg_brush, &bg_path);
     }
 
-    const std::wstring text = current_line_.empty() ? title_ : current_line_;
+    const std::wstring text = current_line_;
     if (!text.empty()) {
       const RectF text_rect(24.0f, 10.0f, static_cast<float>(width - 48),
                             static_cast<float>(height - 20));
@@ -499,6 +494,8 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
       const bool should_stroke =
           stroke_width_ > 0.01 && ((stroke_argb_ >> 24) & 0xFF) > 0;
       if (!has_text_path && should_stroke) {
+        // DrawString fallback path caps radius for performance; wide values are
+        // still honored when path rendering is available (Pen + GraphicsPath).
         const int radius = (std::min)(
             2, (std::max)(1, static_cast<int>(std::round(stroke_width_))));
         SolidBrush stroke_brush(ArgbToColor(stroke_argb_));
@@ -515,11 +512,32 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
       }
 
       const bool has_frame_progress = has_frame_ && frame_line_progress_ < 0.999;
+      const auto paint_gradient = [&]() {
+        const float cx = text_rect.X + text_rect.Width * 0.5f;
+        const float cy = text_rect.Y + text_rect.Height * 0.5f;
+        const float rad =
+            static_cast<float>(text_gradient_angle_ * 3.141592653589793 / 180.0);
+        const float half = (std::max)(text_rect.Width, text_rect.Height) * 0.5f;
+        const float dx = std::cos(rad) * half;
+        const float dy = std::sin(rad) * half;
+        LinearGradientBrush gradient(PointF(cx - dx, cy - dy), PointF(cx + dx, cy + dy),
+                                     ArgbToColor(text_gradient_start_argb_),
+                                     ArgbToColor(text_gradient_end_argb_));
+        if (has_text_path) {
+          graphics.FillPath(&gradient, cached_text_path_.get());
+        } else {
+          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &gradient);
+        }
+      };
       if (has_frame_progress && has_text_path) {
         // Draw a softer full-line base, then overlay the active progress fill.
-        uint32_t base_argb = text_argb_;
+        // In gradient mode, use gradient start color as base to avoid invisible
+        // "unplayed" text when text color alpha is low/transparent.
+        uint32_t base_argb =
+            text_gradient_enabled_ ? text_gradient_start_argb_ : text_argb_;
         const uint32_t base_alpha = (base_argb >> 24) & 0xFF;
-        const uint32_t softened_alpha = (std::max)(base_alpha / 3, static_cast<uint32_t>(0x3A));
+        const uint32_t softened_alpha =
+            (std::max)(base_alpha / 2, static_cast<uint32_t>(0x88));
         base_argb = (base_argb & 0x00FFFFFF) | (softened_alpha << 24);
         SolidBrush base_brush(ArgbToColor(base_argb));
         graphics.FillPath(&base_brush, cached_text_path_.get());
@@ -532,42 +550,14 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
         graphics.SetClip(progress_rect, Gdiplus::CombineModeReplace);
 
         if (text_gradient_enabled_) {
-          const float cx = text_rect.X + text_rect.Width * 0.5f;
-          const float cy = text_rect.Y + text_rect.Height * 0.5f;
-          const float rad =
-              static_cast<float>(text_gradient_angle_ * 3.141592653589793 / 180.0);
-          const float half = (std::max)(text_rect.Width, text_rect.Height) * 0.5f;
-          const float dx = std::cos(rad) * half;
-          const float dy = std::sin(rad) * half;
-          LinearGradientBrush gradient(
-              PointF(cx - dx, cy - dy),
-              PointF(cx + dx, cy + dy),
-              ArgbToColor(text_gradient_start_argb_),
-              ArgbToColor(text_gradient_end_argb_));
-          graphics.FillPath(&gradient, cached_text_path_.get());
+          paint_gradient();
         } else {
           SolidBrush text_brush(ArgbToColor(text_argb_));
           graphics.FillPath(&text_brush, cached_text_path_.get());
         }
         graphics.ResetClip();
       } else if (text_gradient_enabled_) {
-        const float cx = text_rect.X + text_rect.Width * 0.5f;
-        const float cy = text_rect.Y + text_rect.Height * 0.5f;
-        const float rad = static_cast<float>(text_gradient_angle_ * 3.141592653589793 / 180.0);
-        const float half = (std::max)(text_rect.Width, text_rect.Height) * 0.5f;
-        const float dx = std::cos(rad) * half;
-        const float dy = std::sin(rad) * half;
-        LinearGradientBrush gradient(
-            PointF(cx - dx, cy - dy),
-            PointF(cx + dx, cy + dy),
-            ArgbToColor(text_gradient_start_argb_),
-            ArgbToColor(text_gradient_end_argb_));
-        if (has_text_path) {
-          graphics.FillPath(&gradient, cached_text_path_.get());
-        } else {
-          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format,
-                              &gradient);
-        }
+        paint_gradient();
       } else {
         SolidBrush text_brush(ArgbToColor(text_argb_));
         if (has_text_path) {

@@ -5,7 +5,7 @@ Desktop floating lyrics plugin for Flutter.
 ## Features
 
 - Windows desktop floating lyrics overlay.
-- Real-time track/progress updates.
+- Real-time frame rendering (line or tokenized karaoke progress).
 - Runtime style config via method channel parameters.
 - Drag overlay when click-through is disabled.
 - Double-click overlay to reset position near bottom center.
@@ -27,48 +27,38 @@ dependencies:
 ```dart
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
-const desktopLyrics = DesktopLyrics();
+final desktopLyrics = DesktopLyrics.instance;
 
-await desktopLyrics.updateConfig(
+await desktopLyrics.configure(
   const DesktopLyricsConfig(
-    enabled: true,
-    clickThrough: false,
-    fontSize: 34,
+    interaction: DesktopLyricsInteractionConfig(
+      enabled: true,
+      clickThrough: false,
+    ),
+    text: DesktopLyricsTextConfig(
+      fontSize: 34,
+    ),
     opacity: 0.93,
-    textColorArgb: 0xFFF2F2F8,
-    shadowColorArgb: 0xFF121214,
-    strokeColorArgb: 0x00000000,
-    strokeWidth: 0,
   ),
 );
 
-await desktopLyrics.updateTrack(
-  songId: 'song-id',
-  title: 'Song Title',
-  artist: 'Artist',
-  lines: const [
-    DesktopLyricsLine(startMs: 1200, values: ['First line']),
-    DesktopLyricsLine(startMs: 3600, values: ['Second line']),
-  ],
-);
-
 await desktopLyrics.show();
-await desktopLyrics.updateProgress(
-  position: const Duration(seconds: 15),
-  duration: const Duration(minutes: 4),
+await desktopLyrics.render(
+  const DesktopLyricFrame.line(
+    currentLine: 'First line',
+    lineProgress: 1.0,
+  ),
 );
 ```
 
 ## API
 
 - `show()` / `hide()` / `dispose()`
-- `updateTrack({songId, title, artist, lines})`
-- `updateProgress({position, duration})`
-- `updateConfig(DesktopLyricsConfig config)`
-- `getPlatformVersion()`
+- `configure(DesktopLyricsConfig config)`
+- `render(DesktopLyricFrame frame)`
 
 ## Notes
 
 - The plugin does not persist any settings by itself.
-- Host app should manage configuration and call `updateConfig` as needed.
+- Host app should manage configuration and call `configure` as needed.
 

@@ -23,7 +23,7 @@ void main() {
   });
 
   test('simulated karaoke frames can be streamed continuously', () async {
-    final lyrics = DesktopLyrics.test(channel: channel);
+    final lyrics = DesktopLyrics.instance;
 
     await lyrics.configure(
       const DesktopLyricsConfig(
@@ -67,5 +67,14 @@ void main() {
     expect(firstFrame['lineProgress'], 0.0);
     expect(lastFrame['lineProgress'], 1.0);
     expect(firstFrame['currentLine'], 'Hello desktop lyrics');
+  });
+
+  test('line frame uses visible default progress when omitted', () async {
+    final lyrics = DesktopLyrics.instance;
+    await lyrics.render(const DesktopLyricFrame.line(currentLine: 'Visible'));
+    final renderCalls =
+        calls.where((call) => call.method == 'updateLyricFrame').toList();
+    final payload = renderCalls.last.arguments as Map<Object?, Object?>;
+    expect(payload['lineProgress'], 1.0);
   });
 }
