@@ -116,6 +116,25 @@ std::vector<LyricsLineEntry> ParseLyricsLines(const flutter::EncodableMap& map) 
   return result;
 }
 
+std::wstring ParseCurrentLineFromFrame(const flutter::EncodableMap& map) {
+  std::wstring current = Utf8ToWide(ReadStringFromMap(map, "currentLine"));
+  if (!current.empty()) return current;
+
+  const auto tokens_it = map.find(flutter::EncodableValue("tokens"));
+  if (tokens_it == map.end()) return current;
+  const auto* tokens = std::get_if<flutter::EncodableList>(&tokens_it->second);
+  if (!tokens) return current;
+
+  for (const auto& token_value : *tokens) {
+    const auto* token_map = std::get_if<flutter::EncodableMap>(&token_value);
+    if (!token_map) continue;
+    const auto text = Utf8ToWide(ReadStringFromMap(*token_map, "text"));
+    if (text.empty()) continue;
+    current += text;
+  }
+  return current;
+}
+
 }  // namespace
 
 // static
@@ -196,24 +215,63 @@ void DesktopLyricsPlugin::HandleMethodCall(
     result->Success();
     return;
   }
+  if (method_call.method_name() == "updateLyricFrame") {
+    if (!arguments) {
+      result->Success();
+      return;
+    }
+    const auto current_line = ParseCurrentLineFromFrame(*arguments);
+    overlay_->UpdateLyricFrame(current_line, 1.0);
+    result->Success();
+    return;
+  }
   if (method_call.method_name() == "updateConfig") {
     if (!arguments) {
       result->Success();
       return;
     }
-    const bool enabled = ReadBoolFromMap(*arguments, "enabled", false);
-    const bool click_through = ReadBoolFromMap(*arguments, "clickThrough", true);
-    const double font_size = ReadDoubleFromMap(*arguments, "fontSize", 34.0);
-    const double opacity = ReadDoubleFromMap(*arguments, "opacity", 0.93);
+    const bool enabled = ReadBoolFromMap(*arguments, "enabled", true);
+    const bool click_through = ReadBoolFromMap(*arguments, "clickThrough", false);
+    const double font_size = ReadDoubleFromMap(*arguments, "fontSize", 38.0);
+    const double opacity = ReadDoubleFromMap(*arguments, "opacity", 0.96);
     const uint32_t text_argb = static_cast<uint32_t>(
-        ReadInt64FromMap(*arguments, "textColorArgb", 0xFFF2F2F8));
+        ReadInt64FromMap(*arguments, "textColorArgb", 0xFFF6F7FF));
     const uint32_t shadow_argb = static_cast<uint32_t>(
-        ReadInt64FromMap(*arguments, "shadowColorArgb", 0xFF121214));
+        ReadInt64FromMap(*arguments, "shadowColorArgb", 0x00000000));
     const uint32_t stroke_argb = static_cast<uint32_t>(
         ReadInt64FromMap(*arguments, "strokeColorArgb", 0x00000000));
     const double stroke_width = ReadDoubleFromMap(*arguments, "strokeWidth", 0.0);
+    const uint32_t background_argb = static_cast<uint32_t>(
+        ReadInt64FromMap(*arguments, "backgroundColorArgb", 0x7A220A35));
+    const double background_radius =
+        ReadDoubleFromMap(*arguments, "backgroundRadius", 22.0);
+    const double background_padding =
+        ReadDoubleFromMap(*arguments, "backgroundPadding", 12.0);
+    const bool text_gradient_enabled =
+        ReadBoolFromMap(*arguments, "textGradientEnabled", true);
+    const uint32_t text_gradient_start_argb = static_cast<uint32_t>(
+        ReadInt64FromMap(*arguments, "textGradientStartArgb", 0xFFFFD36E));
+    const uint32_t text_gradient_end_argb = static_cast<uint32_t>(
+        ReadInt64FromMap(*arguments, "textGradientEndArgb", 0xFFFF4D8D));
+    const double text_gradient_angle =
+        ReadDoubleFromMap(*arguments, "textGradientAngle", 0.0);
+    const double overlay_width =
+        ReadDoubleFromMap(*arguments, "overlayWidth", 980.0);
+    const double overlay_height =
+        ReadDoubleFromMap(*arguments, "overlayHeight", -1.0);
+    const auto font_family =
+        Utf8ToWide(ReadStringFromMap(*arguments, "fontFamily"));
+    const int text_align = static_cast<int>(
+        ReadInt64FromMap(*arguments, "textAlign", 0));
+    const int font_weight_value = static_cast<int>(
+        ReadInt64FromMap(*arguments, "fontWeightValue", 400));
     overlay_->UpdateConfig(enabled, click_through, font_size, opacity, text_argb,
-                           shadow_argb, stroke_argb, stroke_width);
+                           shadow_argb, stroke_argb, stroke_width,
+                           background_argb, background_radius, background_padding,
+                           text_gradient_enabled, text_gradient_start_argb,
+                           text_gradient_end_argb, text_gradient_angle,
+                           overlay_width, overlay_height,
+                           font_family, text_align, font_weight_value);
     result->Success();
     return;
   }
