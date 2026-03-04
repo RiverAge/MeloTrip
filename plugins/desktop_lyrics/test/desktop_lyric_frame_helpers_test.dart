@@ -3,13 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('fromTimedTokens maps line progress to token progress', () {
-    final frame = DesktopLyricFrame.fromTimedTokens(
+    final frame = DesktopLyricsFrame.fromTimedTokens(
       lineProgress: 0.5,
       tokens: const [
-        DesktopLyricTokenTiming(text: 'Never ', durationMs: 1000),
-        DesktopLyricTokenTiming(text: 'gonna ', durationMs: 1000),
-        DesktopLyricTokenTiming(text: 'give ', durationMs: 1000),
-        DesktopLyricTokenTiming(text: 'you up', durationMs: 1000),
+        DesktopLyricsTokenTiming(text: 'Never ', durationMs: 1000),
+        DesktopLyricsTokenTiming(text: 'gonna ', durationMs: 1000),
+        DesktopLyricsTokenTiming(text: 'give ', durationMs: 1000),
+        DesktopLyricsTokenTiming(text: 'you up', durationMs: 1000),
       ],
     );
 
@@ -22,13 +22,13 @@ void main() {
   });
 
   test('fromKaraokeTimeline computes line and token progress by position', () {
-    final frame = DesktopLyricFrame.fromKaraokeTimeline(
+    final frame = DesktopLyricsFrame.fromKaraokeTimeline(
       positionMs: 2500,
       tokens: const [
-        DesktopLyricTimelineToken(text: 'Ne', startMs: 0, endMs: 1000),
-        DesktopLyricTimelineToken(text: 'ver ', startMs: 1000, endMs: 2000),
-        DesktopLyricTimelineToken(text: 'go', startMs: 2000, endMs: 3000),
-        DesktopLyricTimelineToken(text: 'nna', startMs: 3000, endMs: 4000),
+        DesktopLyricsTimelineToken(text: 'Ne', startMs: 0, endMs: 1000),
+        DesktopLyricsTimelineToken(text: 'ver ', startMs: 1000, endMs: 2000),
+        DesktopLyricsTimelineToken(text: 'go', startMs: 2000, endMs: 3000),
+        DesktopLyricsTimelineToken(text: 'nna', startMs: 3000, endMs: 4000),
       ],
     );
 
@@ -40,4 +40,3 @@ void main() {
     expect(frame.tokens[3].progress, 0.0);
   });
 }
-

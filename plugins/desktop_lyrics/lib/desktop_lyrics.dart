@@ -2,24 +2,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 @immutable
-class DesktopLyricToken {
-  const DesktopLyricToken({required this.text, required this.progress});
+class DesktopLyricsToken {
+  const DesktopLyricsToken({required this.text, required this.progress});
 
   final String text;
   final double progress;
 }
 
 @immutable
-class DesktopLyricTokenTiming {
-  const DesktopLyricTokenTiming({required this.text, required this.durationMs});
+class DesktopLyricsTokenTiming {
+  const DesktopLyricsTokenTiming({required this.text, required this.durationMs});
 
   final String text;
   final int durationMs;
 }
 
 @immutable
-class DesktopLyricTimelineToken {
-  const DesktopLyricTimelineToken({
+class DesktopLyricsTimelineToken {
+  const DesktopLyricsTimelineToken({
     required this.text,
     required this.startMs,
     required this.endMs,
@@ -31,71 +31,71 @@ class DesktopLyricTimelineToken {
 }
 
 @immutable
-class DesktopLyricFrame {
+class DesktopLyricsFrame {
   // `.line` is for static single-line display by default, so progress defaults
   // to fully visible. Callers can pass a custom value when they need sweeping.
-  const DesktopLyricFrame.line({required this.currentLine, this.lineProgress = 1.0})
+  const DesktopLyricsFrame.line({required this.currentLine, this.lineProgress = 1.0})
     : tokens = const [];
 
-  const DesktopLyricFrame.tokenized({
+  const DesktopLyricsFrame.tokenized({
     required this.tokens,
     this.currentLine = '',
-    this.lineProgress = 1.0,
+    this.lineProgress = double.nan,
   });
 
   final String currentLine;
   final double lineProgress;
-  final List<DesktopLyricToken> tokens;
+  final List<DesktopLyricsToken> tokens;
 
-  factory DesktopLyricFrame.fromTimedTokens({
-    required List<DesktopLyricTokenTiming> tokens,
+  factory DesktopLyricsFrame.fromTimedTokens({
+    required List<DesktopLyricsTokenTiming> tokens,
     required double lineProgress,
   }) {
     final normalized = lineProgress.clamp(0.0, 1.0);
     if (tokens.isEmpty) {
-      return DesktopLyricFrame.line(currentLine: '', lineProgress: normalized);
+      return DesktopLyricsFrame.line(currentLine: '', lineProgress: normalized);
     }
     var total = 0;
     for (final token in tokens) {
       total += token.durationMs > 0 ? token.durationMs : 1;
     }
     var elapsed = 0;
-    final mapped = <DesktopLyricToken>[];
+    final mapped = <DesktopLyricsToken>[];
     for (final token in tokens) {
       final duration = token.durationMs > 0 ? token.durationMs : 1;
       final start = elapsed / total;
       final end = (elapsed + duration) / total;
       final local = ((normalized - start) / (end - start)).clamp(0.0, 1.0);
-      mapped.add(DesktopLyricToken(text: token.text, progress: local));
+      mapped.add(DesktopLyricsToken(text: token.text, progress: local));
       elapsed += duration;
     }
-    return DesktopLyricFrame.tokenized(
+    return DesktopLyricsFrame.tokenized(
       currentLine: tokens.map((e) => e.text).join(),
       lineProgress: normalized,
       tokens: mapped,
     );
   }
 
-  factory DesktopLyricFrame.fromKaraokeTimeline({
+  factory DesktopLyricsFrame.fromKaraokeTimeline({
     required int positionMs,
-    required List<DesktopLyricTimelineToken> tokens,
+    required List<DesktopLyricsTimelineToken> tokens,
   }) {
     if (tokens.isEmpty) {
-      return const DesktopLyricFrame.line(currentLine: '', lineProgress: 1.0);
+      return const DesktopLyricsFrame.line(currentLine: '', lineProgress: 1.0);
     }
     final minStart = tokens.first.startMs;
     final maxEnd = tokens.last.endMs;
     final total = (maxEnd - minStart).clamp(1, 1 << 30);
     final normalized =
         ((positionMs - minStart) / total).clamp(0.0, 1.0).toDouble();
-    final mapped = <DesktopLyricToken>[];
+    final mapped = <DesktopLyricsToken>[];
     for (final token in tokens) {
       final denom = (token.endMs - token.startMs).clamp(1, 1 << 30);
       final local =
           ((positionMs - token.startMs) / denom).clamp(0.0, 1.0).toDouble();
-      mapped.add(DesktopLyricToken(text: token.text, progress: local));
+      mapped.add(DesktopLyricsToken(text: token.text, progress: local));
     }
-    return DesktopLyricFrame.tokenized(
+    return DesktopLyricsFrame.tokenized(
       currentLine: tokens.map((e) => e.text).join(),
       lineProgress: normalized,
       tokens: mapped,
@@ -112,6 +112,16 @@ class DesktopLyricsInteractionConfig {
 
   final bool enabled;
   final bool clickThrough;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsInteractionConfig &&
+          enabled == other.enabled &&
+          clickThrough == other.clickThrough;
+
+  @override
+  int get hashCode => Object.hash(enabled, clickThrough);
 }
 
 @immutable
@@ -135,19 +145,56 @@ class DesktopLyricsTextConfig {
   final String? fontFamily;
   final TextAlign? textAlign;
   final FontWeight? fontWeight;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsTextConfig &&
+          fontSize == other.fontSize &&
+          textColor == other.textColor &&
+          shadowColor == other.shadowColor &&
+          strokeColor == other.strokeColor &&
+          strokeWidth == other.strokeWidth &&
+          fontFamily == other.fontFamily &&
+          textAlign == other.textAlign &&
+          fontWeight == other.fontWeight;
+
+  @override
+  int get hashCode => Object.hash(
+    fontSize,
+    textColor,
+    shadowColor,
+    strokeColor,
+    strokeWidth,
+    fontFamily,
+    textAlign,
+    fontWeight,
+  );
 }
 
 @immutable
 class DesktopLyricsBackgroundConfig {
   const DesktopLyricsBackgroundConfig({
     this.backgroundColor,
-    this.backgroundRadius,
-    this.backgroundPadding,
+    this.backgroundRadius = 16.0,
+    this.backgroundPadding = 10.0,
   });
 
   final Color? backgroundColor;
-  final double? backgroundRadius;
-  final double? backgroundPadding;
+  final double backgroundRadius;
+  final double backgroundPadding;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsBackgroundConfig &&
+          backgroundColor == other.backgroundColor &&
+          backgroundRadius == other.backgroundRadius &&
+          backgroundPadding == other.backgroundPadding;
+
+  @override
+  int get hashCode =>
+      Object.hash(backgroundColor, backgroundRadius, backgroundPadding);
 }
 
 @immutable
@@ -156,13 +203,30 @@ class DesktopLyricsGradientConfig {
     this.textGradientEnabled,
     this.textGradientStartColor,
     this.textGradientEndColor,
-    this.textGradientAngle,
+    this.textGradientAngle = 0.0,
   });
 
   final bool? textGradientEnabled;
   final Color? textGradientStartColor;
   final Color? textGradientEndColor;
-  final double? textGradientAngle;
+  final double textGradientAngle;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsGradientConfig &&
+          textGradientEnabled == other.textGradientEnabled &&
+          textGradientStartColor == other.textGradientStartColor &&
+          textGradientEndColor == other.textGradientEndColor &&
+          textGradientAngle == other.textGradientAngle;
+
+  @override
+  int get hashCode => Object.hash(
+    textGradientEnabled,
+    textGradientStartColor,
+    textGradientEndColor,
+    textGradientAngle,
+  );
 }
 
 @immutable
@@ -171,6 +235,16 @@ class DesktopLyricsLayoutConfig {
 
   final double? overlayWidth;
   final double? overlayHeight;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsLayoutConfig &&
+          overlayWidth == other.overlayWidth &&
+          overlayHeight == other.overlayHeight;
+
+  @override
+  int get hashCode => Object.hash(overlayWidth, overlayHeight);
 }
 
 @immutable
@@ -190,6 +264,21 @@ class DesktopLyricsConfig {
   final DesktopLyricsBackgroundConfig background;
   final DesktopLyricsGradientConfig gradient;
   final DesktopLyricsLayoutConfig layout;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsConfig &&
+          interaction == other.interaction &&
+          text == other.text &&
+          opacity == other.opacity &&
+          background == other.background &&
+          gradient == other.gradient &&
+          layout == other.layout;
+
+  @override
+  int get hashCode =>
+      Object.hash(interaction, text, opacity, background, gradient, layout);
 
   DesktopLyricsConfig copyWith({
     DesktopLyricsInteractionConfig? interaction,
@@ -224,9 +313,14 @@ class DesktopLyricsStateSnapshot {
     required this.textGradientEnabled,
     required this.textGradientStartArgb,
     required this.textGradientEndArgb,
+    required this.textGradientAngle,
     required this.backgroundColorArgb,
+    required this.backgroundRadius,
+    required this.backgroundPadding,
     required this.textAlign,
+    required this.fontFamily,
     required this.fontWeightValue,
+    required this.autoOverlayHeight,
     required this.overlayWidth,
     required this.overlayHeight,
   });
@@ -242,9 +336,14 @@ class DesktopLyricsStateSnapshot {
   final bool textGradientEnabled;
   final int textGradientStartArgb;
   final int textGradientEndArgb;
+  final double textGradientAngle;
   final int backgroundColorArgb;
+  final double backgroundRadius;
+  final double backgroundPadding;
   final TextAlign textAlign;
+  final String fontFamily;
   final int fontWeightValue;
+  final bool autoOverlayHeight;
   final double overlayWidth;
   final double overlayHeight;
 }
@@ -274,17 +373,12 @@ class DesktopLyrics {
   int _fontWeightValue = FontWeight.w400.value;
   double _overlayWidth = 980.0;
   double _overlayHeight = 160.0;
-  bool _perfEnabled = false;
-  int _perfTargetFps = 0;
-  String _perfMode = 'line';
-  bool _perfGradient = false;
-  int _perfAttempted = 0;
-  int _perfSent = 0;
-  int _perfThrottled = 0;
-  int _perfFailed = 0;
-  int _perfSampleCount = 0;
-  double _perfTotalMs = 0.0;
-  DateTime _perfLastLogAt = DateTime.now();
+  double _backgroundRadius = 16.0;
+  double _backgroundPadding = 10.0;
+  String _fontFamily = 'Segoe UI';
+  double _textGradientAngle = 0.0;
+  bool _autoOverlayHeight = true;
+  final _perf = _PerformanceTracker();
   static const int _minRenderIntervalMs = 33;
   static const double _minProgressDelta = 0.01;
   DateTime _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
@@ -303,9 +397,14 @@ class DesktopLyrics {
     textGradientEnabled: _textGradientEnabled,
     textGradientStartArgb: _textGradientStartArgb,
     textGradientEndArgb: _textGradientEndArgb,
+    textGradientAngle: _textGradientAngle,
     backgroundColorArgb: _backgroundColorArgb,
+    backgroundRadius: _backgroundRadius,
+    backgroundPadding: _backgroundPadding,
     textAlign: _textAlign,
+    fontFamily: _fontFamily,
     fontWeightValue: _fontWeightValue,
+    autoOverlayHeight: _autoOverlayHeight,
     overlayWidth: _overlayWidth,
     overlayHeight: _overlayHeight,
   );
@@ -316,14 +415,15 @@ class DesktopLyrics {
 
   Future<void> dispose() async => _invoke('dispose');
 
-  Future<void> render(DesktopLyricFrame frame) async {
+  Future<void> render(DesktopLyricsFrame frame) async {
     final currentLine = frame.currentLine.isNotEmpty
         ? frame.currentLine
         : frame.tokens.map((e) => e.text).join();
     final rawProgress = frame.lineProgress;
+    final tokensProgress = _deriveProgressFromTokens(frame.tokens);
     final double currentProgress = rawProgress.isFinite
         ? rawProgress.clamp(0.0, 1.0).toDouble()
-        : 1.0;
+        : (tokensProgress ?? 1.0);
     final now = DateTime.now();
     final sameLine = currentLine == _lastRenderLine;
     final smallDelta =
@@ -331,46 +431,20 @@ class DesktopLyrics {
     final withinInterval =
         now.difference(_lastRenderAt).inMilliseconds < _minRenderIntervalMs;
     if (sameLine && smallDelta && withinInterval) {
-      if (_perfEnabled) _perfThrottled++;
+      _perf.recordThrottled();
       return;
     }
     _lastRenderAt = now;
     _lastRenderLine = currentLine;
     _lastRenderProgress = currentProgress;
 
-    _perfAttempted += _perfEnabled ? 1 : 0;
-    final sw = _perfEnabled ? (Stopwatch()..start()) : null;
+    final sw = _perf.startAttempt();
     final result = await _invoke('updateLyricFrame', {
       'currentLine': currentLine,
       'lineProgress': currentProgress,
-      'tokens': frame.tokens
-          .map((e) => {'text': e.text, 'progress': e.progress.clamp(0.0, 1.0)})
-          .toList(),
     });
-    if (_perfEnabled) {
-      sw!.stop();
-      _perfSampleCount++;
-      _perfTotalMs += sw.elapsedMicroseconds / 1000.0;
-      if (result == null) {
-        _perfFailed++;
-      } else {
-        _perfSent++;
-      }
-      final now = DateTime.now();
-      if (now.difference(_perfLastLogAt).inMilliseconds >= 1000) {
-        final avg = _perfSampleCount == 0 ? 0.0 : _perfTotalMs / _perfSampleCount;
-        debugPrint(
-          'fps(target=$_perfTargetFps attempted=$_perfAttempted sent=$_perfSent throttled=$_perfThrottled failed=$_perfFailed avg=${avg.toStringAsFixed(2)} ms gradient=$_perfGradient mode=$_perfMode)',
-        );
-        _perfLastLogAt = now;
-        _perfAttempted = 0;
-        _perfSent = 0;
-        _perfThrottled = 0;
-        _perfFailed = 0;
-        _perfSampleCount = 0;
-        _perfTotalMs = 0;
-      }
-    }
+    _perf.recordResult(sw, success: result != null);
+    _perf.maybeLog();
   }
 
   void setPerformanceProbe({
@@ -379,17 +453,12 @@ class DesktopLyrics {
     String mode = 'line',
     bool gradient = false,
   }) {
-    _perfEnabled = enabled;
-    _perfTargetFps = targetFps;
-    _perfMode = mode;
-    _perfGradient = gradient;
-    _perfAttempted = 0;
-    _perfSent = 0;
-    _perfThrottled = 0;
-    _perfFailed = 0;
-    _perfSampleCount = 0;
-    _perfTotalMs = 0;
-    _perfLastLogAt = DateTime.now();
+    _perf.configure(
+      enabled: enabled,
+      targetFps: targetFps,
+      mode: mode,
+      gradient: gradient,
+    );
   }
 
   Future<void> configure(DesktopLyricsConfig config) async {
@@ -405,12 +474,16 @@ class DesktopLyrics {
     final nextStrokeWidth = config.text.strokeWidth ?? _strokeWidth;
     final nextTextGradientEnabled = config.gradient.textGradientEnabled ?? false;
     final nextTextGradientStartArgb =
-        config.gradient.textGradientStartColor?.toARGB32() ?? nextTextColorArgb;
+        config.gradient.textGradientStartColor?.toARGB32() ?? _textGradientStartArgb;
     final nextTextGradientEndArgb =
-        config.gradient.textGradientEndColor?.toARGB32() ?? nextTextColorArgb;
+        config.gradient.textGradientEndColor?.toARGB32() ?? _textGradientEndArgb;
     final nextBackgroundColorArgb =
-        config.background.backgroundColor?.toARGB32() ?? 0x00000000;
+        config.background.backgroundColor?.toARGB32() ?? _backgroundColorArgb;
+    final nextBackgroundRadius = config.background.backgroundRadius;
+    final nextBackgroundPadding = config.background.backgroundPadding;
+    final nextGradientAngle = config.gradient.textGradientAngle;
     final nextTextAlign = config.text.textAlign ?? TextAlign.start;
+    final nextFontFamily = config.text.fontFamily ?? _fontFamily;
     final nextFontWeightValue = config.text.fontWeight?.value ?? FontWeight.w400.value;
     final nextOverlayWidth = config.layout.overlayWidth ?? _overlayWidth;
     final nextAutoOverlayHeight = config.layout.overlayHeight == null;
@@ -426,16 +499,16 @@ class DesktopLyrics {
       'strokeColorArgb': nextStrokeColorArgb,
       'strokeWidth': nextStrokeWidth,
       'backgroundColorArgb': nextBackgroundColorArgb,
-      'backgroundRadius': config.background.backgroundRadius ?? 16.0,
-      'backgroundPadding': config.background.backgroundPadding ?? 10.0,
+      'backgroundRadius': nextBackgroundRadius,
+      'backgroundPadding': nextBackgroundPadding,
       'textGradientEnabled': nextTextGradientEnabled,
       'textGradientStartArgb': nextTextGradientStartArgb,
       'textGradientEndArgb': nextTextGradientEndArgb,
-      'textGradientAngle': config.gradient.textGradientAngle ?? 0.0,
+      'textGradientAngle': nextGradientAngle,
       'overlayWidth': nextOverlayWidth,
       // overlayHeight is omitted from payload to signal auto-height mode.
       if (!nextAutoOverlayHeight) 'overlayHeight': nextOverlayHeight,
-      'fontFamily': config.text.fontFamily ?? 'Segoe UI',
+      'fontFamily': nextFontFamily,
       'textAlign': _toNativeTextAlign(nextTextAlign),
       'fontWeightValue': nextFontWeightValue,
     });
@@ -451,11 +524,29 @@ class DesktopLyrics {
     _textGradientEnabled = nextTextGradientEnabled;
     _textGradientStartArgb = nextTextGradientStartArgb;
     _textGradientEndArgb = nextTextGradientEndArgb;
+    _textGradientAngle = nextGradientAngle;
     _backgroundColorArgb = nextBackgroundColorArgb;
+    _backgroundRadius = nextBackgroundRadius;
+    _backgroundPadding = nextBackgroundPadding;
     _textAlign = nextTextAlign;
+    _fontFamily = nextFontFamily;
     _fontWeightValue = nextFontWeightValue;
+    _autoOverlayHeight = nextAutoOverlayHeight;
     _overlayWidth = nextOverlayWidth;
     _overlayHeight = nextOverlayHeight;
+  }
+
+  double? _deriveProgressFromTokens(List<DesktopLyricsToken> tokens) {
+    if (tokens.isEmpty) return null;
+    var totalWeight = 0.0;
+    var sum = 0.0;
+    for (final token in tokens) {
+      final weight = token.text.runes.length.toDouble().clamp(1.0, double.infinity);
+      totalWeight += weight;
+      sum += token.progress.clamp(0.0, 1.0) * weight;
+    }
+    if (totalWeight <= 0) return 1.0;
+    return (sum / totalWeight).clamp(0.0, 1.0).toDouble();
   }
 
   int _toNativeTextAlign(TextAlign value) {
@@ -479,5 +570,79 @@ class DesktopLyrics {
       debugPrint('desktop_lyrics $method failed: ${err.message}');
       return null;
     }
+  }
+}
+
+class _PerformanceTracker {
+  bool enabled = false;
+  int targetFps = 0;
+  String mode = 'line';
+  bool gradient = false;
+
+  int attempted = 0;
+  int sent = 0;
+  int throttled = 0;
+  int failed = 0;
+  int sampleCount = 0;
+  double totalMs = 0.0;
+  DateTime lastLogAt = DateTime.now();
+
+  void configure({
+    required bool enabled,
+    required int targetFps,
+    required String mode,
+    required bool gradient,
+  }) {
+    this.enabled = enabled;
+    this.targetFps = targetFps;
+    this.mode = mode;
+    this.gradient = gradient;
+    attempted = 0;
+    sent = 0;
+    throttled = 0;
+    failed = 0;
+    sampleCount = 0;
+    totalMs = 0.0;
+    lastLogAt = DateTime.now();
+  }
+
+  Stopwatch? startAttempt() {
+    if (!enabled) return null;
+    attempted++;
+    return Stopwatch()..start();
+  }
+
+  void recordThrottled() {
+    if (!enabled) return;
+    throttled++;
+  }
+
+  void recordResult(Stopwatch? stopwatch, {required bool success}) {
+    if (!enabled || stopwatch == null) return;
+    stopwatch.stop();
+    sampleCount++;
+    totalMs += stopwatch.elapsedMicroseconds / 1000.0;
+    if (success) {
+      sent++;
+    } else {
+      failed++;
+    }
+  }
+
+  void maybeLog() {
+    if (!enabled) return;
+    final now = DateTime.now();
+    if (now.difference(lastLogAt).inMilliseconds < 1000) return;
+    final avg = sampleCount == 0 ? 0.0 : totalMs / sampleCount;
+    debugPrint(
+      'fps(target=$targetFps attempted=$attempted sent=$sent throttled=$throttled failed=$failed avg=${avg.toStringAsFixed(2)} ms gradient=$gradient mode=$mode)',
+    );
+    lastLogAt = now;
+    attempted = 0;
+    sent = 0;
+    throttled = 0;
+    failed = 0;
+    sampleCount = 0;
+    totalMs = 0.0;
   }
 }

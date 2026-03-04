@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               ),
               FilledButton(
                 onPressed: () => DesktopLyrics.instance.render(
-                  const DesktopLyricFrame.line(currentLine: 'Hello Desktop Lyrics'),
+                  const DesktopLyricsFrame.line(currentLine: 'Hello Desktop Lyrics'),
                 ),
                 child: const Text('Render'),
               ),

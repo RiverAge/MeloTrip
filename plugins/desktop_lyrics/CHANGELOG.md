@@ -2,7 +2,7 @@
 
 * Initial Windows desktop floating lyrics implementation.
 * Added public Dart API:
-  * `DesktopLyricFrame`
+  * `DesktopLyricsFrame`
   * `DesktopLyricsConfig`
   * `DesktopLyrics.show/hide/dispose`
   * `DesktopLyrics.render/configure`

@@ -151,50 +151,31 @@ void DesktopLyricsOverlay::UpdateLyricFrame(const std::wstring& current_line,
   RequestRepaint();
 }
 
-void DesktopLyricsOverlay::UpdateConfig(bool enabled,
-                                        bool click_through,
-                                        double font_size,
-                                        double opacity,
-                                        uint32_t text_argb,
-                                        uint32_t shadow_argb,
-                                        uint32_t stroke_argb,
-                                        double stroke_width,
-                                        uint32_t background_argb,
-                                        double background_radius,
-                                        double background_padding,
-                                        bool text_gradient_enabled,
-                                        uint32_t text_gradient_start_argb,
-                                        uint32_t text_gradient_end_argb,
-                                        double text_gradient_angle,
-                                        double overlay_width,
-                                        double overlay_height,
-                                        const std::wstring& font_family,
-                                        int text_align,
-                                        int font_weight_value) {
-  enabled_ = enabled;
-  click_through_ = click_through;
-  font_size_ = std::clamp(font_size, 20.0, 72.0);
-  opacity_ = std::clamp(opacity, 0.25, 1.0);
-  text_argb_ = text_argb;
-  shadow_argb_ = shadow_argb;
-  stroke_argb_ = stroke_argb;
-  stroke_width_ = std::clamp(stroke_width, 0.0, 6.0);
-  background_argb_ = background_argb;
-  background_radius_ = std::clamp(background_radius, 0.0, 48.0);
-  background_padding_ = std::clamp(background_padding, 0.0, 36.0);
-  text_gradient_enabled_ = text_gradient_enabled;
-  text_gradient_start_argb_ = text_gradient_start_argb;
-  text_gradient_end_argb_ = text_gradient_end_argb;
-  text_gradient_angle_ = text_gradient_angle;
+void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
+  enabled_ = config.enabled;
+  click_through_ = config.click_through;
+  font_size_ = std::clamp(config.font_size, 20.0, 72.0);
+  opacity_ = std::clamp(config.opacity, 0.25, 1.0);
+  text_argb_ = config.text_argb;
+  shadow_argb_ = config.shadow_argb;
+  stroke_argb_ = config.stroke_argb;
+  stroke_width_ = std::clamp(config.stroke_width, 0.0, 6.0);
+  background_argb_ = config.background_argb;
+  background_radius_ = std::clamp(config.background_radius, 0.0, 48.0);
+  background_padding_ = std::clamp(config.background_padding, 0.0, 36.0);
+  text_gradient_enabled_ = config.text_gradient_enabled;
+  text_gradient_start_argb_ = config.text_gradient_start_argb;
+  text_gradient_end_argb_ = config.text_gradient_end_argb;
+  text_gradient_angle_ = config.text_gradient_angle;
   overlay_width_ =
-      static_cast<int>(std::round(std::clamp(overlay_width, 480.0, 2600.0)));
-  if (overlay_height > 0.0) {
+      static_cast<int>(std::round(std::clamp(config.overlay_width, 480.0, 2600.0)));
+  if (config.overlay_height > 0.0) {
     overlay_height_ =
-        static_cast<int>(std::round(std::clamp(overlay_height, 90.0, 800.0)));
+        static_cast<int>(std::round(std::clamp(config.overlay_height, 90.0, 800.0)));
   }
-  font_family_ = font_family.empty() ? L"Segoe UI" : font_family;
-  text_align_ = std::clamp(text_align, 0, 2);
-  font_weight_value_ = std::clamp(font_weight_value, 100, 900);
+  font_family_ = config.font_family.empty() ? L"Segoe UI" : config.font_family;
+  text_align_ = std::clamp(config.text_align, 0, 2);
+  font_weight_value_ = std::clamp(config.font_weight_value, 100, 900);
 
   if (!hwnd_ && !Create()) return;
   ApplyWindowStyles();

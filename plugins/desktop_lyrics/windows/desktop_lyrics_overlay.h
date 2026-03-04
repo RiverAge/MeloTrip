@@ -14,6 +14,29 @@ class GraphicsPath;
 
 namespace desktop_lyrics {
 
+struct OverlayConfig {
+  bool enabled = true;
+  bool click_through = false;
+  double font_size = 38.0;
+  double opacity = 0.96;
+  uint32_t text_argb = 0xFFF6F7FF;
+  uint32_t shadow_argb = 0x00000000;
+  uint32_t stroke_argb = 0x00000000;
+  double stroke_width = 0.0;
+  uint32_t background_argb = 0x7A220A35;
+  double background_radius = 22.0;
+  double background_padding = 12.0;
+  bool text_gradient_enabled = true;
+  uint32_t text_gradient_start_argb = 0xFFFFD36E;
+  uint32_t text_gradient_end_argb = 0xFFFF4D8D;
+  double text_gradient_angle = 0.0;
+  double overlay_width = 980.0;
+  double overlay_height = -1.0;
+  std::wstring font_family = L"Segoe UI";
+  int text_align = 0;
+  int font_weight_value = 400;
+};
+
 class DesktopLyricsOverlay {
  public:
   DesktopLyricsOverlay();
@@ -25,26 +48,7 @@ class DesktopLyricsOverlay {
   void Dispose();
 
   void UpdateLyricFrame(const std::wstring& current_line, double line_progress);
-  void UpdateConfig(bool enabled,
-                    bool click_through,
-                    double font_size,
-                    double opacity,
-                    uint32_t text_argb,
-                    uint32_t shadow_argb,
-                    uint32_t stroke_argb,
-                    double stroke_width,
-                    uint32_t background_argb,
-                    double background_radius,
-                    double background_padding,
-                    bool text_gradient_enabled,
-                    uint32_t text_gradient_start_argb,
-                    uint32_t text_gradient_end_argb,
-                    double text_gradient_angle,
-                    double overlay_width,
-                    double overlay_height,
-                    const std::wstring& font_family,
-                    int text_align,
-                    int font_weight_value);
+  void UpdateConfig(const OverlayConfig& config);
 
  private:
   static LRESULT CALLBACK WndProc(HWND hwnd,

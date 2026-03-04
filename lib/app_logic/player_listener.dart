@@ -151,7 +151,7 @@ extension _PlayerListenerLogic on _MyAppState {
       if (lyricLines.isNotEmpty) {
         final firstLine = (lyricLines.first.value ?? const <String>[]).join('  ');
         await lyricsService.render(
-          DesktopLyricFrame.line(
+          DesktopLyricsFrame.line(
             currentLine: firstLine,
             lineProgress: 0,
           ),
@@ -175,7 +175,7 @@ extension _PlayerListenerLogic on _MyAppState {
       final currentLine = (current.value ?? const <String>[]).join('  ');
 
       await lyricsService.render(
-        DesktopLyricFrame.line(
+        DesktopLyricsFrame.line(
           currentLine: currentLine,
         ),
       );

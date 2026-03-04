@@ -17,7 +17,7 @@ void main() {
   testWidgets('plugin channel smoke test', (WidgetTester tester) async {
     final plugin = DesktopLyrics.instance;
     await plugin.show();
-    await plugin.render(const DesktopLyricFrame.line(currentLine: 'Hello'));
+    await plugin.render(const DesktopLyricsFrame.line(currentLine: 'Hello'));
     await plugin.hide();
     expect(true, isTrue);
   });

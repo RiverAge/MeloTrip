@@ -44,12 +44,12 @@ void main() {
       final tokenC = ((lineProgress - 0.65) * 2.2).clamp(0.0, 1.0);
 
       await lyrics.render(
-        DesktopLyricFrame.tokenized(
+        DesktopLyricsFrame.tokenized(
           lineProgress: lineProgress,
           tokens: [
-            DesktopLyricToken(text: 'Hello ', progress: tokenA),
-            DesktopLyricToken(text: 'desktop ', progress: tokenB),
-            DesktopLyricToken(text: 'lyrics', progress: tokenC),
+            DesktopLyricsToken(text: 'Hello ', progress: tokenA),
+            DesktopLyricsToken(text: 'desktop ', progress: tokenB),
+            DesktopLyricsToken(text: 'lyrics', progress: tokenC),
           ],
         ),
       );
@@ -71,7 +71,7 @@ void main() {
 
   test('line frame uses visible default progress when omitted', () async {
     final lyrics = DesktopLyrics.instance;
-    await lyrics.render(const DesktopLyricFrame.line(currentLine: 'Visible'));
+    await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'Visible'));
     final renderCalls =
         calls.where((call) => call.method == 'updateLyricFrame').toList();
     final payload = renderCalls.last.arguments as Map<Object?, Object?>;

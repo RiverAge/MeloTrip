@@ -44,7 +44,7 @@ await desktopLyrics.configure(
 
 await desktopLyrics.show();
 await desktopLyrics.render(
-  const DesktopLyricFrame.line(
+  const DesktopLyricsFrame.line(
     currentLine: 'First line',
     lineProgress: 1.0,
   ),
@@ -55,7 +55,7 @@ await desktopLyrics.render(
 
 - `show()` / `hide()` / `dispose()`
 - `configure(DesktopLyricsConfig config)`
-- `render(DesktopLyricFrame frame)`
+- `render(DesktopLyricsFrame frame)`
 
 ## Notes
 

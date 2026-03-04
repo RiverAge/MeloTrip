@@ -36,7 +36,7 @@ void main() {
 
   test('serializes render/config payloads', () async {
     final lyrics = DesktopLyrics.instance;
-    await lyrics.render(const DesktopLyricFrame.line(currentLine: 'line1'));
+    await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
     await lyrics.configure(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
