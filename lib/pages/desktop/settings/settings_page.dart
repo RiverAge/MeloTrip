@@ -316,19 +316,28 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     final l10n = AppLocalizations.of(context)!;
     setState(() => _simulatingLyrics = true);
     final service = ref.read(desktopLyricsServiceProvider);
-    await service.show();
-    final previewText = '${l10n.play} ${l10n.desktopLyrics} ${l10n.playQueue}';
-    for (var i = 1; i <= previewText.length; i++) {
-      if (!mounted) return;
-      await service.render(
-        DesktopLyricsFrame.fromTimedTokens(
-          lineProgress: 1.0,
-          tokens: [DesktopLyricsTokenTiming(text: previewText.substring(0, i), durationMs: 1)],
-        ),
-      );
-      await Future.delayed(const Duration(milliseconds: 45));
+    final previewing = ref.read(desktopLyricsPreviewingProvider.notifier);
+    previewing.state = true;
+    try {
+      await service.show();
+      final stamp = DateTime.now().second.toString().padLeft(2, '0');
+      final previewText =
+          '${l10n.play} ${l10n.desktopLyrics} ${l10n.playQueue} $stamp';
+      const steps = 28;
+      for (var i = 0; i <= steps; i++) {
+        if (!mounted) return;
+        await service.render(
+          DesktopLyricsFrame.line(
+            currentLine: previewText,
+            lineProgress: i / steps,
+          ),
+        );
+        await Future.delayed(const Duration(milliseconds: 40));
+      }
+    } finally {
+      previewing.state = false;
+      if (mounted) setState(() => _simulatingLyrics = false);
     }
-    if (mounted) setState(() => _simulatingLyrics = false);
   }
 
   Future<void> _runTokenLyricsSimulation() async {
@@ -336,35 +345,55 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     final l10n = AppLocalizations.of(context)!;
     setState(() => _simulatingTokenLyrics = true);
     final service = ref.read(desktopLyricsServiceProvider);
-    await service.show();
-    final tokens = <String>[
-      '${l10n.desktopLyrics} ${l10n.desktopLyrics}',
-      'Hi',
-      l10n.playQueue,
-    ];
-    final buffer = StringBuffer();
-    for (var tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
-      final token = tokens[tokenIndex];
-      for (var i = 1; i <= token.length; i++) {
+    final previewing = ref.read(desktopLyricsPreviewingProvider.notifier);
+    previewing.state = true;
+    try {
+      await service.show();
+      final stamp = DateTime.now().second.toString().padLeft(2, '0');
+      final timedTokens = <DesktopLyricsTokenTiming>[
+        DesktopLyricsTokenTiming(text: '${l10n.desktopLyrics} ', durationMs: 5000),
+        const DesktopLyricsTokenTiming(text: 'Hi ', durationMs: 400),
+        DesktopLyricsTokenTiming(text: '${l10n.playQueue} ', durationMs: 1200),
+        DesktopLyricsTokenTiming(text: stamp, durationMs: 500),
+      ];
+      var totalDurationMs = 0;
+      for (final token in timedTokens) {
+        totalDurationMs += token.durationMs;
+      }
+      final total = totalDurationMs.clamp(1, 1 << 30);
+      final segmentCount = timedTokens.length.clamp(1, 1 << 30);
+      const tickMs = 40;
+      for (var elapsedMs = 0; elapsedMs <= total; elapsedMs += tickMs) {
         if (!mounted) return;
-        final prefix = buffer.toString();
-        final current = token.substring(0, i);
-        final line = prefix.isEmpty ? current : '$prefix $current';
-        await service.render(DesktopLyricsFrame.line(currentLine: line));
-        await Future.delayed(const Duration(milliseconds: 45));
+        var consumedDuration = 0;
+        var mappedProgress = 0.0;
+        for (var idx = 0; idx < timedTokens.length; idx++) {
+          final token = timedTokens[idx];
+          final nextDuration = consumedDuration + token.durationMs;
+          if (elapsedMs >= nextDuration) {
+            consumedDuration = nextDuration;
+            mappedProgress = (idx + 1) / segmentCount;
+            continue;
+          }
+
+          final local = ((elapsedMs - consumedDuration) / token.durationMs).clamp(0.0, 1.0);
+          mappedProgress = ((idx + local) / segmentCount).clamp(0.0, 1.0);
+          break;
+        }
+
+        final frame = DesktopLyricsFrame.fromTimedTokens(
+          tokens: timedTokens,
+          lineProgress: mappedProgress,
+        );
+        await service.render(
+          frame,
+        );
+        await Future.delayed(const Duration(milliseconds: tickMs));
       }
-      if (buffer.isEmpty) {
-        buffer.write(token);
-      } else {
-        buffer.write(' $token');
-      }
-      if (!mounted) return;
-      await service.render(DesktopLyricsFrame.line(currentLine: buffer.toString()));
-      await Future.delayed(
-        Duration(milliseconds: tokenIndex == tokens.length - 1 ? 140 : 220),
-      );
+    } finally {
+      previewing.state = false;
+      if (mounted) setState(() => _simulatingTokenLyrics = false);
     }
-    if (mounted) setState(() => _simulatingTokenLyrics = false);
   }
 
   List<_SettingActionConfig> _buildTiles(

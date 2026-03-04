@@ -132,6 +132,7 @@ extension _PlayerListenerLogic on _MyAppState {
     List<int> lyricStartMs = const [];
 
     _desktopLyricsTrackSubscription = player.playQueueStream.listen((queue) async {
+      if (ref.read(desktopLyricsPreviewingProvider)) return;
       if (queue.songs.isEmpty || queue.index < 0 || queue.index >= queue.songs.length) {
         await lyricsService.hide();
         return;
@@ -153,7 +154,6 @@ extension _PlayerListenerLogic on _MyAppState {
         await lyricsService.render(
           DesktopLyricsFrame.line(
             currentLine: firstLine,
-            lineProgress: 0,
           ),
         );
       }
@@ -165,6 +165,7 @@ extension _PlayerListenerLogic on _MyAppState {
       player.durationStream,
       (position, duration) => (position, duration),
     ).listen((data) async {
+      if (ref.read(desktopLyricsPreviewingProvider)) return;
       if (lyricLines.isEmpty) return;
       final positionMs = data.$1.inMilliseconds;
       final currentIndex = lyricIndexByStartMs(

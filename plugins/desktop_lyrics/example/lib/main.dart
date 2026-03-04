@@ -116,15 +116,15 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     if (_playingLineDemo) return;
     setState(() => _playingLineDemo = true);
     await _lyrics.show();
-    const text = 'Desktop Lyrics live preview';
-    for (var i = 1; i <= text.length; i++) {
+    final stamp = DateTime.now().second.toString().padLeft(2, '0');
+    final text = 'Desktop Lyrics live preview $stamp';
+    const steps = 28;
+    for (var i = 0; i <= steps; i++) {
       if (!mounted) return;
       await _lyrics.render(
-        DesktopLyricsFrame.fromTimedTokens(
-          lineProgress: i / text.length,
-          tokens: [
-            DesktopLyricsTokenTiming(text: text.substring(0, i), durationMs: 1),
-          ],
+        DesktopLyricsFrame.line(
+          currentLine: text,
+          lineProgress: i / steps,
         ),
       );
       await Future.delayed(const Duration(milliseconds: 40));
@@ -136,22 +136,44 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     if (_playingTokenDemo) return;
     setState(() => _playingTokenDemo = true);
     await _lyrics.show();
-    for (var i = 0; i <= 20; i++) {
+    final stamp = DateTime.now().second.toString().padLeft(2, '0');
+    final timedTokens = <DesktopLyricsTokenTiming>[
+      const DesktopLyricsTokenTiming(text: 'Desktop ', durationMs: 5000),
+      const DesktopLyricsTokenTiming(text: 'Hi ', durationMs: 400),
+      const DesktopLyricsTokenTiming(text: 'lyrics ', durationMs: 1200),
+      DesktopLyricsTokenTiming(text: stamp, durationMs: 500),
+    ];
+    var totalDurationMs = 0;
+    for (final token in timedTokens) {
+      totalDurationMs += token.durationMs;
+    }
+    final total = totalDurationMs.clamp(1, 1 << 30);
+    final segmentCount = timedTokens.length.clamp(1, 1 << 30);
+    const tickMs = 40;
+    for (var elapsedMs = 0; elapsedMs <= total; elapsedMs += tickMs) {
       if (!mounted) return;
-      final lineProgress = i / 20.0;
-      final a = (lineProgress * 1.4).clamp(0.0, 1.0);
-      final b = ((lineProgress - 0.3) * 1.5).clamp(0.0, 1.0);
-      final c = ((lineProgress - 0.65) * 2.2).clamp(0.0, 1.0);
+      var consumedDuration = 0;
+      var mappedProgress = 0.0;
+      for (var idx = 0; idx < timedTokens.length; idx++) {
+        final token = timedTokens[idx];
+        final nextDuration = consumedDuration + token.durationMs;
+        if (elapsedMs >= nextDuration) {
+          consumedDuration = nextDuration;
+          mappedProgress = (idx + 1) / segmentCount;
+          continue;
+        }
+
+        final local = ((elapsedMs - consumedDuration) / token.durationMs).clamp(0.0, 1.0);
+        mappedProgress = ((idx + local) / segmentCount).clamp(0.0, 1.0);
+        break;
+      }
       await _lyrics.render(
-        DesktopLyricsFrame.tokenized(
-          tokens: [
-            DesktopLyricsToken(text: 'Hello ', progress: a),
-            DesktopLyricsToken(text: 'desktop ', progress: b),
-            DesktopLyricsToken(text: 'lyrics', progress: c),
-          ],
+        DesktopLyricsFrame.fromTimedTokens(
+          tokens: timedTokens,
+          lineProgress: mappedProgress,
         ),
       );
-      await Future.delayed(const Duration(milliseconds: 40));
+      await Future.delayed(const Duration(milliseconds: tickMs));
     }
     if (mounted) setState(() => _playingTokenDemo = false);
   }

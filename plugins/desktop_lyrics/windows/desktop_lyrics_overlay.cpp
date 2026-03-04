@@ -465,7 +465,7 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
           graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &gradient);
         }
       };
-      if (has_frame_progress && has_text_path) {
+      if (has_frame_progress) {
         // Draw a softer full-line base, then overlay the active progress fill.
         // In gradient mode, use gradient start color as base to avoid invisible
         // "unplayed" text when text color alpha is low/transparent.
@@ -476,7 +476,11 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
             (std::max)(base_alpha / 2, static_cast<uint32_t>(0x88));
         base_argb = (base_argb & 0x00FFFFFF) | (softened_alpha << 24);
         SolidBrush base_brush(ArgbToColor(base_argb));
-        graphics.FillPath(&base_brush, cached_text_path_.get());
+        if (has_text_path) {
+          graphics.FillPath(&base_brush, cached_text_path_.get());
+        } else {
+          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &base_brush);
+        }
 
         const RectF progress_rect(
             text_rect.X,
@@ -489,7 +493,11 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
           paint_gradient();
         } else {
           SolidBrush text_brush(ArgbToColor(text_argb_));
-          graphics.FillPath(&text_brush, cached_text_path_.get());
+          if (has_text_path) {
+            graphics.FillPath(&text_brush, cached_text_path_.get());
+          } else {
+            graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &text_brush);
+          }
         }
         graphics.ResetClip();
       } else if (text_gradient_enabled_) {

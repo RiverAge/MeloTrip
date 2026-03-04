@@ -411,10 +411,9 @@ class DesktopLyrics {
   Future<void> render(DesktopLyricsFrame frame) async {
     final currentLine = frame.effectiveLine;
     final rawProgress = frame.lineProgress;
-    final tokensProgress = _deriveProgressFromTokens(frame.tokens);
     final double currentProgress = (rawProgress != null && rawProgress.isFinite)
         ? rawProgress.clamp(0.0, 1.0).toDouble()
-        : (tokensProgress ?? 1.0);
+        : 1.0;
 
     final sw = _perf.startAttempt();
     final result = await _invoke('updateLyricFrame', {
@@ -513,19 +512,6 @@ class DesktopLyrics {
     _autoOverlayHeight = nextAutoOverlayHeight;
     _overlayWidth = nextOverlayWidth;
     _overlayHeight = nextOverlayHeight;
-  }
-
-  double? _deriveProgressFromTokens(List<DesktopLyricsToken> tokens) {
-    if (tokens.isEmpty) return null;
-    var totalWeight = 0.0;
-    var sum = 0.0;
-    for (final token in tokens) {
-      final weight = token.text.runes.length.toDouble().clamp(1.0, double.infinity);
-      totalWeight += weight;
-      sum += token.progress.clamp(0.0, 1.0) * weight;
-    }
-    if (totalWeight <= 0) return 1.0;
-    return (sum / totalWeight).clamp(0.0, 1.0).toDouble();
   }
 
   int _toNativeTextAlign(TextAlign value) {
