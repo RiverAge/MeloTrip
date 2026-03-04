@@ -40,6 +40,8 @@ class DesktopLyricsFrame {
   const DesktopLyricsFrame.tokenized({
     required this.tokens,
     this.currentLine = '',
+    // Defaults to NaN to signal: derive line progress from token progress.
+    // Pass an explicit 0.0-1.0 value to override derived progress.
     this.lineProgress = double.nan,
   });
 
@@ -200,13 +202,13 @@ class DesktopLyricsBackgroundConfig {
 @immutable
 class DesktopLyricsGradientConfig {
   const DesktopLyricsGradientConfig({
-    this.textGradientEnabled,
+    this.textGradientEnabled = false,
     this.textGradientStartColor,
     this.textGradientEndColor,
     this.textGradientAngle = 0.0,
   });
 
-  final bool? textGradientEnabled;
+  final bool textGradientEnabled;
   final Color? textGradientStartColor;
   final Color? textGradientEndColor;
   final double textGradientAngle;
@@ -472,7 +474,7 @@ class DesktopLyrics {
     final nextStrokeColorArgb =
         config.text.strokeColor?.toARGB32() ?? _strokeColorArgb;
     final nextStrokeWidth = config.text.strokeWidth ?? _strokeWidth;
-    final nextTextGradientEnabled = config.gradient.textGradientEnabled ?? false;
+    final nextTextGradientEnabled = config.gradient.textGradientEnabled;
     final nextTextGradientStartArgb =
         config.gradient.textGradientStartColor?.toARGB32() ?? _textGradientStartArgb;
     final nextTextGradientEndArgb =
@@ -570,6 +572,14 @@ class DesktopLyrics {
       debugPrint('desktop_lyrics $method failed: ${err.message}');
       return null;
     }
+  }
+
+  @visibleForTesting
+  void resetForTesting() {
+    _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
+    _lastRenderLine = '';
+    _lastRenderProgress = 1.0;
+    _perf.configure(enabled: false, targetFps: 0, mode: 'line', gradient: false);
   }
 }
 

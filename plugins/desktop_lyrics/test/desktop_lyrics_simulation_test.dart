@@ -10,6 +10,7 @@ void main() {
 
   setUp(() {
     calls.clear();
+    DesktopLyrics.instance.resetForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
       calls.add(call);
@@ -18,6 +19,7 @@ void main() {
   });
 
   tearDown(() {
+    DesktopLyrics.instance.resetForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
   });
