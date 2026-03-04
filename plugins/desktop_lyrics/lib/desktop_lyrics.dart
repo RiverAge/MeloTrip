@@ -178,7 +178,6 @@ class DesktopLyricsStateSnapshot {
     required this.fontWeightValue,
     required this.overlayWidth,
     required this.overlayHeight,
-    required this.autoOverlayHeight,
   });
 
   final bool enabled;
@@ -197,7 +196,6 @@ class DesktopLyricsStateSnapshot {
   final int fontWeightValue;
   final double overlayWidth;
   final double overlayHeight;
-  final bool autoOverlayHeight;
 }
 
 class DesktopLyrics {
@@ -254,7 +252,6 @@ class DesktopLyrics {
     fontWeightValue: _fontWeightValue,
     overlayWidth: _overlayWidth,
     overlayHeight: _overlayHeight,
-    autoOverlayHeight: _autoOverlayHeight,
   );
 
   Future<void> show() async => _invoke('show');

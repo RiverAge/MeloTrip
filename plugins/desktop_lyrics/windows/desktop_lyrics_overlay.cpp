@@ -56,6 +56,34 @@ void BuildRoundedRectPath(GraphicsPath* path, const RectF& rect, float radius) {
   path->CloseFigure();
 }
 
+void BuildTextPathWithFallback(GraphicsPath* path,
+                               const std::wstring& text,
+                               const RectF& rect,
+                               const StringFormat& format,
+                               const wchar_t* preferred_family,
+                               int font_style,
+                               float font_size) {
+  if (!path) return;
+  path->Reset();
+  const wchar_t* candidates[] = {
+      preferred_family,
+      L"Segoe UI",
+      L"Microsoft YaHei UI",
+      L"Microsoft YaHei",
+      L"Yu Gothic UI",
+      L"Meiryo",
+      L"Malgun Gothic",
+  };
+  for (const auto* family_name : candidates) {
+    if (!family_name || family_name[0] == L'\0') continue;
+    const int before = path->GetPointCount();
+    Gdiplus::FontFamily family(family_name);
+    if (family.GetLastStatus() != Gdiplus::Ok) continue;
+    path->AddString(text.c_str(), -1, &family, font_style, font_size, rect, &format);
+    if (path->GetPointCount() > before) return;
+  }
+}
+
 }  // namespace
 
 DesktopLyricsOverlay::DesktopLyricsOverlay() = default;
@@ -136,11 +164,7 @@ void DesktopLyricsOverlay::UpdateProgress(int64_t position_ms, int64_t duration_
 
 void DesktopLyricsOverlay::UpdateLyricFrame(const std::wstring& current_line,
                                             double line_progress) {
-  const double clamped_progress = std::clamp(line_progress, 0.0, 1.0);
-  const bool same_line = current_line_ == current_line;
-  const bool small_delta =
-      std::abs(frame_line_progress_ - clamped_progress) < 0.01;
-  if (same_line && small_delta) return;
+  (void)line_progress;
   current_line_ = current_line;
   frame_line_progress_ = 1.0;
   if (current_line_.empty()) {
@@ -191,9 +215,6 @@ void DesktopLyricsOverlay::UpdateConfig(bool enabled,
   if (overlay_height > 0.0) {
     overlay_height_ =
         static_cast<int>(std::round(std::clamp(overlay_height, 90.0, 800.0)));
-  } else {
-    overlay_height_ = static_cast<int>(
-        std::round(std::clamp(font_size_ + background_padding_ * 2.0 + 56.0, 90.0, 800.0)));
   }
   font_family_ = font_family.empty() ? L"Segoe UI" : font_family;
   text_align_ = std::clamp(text_align, 0, 2);
@@ -208,6 +229,7 @@ void DesktopLyricsOverlay::UpdateConfig(bool enabled,
     return;
   }
   Show();
+  RequestRepaint();
 }
 
 LRESULT CALLBACK DesktopLyricsOverlay::WndProc(HWND hwnd,
@@ -455,20 +477,36 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
         cached_text_align_ = text_align_;
         cached_font_weight_ = font_weight_value_;
         cached_font_size_ = static_cast<float>(font_size_);
-        cached_text_path_.Reset();
-        Gdiplus::FontFamily family(font_family_.c_str());
-        cached_text_path_.AddString(text.c_str(), -1, &family, font_style,
-                                    static_cast<float>(font_size_), text_rect,
-                                    &format);
+        BuildTextPathWithFallback(&cached_text_path_, text, text_rect, format,
+                                  font_family_.c_str(), font_style,
+                                  static_cast<float>(font_size_));
       }
       const bool has_text_path = cached_text_path_.GetPointCount() > 0;
 
       if (((shadow_argb_ >> 24) & 0xFF) > 0) {
         SolidBrush shadow_brush(ArgbToColor(shadow_argb_));
-        RectF shadow_rect(text_rect.X + 1.0f, text_rect.Y + 1.0f, text_rect.Width,
+        RectF shadow_rect(text_rect.X + 2.5f, text_rect.Y + 2.5f, text_rect.Width,
                           text_rect.Height);
         graphics.DrawString(text.c_str(), -1, &font, shadow_rect, &format,
                             &shadow_brush);
+      }
+
+      const bool should_stroke =
+          stroke_width_ > 0.01 && ((stroke_argb_ >> 24) & 0xFF) > 0;
+      if (!has_text_path && should_stroke) {
+        const int radius =
+            (std::max)(1, static_cast<int>(std::round(stroke_width_)));
+        SolidBrush stroke_brush(ArgbToColor(stroke_argb_));
+        for (int dx = -radius; dx <= radius; ++dx) {
+          for (int dy = -radius; dy <= radius; ++dy) {
+            if (dx == 0 && dy == 0) continue;
+            RectF stroke_rect(text_rect.X + static_cast<float>(dx),
+                              text_rect.Y + static_cast<float>(dy),
+                              text_rect.Width, text_rect.Height);
+            graphics.DrawString(text.c_str(), -1, &font, stroke_rect, &format,
+                                &stroke_brush);
+          }
+        }
       }
 
       if (text_gradient_enabled_) {
@@ -483,48 +521,32 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
             PointF(cx + dx, cy + dy),
             ArgbToColor(text_gradient_start_argb_),
             ArgbToColor(text_gradient_end_argb_));
-        // Draw a dim base first, then reveal active gradient by line progress.
-        const uint32_t dim_start_argb =
-            (text_gradient_start_argb_ & 0x00FFFFFF) |
-            (static_cast<uint32_t>(0x48) << 24);
-        const uint32_t dim_end_argb =
-            (text_gradient_end_argb_ & 0x00FFFFFF) |
-            (static_cast<uint32_t>(0x48) << 24);
-        LinearGradientBrush dim_gradient(
-            PointF(cx - dx, cy - dy), PointF(cx + dx, cy + dy),
-            ArgbToColor(dim_start_argb), ArgbToColor(dim_end_argb));
         if (has_text_path) {
-          graphics.FillPath(&dim_gradient, &cached_text_path_);
-        }
-
-        const float clip_width =
-            text_rect.Width * static_cast<float>(frame_line_progress_);
-        if (has_text_path && clip_width > 0.5f) {
-          graphics.SetClip(
-              RectF(text_rect.X, text_rect.Y, clip_width, text_rect.Height));
           graphics.FillPath(&gradient, &cached_text_path_);
-          graphics.ResetClip();
+        } else {
+          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format,
+                              &gradient);
         }
       } else {
-        const uint32_t base_argb =
-            (text_argb_ & 0x00FFFFFF) | (static_cast<uint32_t>(0x40) << 24);
-        SolidBrush base_brush(ArgbToColor(base_argb));
+        SolidBrush text_brush(ArgbToColor(text_argb_));
         if (has_text_path) {
-          graphics.FillPath(&base_brush, &cached_text_path_);
-        }
-        const float clip_width =
-            text_rect.Width * static_cast<float>(frame_line_progress_);
-        if (has_text_path && clip_width > 0.5f) {
-          graphics.SetClip(RectF(text_rect.X, text_rect.Y, clip_width, text_rect.Height));
-          SolidBrush active_brush(ArgbToColor(text_argb_));
-          graphics.FillPath(&active_brush, &cached_text_path_);
-          graphics.ResetClip();
+          graphics.FillPath(&text_brush, &cached_text_path_);
+        } else {
+          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format,
+                              &text_brush);
         }
       }
 
-      if (has_text_path && stroke_width_ > 0.01 && ((stroke_argb_ >> 24) & 0xFF) > 0) {
-        Gdiplus::Pen stroke_pen(ArgbToColor(stroke_argb_),
-                                static_cast<float>(stroke_width_));
+      if (has_text_path && should_stroke) {
+        const float visible_width =
+            (std::max)(static_cast<float>(stroke_width_), 1.1f);
+        const uint32_t glow_argb =
+            (stroke_argb_ & 0x00FFFFFF) | (static_cast<uint32_t>(0x66) << 24);
+        Gdiplus::Pen glow_pen(ArgbToColor(glow_argb), visible_width + 1.0f);
+        glow_pen.SetLineJoin(Gdiplus::LineJoinRound);
+        graphics.DrawPath(&glow_pen, &cached_text_path_);
+
+        Gdiplus::Pen stroke_pen(ArgbToColor(stroke_argb_), visible_width);
         stroke_pen.SetLineJoin(Gdiplus::LineJoinRound);
         graphics.DrawPath(&stroke_pen, &cached_text_path_);
       }
