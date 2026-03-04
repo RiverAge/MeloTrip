@@ -15,7 +15,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('plugin channel smoke test', (WidgetTester tester) async {
-    final plugin = DesktopLyrics.instance;
+    final plugin = DesktopLyrics();
     await plugin.show();
     await plugin.render(const DesktopLyricsFrame.line(currentLine: 'Hello'));
     await plugin.hide();

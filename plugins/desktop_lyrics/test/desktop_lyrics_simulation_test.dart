@@ -10,7 +10,6 @@ void main() {
 
   setUp(() {
     calls.clear();
-    DesktopLyrics.instance.resetForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
       calls.add(call);
@@ -19,14 +18,12 @@ void main() {
   });
 
   tearDown(() {
-    DesktopLyrics.instance.resetForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
   });
 
   test('simulated karaoke frames can be streamed continuously', () async {
-    final lyrics = DesktopLyrics.instance;
-
+    final lyrics = DesktopLyrics(channel: channel);
     await lyrics.configure(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
@@ -34,7 +31,7 @@ void main() {
           clickThrough: false,
         ),
         text: DesktopLyricsTextConfig(fontSize: 28),
-        opacity: 0.92,
+        background: DesktopLyricsBackgroundConfig(opacity: 0.92),
       ),
     );
     await lyrics.show();
@@ -72,7 +69,7 @@ void main() {
   });
 
   test('line frame uses visible default progress when omitted', () async {
-    final lyrics = DesktopLyrics.instance;
+    final lyrics = DesktopLyrics(channel: channel);
     await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'Visible'));
     final renderCalls =
         calls.where((call) => call.method == 'updateLyricFrame').toList();

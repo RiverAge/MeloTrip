@@ -12,7 +12,6 @@ void main() {
 
   setUp(() {
     calls.clear();
-    DesktopLyrics.instance.resetForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
           calls.add(call);
@@ -21,14 +20,12 @@ void main() {
   });
 
   tearDown(() {
-    DesktopLyrics.instance.resetForTesting();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
   });
 
   test('sends show/hide/dispose calls', () async {
-    final lyrics = DesktopLyrics.instance;
-
+    final lyrics = DesktopLyrics(channel: channel);
     await lyrics.show();
     await lyrics.hide();
     await lyrics.dispose();
@@ -37,7 +34,7 @@ void main() {
   });
 
   test('serializes render/config payloads', () async {
-    final lyrics = DesktopLyrics.instance;
+    final lyrics = DesktopLyrics(channel: channel);
     await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
     await lyrics.configure(
       const DesktopLyricsConfig(
@@ -52,7 +49,7 @@ void main() {
           strokeColor: Color(0xFFFF0000),
           strokeWidth: 1.5,
         ),
-        opacity: 0.8,
+        background: DesktopLyricsBackgroundConfig(opacity: 0.8),
       ),
     );
 

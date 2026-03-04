@@ -39,15 +39,15 @@ class DesktopLyricsFrame {
 
   const DesktopLyricsFrame.tokenized({
     required this.tokens,
-    this.currentLine = '',
-    // Defaults to NaN to signal: derive line progress from token progress.
-    // Pass an explicit 0.0-1.0 value to override derived progress.
-    this.lineProgress = double.nan,
-  });
+    this.lineProgress,
+    String? resolvedLine,
+  }) : currentLine = resolvedLine ?? '';
 
   final String currentLine;
-  final double lineProgress;
+  final double? lineProgress;
   final List<DesktopLyricsToken> tokens;
+  String get effectiveLine =>
+      tokens.isNotEmpty ? tokens.map((e) => e.text).join() : currentLine;
 
   factory DesktopLyricsFrame.fromTimedTokens({
     required List<DesktopLyricsTokenTiming> tokens,
@@ -72,7 +72,7 @@ class DesktopLyricsFrame {
       elapsed += duration;
     }
     return DesktopLyricsFrame.tokenized(
-      currentLine: tokens.map((e) => e.text).join(),
+      resolvedLine: tokens.map((e) => e.text).join(),
       lineProgress: normalized,
       tokens: mapped,
     );
@@ -98,7 +98,7 @@ class DesktopLyricsFrame {
       mapped.add(DesktopLyricsToken(text: token.text, progress: local));
     }
     return DesktopLyricsFrame.tokenized(
-      currentLine: tokens.map((e) => e.text).join(),
+      resolvedLine: tokens.map((e) => e.text).join(),
       lineProgress: normalized,
       tokens: mapped,
     );
@@ -177,11 +177,13 @@ class DesktopLyricsTextConfig {
 @immutable
 class DesktopLyricsBackgroundConfig {
   const DesktopLyricsBackgroundConfig({
+    this.opacity = 0.96,
     this.backgroundColor,
     this.backgroundRadius = 16.0,
     this.backgroundPadding = 10.0,
   });
 
+  final double opacity;
   final Color? backgroundColor;
   final double backgroundRadius;
   final double backgroundPadding;
@@ -190,13 +192,14 @@ class DesktopLyricsBackgroundConfig {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is DesktopLyricsBackgroundConfig &&
+          opacity == other.opacity &&
           backgroundColor == other.backgroundColor &&
           backgroundRadius == other.backgroundRadius &&
           backgroundPadding == other.backgroundPadding;
 
   @override
   int get hashCode =>
-      Object.hash(backgroundColor, backgroundRadius, backgroundPadding);
+      Object.hash(opacity, backgroundColor, backgroundRadius, backgroundPadding);
 }
 
 @immutable
@@ -254,7 +257,6 @@ class DesktopLyricsConfig {
   const DesktopLyricsConfig({
     required this.interaction,
     required this.text,
-    required this.opacity,
     this.background = const DesktopLyricsBackgroundConfig(),
     this.gradient = const DesktopLyricsGradientConfig(),
     this.layout = const DesktopLyricsLayoutConfig(),
@@ -262,7 +264,6 @@ class DesktopLyricsConfig {
 
   final DesktopLyricsInteractionConfig interaction;
   final DesktopLyricsTextConfig text;
-  final double opacity;
   final DesktopLyricsBackgroundConfig background;
   final DesktopLyricsGradientConfig gradient;
   final DesktopLyricsLayoutConfig layout;
@@ -273,19 +274,16 @@ class DesktopLyricsConfig {
       other is DesktopLyricsConfig &&
           interaction == other.interaction &&
           text == other.text &&
-          opacity == other.opacity &&
           background == other.background &&
           gradient == other.gradient &&
           layout == other.layout;
 
   @override
-  int get hashCode =>
-      Object.hash(interaction, text, opacity, background, gradient, layout);
+  int get hashCode => Object.hash(interaction, text, background, gradient, layout);
 
   DesktopLyricsConfig copyWith({
     DesktopLyricsInteractionConfig? interaction,
     DesktopLyricsTextConfig? text,
-    double? opacity,
     DesktopLyricsBackgroundConfig? background,
     DesktopLyricsGradientConfig? gradient,
     DesktopLyricsLayoutConfig? layout,
@@ -293,7 +291,6 @@ class DesktopLyricsConfig {
     return DesktopLyricsConfig(
       interaction: interaction ?? this.interaction,
       text: text ?? this.text,
-      opacity: opacity ?? this.opacity,
       background: background ?? this.background,
       gradient: gradient ?? this.gradient,
       layout: layout ?? this.layout,
@@ -307,7 +304,7 @@ class DesktopLyricsStateSnapshot {
     required this.enabled,
     required this.clickThrough,
     required this.fontSize,
-    required this.opacity,
+    required this.backgroundOpacity,
     required this.textColorArgb,
     required this.shadowColorArgb,
     required this.strokeColorArgb,
@@ -330,7 +327,7 @@ class DesktopLyricsStateSnapshot {
   final bool enabled;
   final bool clickThrough;
   final double fontSize;
-  final double opacity;
+  final double backgroundOpacity;
   final int textColorArgb;
   final int shadowColorArgb;
   final int strokeColorArgb;
@@ -351,11 +348,10 @@ class DesktopLyricsStateSnapshot {
 }
 
 class DesktopLyrics {
-  DesktopLyrics._({MethodChannel? channel})
+  DesktopLyrics({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel(_channelName);
 
   static const _channelName = 'desktop_lyrics';
-  static final DesktopLyrics instance = DesktopLyrics._();
 
   final MethodChannel _channel;
 
@@ -381,17 +377,12 @@ class DesktopLyrics {
   double _textGradientAngle = 0.0;
   bool _autoOverlayHeight = true;
   final _perf = _PerformanceTracker();
-  static const int _minRenderIntervalMs = 33;
-  static const double _minProgressDelta = 0.01;
-  DateTime _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
-  String _lastRenderLine = '';
-  double _lastRenderProgress = 1.0;
 
   DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
     enabled: _enabled,
     clickThrough: _clickThrough,
     fontSize: _fontSize,
-    opacity: _opacity,
+    backgroundOpacity: _opacity,
     textColorArgb: _textColorArgb,
     shadowColorArgb: _shadowColorArgb,
     strokeColorArgb: _strokeColorArgb,
@@ -418,27 +409,12 @@ class DesktopLyrics {
   Future<void> dispose() async => _invoke('dispose');
 
   Future<void> render(DesktopLyricsFrame frame) async {
-    final currentLine = frame.currentLine.isNotEmpty
-        ? frame.currentLine
-        : frame.tokens.map((e) => e.text).join();
+    final currentLine = frame.effectiveLine;
     final rawProgress = frame.lineProgress;
     final tokensProgress = _deriveProgressFromTokens(frame.tokens);
-    final double currentProgress = rawProgress.isFinite
+    final double currentProgress = (rawProgress != null && rawProgress.isFinite)
         ? rawProgress.clamp(0.0, 1.0).toDouble()
         : (tokensProgress ?? 1.0);
-    final now = DateTime.now();
-    final sameLine = currentLine == _lastRenderLine;
-    final smallDelta =
-        (currentProgress - _lastRenderProgress).abs() < _minProgressDelta;
-    final withinInterval =
-        now.difference(_lastRenderAt).inMilliseconds < _minRenderIntervalMs;
-    if (sameLine && smallDelta && withinInterval) {
-      _perf.recordThrottled();
-      return;
-    }
-    _lastRenderAt = now;
-    _lastRenderLine = currentLine;
-    _lastRenderProgress = currentProgress;
 
     final sw = _perf.startAttempt();
     final result = await _invoke('updateLyricFrame', {
@@ -449,6 +425,7 @@ class DesktopLyrics {
     _perf.maybeLog();
   }
 
+  @visibleForTesting
   void setPerformanceProbe({
     required bool enabled,
     int targetFps = 0,
@@ -467,7 +444,7 @@ class DesktopLyrics {
     final nextEnabled = config.interaction.enabled;
     final nextClickThrough = config.interaction.clickThrough;
     final nextFontSize = config.text.fontSize;
-    final nextOpacity = config.opacity;
+    final nextOpacity = config.background.opacity;
     final nextTextColorArgb = config.text.textColor?.toARGB32() ?? _textColorArgb;
     final nextShadowColorArgb =
         config.text.shadowColor?.toARGB32() ?? _shadowColorArgb;
@@ -574,13 +551,6 @@ class DesktopLyrics {
     }
   }
 
-  @visibleForTesting
-  void resetForTesting() {
-    _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
-    _lastRenderLine = '';
-    _lastRenderProgress = 1.0;
-    _perf.configure(enabled: false, targetFps: 0, mode: 'line', gradient: false);
-  }
 }
 
 class _PerformanceTracker {

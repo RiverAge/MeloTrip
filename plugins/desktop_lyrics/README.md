@@ -27,7 +27,7 @@ dependencies:
 ```dart
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
-final desktopLyrics = DesktopLyrics.instance;
+final desktopLyrics = DesktopLyrics();
 
 await desktopLyrics.configure(
   const DesktopLyricsConfig(
@@ -38,7 +38,9 @@ await desktopLyrics.configure(
     text: DesktopLyricsTextConfig(
       fontSize: 34,
     ),
-    opacity: 0.93,
+    background: DesktopLyricsBackgroundConfig(
+      opacity: 0.93,
+    ),
   ),
 );
 

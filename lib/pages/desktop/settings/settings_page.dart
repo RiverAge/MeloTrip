@@ -50,7 +50,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     _enabled = state.enabled;
     _clickThrough = state.clickThrough;
     _fontSize = state.fontSize;
-    _opacity = state.opacity;
+    _opacity = state.backgroundOpacity;
     _strokeWidth = state.strokeWidth;
     _textAlign = state.textAlign;
     _fontWeight = _toFontWeight(state.fontWeightValue);
@@ -266,8 +266,8 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
           textAlign: _textAlign,
           fontWeight: _fontWeight,
         ),
-            opacity: _opacity,
             background: DesktopLyricsBackgroundConfig(
+              opacity: _opacity,
               backgroundColor: Color(
                 ((255 * _backgroundOpacity).round() << 24) |
                     (_backgroundBaseColor & 0x00FFFFFF),
