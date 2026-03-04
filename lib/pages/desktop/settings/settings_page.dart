@@ -42,11 +42,35 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
   int _backgroundBaseColor = 0xFF220A35;
   int _gradientStartColor = 0xFFFFD36E;
   int _gradientEndColor = 0xFFFF4D8D;
+  ProviderSubscription<DesktopLyrics>? _lyricsControllerSubscription;
 
   @override
   void initState() {
     super.initState();
     final state = ref.read(desktopLyricsServiceProvider).state;
+    _syncFromControllerState(state, resetOverlayHeightCustomization: true);
+    _lyricsControllerSubscription = ref.listenManual<DesktopLyrics>(
+      desktopLyricsServiceProvider,
+      (_, next) {
+        if (!mounted) return;
+        if (_simulatingLyrics || _simulatingTokenLyrics) return;
+        setState(() {
+          _syncFromControllerState(next.state);
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _lyricsControllerSubscription?.close();
+    super.dispose();
+  }
+
+  void _syncFromControllerState(
+    DesktopLyricsStateSnapshot state, {
+    bool resetOverlayHeightCustomization = false,
+  }) {
     _enabled = state.enabled;
     _clickThrough = state.clickThrough;
     _fontSize = state.fontSize;
@@ -65,6 +89,9 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
         0xFF000000 | (state.backgroundColorArgb & 0x00FFFFFF);
     _overlayWidth = state.overlayWidth;
     _overlayHeight = state.overlayHeight;
+    if (resetOverlayHeightCustomization) {
+      _overlayHeightCustomized = !state.autoOverlayHeight;
+    }
   }
 
   @override
@@ -248,45 +275,47 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
   }
 
   Future<void> _pushLyricsConfig() async {
-    await ref
-        .read(desktopLyricsServiceProvider)
-        .configure(
-          DesktopLyricsConfig(
-            interaction: DesktopLyricsInteractionConfig(
-              enabled: _enabled,
-              clickThrough: _clickThrough,
-            ),
-            text: DesktopLyricsTextConfig(
-              fontSize: _fontSize,
-              textColor: Color(_textColor),
-              shadowColor: Color(_shadowColor),
-              strokeColor: Color(_strokeColor),
-              strokeWidth: _strokeWidth,
-              fontFamily: 'Segoe UI',
-          textAlign: _textAlign,
-          fontWeight: _fontWeight,
+    await ref.read(desktopLyricsServiceProvider).setConfig(
+      _buildDesktopLyricsConfig(),
+    );
+  }
+
+  DesktopLyricsConfig _buildDesktopLyricsConfig() {
+    return DesktopLyricsConfig(
+      interaction: DesktopLyricsInteractionConfig(
+        enabled: _enabled,
+        clickThrough: _clickThrough,
+      ),
+      text: DesktopLyricsTextConfig(
+        fontSize: _fontSize,
+        textColor: Color(_textColor),
+        shadowColor: Color(_shadowColor),
+        strokeColor: Color(_strokeColor),
+        strokeWidth: _strokeWidth,
+        fontFamily: 'Segoe UI',
+        textAlign: _textAlign,
+        fontWeight: _fontWeight,
+      ),
+      background: DesktopLyricsBackgroundConfig(
+        opacity: _opacity,
+        backgroundColor: Color(
+          ((255 * _backgroundOpacity).round() << 24) |
+              (_backgroundBaseColor & 0x00FFFFFF),
         ),
-            background: DesktopLyricsBackgroundConfig(
-              opacity: _opacity,
-              backgroundColor: Color(
-                ((255 * _backgroundOpacity).round() << 24) |
-                    (_backgroundBaseColor & 0x00FFFFFF),
-              ),
-              backgroundRadius: 22,
-              backgroundPadding: 12,
-            ),
-            gradient: DesktopLyricsGradientConfig(
-              textGradientEnabled: _gradientEnabled,
-              textGradientStartColor: Color(_gradientStartColor),
-              textGradientEndColor: Color(_gradientEndColor),
-              textGradientAngle: 0,
-            ),
-            layout: DesktopLyricsLayoutConfig(
-              overlayWidth: _overlayWidth,
-              overlayHeight: _overlayHeightCustomized ? _overlayHeight : null,
-            ),
-          ),
-        );
+        backgroundRadius: 22,
+        backgroundPadding: 12,
+      ),
+      gradient: DesktopLyricsGradientConfig(
+        textGradientEnabled: _gradientEnabled,
+        textGradientStartColor: Color(_gradientStartColor),
+        textGradientEndColor: Color(_gradientEndColor),
+        textGradientAngle: 0,
+      ),
+      layout: DesktopLyricsLayoutConfig(
+        overlayWidth: _overlayWidth,
+        overlayHeight: _overlayHeightCustomized ? _overlayHeight : null,
+      ),
+    );
   }
 
   FontWeight _toFontWeight(int value) {
@@ -319,7 +348,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     final previewing = ref.read(desktopLyricsPreviewingProvider.notifier);
     previewing.state = true;
     try {
-      await service.show();
+      await service.setEnabled(true);
       final stamp = DateTime.now().second.toString().padLeft(2, '0');
       final previewText =
           '${l10n.play} ${l10n.desktopLyrics} ${l10n.playQueue} $stamp';
@@ -348,7 +377,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     final previewing = ref.read(desktopLyricsPreviewingProvider.notifier);
     previewing.state = true;
     try {
-      await service.show();
+      await service.setEnabled(true);
       final stamp = DateTime.now().second.toString().padLeft(2, '0');
       final timedTokens = <DesktopLyricsTokenTiming>[
         DesktopLyricsTokenTiming(text: '${l10n.desktopLyrics} ', durationMs: 5000),

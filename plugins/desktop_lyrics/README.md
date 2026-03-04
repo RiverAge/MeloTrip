@@ -27,9 +27,9 @@ dependencies:
 ```dart
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
-final desktopLyrics = DesktopLyrics();
+final lyrics = DesktopLyrics();
 
-await desktopLyrics.configure(
+await lyrics.setConfig(
   const DesktopLyricsConfig(
     interaction: DesktopLyricsInteractionConfig(
       enabled: true,
@@ -44,20 +44,24 @@ await desktopLyrics.configure(
   ),
 );
 
-await desktopLyrics.show();
-await desktopLyrics.render(
+await lyrics.setEnabled(true);
+await lyrics.render(
   const DesktopLyricsFrame.line(
     currentLine: 'First line',
     lineProgress: 1.0,
   ),
 );
+
+lyrics.dispose();
 ```
 
 ## API
 
-- `show()` / `hide()` / `dispose()`
-- `configure(DesktopLyricsConfig config)`
-- `render(DesktopLyricsFrame frame)`
+- `DesktopLyrics` (recommended)
+  - `setConfig(DesktopLyricsConfig config)` or `config = ...`
+  - `setEnabled(bool enabled)`
+  - `render(DesktopLyricsFrame frame)`
+  - `state` + `addListener(...)` for reactive UI updates
 
 ## Notes
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -124,6 +126,16 @@ class DesktopLyricsInteractionConfig {
 
   @override
   int get hashCode => Object.hash(enabled, clickThrough);
+
+  DesktopLyricsInteractionConfig copyWith({
+    bool? enabled,
+    bool? clickThrough,
+  }) {
+    return DesktopLyricsInteractionConfig(
+      enabled: enabled ?? this.enabled,
+      clickThrough: clickThrough ?? this.clickThrough,
+    );
+  }
 }
 
 @immutable
@@ -345,66 +357,67 @@ class DesktopLyricsStateSnapshot {
   final bool autoOverlayHeight;
   final double overlayWidth;
   final double overlayHeight;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesktopLyricsStateSnapshot &&
+          enabled == other.enabled &&
+          clickThrough == other.clickThrough &&
+          fontSize == other.fontSize &&
+          backgroundOpacity == other.backgroundOpacity &&
+          textColorArgb == other.textColorArgb &&
+          shadowColorArgb == other.shadowColorArgb &&
+          strokeColorArgb == other.strokeColorArgb &&
+          strokeWidth == other.strokeWidth &&
+          textGradientEnabled == other.textGradientEnabled &&
+          textGradientStartArgb == other.textGradientStartArgb &&
+          textGradientEndArgb == other.textGradientEndArgb &&
+          textGradientAngle == other.textGradientAngle &&
+          backgroundColorArgb == other.backgroundColorArgb &&
+          backgroundRadius == other.backgroundRadius &&
+          backgroundPadding == other.backgroundPadding &&
+          textAlign == other.textAlign &&
+          fontFamily == other.fontFamily &&
+          fontWeightValue == other.fontWeightValue &&
+          autoOverlayHeight == other.autoOverlayHeight &&
+          overlayWidth == other.overlayWidth &&
+          overlayHeight == other.overlayHeight;
+
+  @override
+  int get hashCode => Object.hashAll([
+    enabled,
+    clickThrough,
+    fontSize,
+    backgroundOpacity,
+    textColorArgb,
+    shadowColorArgb,
+    strokeColorArgb,
+    strokeWidth,
+    textGradientEnabled,
+    textGradientStartArgb,
+    textGradientEndArgb,
+    textGradientAngle,
+    backgroundColorArgb,
+    backgroundRadius,
+    backgroundPadding,
+    textAlign,
+    fontFamily,
+    fontWeightValue,
+    autoOverlayHeight,
+    overlayWidth,
+    overlayHeight,
+  ]);
 }
 
-class DesktopLyrics {
-  DesktopLyrics({MethodChannel? channel})
+class _DesktopLyricsService {
+  _DesktopLyricsService({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel(_channelName);
 
   static const _channelName = 'desktop_lyrics';
 
   final MethodChannel _channel;
-
-  bool _enabled = true;
-  bool _clickThrough = false;
-  double _fontSize = 38.0;
-  double _opacity = 0.96;
-  int _textColorArgb = 0xFFF6F7FF;
-  int _shadowColorArgb = 0x00000000;
-  int _strokeColorArgb = 0x00000000;
-  double _strokeWidth = 0.0;
-  bool _textGradientEnabled = true;
-  int _textGradientStartArgb = 0xFFFFD36E;
-  int _textGradientEndArgb = 0xFFFF4D8D;
-  int _backgroundColorArgb = 0x7A220A35;
-  TextAlign _textAlign = TextAlign.start;
-  int _fontWeightValue = FontWeight.w400.value;
-  double _overlayWidth = 980.0;
-  double _overlayHeight = 160.0;
-  double _backgroundRadius = 16.0;
-  double _backgroundPadding = 10.0;
-  String _fontFamily = 'Segoe UI';
-  double _textGradientAngle = 0.0;
-  bool _autoOverlayHeight = true;
   final _perf = _PerformanceTracker();
-
-  DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
-    enabled: _enabled,
-    clickThrough: _clickThrough,
-    fontSize: _fontSize,
-    backgroundOpacity: _opacity,
-    textColorArgb: _textColorArgb,
-    shadowColorArgb: _shadowColorArgb,
-    strokeColorArgb: _strokeColorArgb,
-    strokeWidth: _strokeWidth,
-    textGradientEnabled: _textGradientEnabled,
-    textGradientStartArgb: _textGradientStartArgb,
-    textGradientEndArgb: _textGradientEndArgb,
-    textGradientAngle: _textGradientAngle,
-    backgroundColorArgb: _backgroundColorArgb,
-    backgroundRadius: _backgroundRadius,
-    backgroundPadding: _backgroundPadding,
-    textAlign: _textAlign,
-    fontFamily: _fontFamily,
-    fontWeightValue: _fontWeightValue,
-    autoOverlayHeight: _autoOverlayHeight,
-    overlayWidth: _overlayWidth,
-    overlayHeight: _overlayHeight,
-  );
-
-  Future<void> show() async => _invoke('show');
-
-  Future<void> hide() async => _invoke('hide');
 
   Future<void> dispose() async => _invoke('dispose');
 
@@ -440,78 +453,33 @@ class DesktopLyrics {
   }
 
   Future<void> configure(DesktopLyricsConfig config) async {
-    final nextEnabled = config.interaction.enabled;
-    final nextClickThrough = config.interaction.clickThrough;
-    final nextFontSize = config.text.fontSize;
-    final nextOpacity = config.background.opacity;
-    final nextTextColorArgb = config.text.textColor?.toARGB32() ?? _textColorArgb;
-    final nextShadowColorArgb =
-        config.text.shadowColor?.toARGB32() ?? _shadowColorArgb;
-    final nextStrokeColorArgb =
-        config.text.strokeColor?.toARGB32() ?? _strokeColorArgb;
-    final nextStrokeWidth = config.text.strokeWidth ?? _strokeWidth;
-    final nextTextGradientEnabled = config.gradient.textGradientEnabled;
-    final nextTextGradientStartArgb =
-        config.gradient.textGradientStartColor?.toARGB32() ?? _textGradientStartArgb;
-    final nextTextGradientEndArgb =
-        config.gradient.textGradientEndColor?.toARGB32() ?? _textGradientEndArgb;
-    final nextBackgroundColorArgb =
-        config.background.backgroundColor?.toARGB32() ?? _backgroundColorArgb;
-    final nextBackgroundRadius = config.background.backgroundRadius;
-    final nextBackgroundPadding = config.background.backgroundPadding;
-    final nextGradientAngle = config.gradient.textGradientAngle;
-    final nextTextAlign = config.text.textAlign ?? TextAlign.start;
-    final nextFontFamily = config.text.fontFamily ?? _fontFamily;
-    final nextFontWeightValue = config.text.fontWeight?.value ?? FontWeight.w400.value;
-    final nextOverlayWidth = config.layout.overlayWidth ?? _overlayWidth;
-    final nextAutoOverlayHeight = config.layout.overlayHeight == null;
-    final nextOverlayHeight = config.layout.overlayHeight ?? _overlayHeight;
-
     await _invoke('updateConfig', {
-      'enabled': nextEnabled,
-      'clickThrough': nextClickThrough,
-      'fontSize': nextFontSize,
-      'opacity': nextOpacity,
-      'textColorArgb': nextTextColorArgb,
-      'shadowColorArgb': nextShadowColorArgb,
-      'strokeColorArgb': nextStrokeColorArgb,
-      'strokeWidth': nextStrokeWidth,
-      'backgroundColorArgb': nextBackgroundColorArgb,
-      'backgroundRadius': nextBackgroundRadius,
-      'backgroundPadding': nextBackgroundPadding,
-      'textGradientEnabled': nextTextGradientEnabled,
-      'textGradientStartArgb': nextTextGradientStartArgb,
-      'textGradientEndArgb': nextTextGradientEndArgb,
-      'textGradientAngle': nextGradientAngle,
-      'overlayWidth': nextOverlayWidth,
+      'enabled': config.interaction.enabled,
+      'clickThrough': config.interaction.clickThrough,
+      'fontSize': config.text.fontSize,
+      'opacity': config.background.opacity,
+      'textColorArgb': config.text.textColor?.toARGB32() ?? 0xFFF6F7FF,
+      'shadowColorArgb': config.text.shadowColor?.toARGB32() ?? 0x00000000,
+      'strokeColorArgb': config.text.strokeColor?.toARGB32() ?? 0x00000000,
+      'strokeWidth': config.text.strokeWidth ?? 0.0,
+      'backgroundColorArgb':
+          config.background.backgroundColor?.toARGB32() ?? 0x7A220A35,
+      'backgroundRadius': config.background.backgroundRadius,
+      'backgroundPadding': config.background.backgroundPadding,
+      'textGradientEnabled': config.gradient.textGradientEnabled,
+      'textGradientStartArgb':
+          config.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E,
+      'textGradientEndArgb':
+          config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
+      'textGradientAngle': config.gradient.textGradientAngle,
+      'overlayWidth': config.layout.overlayWidth ?? 980.0,
       // overlayHeight is omitted from payload to signal auto-height mode.
-      if (!nextAutoOverlayHeight) 'overlayHeight': nextOverlayHeight,
-      'fontFamily': nextFontFamily,
-      'textAlign': _toNativeTextAlign(nextTextAlign),
-      'fontWeightValue': nextFontWeightValue,
+      if (config.layout.overlayHeight != null)
+        'overlayHeight': config.layout.overlayHeight,
+      'fontFamily': config.text.fontFamily ?? 'Segoe UI',
+      'textAlign': _toNativeTextAlign(config.text.textAlign ?? TextAlign.start),
+      'fontWeightValue': config.text.fontWeight?.value ?? FontWeight.w400.value,
     });
-
-    _enabled = nextEnabled;
-    _clickThrough = nextClickThrough;
-    _fontSize = nextFontSize;
-    _opacity = nextOpacity;
-    _textColorArgb = nextTextColorArgb;
-    _shadowColorArgb = nextShadowColorArgb;
-    _strokeColorArgb = nextStrokeColorArgb;
-    _strokeWidth = nextStrokeWidth;
-    _textGradientEnabled = nextTextGradientEnabled;
-    _textGradientStartArgb = nextTextGradientStartArgb;
-    _textGradientEndArgb = nextTextGradientEndArgb;
-    _textGradientAngle = nextGradientAngle;
-    _backgroundColorArgb = nextBackgroundColorArgb;
-    _backgroundRadius = nextBackgroundRadius;
-    _backgroundPadding = nextBackgroundPadding;
-    _textAlign = nextTextAlign;
-    _fontFamily = nextFontFamily;
-    _fontWeightValue = nextFontWeightValue;
-    _autoOverlayHeight = nextAutoOverlayHeight;
-    _overlayWidth = nextOverlayWidth;
-    _overlayHeight = nextOverlayHeight;
   }
 
   int _toNativeTextAlign(TextAlign value) {
@@ -537,6 +505,106 @@ class DesktopLyrics {
     }
   }
 
+}
+
+class DesktopLyrics extends ChangeNotifier {
+  DesktopLyrics({MethodChannel? channel})
+    : _service = _DesktopLyricsService(channel: channel);
+
+  final _DesktopLyricsService _service;
+  DesktopLyricsConfig _config = const DesktopLyricsConfig(
+    interaction: DesktopLyricsInteractionConfig(
+      enabled: true,
+      clickThrough: false,
+    ),
+    text: DesktopLyricsTextConfig(
+      fontSize: 38.0,
+      textColor: Color(0xFFF6F7FF),
+      shadowColor: Color(0x00000000),
+      strokeColor: Color(0x00000000),
+      strokeWidth: 0.0,
+      fontFamily: 'Segoe UI',
+      textAlign: TextAlign.start,
+      fontWeight: FontWeight.w400,
+    ),
+    background: DesktopLyricsBackgroundConfig(
+      opacity: 0.96,
+      backgroundColor: Color(0x7A220A35),
+      backgroundRadius: 16.0,
+      backgroundPadding: 10.0,
+    ),
+    gradient: DesktopLyricsGradientConfig(
+      textGradientEnabled: true,
+      textGradientStartColor: Color(0xFFFFD36E),
+      textGradientEndColor: Color(0xFFFF4D8D),
+      textGradientAngle: 0.0,
+    ),
+    layout: DesktopLyricsLayoutConfig(
+      overlayWidth: 980.0,
+      overlayHeight: null,
+    ),
+  );
+  bool _disposed = false;
+
+  DesktopLyricsConfig get config => _config;
+  set config(DesktopLyricsConfig value) {
+    unawaited(setConfig(value));
+  }
+  bool get isEnabled => _config.interaction.enabled;
+  DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
+    enabled: _config.interaction.enabled,
+    clickThrough: _config.interaction.clickThrough,
+    fontSize: _config.text.fontSize,
+    backgroundOpacity: _config.background.opacity,
+    textColorArgb: _config.text.textColor?.toARGB32() ?? 0xFFF6F7FF,
+    shadowColorArgb: _config.text.shadowColor?.toARGB32() ?? 0x00000000,
+    strokeColorArgb: _config.text.strokeColor?.toARGB32() ?? 0x00000000,
+    strokeWidth: _config.text.strokeWidth ?? 0.0,
+    textGradientEnabled: _config.gradient.textGradientEnabled,
+    textGradientStartArgb:
+        _config.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E,
+    textGradientEndArgb:
+        _config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
+    textGradientAngle: _config.gradient.textGradientAngle,
+    backgroundColorArgb:
+        _config.background.backgroundColor?.toARGB32() ?? 0x7A220A35,
+    backgroundRadius: _config.background.backgroundRadius,
+    backgroundPadding: _config.background.backgroundPadding,
+    textAlign: _config.text.textAlign ?? TextAlign.start,
+    fontFamily: _config.text.fontFamily ?? 'Segoe UI',
+    fontWeightValue: _config.text.fontWeight?.value ?? FontWeight.w400.value,
+    autoOverlayHeight: _config.layout.overlayHeight == null,
+    overlayWidth: _config.layout.overlayWidth ?? 980.0,
+    overlayHeight: _config.layout.overlayHeight ?? 160.0,
+  );
+
+  Future<void> setConfig(DesktopLyricsConfig config) async {
+    if (config == _config) return;
+    await _service.configure(config);
+    _config = config;
+    if (!_disposed) notifyListeners();
+  }
+
+  Future<void> setEnabled(bool enabled) async {
+    if (_config.interaction.enabled == enabled) return;
+    await setConfig(
+      _config.copyWith(
+        interaction: _config.interaction.copyWith(enabled: enabled),
+      ),
+    );
+  }
+
+  Future<void> render(DesktopLyricsFrame frame) => _service.render(frame);
+
+  Future<void> shutdown() => _service.dispose();
+
+  @override
+  void dispose() {
+    if (_disposed) return;
+    _disposed = true;
+    unawaited(_service.dispose());
+    super.dispose();
+  }
 }
 
 class _PerformanceTracker {
@@ -611,4 +679,5 @@ class _PerformanceTracker {
     sampleCount = 0;
     totalMs = 0.0;
   }
+
 }

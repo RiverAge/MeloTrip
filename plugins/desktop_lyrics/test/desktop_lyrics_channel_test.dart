@@ -24,19 +24,23 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('sends show/hide/dispose calls', () async {
+  test('setEnabled uses updateConfig and dispose call', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.show();
-    await lyrics.hide();
-    await lyrics.dispose();
+    await lyrics.setEnabled(false);
+    await lyrics.setEnabled(true);
+    await lyrics.shutdown();
 
-    expect(calls.map((e) => e.method), ['show', 'hide', 'dispose']);
+    expect(calls.map((e) => e.method), ['updateConfig', 'updateConfig', 'dispose']);
+    final hideArgs = calls[0].arguments as Map<Object?, Object?>;
+    final showArgs = calls[1].arguments as Map<Object?, Object?>;
+    expect(hideArgs['enabled'], false);
+    expect(showArgs['enabled'], true);
   });
 
   test('serializes render/config payloads', () async {
     final lyrics = DesktopLyrics(channel: channel);
     await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
-    await lyrics.configure(
+    await lyrics.setConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,

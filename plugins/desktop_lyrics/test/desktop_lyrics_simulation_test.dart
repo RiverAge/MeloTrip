@@ -24,7 +24,7 @@ void main() {
 
   test('simulated karaoke frames can be streamed continuously', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.configure(
+    await lyrics.setConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,
@@ -34,7 +34,7 @@ void main() {
         background: DesktopLyricsBackgroundConfig(opacity: 0.92),
       ),
     );
-    await lyrics.show();
+    await lyrics.setEnabled(true);
 
     for (var i = 0; i <= 20; i++) {
       final lineProgress = i / 20.0;
@@ -54,8 +54,8 @@ void main() {
       );
     }
 
-    await lyrics.hide();
-    await lyrics.dispose();
+    await lyrics.setEnabled(false);
+    await lyrics.shutdown();
 
     final renderCalls =
         calls.where((call) => call.method == 'updateLyricFrame').toList();

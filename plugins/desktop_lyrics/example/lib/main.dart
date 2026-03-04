@@ -72,8 +72,14 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     _pushConfig();
   }
 
+  @override
+  void dispose() {
+    _lyrics.dispose();
+    super.dispose();
+  }
+
   Future<void> _pushConfig() async {
-    await _lyrics.configure(
+    await _lyrics.setConfig(
       DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: _enabled,
@@ -115,7 +121,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   Future<void> _playLineDemo() async {
     if (_playingLineDemo) return;
     setState(() => _playingLineDemo = true);
-    await _lyrics.show();
+    await _lyrics.setEnabled(true);
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final text = 'Desktop Lyrics live preview $stamp';
     const steps = 28;
@@ -135,7 +141,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   Future<void> _playTokenDemo() async {
     if (_playingTokenDemo) return;
     setState(() => _playingTokenDemo = true);
-    await _lyrics.show();
+    await _lyrics.setEnabled(true);
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final timedTokens = <DesktopLyricsTokenTiming>[
       const DesktopLyricsTokenTiming(text: 'Desktop ', durationMs: 5000),
@@ -190,11 +196,11 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
             runSpacing: 8,
             children: [
               FilledButton(
-                onPressed: () => _lyrics.show(),
+                onPressed: () => _lyrics.setEnabled(true),
                 child: const Text('Show'),
               ),
               FilledButton(
-                onPressed: () => _lyrics.hide(),
+                onPressed: () => _lyrics.setEnabled(false),
                 child: const Text('Hide'),
               ),
               FilledButton(

@@ -16,7 +16,7 @@ extension _PlayerListenerLogic on _MyAppState {
     _desktopLyricsTrackSubscription?.cancel();
     _desktopLyricsProgressSubscription?.cancel();
     _nowPlayingTimer?.cancel();
-    unawaited(ref.read(desktopLyricsServiceProvider).dispose());
+    unawaited(ref.read(desktopLyricsServiceProvider).shutdown());
   }
 
   void _setPlayerMediaResolver() async {
@@ -134,7 +134,7 @@ extension _PlayerListenerLogic on _MyAppState {
     _desktopLyricsTrackSubscription = player.playQueueStream.listen((queue) async {
       if (ref.read(desktopLyricsPreviewingProvider)) return;
       if (queue.songs.isEmpty || queue.index < 0 || queue.index >= queue.songs.length) {
-        await lyricsService.hide();
+        await lyricsService.setEnabled(false);
         return;
       }
 
@@ -157,7 +157,7 @@ extension _PlayerListenerLogic on _MyAppState {
           ),
         );
       }
-      await lyricsService.show();
+      await lyricsService.setEnabled(true);
     });
 
     _desktopLyricsProgressSubscription = CombineLatestStream.combine2(
