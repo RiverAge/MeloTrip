@@ -138,30 +138,6 @@ void DesktopLyricsOverlay::Dispose() {
   hwnd_ = nullptr;
 }
 
-void DesktopLyricsOverlay::UpdateTrack(const std::vector<LyricsLineEntry>& lines) {
-  lines_ = lines;
-  has_frame_ = false;
-  position_ms_ = 0;
-  duration_ms_ = 0;
-  current_line_.clear();
-  const bool changed = UpdateCurrentLineByPosition();
-
-  if (lines_.empty()) {
-    Hide();
-    return;
-  }
-  if (enabled_) Show();
-  if (changed) RequestRepaint();
-}
-
-void DesktopLyricsOverlay::UpdateProgress(int64_t position_ms, int64_t duration_ms) {
-  if (has_frame_) return;
-  position_ms_ = std::max<int64_t>(0, position_ms);
-  duration_ms_ = std::max<int64_t>(0, duration_ms);
-  const bool changed = UpdateCurrentLineByPosition();
-  if (changed) RequestRepaint();
-}
-
 void DesktopLyricsOverlay::UpdateLyricFrame(const std::wstring& current_line,
                                             double line_progress) {
   has_frame_ = true;
@@ -323,27 +299,6 @@ void DesktopLyricsOverlay::PositionNearBottomCenter(bool force) {
 
   SetWindowPos(hwnd_, HWND_TOPMOST, left, top, overlay_width_, overlay_height_,
                SWP_NOACTIVATE);
-}
-
-bool DesktopLyricsOverlay::UpdateCurrentLineByPosition() {
-  const std::wstring old_line = current_line_;
-  if (lines_.empty()) {
-    current_line_.clear();
-    return old_line != current_line_;
-  }
-
-  const auto it = std::upper_bound(
-      lines_.begin(), lines_.end(), position_ms_,
-      [](int64_t value, const LyricsLineEntry& entry) {
-        return value < entry.start_ms;
-      });
-
-  if (it == lines_.begin()) {
-    current_line_ = lines_.front().text;
-    return old_line != current_line_;
-  }
-  current_line_ = std::prev(it)->text;
-  return old_line != current_line_;
 }
 
 void DesktopLyricsOverlay::RequestRepaint() {

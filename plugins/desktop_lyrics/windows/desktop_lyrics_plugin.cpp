@@ -80,42 +80,6 @@ double ReadDoubleFromMap(const flutter::EncodableMap& map,
   return fallback;
 }
 
-std::vector<LyricsLineEntry> ParseLyricsLines(const flutter::EncodableMap& map) {
-  std::vector<LyricsLineEntry> result;
-  const auto lines_it = map.find(flutter::EncodableValue("lines"));
-  if (lines_it == map.end()) return result;
-
-  const auto* lines_list = std::get_if<flutter::EncodableList>(&lines_it->second);
-  if (!lines_list) return result;
-
-  for (const auto& line_value : *lines_list) {
-    const auto* line_map = std::get_if<flutter::EncodableMap>(&line_value);
-    if (!line_map) continue;
-
-    const int64_t start_ms = ReadInt64FromMap(*line_map, "start", 0);
-    std::wstring text;
-
-    const auto value_it = line_map->find(flutter::EncodableValue("value"));
-    if (value_it != line_map->end()) {
-      if (const auto* values =
-              std::get_if<flutter::EncodableList>(&value_it->second)) {
-        for (const auto& value : *values) {
-          if (const auto* utf8 = std::get_if<std::string>(&value)) {
-            if (!text.empty()) text += L"  ";
-            text += Utf8ToWide(*utf8);
-          }
-        }
-      }
-    }
-
-    if (!text.empty()) {
-      result.push_back({start_ms, text});
-    }
-  }
-
-  return result;
-}
-
 std::wstring ParseCurrentLineFromFrame(const flutter::EncodableMap& map) {
   std::wstring current = Utf8ToWide(ReadStringFromMap(map, "currentLine"));
   if (!current.empty()) return current;
@@ -189,27 +153,6 @@ void DesktopLyricsPlugin::HandleMethodCall(
   }
   if (method_call.method_name() == "dispose") {
     overlay_->Dispose();
-    result->Success();
-    return;
-  }
-  if (method_call.method_name() == "updateTrack") {
-    if (!arguments) {
-      result->Success();
-      return;
-    }
-    auto lines = ParseLyricsLines(*arguments);
-    overlay_->UpdateTrack(lines);
-    result->Success();
-    return;
-  }
-  if (method_call.method_name() == "updateProgress") {
-    if (!arguments) {
-      result->Success();
-      return;
-    }
-    const int64_t position_ms = ReadInt64FromMap(*arguments, "positionMs", 0);
-    const int64_t duration_ms = ReadInt64FromMap(*arguments, "durationMs", 0);
-    overlay_->UpdateProgress(position_ms, duration_ms);
     result->Success();
     return;
   }

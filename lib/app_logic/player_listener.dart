@@ -127,8 +127,9 @@ extension _PlayerListenerLogic on _MyAppState {
     if (player == null) return;
 
     final lyricsService = ref.read(desktopLyricsServiceProvider);
-    await _syncDesktopLyricsConfig();
     String? lastSongId;
+    List<Line> lyricLines = const [];
+    List<int> lyricStartMs = const [];
 
     _desktopLyricsTrackSubscription = player.playQueueStream.listen((queue) async {
       if (queue.songs.isEmpty || queue.index < 0 || queue.index >= queue.songs.length) {
@@ -144,21 +145,18 @@ extension _PlayerListenerLogic on _MyAppState {
       final lines =
           lyricsResponse?.subsonicResponse?.lyricsList?.structuredLyrics?.firstOrNull?.line ??
           const <Line>[];
-      final lyricLines = lines
-          .map(
-            (line) => DesktopLyricsLine(
-              startMs: line.start ?? 0,
-              values: line.value ?? const <String>[],
-            ),
-          )
-          .toList();
+      lyricLines = lines;
+      lyricStartMs = lyricLines.map((line) => line.start ?? 0).toList(growable: false);
 
-      await lyricsService.updateTrack(
-        songId: song.id,
-        title: song.title,
-        artist: song.displayArtist,
-        lines: lyricLines,
-      );
+      if (lyricLines.isNotEmpty) {
+        final firstLine = (lyricLines.first.value ?? const <String>[]).join('  ');
+        await lyricsService.render(
+          DesktopLyricFrame.line(
+            currentLine: firstLine,
+            lineProgress: 0,
+          ),
+        );
+      }
       await lyricsService.show();
     });
 
@@ -167,27 +165,21 @@ extension _PlayerListenerLogic on _MyAppState {
       player.durationStream,
       (position, duration) => (position, duration),
     ).listen((data) async {
-      await lyricsService.updateProgress(
-        position: data.$1,
-        duration: data.$2,
+      if (lyricLines.isEmpty) return;
+      final positionMs = data.$1.inMilliseconds;
+      final currentIndex = lyricIndexByStartMs(
+        sortedStartMs: lyricStartMs,
+        positionMs: positionMs,
+      );
+      final current = lyricLines[currentIndex];
+      final currentLine = (current.value ?? const <String>[]).join('  ');
+
+      await lyricsService.render(
+        DesktopLyricFrame.line(
+          currentLine: currentLine,
+        ),
       );
     });
-  }
-
-  Future<void> _syncDesktopLyricsConfig() async {
-    final service = ref.read(desktopLyricsServiceProvider);
-    await service.updateConfig(
-      const DesktopLyricsConfig(
-      enabled: true,
-      clickThrough: false,
-      fontSize: 34,
-      opacity: .93,
-      textColorArgb: 0xFFF2F2F8,
-      shadowColorArgb: 0xFF121214,
-      strokeColorArgb: 0x00000000,
-      strokeWidth: 0,
-      ),
-    );
   }
 
   void _savePlayQueue(AppPlayer player, dynamic api) {

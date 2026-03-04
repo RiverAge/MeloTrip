@@ -2,14 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 @immutable
-class DesktopLyricsLine {
-  const DesktopLyricsLine({required this.startMs, required this.values});
-
-  final int startMs;
-  final List<String> values;
-}
-
-@immutable
 class DesktopLyricToken {
   const DesktopLyricToken({required this.text, required this.progress});
 

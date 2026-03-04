@@ -14,11 +14,6 @@ class GraphicsPath;
 
 namespace desktop_lyrics {
 
-struct LyricsLineEntry {
-  int64_t start_ms;
-  std::wstring text;
-};
-
 class DesktopLyricsOverlay {
  public:
   DesktopLyricsOverlay();
@@ -29,8 +24,6 @@ class DesktopLyricsOverlay {
   void Hide();
   void Dispose();
 
-  void UpdateTrack(const std::vector<LyricsLineEntry>& lines);
-  void UpdateProgress(int64_t position_ms, int64_t duration_ms);
   void UpdateLyricFrame(const std::wstring& current_line, double line_progress);
   void UpdateConfig(bool enabled,
                     bool click_through,
@@ -63,7 +56,6 @@ class DesktopLyricsOverlay {
                         WPARAM wparam,
                         LPARAM lparam);
   void PositionNearBottomCenter(bool force = false);
-  bool UpdateCurrentLineByPosition();
   void RequestRepaint();
   void ApplyWindowStyles();
   void RenderLayeredWindow();
@@ -72,9 +64,6 @@ class DesktopLyricsOverlay {
 
   HWND hwnd_ = nullptr;
   std::wstring current_line_;
-  std::vector<LyricsLineEntry> lines_;
-  int64_t position_ms_ = 0;
-  int64_t duration_ms_ = 0;
   double frame_line_progress_ = 1.0;
   bool has_frame_ = false;
   bool enabled_ = true;
