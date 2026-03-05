@@ -39,13 +39,10 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 
 ### Dart Dot Shorthand
 
-- Must use dot shorthand when the context type is clear and compile-safe.
-- Good examples:
-- Enum values: `mainAxisSize: .min`, `playlistMode == .loop`
-- Static members with clear context: `Uri uri = .parse(url)`
-- Full qualifier is allowed only when dot shorthand would fail compile or reduce readability in that exact expression.
-- Do not force replacement where context type does not own the member.
-- Keep full form for common cases like `Icons.*` and `Colors.*`
+- Do NOT use dot shorthand in this project.
+- Always use explicit qualified members for enums/static values (for example: `MainAxisSize.min`, `PlaylistMode.loop`, `Uri.parse(url)`).
+- Reason: dot shorthand can fail in some contexts/toolchains (especially desktop builds) and reduce cross-environment compatibility.
+- Keep full form for common cases like `Icons.*` and `Colors.*`.
 - Always validate with `flutter analyze` after bulk replacements.
 
 ### Dart Import Path Style (must follow)
