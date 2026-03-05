@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
+import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/pages/shared/initial/tab_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
@@ -73,7 +74,7 @@ void main() {
     expect(find.byType(DesktopSettingsPage), findsOneWidget);
   });
 
-  testWidgets('Desktop unavailable sidebar tile shows coming-soon hint', (
+  testWidgets('Desktop sidebar favorites tile navigates to favorites page', (
     tester,
   ) async {
     await pumpTabPage(tester, size: const Size(1440, 960));
@@ -81,7 +82,7 @@ void main() {
     await tester.tap(find.text('My Favorites').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('Coming soon'), findsOneWidget);
+    expect(find.byType(DesktopFavoritesPage), findsOneWidget);
   });
 }
 

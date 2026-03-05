@@ -10,11 +10,13 @@ class _PlaylistTile extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => DesktopPlaylistDetailPage(playlistId: item.id),
-          ),
+        final state = context.findAncestorStateOfType<_DesktopTabPageState>();
+        final navigator = state?.contentNavigatorKey.currentState;
+        assert(
+          navigator != null,
+          'Desktop content navigator is not available for playlist routing.',
         );
+        navigator?.pushNamed('/playlist_detail', arguments: item.id);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
@@ -76,7 +78,9 @@ class _PlaylistTile extends StatelessWidget {
                           overflow: .ellipsis,
                           style: TextStyle(
                             fontSize: 10,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),

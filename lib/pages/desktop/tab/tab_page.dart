@@ -26,7 +26,6 @@ import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
 import 'package:melo_trip/pages/desktop/library/folders_page.dart';
 import 'package:melo_trip/pages/desktop/library/genres_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
-import 'package:melo_trip/pages/desktop/playlist/playlist_page.dart';
 
 part 'parts/sidebar.dart';
 part 'parts/sidebar_search_button.dart';
@@ -92,8 +91,6 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
         return '/genres';
       case 7:
         return '/folders';
-      case 8:
-        return '/playlists';
       default:
         return '/';
     }
@@ -190,19 +187,23 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
                                 case '/folders':
                                   page = const DesktopFoldersPage();
                                   break;
-                                case '/playlists':
-                                  page = const DesktopPlaylistsPage();
+                                case '/playlist_detail':
+                                  final id = settings.arguments;
+                                  if (id is String && id.isNotEmpty) {
+                                    page = DesktopPlaylistDetailPage(
+                                      playlistId: id,
+                                    );
+                                  } else {
+                                    page = const DesktopHomePage();
+                                  }
                                   break;
                                 default:
                                   page = const DesktopHomePage();
                               }
                               return PageRouteBuilder(
                                 pageBuilder:
-                                    (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                    ) => page,
+                                    (context, animation, secondaryAnimation) =>
+                                        page,
                                 transitionsBuilder:
                                     (
                                       context,
@@ -210,10 +211,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
                                       secondaryAnimation,
                                       child,
                                     ) {
-                                      return FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      );
+                                      return child;
                                     },
                                 settings: settings,
                               );

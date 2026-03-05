@@ -17,7 +17,6 @@ class _DesktopSidebar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-
     final libraryItems = <_SidebarNavItem>[
       _SidebarNavItem(
         index: 0,
@@ -60,12 +59,6 @@ class _DesktopSidebar extends ConsumerWidget {
         title: l10n.songMetaPath,
         icon: Icons.folder_open_outlined,
         onTap: () => onSelected(7),
-      ),
-      _SidebarNavItem(
-        index: 8,
-        title: l10n.playlist,
-        icon: Icons.radio_outlined,
-        onTap: () => onSelected(8),
       ),
     ];
 
@@ -155,12 +148,8 @@ class _SidebarNavItem {
   final VoidCallback onTap;
 }
 
-
 class _SidebarSection extends StatelessWidget {
-  const _SidebarSection({
-    required this.title,
-    required this.children,
-  });
+  const _SidebarSection({required this.title, required this.children});
 
   final String title;
   final List<Widget> children;
