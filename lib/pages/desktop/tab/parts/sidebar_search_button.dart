@@ -12,8 +12,10 @@ class _SidebarSearchButton extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const DesktopSearchPage()),
+        showDialog(
+          context: context,
+          barrierColor: Colors.black.withValues(alpha: .4),
+          builder: (_) => const SearchCommandPalette(),
         );
       },
       child: Container(

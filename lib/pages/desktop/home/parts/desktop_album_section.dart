@@ -37,7 +37,7 @@ class _DesktopAlbumSection extends ConsumerWidget {
                       padding: const EdgeInsets.only(right: _cardGap),
                       child: SizedBox(
                         width: _cardWidth,
-                        child: _DesktopAlbumCard(album: albums[index]),
+                        child: DesktopAlbumCard(album: albums[index]),
                       ),
                     );
                   },

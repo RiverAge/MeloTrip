@@ -1,15 +1,23 @@
-part of '../home_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
+import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
+import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/provider/album/album_detail.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/widget/artwork_image.dart';
 
-class _DesktopAlbumCard extends ConsumerStatefulWidget {
-  const _DesktopAlbumCard({required this.album});
+class DesktopAlbumCard extends ConsumerStatefulWidget {
+  const DesktopAlbumCard({super.key, required this.album});
 
   final AlbumEntity album;
 
   @override
-  ConsumerState<_DesktopAlbumCard> createState() => _DesktopAlbumCardState();
+  ConsumerState<DesktopAlbumCard> createState() => _DesktopAlbumCardState();
 }
 
-class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
+class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     with SingleTickerProviderStateMixin {
   bool _isHovering = false;
   late AnimationController _controller;
@@ -19,9 +27,7 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      vsync: this,
-      duration: DesktopMotionTokens.medium,
-    );
+        vsync: this, duration: DesktopMotionTokens.medium);
     _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -67,7 +73,8 @@ class _DesktopAlbumCardState extends ConsumerState<_DesktopAlbumCard>
     final overlayBackground = Colors.black.withValues(alpha: isDark ? .52 : .46);
     final overlayForeground = Colors.white.withValues(alpha: .94);
     final overlayForegroundMuted = Colors.white.withValues(alpha: .82);
-    final mainButtonBackground = Colors.white.withValues(alpha: isDark ? .98 : .94);
+    final mainButtonBackground =
+        Colors.white.withValues(alpha: isDark ? .98 : .94);
     final mainButtonForeground = Colors.black.withValues(alpha: .9);
     final secondaryButtonBackground = Colors.white.withValues(alpha: .24);
     final isStarred = widget.album.starred != null;
@@ -239,7 +246,9 @@ class _RatingStars extends StatelessWidget {
       mainAxisSize: .min,
       children: List.generate(5, (index) {
         return Icon(
-          index < (rating / 2).ceil() ? Icons.star_rounded : Icons.star_border_rounded,
+          index < (rating / 2).ceil()
+              ? Icons.star_rounded
+              : Icons.star_border_rounded,
           color: Colors.white.withValues(alpha: .9),
           size: 14,
         );

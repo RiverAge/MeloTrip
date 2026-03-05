@@ -16,16 +16,7 @@ class _DesktopSidebar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    void onUnavailableTap() {
-      final messenger = ScaffoldMessenger.maybeOf(context);
-      messenger?.hideCurrentSnackBar();
-      messenger?.showSnackBar(
-        SnackBar(
-          content: Text(l10n.featureComingSoon),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+
 
     final libraryItems = <_SidebarNavItem>[
       _SidebarNavItem(
@@ -38,50 +29,43 @@ class _DesktopSidebar extends ConsumerWidget {
         index: 2,
         title: l10n.myFavorites,
         icon: Icons.favorite_outline_rounded,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(2),
       ),
       _SidebarNavItem(
         index: 3,
         title: l10n.album,
         icon: Icons.album_outlined,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(3),
       ),
       _SidebarNavItem(
         index: 4,
         title: l10n.song,
         icon: Icons.music_note_outlined,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(4),
       ),
       _SidebarNavItem(
         index: 5,
         title: l10n.artist,
         icon: Icons.people_outline_rounded,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(5),
       ),
       _SidebarNavItem(
         index: 6,
         title: l10n.songMetaGenre,
         icon: Icons.flag_outlined,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(6),
       ),
       _SidebarNavItem(
         index: 7,
         title: l10n.songMetaPath,
         icon: Icons.folder_open_outlined,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(7),
       ),
       _SidebarNavItem(
         index: 8,
         title: l10n.playlist,
         icon: Icons.radio_outlined,
-        onTap: onUnavailableTap,
-        tooltip: l10n.featureComingSoon,
+        onTap: () => onSelected(8),
       ),
     ];
 
@@ -109,7 +93,6 @@ class _DesktopSidebar extends ConsumerWidget {
                           icon: item.icon,
                           selected: currentIndex == item.index,
                           onTap: item.onTap,
-                          tooltip: item.tooltip,
                         ),
                       )
                       .toList(),
@@ -164,14 +147,12 @@ class _SidebarNavItem {
     required this.title,
     required this.icon,
     required this.onTap,
-    this.tooltip,
   });
 
   final int index;
   final String title;
   final IconData icon;
   final VoidCallback onTap;
-  final String? tooltip;
 }
 
 

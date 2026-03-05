@@ -6,14 +6,12 @@ class _NavTile extends StatefulWidget {
     required this.icon,
     required this.selected,
     required this.onTap,
-    this.tooltip,
   });
 
   final String title;
   final IconData icon;
   final bool selected;
   final VoidCallback? onTap;
-  final String? tooltip;
 
   @override
   State<_NavTile> createState() => _NavTileState();
@@ -78,13 +76,6 @@ class _NavTileState extends State<_NavTile> {
       ),
     );
 
-    if (widget.tooltip != null) {
-      tile = Tooltip(
-        message: widget.tooltip!,
-        waitDuration: const Duration(milliseconds: 400),
-        child: tile,
-      );
-    }
     return tile;
   }
 }

@@ -7,8 +7,8 @@ import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/home/home_page.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
-import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
-import 'package:melo_trip/pages/desktop/search/search_page.dart';
+import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
+import 'package:melo_trip/pages/desktop/tab/parts/search_command_palette.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
@@ -19,7 +19,14 @@ import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/rating.dart';
-import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
+import 'package:melo_trip/pages/desktop/library/songs_page.dart';
+import 'package:melo_trip/pages/desktop/library/albums_page.dart';
+import 'package:melo_trip/pages/desktop/library/artists_page.dart';
+import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
+import 'package:melo_trip/pages/desktop/library/folders_page.dart';
+import 'package:melo_trip/pages/desktop/library/genres_page.dart';
+import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
+import 'package:melo_trip/pages/desktop/playlist/playlist_page.dart';
 
 part 'parts/sidebar.dart';
 part 'parts/sidebar_search_button.dart';
@@ -73,6 +80,20 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
         return '/';
       case 1:
         return '/settings';
+      case 2:
+        return '/favorites';
+      case 3:
+        return '/albums';
+      case 4:
+        return '/songs';
+      case 5:
+        return '/artists';
+      case 6:
+        return '/genres';
+      case 7:
+        return '/folders';
+      case 8:
+        return '/playlists';
       default:
         return '/';
     }
@@ -129,8 +150,8 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: .topCenter,
-                              end: .bottomCenter,
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                               colors: [
                                 Theme.of(
                                   context,
@@ -150,6 +171,27 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
                                   break;
                                 case '/settings':
                                   page = const DesktopSettingsPage();
+                                  break;
+                                case '/songs':
+                                  page = const DesktopSongsPage();
+                                  break;
+                                case '/favorites':
+                                  page = const DesktopFavoritesPage();
+                                  break;
+                                case '/genres':
+                                  page = const DesktopGenresPage();
+                                  break;
+                                case '/albums':
+                                  page = const DesktopAlbumsPage();
+                                  break;
+                                case '/artists':
+                                  page = const DesktopArtistsPage();
+                                  break;
+                                case '/folders':
+                                  page = const DesktopFoldersPage();
+                                  break;
+                                case '/playlists':
+                                  page = const DesktopPlaylistsPage();
                                   break;
                                 default:
                                   page = const DesktopHomePage();
