@@ -1,4 +1,5 @@
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,6 +11,7 @@ abstract class StarredEntity with _$StarredEntity {
   const factory StarredEntity({
     List<SongEntity>? song,
     List<AlbumEntity>? album,
+    List<ArtistEntity>? artist,
   }) = _StarredEntity;
 
   factory StarredEntity.fromJson(Map<String, dynamic> json) =>

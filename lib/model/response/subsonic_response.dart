@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/error/error.dart';
+import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/model/response/play_queue/play_queue.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
@@ -27,7 +28,7 @@ abstract class SubsonicResponse with _$SubsonicResponse {
       _$SubsonicResponseFromJson(json);
 }
 
-@freezed
+  @freezed
 abstract class SubsonicResponseClass with _$SubsonicResponseClass {
   const factory SubsonicResponseClass({
     String? status,
@@ -48,6 +49,7 @@ abstract class SubsonicResponseClass with _$SubsonicResponseClass {
     ScanStatusEntity? scanStatus,
     StarredEntity? starred,
     ArtistEntity? artist,
+    GenresEntity? genres,
     SongsByGenreEntity? songsByGenre,
     ErrorEntity? error,
   }) = _SubsonicResponseClass;
