@@ -23,13 +23,6 @@ Desktop floating lyrics overlay plugin for Flutter.
   - Wayland: click-through is currently not supported due to technical limitations.
 - macOS: currently not implemented (calls return safely)
 
-## Installation
-
-```yaml
-dependencies:
-  desktop_lyrics: ^0.0.1
-```
-
 ## Quick Start
 
 ```dart
