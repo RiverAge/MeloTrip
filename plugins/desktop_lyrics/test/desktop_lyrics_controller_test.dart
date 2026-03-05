@@ -22,12 +22,12 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('setConfig notifies listeners once', () async {
+  test('applyConfig notifies listeners once', () async {
     final controller = DesktopLyrics(channel: channel);
     var notified = 0;
     controller.addListener(() => notified++);
 
-    await controller.setConfig(
+    await controller.applyConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,
@@ -54,6 +54,6 @@ void main() {
     final showArgs = methodCalls[1].arguments as Map<Object?, Object?>;
     expect(hideArgs['enabled'], false);
     expect(showArgs['enabled'], true);
-    expect(controller.isEnabled, true);
+    expect(controller.enabled, true);
   });
 }

@@ -24,7 +24,7 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('setEnabled uses setConfig path and dispose call', () async {
+  test('setEnabled uses applyConfig path and dispose call', () async {
     final lyrics = DesktopLyrics(channel: channel);
     await lyrics.setEnabled(false);
     await lyrics.setEnabled(true);
@@ -40,7 +40,7 @@ void main() {
   test('serializes render/config payloads', () async {
     final lyrics = DesktopLyrics(channel: channel);
     await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
-    await lyrics.setConfig(
+    await lyrics.applyConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,
@@ -76,7 +76,7 @@ void main() {
 
   test('serializes full config contract for native parity', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.setConfig(
+    await lyrics.applyConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: false,
@@ -136,7 +136,7 @@ void main() {
 
   test('omits overlayHeight in auto-height mode', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.setConfig(
+    await lyrics.applyConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,

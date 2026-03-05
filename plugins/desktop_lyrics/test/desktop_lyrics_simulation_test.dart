@@ -24,7 +24,7 @@ void main() {
 
   test('simulated karaoke frames can be streamed continuously', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.setConfig(
+    await lyrics.applyConfig(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,

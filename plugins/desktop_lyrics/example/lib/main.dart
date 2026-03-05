@@ -79,7 +79,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   }
 
   Future<void> _pushConfig() async {
-    await _lyrics.setConfig(
+    await _lyrics.applyConfig(
       DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: _enabled,
@@ -144,14 +144,26 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     await _lyrics.setEnabled(true);
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final timedTokens = <DesktopLyricsTokenTiming>[
-      const DesktopLyricsTokenTiming(text: 'Desktop ', durationMs: 5000),
-      const DesktopLyricsTokenTiming(text: 'Hi ', durationMs: 400),
-      const DesktopLyricsTokenTiming(text: 'lyrics ', durationMs: 1200),
-      DesktopLyricsTokenTiming(text: stamp, durationMs: 500),
+      const DesktopLyricsTokenTiming(
+        text: 'Desktop ',
+        duration: Duration(milliseconds: 5000),
+      ),
+      const DesktopLyricsTokenTiming(
+        text: 'Hi ',
+        duration: Duration(milliseconds: 400),
+      ),
+      const DesktopLyricsTokenTiming(
+        text: 'lyrics ',
+        duration: Duration(milliseconds: 1200),
+      ),
+      DesktopLyricsTokenTiming(
+        text: stamp,
+        duration: const Duration(milliseconds: 500),
+      ),
     ];
     var totalDurationMs = 0;
     for (final token in timedTokens) {
-      totalDurationMs += token.durationMs;
+      totalDurationMs += token.duration.inMilliseconds;
     }
     final total = totalDurationMs.clamp(1, 1 << 30);
     final segmentCount = timedTokens.length.clamp(1, 1 << 30);
@@ -162,14 +174,16 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
       var mappedProgress = 0.0;
       for (var idx = 0; idx < timedTokens.length; idx++) {
         final token = timedTokens[idx];
-        final nextDuration = consumedDuration + token.durationMs;
+        final tokenMs = token.duration.inMilliseconds;
+        final nextDuration = consumedDuration + tokenMs;
         if (elapsedMs >= nextDuration) {
           consumedDuration = nextDuration;
           mappedProgress = (idx + 1) / segmentCount;
           continue;
         }
 
-        final local = ((elapsedMs - consumedDuration) / token.durationMs).clamp(0.0, 1.0);
+        final safeTokenMs = tokenMs <= 0 ? 1 : tokenMs;
+        final local = ((elapsedMs - consumedDuration) / safeTokenMs).clamp(0.0, 1.0);
         mappedProgress = ((idx + local) / segmentCount).clamp(0.0, 1.0);
         break;
       }

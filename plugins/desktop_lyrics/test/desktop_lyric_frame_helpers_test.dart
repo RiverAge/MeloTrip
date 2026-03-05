@@ -6,10 +6,10 @@ void main() {
     final frame = DesktopLyricsFrame.fromTimedTokens(
       lineProgress: 0.5,
       tokens: const [
-        DesktopLyricsTokenTiming(text: 'Never ', durationMs: 1000),
-        DesktopLyricsTokenTiming(text: 'gonna ', durationMs: 1000),
-        DesktopLyricsTokenTiming(text: 'give ', durationMs: 1000),
-        DesktopLyricsTokenTiming(text: 'you up', durationMs: 1000),
+        DesktopLyricsTokenTiming(text: 'Never ', duration: Duration(seconds: 1)),
+        DesktopLyricsTokenTiming(text: 'gonna ', duration: Duration(seconds: 1)),
+        DesktopLyricsTokenTiming(text: 'give ', duration: Duration(seconds: 1)),
+        DesktopLyricsTokenTiming(text: 'you up', duration: Duration(seconds: 1)),
       ],
     );
 
@@ -23,12 +23,28 @@ void main() {
 
   test('fromKaraokeTimeline computes line and token progress by position', () {
     final frame = DesktopLyricsFrame.fromKaraokeTimeline(
-      positionMs: 2500,
+      position: const Duration(milliseconds: 2500),
       tokens: const [
-        DesktopLyricsTimelineToken(text: 'Ne', startMs: 0, endMs: 1000),
-        DesktopLyricsTimelineToken(text: 'ver ', startMs: 1000, endMs: 2000),
-        DesktopLyricsTimelineToken(text: 'go', startMs: 2000, endMs: 3000),
-        DesktopLyricsTimelineToken(text: 'nna', startMs: 3000, endMs: 4000),
+        DesktopLyricsTimelineToken(
+          text: 'Ne',
+          start: Duration.zero,
+          end: Duration(seconds: 1),
+        ),
+        DesktopLyricsTimelineToken(
+          text: 'ver ',
+          start: Duration(seconds: 1),
+          end: Duration(seconds: 2),
+        ),
+        DesktopLyricsTimelineToken(
+          text: 'go',
+          start: Duration(seconds: 2),
+          end: Duration(seconds: 3),
+        ),
+        DesktopLyricsTimelineToken(
+          text: 'nna',
+          start: Duration(seconds: 3),
+          end: Duration(seconds: 4),
+        ),
       ],
     );
 

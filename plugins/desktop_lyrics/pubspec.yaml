@@ -1,9 +1,9 @@
 name: desktop_lyrics
-description: "Desktop floating lyrics plugin for Flutter (Windows)."
+description: "Desktop floating lyrics overlay plugin for Flutter (Windows/Linux)."
 version: 0.0.1
-homepage: https://github.com/RiverAge/MeloTrip
-repository: https://github.com/RiverAge/MeloTrip
-issue_tracker: https://github.com/RiverAge/MeloTrip/issues
+homepage: https://github.com/587626/desktop_lyrics
+repository: https://github.com/587626/desktop_lyrics
+issue_tracker: https://github.com/587626/desktop_lyrics/issues
 
 environment:
   sdk: '>=3.3.0 <4.0.0'

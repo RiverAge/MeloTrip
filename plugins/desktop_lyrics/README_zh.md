@@ -2,32 +2,32 @@
 
 [![pub package](https://img.shields.io/pub/v/desktop_lyrics.svg)](https://pub.dev/packages/desktop_lyrics)
 
-Desktop floating lyrics overlay plugin for Flutter.
+Flutter 桌面悬浮歌词插件。
 
-[中文文档](README_zh.md)
+[English README](README.md)
 
-## Features
+## 功能特性
 
-- Floating top-most lyrics window for desktop.
-- Supports both static line rendering and token/timeline karaoke progress.
-- Runtime style configuration (font, alignment, stroke, shadow, gradient, background).
-- Overlay interaction controls (enable/disable, click-through).
-- Layout controls (width + optional auto height).
+- 桌面置顶悬浮歌词窗口。
+- 支持单行歌词与逐词/逐字卡拉 OK 进度渲染。
+- 运行时可配置样式（字体、对齐、描边、阴影、渐变、背景）。
+- 支持交互控制（启用/禁用、点击穿透）。
+- 支持布局控制（宽度 + 自动高度）。
 
-## Platform Support
+## 平台支持
 
-- Windows: supported
-- Linux: supported
-- macOS: currently not implemented (calls return safely)
+- Windows：已支持
+- Linux：已支持
+- macOS：暂未实现（调用会安全返回）
 
-## Installation
+## 安装
 
 ```yaml
 dependencies:
   desktop_lyrics: ^0.0.1
 ```
 
-## Quick Start
+## 快速开始
 
 ```dart
 import 'package:desktop_lyrics/desktop_lyrics.dart';
@@ -60,9 +60,9 @@ await lyrics.render(
 );
 ```
 
-## Karaoke Frames
+## 卡拉 OK 帧构建
 
-Use `DesktopLyricsFrame.fromTimedTokens`:
+使用 `DesktopLyricsFrame.fromTimedTokens`：
 
 ```dart
 final frame = DesktopLyricsFrame.fromTimedTokens(
@@ -77,7 +77,7 @@ final frame = DesktopLyricsFrame.fromTimedTokens(
 await lyrics.render(frame);
 ```
 
-Or use timeline tokens:
+或使用时间轴 token：
 
 ```dart
 final frame = DesktopLyricsFrame.fromKaraokeTimeline(
@@ -98,17 +98,17 @@ final frame = DesktopLyricsFrame.fromKaraokeTimeline(
 await lyrics.render(frame);
 ```
 
-## API Summary
+## API 摘要
 
 - `DesktopLyrics.applyConfig(DesktopLyricsConfig config)`
 - `DesktopLyrics.setEnabled(bool enabled)`
-- `DesktopLyrics.config` / `DesktopLyrics.enabled` (read-only state snapshot)
+- `DesktopLyrics.config` / `DesktopLyrics.enabled`（只读状态快照）
 - `DesktopLyrics.render(DesktopLyricsFrame frame)`
-- `DesktopLyrics.state` + `addListener(...)` for reactive config UI
+- `DesktopLyrics.state` + `addListener(...)`（用于响应式配置 UI）
 - `DesktopLyrics.dispose()`
 
-## Notes
+## 说明
 
-- The plugin does not persist settings.
-- Host apps should store config and re-apply it on startup.
-- `DesktopLyricsFrame.line` defaults to `lineProgress = 1.0` for visible text.
+- 插件不负责持久化配置。
+- 建议宿主应用自行保存配置并在启动后重新应用。
+- `DesktopLyricsFrame.line` 默认 `lineProgress = 1.0`，确保文本可见。

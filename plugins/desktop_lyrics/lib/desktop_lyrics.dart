@@ -13,23 +13,23 @@ class DesktopLyricsToken {
 
 @immutable
 class DesktopLyricsTokenTiming {
-  const DesktopLyricsTokenTiming({required this.text, required this.durationMs});
+  const DesktopLyricsTokenTiming({required this.text, required this.duration});
 
   final String text;
-  final int durationMs;
+  final Duration duration;
 }
 
 @immutable
 class DesktopLyricsTimelineToken {
   const DesktopLyricsTimelineToken({
     required this.text,
-    required this.startMs,
-    required this.endMs,
+    required this.start,
+    required this.end,
   });
 
   final String text;
-  final int startMs;
-  final int endMs;
+  final Duration start;
+  final Duration end;
 }
 
 @immutable
@@ -61,12 +61,14 @@ class DesktopLyricsFrame {
     }
     var total = 0;
     for (final token in tokens) {
-      total += token.durationMs > 0 ? token.durationMs : 1;
+      final ms = token.duration.inMilliseconds;
+      total += ms > 0 ? ms : 1;
     }
     var elapsed = 0;
     final mapped = <DesktopLyricsToken>[];
     for (final token in tokens) {
-      final duration = token.durationMs > 0 ? token.durationMs : 1;
+      final ms = token.duration.inMilliseconds;
+      final duration = ms > 0 ? ms : 1;
       final start = elapsed / total;
       final end = (elapsed + duration) / total;
       final local = ((normalized - start) / (end - start)).clamp(0.0, 1.0);
@@ -81,22 +83,25 @@ class DesktopLyricsFrame {
   }
 
   factory DesktopLyricsFrame.fromKaraokeTimeline({
-    required int positionMs,
+    required Duration position,
     required List<DesktopLyricsTimelineToken> tokens,
   }) {
     if (tokens.isEmpty) {
       return const DesktopLyricsFrame.line(currentLine: '', lineProgress: 1.0);
     }
-    final minStart = tokens.first.startMs;
-    final maxEnd = tokens.last.endMs;
+    final positionMs = position.inMilliseconds;
+    final minStart = tokens.first.start.inMilliseconds;
+    final maxEnd = tokens.last.end.inMilliseconds;
     final total = (maxEnd - minStart).clamp(1, 1 << 30);
     final normalized =
         ((positionMs - minStart) / total).clamp(0.0, 1.0).toDouble();
     final mapped = <DesktopLyricsToken>[];
     for (final token in tokens) {
-      final denom = (token.endMs - token.startMs).clamp(1, 1 << 30);
+      final tokenStart = token.start.inMilliseconds;
+      final tokenEnd = token.end.inMilliseconds;
+      final denom = (tokenEnd - tokenStart).clamp(1, 1 << 30);
       final local =
-          ((positionMs - token.startMs) / denom).clamp(0.0, 1.0).toDouble();
+          ((positionMs - tokenStart) / denom).clamp(0.0, 1.0).toDouble();
       mapped.add(DesktopLyricsToken(text: token.text, progress: local));
     }
     return DesktopLyricsFrame.tokenized(
@@ -418,6 +423,11 @@ class _DesktopLyricsService {
 
   final MethodChannel _channel;
   final _perf = _PerformanceTracker();
+  DateTime _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
+  String _lastRenderLine = '';
+  double _lastRenderProgress = 1.0;
+  Duration _minRenderInterval = Duration.zero;
+  double _minProgressDelta = 0.0;
 
   Future<void> dispose() async => _invoke('dispose');
 
@@ -427,6 +437,21 @@ class _DesktopLyricsService {
     final double currentProgress = (rawProgress != null && rawProgress.isFinite)
         ? rawProgress.clamp(0.0, 1.0).toDouble()
         : 1.0;
+    final now = DateTime.now();
+    final sameLine = currentLine == _lastRenderLine;
+    final smallDelta = (currentProgress - _lastRenderProgress).abs() < _minProgressDelta;
+    final withinInterval = now.difference(_lastRenderAt) < _minRenderInterval;
+    if (_minRenderInterval > Duration.zero &&
+        sameLine &&
+        smallDelta &&
+        withinInterval) {
+      _perf.recordThrottled();
+      _perf.maybeLog();
+      return;
+    }
+    _lastRenderAt = now;
+    _lastRenderLine = currentLine;
+    _lastRenderProgress = currentProgress;
 
     final sw = _perf.startAttempt();
     final result = await _invoke('updateLyricFrame', {
@@ -450,6 +475,18 @@ class _DesktopLyricsService {
       mode: mode,
       gradient: gradient,
     );
+  }
+
+  void setRenderRateLimit({
+    required int maxFps,
+    required double minProgressDelta,
+  }) {
+    if (maxFps <= 0) {
+      _minRenderInterval = Duration.zero;
+    } else {
+      _minRenderInterval = Duration(milliseconds: (1000 / maxFps).round());
+    }
+    _minProgressDelta = minProgressDelta.clamp(0.0, 1.0);
   }
 
   Future<void> configure(DesktopLyricsConfig config) async {
@@ -545,12 +582,10 @@ class DesktopLyrics extends ChangeNotifier {
     ),
   );
   bool _disposed = false;
+  Future<void> _configWriteQueue = Future.value();
 
   DesktopLyricsConfig get config => _config;
-  set config(DesktopLyricsConfig value) {
-    unawaited(setConfig(value));
-  }
-  bool get isEnabled => _config.interaction.enabled;
+  bool get enabled => _config.interaction.enabled;
   DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
     enabled: _config.interaction.enabled,
     clickThrough: _config.interaction.clickThrough,
@@ -578,23 +613,33 @@ class DesktopLyrics extends ChangeNotifier {
     overlayHeight: _config.layout.overlayHeight ?? 160.0,
   );
 
-  Future<void> setConfig(DesktopLyricsConfig config) async {
-    if (config == _config) return;
-    await _service.configure(config);
-    _config = config;
-    if (!_disposed) notifyListeners();
+  Future<void> applyConfig(DesktopLyricsConfig value) {
+    if (value == _config) return Future.value();
+    _configWriteQueue = _configWriteQueue.then((_) async {
+      if (value == _config) return;
+      await _service.configure(value);
+      _config = value;
+      if (!_disposed) notifyListeners();
+    });
+    return _configWriteQueue;
   }
 
-  Future<void> setEnabled(bool enabled) async {
-    if (_config.interaction.enabled == enabled) return;
-    await setConfig(
+  Future<void> setEnabled(bool value) {
+    if (value == _config.interaction.enabled) return Future.value();
+    return applyConfig(
       _config.copyWith(
-        interaction: _config.interaction.copyWith(enabled: enabled),
+        interaction: _config.interaction.copyWith(enabled: value),
       ),
     );
   }
 
   Future<void> render(DesktopLyricsFrame frame) => _service.render(frame);
+  void setRenderRateLimit({int maxFps = 0, double minProgressDelta = 0.0}) {
+    _service.setRenderRateLimit(
+      maxFps: maxFps,
+      minProgressDelta: minProgressDelta,
+    );
+  }
 
   Future<void> shutdown() => _service.dispose();
 
