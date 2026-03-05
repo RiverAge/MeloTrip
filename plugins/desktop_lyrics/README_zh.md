@@ -19,7 +19,7 @@ Flutter 桌面悬浮歌词插件。
 ## 平台支持
 
 - Windows：已支持
-- Linux：已支持
+- Linux：已支持（Wayland 支持有限；如需完整行为建议 X11）
 - macOS：暂未实现（调用会安全返回）
 
 ## 安装
@@ -117,6 +117,7 @@ await lyrics.render(frame);
 - 插件不负责持久化配置。
 - 建议宿主应用自行保存配置，并在启动后重新应用。
 - `DesktopLyricsFrame.line` 默认 `lineProgress = 1.0`，确保文本可见。
+- Linux Wayland 说明：置顶、点击穿透和窗口层级行为会受不同 compositor 影响，可能与 X11 不一致。
 - 可见性行为：
   - 初始状态默认 `enabled=true`，因此可以直接 `render(...)` 显示歌词。
   - 若通过 `apply` 将 `interaction.enabled=false`，后续 `render(...)` 只更新内容，不会显示窗口。
