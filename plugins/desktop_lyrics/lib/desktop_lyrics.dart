@@ -312,8 +312,7 @@ class DesktopLyricsLayoutConfig {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DesktopLyricsLayoutConfig &&
-          overlayWidth == other.overlayWidth;
+      other is DesktopLyricsLayoutConfig && overlayWidth == other.overlayWidth;
 
   @override
   int get hashCode => overlayWidth.hashCode;
