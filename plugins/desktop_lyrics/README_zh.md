@@ -1,6 +1,8 @@
 # desktop_lyrics
 
 [![pub package](https://img.shields.io/pub/v/desktop_lyrics.svg)](https://pub.dev/packages/desktop_lyrics)
+[![Powered by Codex](https://img.shields.io/badge/Powered%20by-Codex-0A84FF?logo=openai&logoColor=white)](https://openai.com)
+[![Gemini](https://img.shields.io/badge/Gemini-1A73E8?logo=google&logoColor=white)](https://gemini.google.com)
 
 Flutter 桌面悬浮歌词插件。
 
