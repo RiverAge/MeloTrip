@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
 final desktopLyricsServiceProvider = ChangeNotifierProvider<DesktopLyrics>(

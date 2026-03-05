@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 import 'package:melo_trip/widget/no_data.dart';

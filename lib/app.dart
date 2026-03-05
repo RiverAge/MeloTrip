@@ -99,7 +99,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final observer = ref.watch(routeObserverProvider);
-    final config = ref.watch(userConfigProvider).valueOrNull;
+    final config = ref.watch(userConfigProvider).asData?.value;
 
     return MaterialApp(
       scaffoldMessengerKey: _scaffoldMessengerKey,
@@ -113,7 +113,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       locale: config?.locale,
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(
-          brightness: .dark,
+          brightness: Brightness.dark,
           seedColor: const Color(0xFFDB1D5D),
         ),
       ),
