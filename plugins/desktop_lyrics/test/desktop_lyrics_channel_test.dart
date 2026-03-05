@@ -180,4 +180,27 @@ void main() {
     expect(second['lineProgress'], 1.0);
     expect(third['lineProgress'], 1.0);
   });
+
+  test('render rate limit throttles tiny progress deltas on same line', () async {
+    final lyrics = DesktopLyrics(channel: channel);
+    lyrics.setRenderRateLimit(maxFps: 30, minProgressDelta: 0.01);
+
+    await lyrics.render(
+      const DesktopLyricsFrame.line(currentLine: 'same line', lineProgress: 0.50),
+    );
+    await lyrics.render(
+      const DesktopLyricsFrame.line(currentLine: 'same line', lineProgress: 0.505),
+    );
+    await lyrics.render(
+      const DesktopLyricsFrame.line(currentLine: 'line changed', lineProgress: 0.505),
+    );
+
+    final renderCalls =
+        calls.where((call) => call.method == 'updateLyricFrame').toList();
+    expect(renderCalls.length, 2);
+    final first = renderCalls[0].arguments as Map<Object?, Object?>;
+    final second = renderCalls[1].arguments as Map<Object?, Object?>;
+    expect(first['currentLine'], 'same line');
+    expect(second['currentLine'], 'line changed');
+  });
 }

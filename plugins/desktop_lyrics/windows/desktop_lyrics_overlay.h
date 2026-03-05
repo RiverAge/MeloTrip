@@ -63,6 +63,7 @@ class DesktopLyricsOverlay {
   void RequestRepaint();
   void ApplyWindowStyles();
   void RenderLayeredWindow();
+  int ComputeAutoOverlayHeight(HDC reference_dc, int width) const;
   bool EnsureBackBuffer(HDC screen_dc, int width, int height);
   void ReleaseBackBuffer();
 
@@ -94,6 +95,7 @@ class DesktopLyricsOverlay {
   int font_weight_value_ = 400;
   int overlay_width_ = 980;
   int overlay_height_ = 160;
+  bool auto_overlay_height_ = true;
 
   HDC backbuffer_dc_ = nullptr;
   HBITMAP backbuffer_bitmap_ = nullptr;
@@ -109,6 +111,7 @@ class DesktopLyricsOverlay {
   int cached_text_align_ = -1;
   int cached_font_weight_ = -1;
   float cached_font_size_ = 0.0f;
+  float cached_stroke_width_ = 0.0f;
   std::unique_ptr<Gdiplus::GraphicsPath> cached_text_path_;
 };
 

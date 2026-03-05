@@ -52,6 +52,9 @@ await lyrics.render(
   ),
 );
 
+// Optional: enable internal rate limit (disabled by default).
+lyrics.setRenderRateLimit(maxFps: 60, minProgressDelta: 0.01);
+
 lyrics.dispose();
 ```
 
@@ -61,10 +64,11 @@ lyrics.dispose();
   - `setConfig(DesktopLyricsConfig config)` or `config = ...`
   - `setEnabled(bool enabled)`
   - `render(DesktopLyricsFrame frame)`
+  - `setRenderRateLimit({int maxFps = 0, double minProgressDelta = 0.0})`
   - `state` + `addListener(...)` for reactive UI updates
 
 ## Notes
 
 - The plugin does not persist any settings by itself.
-- Host app should manage configuration and call `configure` as needed.
+- Host app should manage configuration and call `setConfig` (or assign `config`) as needed.
 

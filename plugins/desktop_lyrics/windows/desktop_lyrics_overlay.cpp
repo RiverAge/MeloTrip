@@ -169,7 +169,8 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   text_gradient_angle_ = config.text_gradient_angle;
   overlay_width_ =
       static_cast<int>(std::round(std::clamp(config.overlay_width, 480.0, 2600.0)));
-  if (config.overlay_height > 0.0) {
+  auto_overlay_height_ = config.overlay_height <= 0.0;
+  if (!auto_overlay_height_) {
     overlay_height_ =
         static_cast<int>(std::round(std::clamp(config.overlay_height, 90.0, 800.0)));
   }
@@ -178,6 +179,15 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   font_weight_value_ = std::clamp(config.font_weight_value, 100, 900);
 
   if (!hwnd_ && !Create()) return;
+
+  if (auto_overlay_height_) {
+    HDC screen_dc = GetDC(hwnd_);
+    if (screen_dc) {
+      overlay_height_ = ComputeAutoOverlayHeight(screen_dc, overlay_width_);
+      ReleaseDC(hwnd_, screen_dc);
+    }
+  }
+
   ApplyWindowStyles();
   SetWindowPos(hwnd_, HWND_TOPMOST, 0, 0, overlay_width_, overlay_height_,
                SWP_NOMOVE | SWP_NOACTIVATE);
@@ -186,6 +196,33 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
     return;
   }
   Show();
+}
+
+int DesktopLyricsOverlay::ComputeAutoOverlayHeight(HDC reference_dc, int width) const {
+  if (!reference_dc || width <= 0) return overlay_height_;
+
+  const int font_style =
+      font_weight_value_ >= 600 ? Gdiplus::FontStyleBold
+                                : Gdiplus::FontStyleRegular;
+  Gdiplus::Graphics measure_graphics(reference_dc);
+  measure_graphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+  Gdiplus::Font font(font_family_.c_str(), static_cast<float>(font_size_), font_style,
+                     Gdiplus::UnitPixel);
+  Gdiplus::StringFormat format;
+  format.SetFormatFlags(Gdiplus::StringFormatFlagsNoWrap);
+  const float layout_width = static_cast<float>((std::max)(width - 48, 120));
+  const Gdiplus::RectF layout(0.0f, 0.0f, layout_width, 2000.0f);
+  Gdiplus::RectF measured{};
+  const std::wstring sample =
+      current_line_.empty() ? std::wstring(L"Ag") : current_line_;
+  measure_graphics.MeasureString(sample.c_str(), -1, &font, layout, &format, &measured);
+
+  const float text_height = (std::max)(measured.Height, static_cast<float>(font_size_) * 1.2f);
+  const float content_height =
+      text_height + 20.0f + static_cast<float>(background_padding_) * 2.0f +
+      static_cast<float>((std::max)(0.0, stroke_width_)) * 2.0f + 4.0f;
+  return static_cast<int>(
+      std::round(std::clamp(content_height, 90.0f, 800.0f)));
 }
 
 LRESULT CALLBACK DesktopLyricsOverlay::WndProc(HWND hwnd,
@@ -350,12 +387,27 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
 
   RECT window_rect{};
   if (!GetWindowRect(hwnd_, &window_rect)) return;
-  const int width = window_rect.right - window_rect.left;
-  const int height = window_rect.bottom - window_rect.top;
+  int width = window_rect.right - window_rect.left;
+  int height = window_rect.bottom - window_rect.top;
   if (width <= 0 || height <= 0) return;
 
   HDC screen_dc = GetDC(nullptr);
   if (!screen_dc) return;
+  if (auto_overlay_height_) {
+    const int desired_height = ComputeAutoOverlayHeight(screen_dc, width);
+    if (desired_height != height) {
+      overlay_height_ = desired_height;
+      if (!has_custom_position_) {
+        PositionNearBottomCenter(true);
+      } else {
+        SetWindowPos(hwnd_, HWND_TOPMOST, 0, 0, overlay_width_, overlay_height_,
+                     SWP_NOMOVE | SWP_NOACTIVATE);
+      }
+      GetWindowRect(hwnd_, &window_rect);
+      width = window_rect.right - window_rect.left;
+      height = window_rect.bottom - window_rect.top;
+    }
+  }
   if (!EnsureBackBuffer(screen_dc, width, height)) {
     ReleaseDC(nullptr, screen_dc);
     return;
@@ -370,17 +422,28 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
     const float pad = static_cast<float>(background_padding_);
     const RectF bg_rect(pad, pad, static_cast<float>(width) - pad * 2.0f,
                         static_cast<float>(height) - pad * 2.0f);
-    if (((background_argb_ >> 24) & 0xFF) > 0) {
-      GraphicsPath bg_path;
+    GraphicsPath bg_path;
+    const bool has_background = ((background_argb_ >> 24) & 0xFF) > 0;
+    if (has_background) {
       BuildRoundedRectPath(&bg_path, bg_rect, static_cast<float>(background_radius_));
       SolidBrush bg_brush(ArgbToColor(background_argb_));
       graphics.FillPath(&bg_brush, &bg_path);
+      // Keep text layers inside rounded container so stroke/shadow will not
+      // visually cut rounded corners on the right edge.
+      graphics.SetClip(&bg_path, Gdiplus::CombineModeIntersect);
     }
 
     const std::wstring text = current_line_;
     if (!text.empty()) {
-      const RectF text_rect(24.0f, 10.0f, static_cast<float>(width - 48),
-                            static_cast<float>(height - 20));
+      const float stroke_safe_pad =
+          static_cast<float>((std::max)(0.0, stroke_width_)) + 2.0f;
+      const float left = 24.0f + stroke_safe_pad;
+      const float top = 10.0f + stroke_safe_pad * 0.5f;
+      const float w = static_cast<float>((std::max)(
+          width - static_cast<int>(left * 2.0f), 80));
+      const float h = static_cast<float>((std::max)(
+          height - static_cast<int>(top * 2.0f), 28));
+      const RectF text_rect(left, top, w, h);
       StringFormat format;
       const Gdiplus::StringAlignment horizontal_alignment =
           text_align_ == 1
@@ -403,7 +466,9 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
                               cached_text_align_ != text_align_ ||
                               cached_font_weight_ != font_weight_value_ ||
                               std::abs(cached_font_size_ -
-                                       static_cast<float>(font_size_)) > 0.01f;
+                                       static_cast<float>(font_size_)) > 0.01f ||
+                              std::abs(cached_stroke_width_ -
+                                       static_cast<float>(stroke_width_)) > 0.01f;
       if (cache_miss) {
         cached_text_ = text;
         cached_font_family_ = font_family_;
@@ -412,6 +477,7 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
         cached_text_align_ = text_align_;
         cached_font_weight_ = font_weight_value_;
         cached_font_size_ = static_cast<float>(font_size_);
+        cached_stroke_width_ = static_cast<float>(stroke_width_);
         BuildTextPathWithFallback(cached_text_path_.get(), text, text_rect, format,
                                   font_family_.c_str(), font_style,
                                   static_cast<float>(font_size_));
@@ -525,6 +591,9 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
         stroke_pen.SetLineJoin(Gdiplus::LineJoinRound);
         graphics.DrawPath(&stroke_pen, cached_text_path_.get());
       }
+    }
+    if (has_background) {
+      graphics.ResetClip();
     }
   }
 

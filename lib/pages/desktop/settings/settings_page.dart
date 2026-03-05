@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:desktop_lyrics/desktop_lyrics.dart';
@@ -43,6 +45,8 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
   int _gradientStartColor = 0xFFFFD36E;
   int _gradientEndColor = 0xFFFF4D8D;
   ProviderSubscription<DesktopLyrics>? _lyricsControllerSubscription;
+  Timer? _lyricsConfigDebounce;
+  Future<void> _lyricsConfigWriteQueue = Future.value();
 
   @override
   void initState() {
@@ -63,6 +67,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
 
   @override
   void dispose() {
+    _lyricsConfigDebounce?.cancel();
     _lyricsControllerSubscription?.close();
     super.dispose();
   }
@@ -125,99 +130,105 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
                       strokeColor: _strokeColor,
                       onEnabledChanged: (v) async {
                         setState(() => _enabled = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onClickThroughChanged: (v) async {
                         setState(() => _clickThrough = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onFontSizeChanged: (v) {
                         setState(() => _fontSize = v);
+                        _scheduleLyricsConfigPush();
                       },
                       onFontSizeChangeEnd: (v) async {
                         _fontSize = v;
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onOpacityChanged: (v) {
                         setState(() => _opacity = v);
+                        _scheduleLyricsConfigPush();
                       },
                       onOpacityChangeEnd: (v) async {
                         _opacity = v;
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onStrokeWidthChanged: (v) {
                         setState(() => _strokeWidth = v);
+                        _scheduleLyricsConfigPush();
                       },
                       onStrokeWidthChangeEnd: (v) async {
                         _strokeWidth = v;
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       textAlign: _textAlign,
                       fontWeight: _fontWeight,
                       onTextAlignChanged: (v) async {
                         setState(() => _textAlign = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onFontWeightChanged: (v) async {
                         setState(() => _fontWeight = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onTextColorChanged: (v) async {
                         setState(() => _textColor = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onShadowColorChanged: (v) async {
                         setState(() => _shadowColor = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onStrokeColorChanged: (v) async {
                         setState(() => _strokeColor = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       backgroundBaseColor: _backgroundBaseColor,
                       backgroundOpacity: _backgroundOpacity,
                       onBackgroundBaseColorChanged: (v) async {
                         setState(() => _backgroundBaseColor = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onBackgroundOpacityChanged: (v) {
                         setState(() => _backgroundOpacity = v);
+                        _scheduleLyricsConfigPush();
                       },
                       onBackgroundOpacityChangeEnd: (v) async {
                         _backgroundOpacity = v;
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       gradientEnabled: _gradientEnabled,
                       gradientStartColor: _gradientStartColor,
                       gradientEndColor: _gradientEndColor,
                       onGradientEnabledChanged: (v) async {
                         setState(() => _gradientEnabled = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onGradientStartColorChanged: (v) async {
                         setState(() => _gradientStartColor = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onGradientEndColorChanged: (v) async {
                         setState(() => _gradientEndColor = v);
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       overlayWidth: _overlayWidth,
                       overlayHeight: _overlayHeight,
                       onOverlayWidthChanged: (v) {
                         setState(() => _overlayWidth = v);
+                        _scheduleLyricsConfigPush();
                       },
                       onOverlayWidthChangeEnd: (v) async {
                         _overlayWidth = v;
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       onOverlayHeightChanged: (v) {
                         setState(() => _overlayHeight = v);
+                        _scheduleLyricsConfigPush();
                       },
                       onOverlayHeightChangeEnd: (v) async {
                         _overlayHeight = v;
                         _overlayHeightCustomized = true;
-                        await _pushLyricsConfig();
+                        await _flushLyricsConfigPush();
                       },
                       simulatingLyrics: _simulatingLyrics,
                       onSimulatePressed: _runLyricsSimulation,
@@ -278,6 +289,22 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     await ref.read(desktopLyricsServiceProvider).setConfig(
       _buildDesktopLyricsConfig(),
     );
+  }
+
+  void _scheduleLyricsConfigPush() {
+    _lyricsConfigDebounce?.cancel();
+    _lyricsConfigDebounce = Timer(const Duration(milliseconds: 80), () {
+      unawaited(_flushLyricsConfigPush());
+    });
+  }
+
+  Future<void> _flushLyricsConfigPush() async {
+    _lyricsConfigDebounce?.cancel();
+    _lyricsConfigDebounce = null;
+    _lyricsConfigWriteQueue = _lyricsConfigWriteQueue.then((_) async {
+      await _pushLyricsConfig();
+    });
+    await _lyricsConfigWriteQueue;
   }
 
   DesktopLyricsConfig _buildDesktopLyricsConfig() {
