@@ -4,10 +4,8 @@
 * Added public Dart API:
   * `DesktopLyricsFrame`
   * `DesktopLyricsConfig`
-  * `DesktopLyrics.applyConfig`
-  * `DesktopLyrics.setEnabled`
-  * `DesktopLyrics.config` (read-only)
-  * `DesktopLyrics.enabled` (read-only)
+  * `DesktopLyrics.apply`
+  * `DesktopLyrics.state` (read-only, single state entry)
   * `DesktopLyrics.render`
   * `DesktopLyrics.dispose`
 * Added desktop overlay behavior:

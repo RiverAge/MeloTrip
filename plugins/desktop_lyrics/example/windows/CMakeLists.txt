@@ -52,10 +52,8 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
-# Native plugin tests pull googletest (which may emit upstream deprecation
-# warnings with newer CMake). Keep it off for normal example runs.
-option(DESKTOP_LYRICS_BUILD_NATIVE_TESTS "Build desktop_lyrics native tests" OFF)
-set(include_desktop_lyrics_tests ${DESKTOP_LYRICS_BUILD_NATIVE_TESTS})
+# Enable the test target.
+set(include_desktop_lyrics_tests TRUE)
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.

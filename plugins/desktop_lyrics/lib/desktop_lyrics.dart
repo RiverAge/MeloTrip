@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+const Object _kUnset = Object();
+
 @immutable
 class DesktopLyricsToken {
   const DesktopLyricsToken({required this.text, required this.progress});
@@ -190,6 +192,28 @@ class DesktopLyricsTextConfig {
         textAlign,
         fontWeight,
       );
+
+  DesktopLyricsTextConfig copyWith({
+    double? fontSize,
+    Color? textColor,
+    Color? shadowColor,
+    Color? strokeColor,
+    double? strokeWidth,
+    String? fontFamily,
+    TextAlign? textAlign,
+    FontWeight? fontWeight,
+  }) {
+    return DesktopLyricsTextConfig(
+      fontSize: fontSize ?? this.fontSize,
+      textColor: textColor ?? this.textColor,
+      shadowColor: shadowColor ?? this.shadowColor,
+      strokeColor: strokeColor ?? this.strokeColor,
+      strokeWidth: strokeWidth ?? this.strokeWidth,
+      fontFamily: fontFamily ?? this.fontFamily,
+      textAlign: textAlign ?? this.textAlign,
+      fontWeight: fontWeight ?? this.fontWeight,
+    );
+  }
 }
 
 @immutable
@@ -218,6 +242,20 @@ class DesktopLyricsBackgroundConfig {
   @override
   int get hashCode => Object.hash(
       opacity, backgroundColor, backgroundRadius, backgroundPadding);
+
+  DesktopLyricsBackgroundConfig copyWith({
+    double? opacity,
+    Color? backgroundColor,
+    double? backgroundRadius,
+    double? backgroundPadding,
+  }) {
+    return DesktopLyricsBackgroundConfig(
+      opacity: opacity ?? this.opacity,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      backgroundRadius: backgroundRadius ?? this.backgroundRadius,
+      backgroundPadding: backgroundPadding ?? this.backgroundPadding,
+    );
+  }
 }
 
 @immutable
@@ -250,6 +288,21 @@ class DesktopLyricsGradientConfig {
         textGradientEndColor,
         textGradientAngle,
       );
+
+  DesktopLyricsGradientConfig copyWith({
+    bool? textGradientEnabled,
+    Color? textGradientStartColor,
+    Color? textGradientEndColor,
+    double? textGradientAngle,
+  }) {
+    return DesktopLyricsGradientConfig(
+      textGradientEnabled: textGradientEnabled ?? this.textGradientEnabled,
+      textGradientStartColor:
+          textGradientStartColor ?? this.textGradientStartColor,
+      textGradientEndColor: textGradientEndColor ?? this.textGradientEndColor,
+      textGradientAngle: textGradientAngle ?? this.textGradientAngle,
+    );
+  }
 }
 
 @immutable
@@ -268,6 +321,18 @@ class DesktopLyricsLayoutConfig {
 
   @override
   int get hashCode => Object.hash(overlayWidth, overlayHeight);
+
+  DesktopLyricsLayoutConfig copyWith({
+    double? overlayWidth,
+    Object? overlayHeight = _kUnset,
+  }) {
+    return DesktopLyricsLayoutConfig(
+      overlayWidth: overlayWidth ?? this.overlayWidth,
+      overlayHeight: identical(overlayHeight, _kUnset)
+          ? this.overlayHeight
+          : overlayHeight as double?,
+    );
+  }
 }
 
 @immutable
@@ -320,101 +385,57 @@ class DesktopLyricsConfig {
 @immutable
 class DesktopLyricsStateSnapshot {
   const DesktopLyricsStateSnapshot({
-    required this.enabled,
-    required this.clickThrough,
-    required this.fontSize,
-    required this.backgroundOpacity,
-    required this.textColorArgb,
-    required this.shadowColorArgb,
-    required this.strokeColorArgb,
-    required this.strokeWidth,
-    required this.textGradientEnabled,
-    required this.textGradientStartArgb,
-    required this.textGradientEndArgb,
-    required this.textGradientAngle,
-    required this.backgroundColorArgb,
-    required this.backgroundRadius,
-    required this.backgroundPadding,
-    required this.textAlign,
-    required this.fontFamily,
-    required this.fontWeightValue,
-    required this.autoOverlayHeight,
-    required this.overlayWidth,
-    required this.overlayHeight,
+    required this.interaction,
+    required this.text,
+    required this.background,
+    required this.gradient,
+    required this.layout,
   });
 
-  final bool enabled;
-  final bool clickThrough;
-  final double fontSize;
-  final double backgroundOpacity;
-  final int textColorArgb;
-  final int shadowColorArgb;
-  final int strokeColorArgb;
-  final double strokeWidth;
-  final bool textGradientEnabled;
-  final int textGradientStartArgb;
-  final int textGradientEndArgb;
-  final double textGradientAngle;
-  final int backgroundColorArgb;
-  final double backgroundRadius;
-  final double backgroundPadding;
-  final TextAlign textAlign;
-  final String fontFamily;
-  final int fontWeightValue;
-  final bool autoOverlayHeight;
-  final double overlayWidth;
-  final double overlayHeight;
+  final DesktopLyricsInteractionConfig interaction;
+  final DesktopLyricsTextConfig text;
+  final DesktopLyricsBackgroundConfig background;
+  final DesktopLyricsGradientConfig gradient;
+  final DesktopLyricsLayoutConfig layout;
+
+  DesktopLyricsConfig toConfig() {
+    return DesktopLyricsConfig(
+      interaction: interaction,
+      text: text,
+      background: background,
+      gradient: gradient,
+      layout: layout,
+    );
+  }
+
+  DesktopLyricsConfig copyWith({
+    DesktopLyricsInteractionConfig? interaction,
+    DesktopLyricsTextConfig? text,
+    DesktopLyricsBackgroundConfig? background,
+    DesktopLyricsGradientConfig? gradient,
+    DesktopLyricsLayoutConfig? layout,
+  }) {
+    return toConfig().copyWith(
+      interaction: interaction,
+      text: text,
+      background: background,
+      gradient: gradient,
+      layout: layout,
+    );
+  }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is DesktopLyricsStateSnapshot &&
-          enabled == other.enabled &&
-          clickThrough == other.clickThrough &&
-          fontSize == other.fontSize &&
-          backgroundOpacity == other.backgroundOpacity &&
-          textColorArgb == other.textColorArgb &&
-          shadowColorArgb == other.shadowColorArgb &&
-          strokeColorArgb == other.strokeColorArgb &&
-          strokeWidth == other.strokeWidth &&
-          textGradientEnabled == other.textGradientEnabled &&
-          textGradientStartArgb == other.textGradientStartArgb &&
-          textGradientEndArgb == other.textGradientEndArgb &&
-          textGradientAngle == other.textGradientAngle &&
-          backgroundColorArgb == other.backgroundColorArgb &&
-          backgroundRadius == other.backgroundRadius &&
-          backgroundPadding == other.backgroundPadding &&
-          textAlign == other.textAlign &&
-          fontFamily == other.fontFamily &&
-          fontWeightValue == other.fontWeightValue &&
-          autoOverlayHeight == other.autoOverlayHeight &&
-          overlayWidth == other.overlayWidth &&
-          overlayHeight == other.overlayHeight;
+          interaction == other.interaction &&
+          text == other.text &&
+          background == other.background &&
+          gradient == other.gradient &&
+          layout == other.layout;
 
   @override
-  int get hashCode => Object.hashAll([
-        enabled,
-        clickThrough,
-        fontSize,
-        backgroundOpacity,
-        textColorArgb,
-        shadowColorArgb,
-        strokeColorArgb,
-        strokeWidth,
-        textGradientEnabled,
-        textGradientStartArgb,
-        textGradientEndArgb,
-        textGradientAngle,
-        backgroundColorArgb,
-        backgroundRadius,
-        backgroundPadding,
-        textAlign,
-        fontFamily,
-        fontWeightValue,
-        autoOverlayHeight,
-        overlayWidth,
-        overlayHeight,
-      ]);
+  int get hashCode => Object.hash(interaction, text, background, gradient, layout);
 }
 
 class _DesktopLyricsService {
@@ -425,11 +446,6 @@ class _DesktopLyricsService {
 
   final MethodChannel _channel;
   final _perf = _PerformanceTracker();
-  DateTime _lastRenderAt = DateTime.fromMillisecondsSinceEpoch(0);
-  String _lastRenderLine = '';
-  double _lastRenderProgress = 1.0;
-  Duration _minRenderInterval = Duration.zero;
-  double _minProgressDelta = 0.0;
 
   Future<void> dispose() async => _invoke('dispose');
 
@@ -439,22 +455,6 @@ class _DesktopLyricsService {
     final double currentProgress = (rawProgress != null && rawProgress.isFinite)
         ? rawProgress.clamp(0.0, 1.0).toDouble()
         : 1.0;
-    final now = DateTime.now();
-    final sameLine = currentLine == _lastRenderLine;
-    final smallDelta =
-        (currentProgress - _lastRenderProgress).abs() < _minProgressDelta;
-    final withinInterval = now.difference(_lastRenderAt) < _minRenderInterval;
-    if (_minRenderInterval > Duration.zero &&
-        sameLine &&
-        smallDelta &&
-        withinInterval) {
-      _perf.recordThrottled();
-      _perf.maybeLog();
-      return;
-    }
-    _lastRenderAt = now;
-    _lastRenderLine = currentLine;
-    _lastRenderProgress = currentProgress;
 
     final sw = _perf.startAttempt();
     final result = await _invoke('updateLyricFrame', {
@@ -478,18 +478,6 @@ class _DesktopLyricsService {
       mode: mode,
       gradient: gradient,
     );
-  }
-
-  void setRenderRateLimit({
-    required int maxFps,
-    required double minProgressDelta,
-  }) {
-    if (maxFps <= 0) {
-      _minRenderInterval = Duration.zero;
-    } else {
-      _minRenderInterval = Duration(milliseconds: (1000 / maxFps).round());
-    }
-    _minProgressDelta = minProgressDelta.clamp(0.0, 1.0);
   }
 
   Future<void> configure(DesktopLyricsConfig config) async {
@@ -586,37 +574,15 @@ class DesktopLyrics extends ChangeNotifier {
   bool _disposed = false;
   Future<void> _configWriteQueue = Future.value();
 
-  DesktopLyricsConfig get config => _config;
-  bool get enabled => _config.interaction.enabled;
   DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
-        enabled: _config.interaction.enabled,
-        clickThrough: _config.interaction.clickThrough,
-        fontSize: _config.text.fontSize,
-        backgroundOpacity: _config.background.opacity,
-        textColorArgb: _config.text.textColor?.toARGB32() ?? 0xFFF6F7FF,
-        shadowColorArgb: _config.text.shadowColor?.toARGB32() ?? 0x00000000,
-        strokeColorArgb: _config.text.strokeColor?.toARGB32() ?? 0x00000000,
-        strokeWidth: _config.text.strokeWidth ?? 0.0,
-        textGradientEnabled: _config.gradient.textGradientEnabled,
-        textGradientStartArgb:
-            _config.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E,
-        textGradientEndArgb:
-            _config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
-        textGradientAngle: _config.gradient.textGradientAngle,
-        backgroundColorArgb:
-            _config.background.backgroundColor?.toARGB32() ?? 0x7A220A35,
-        backgroundRadius: _config.background.backgroundRadius,
-        backgroundPadding: _config.background.backgroundPadding,
-        textAlign: _config.text.textAlign ?? TextAlign.start,
-        fontFamily: _config.text.fontFamily ?? 'Segoe UI',
-        fontWeightValue:
-            _config.text.fontWeight?.value ?? FontWeight.w400.value,
-        autoOverlayHeight: _config.layout.overlayHeight == null,
-        overlayWidth: _config.layout.overlayWidth ?? 980.0,
-        overlayHeight: _config.layout.overlayHeight ?? 160.0,
+        interaction: _config.interaction,
+        text: _config.text,
+        background: _config.background,
+        gradient: _config.gradient,
+        layout: _config.layout,
       );
 
-  Future<void> applyConfig(DesktopLyricsConfig value) {
+  Future<void> apply(DesktopLyricsConfig value) {
     if (value == _config) return Future.value();
     _configWriteQueue = _configWriteQueue.then((_) async {
       if (value == _config) return;
@@ -627,24 +593,7 @@ class DesktopLyrics extends ChangeNotifier {
     return _configWriteQueue;
   }
 
-  Future<void> setEnabled(bool value) {
-    if (value == _config.interaction.enabled) return Future.value();
-    return applyConfig(
-      _config.copyWith(
-        interaction: _config.interaction.copyWith(enabled: value),
-      ),
-    );
-  }
-
   Future<void> render(DesktopLyricsFrame frame) => _service.render(frame);
-  void setRenderRateLimit({int maxFps = 0, double minProgressDelta = 0.0}) {
-    _service.setRenderRateLimit(
-      maxFps: maxFps,
-      minProgressDelta: minProgressDelta,
-    );
-  }
-
-  Future<void> shutdown() => _service.dispose();
 
   @override
   void dispose() {

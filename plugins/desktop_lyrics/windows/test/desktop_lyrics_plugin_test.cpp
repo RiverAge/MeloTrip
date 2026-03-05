@@ -39,5 +39,35 @@ TEST(DesktopLyricsPlugin, GetPlatformVersion) {
   EXPECT_TRUE(result_string.rfind("Windows ", 0) == 0);
 }
 
+TEST(DesktopLyricsPlugin, ShowWithoutLyricFrameReturnsSuccess) {
+  DesktopLyricsPlugin plugin;
+  bool succeeded = false;
+  plugin.HandleMethodCall(
+      MethodCall("show", std::make_unique<EncodableValue>()),
+      std::make_unique<MethodResultFunctions<>>(
+          [&succeeded](const EncodableValue* result) {
+            succeeded = result == nullptr;
+          },
+          nullptr, nullptr));
+  EXPECT_TRUE(succeeded);
+}
+
+TEST(DesktopLyricsPlugin, EnableWithoutLyricFrameReturnsSuccess) {
+  DesktopLyricsPlugin plugin;
+  bool succeeded = false;
+  EncodableMap config;
+  config[EncodableValue("enabled")] = EncodableValue(true);
+  config[EncodableValue("clickThrough")] = EncodableValue(false);
+  config[EncodableValue("fontSize")] = EncodableValue(32.0);
+  plugin.HandleMethodCall(
+      MethodCall("updateConfig", std::make_unique<EncodableValue>(config)),
+      std::make_unique<MethodResultFunctions<>>(
+          [&succeeded](const EncodableValue* result) {
+            succeeded = result == nullptr;
+          },
+          nullptr, nullptr));
+  EXPECT_TRUE(succeeded);
+}
+
 }  // namespace test
 }  // namespace desktop_lyrics

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
 
@@ -32,26 +34,6 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   final _lyrics = DesktopLyrics();
   static const _previewLine = 'Desktop Lyrics Enabled';
 
-  bool _enabled = false;
-  bool _clickThrough = false;
-  bool _gradientEnabled = true;
-  double _fontSize = 34;
-  double _opacity = 0.93;
-  double _strokeWidth = 0;
-  double _overlayWidth = 980;
-  double _overlayHeight = 160;
-  bool _overlayHeightCustomized = false;
-  TextAlign _textAlign = TextAlign.start;
-  FontWeight _fontWeight = FontWeight.w400;
-
-  int _textColor = 0xFFF2F2F8;
-  int _shadowColor = 0xFF121214;
-  int _strokeColor = 0x00000000;
-  int _backgroundBaseColor = 0xFF220A35;
-  double _backgroundOpacity = 0x7A / 255.0;
-  int _gradientStartColor = 0xFFFFD36E;
-  int _gradientEndColor = 0xFFFF4D8D;
-
   bool _playingLineDemo = false;
   bool _playingTokenDemo = false;
 
@@ -70,60 +52,43 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   @override
   void initState() {
     super.initState();
-    // Delay native overlay initialization until user action to avoid
-    // startup-time native window instability on some Windows environments.
+    _lyrics.addListener(_onLyricsStateChanged);
+    Future<void>.microtask(() {
+      _apply((config) {
+        return config.copyWith(
+          text: config.text.copyWith(fontSize: 34),
+          background: config.background.copyWith(opacity: 0.93),
+          layout: config.layout.copyWith(overlayWidth: 980),
+        );
+      });
+    });
   }
 
   @override
   void dispose() {
+    _lyrics.removeListener(_onLyricsStateChanged);
     _lyrics.dispose();
     super.dispose();
   }
 
-  Future<void> _pushConfig() async {
-    await _lyrics.applyConfig(
-      DesktopLyricsConfig(
-        interaction: DesktopLyricsInteractionConfig(
-          enabled: _enabled,
-          clickThrough: _clickThrough,
-        ),
-        text: DesktopLyricsTextConfig(
-          fontSize: _fontSize,
-          textColor: Color(_textColor),
-          shadowColor: Color(_shadowColor),
-          strokeColor: Color(_strokeColor),
-          strokeWidth: _strokeWidth,
-          fontFamily: 'Segoe UI',
-          textAlign: _textAlign,
-          fontWeight: _fontWeight,
-        ),
-        background: DesktopLyricsBackgroundConfig(
-          opacity: _opacity,
-          backgroundColor: Color(
-            ((255 * _backgroundOpacity).round() << 24) |
-                (_backgroundBaseColor & 0x00FFFFFF),
-          ),
-          backgroundRadius: 22,
-          backgroundPadding: 12,
-        ),
-        gradient: DesktopLyricsGradientConfig(
-          textGradientEnabled: _gradientEnabled,
-          textGradientStartColor: Color(_gradientStartColor),
-          textGradientEndColor: Color(_gradientEndColor),
-          textGradientAngle: 0,
-        ),
-        layout: DesktopLyricsLayoutConfig(
-          overlayWidth: _overlayWidth,
-          overlayHeight: _overlayHeightCustomized ? _overlayHeight : null,
-        ),
-      ),
-    );
+  void _onLyricsStateChanged() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> _apply(
+      DesktopLyricsConfig Function(DesktopLyricsConfig config) transform) async {
+    final current = _lyrics.state.toConfig();
+    final next = transform(current);
+    await _lyrics.apply(next);
   }
 
   Future<void> _playLineDemo() async {
     if (_playingLineDemo) return;
     setState(() => _playingLineDemo = true);
-    await _lyrics.setEnabled(true);
+    await _apply((config) => config.copyWith(
+          interaction: config.interaction.copyWith(enabled: true),
+        ));
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final text = 'Desktop Lyrics live preview $stamp';
     const steps = 28;
@@ -140,7 +105,9 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   Future<void> _playTokenDemo() async {
     if (_playingTokenDemo) return;
     setState(() => _playingTokenDemo = true);
-    await _lyrics.setEnabled(true);
+    await _apply((config) => config.copyWith(
+          interaction: config.interaction.copyWith(enabled: true),
+        ));
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final timedTokens = <DesktopLyricsTokenTiming>[
       const DesktopLyricsTokenTiming(
@@ -202,6 +169,30 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = _lyrics.state;
+    final enabled = state.interaction.enabled;
+    final clickThrough = state.interaction.clickThrough;
+    final gradientEnabled = state.gradient.textGradientEnabled;
+    final fontSize = state.text.fontSize;
+    final opacity = state.background.opacity;
+    final strokeWidth = state.text.strokeWidth ?? 0.0;
+    final overlayWidth = state.layout.overlayWidth ?? 980.0;
+    final overlayHeight = state.layout.overlayHeight ?? 160.0;
+    final overlayHeightCustomized = state.layout.overlayHeight != null;
+    final textAlign = state.text.textAlign ?? TextAlign.start;
+    final fontWeight = state.text.fontWeight ?? FontWeight.w400;
+    final textColor = state.text.textColor?.toARGB32() ?? 0xFFF2F2F8;
+    final shadowColor = state.text.shadowColor?.toARGB32() ?? 0xFF121214;
+    final strokeColor = state.text.strokeColor?.toARGB32() ?? 0x00000000;
+    final backgroundColor =
+        state.background.backgroundColor?.toARGB32() ?? 0x7A220A35;
+    final backgroundBaseColor = 0xFF000000 | (backgroundColor & 0x00FFFFFF);
+    final backgroundOpacity = ((backgroundColor >> 24) & 0xFF) / 255.0;
+    final gradientStartColor =
+        state.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E;
+    final gradientEndColor =
+        state.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Desktop Lyrics Full Demo')),
       body: ListView(
@@ -228,10 +219,12 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
               children: [
                 SwitchListTile(
                   title: const Text('Enabled'),
-                  value: _enabled,
+                  value: enabled,
                   onChanged: (v) async {
-                    setState(() => _enabled = v);
-                    await _pushConfig();
+                    await _apply((config) => config.copyWith(
+                          interaction:
+                              config.interaction.copyWith(enabled: v),
+                        ));
                     if (v) {
                       await _lyrics.render(
                         const DesktopLyricsFrame.line(
@@ -244,11 +237,12 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                 ),
                 SwitchListTile(
                   title: const Text('Click Through'),
-                  value: _clickThrough,
-                  onChanged: (v) async {
-                    setState(() => _clickThrough = v);
-                    await _pushConfig();
-                  },
+                  value: clickThrough,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      interaction: config.interaction.copyWith(clickThrough: v),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -259,33 +253,42 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
               children: [
                 _slider(
                   label: 'Font Size',
-                  value: _fontSize,
+                  value: fontSize,
                   min: 20,
                   max: 72,
-                  onChanged: (v) => setState(() => _fontSize = v),
-                  onChangeEnd: (_) => _pushConfig(),
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      text: config.text.copyWith(fontSize: v),
+                    ),
+                  ),
                 ),
                 _slider(
                   label: 'Opacity',
-                  value: _opacity,
+                  value: opacity,
                   min: .25,
                   max: 1,
-                  onChanged: (v) => setState(() => _opacity = v),
-                  onChangeEnd: (_) => _pushConfig(),
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      background: config.background.copyWith(opacity: v),
+                    ),
+                  ),
                 ),
                 _slider(
                   label: 'Stroke Width',
-                  value: _strokeWidth,
+                  value: strokeWidth,
                   min: 0,
                   max: 6,
-                  onChanged: (v) => setState(() => _strokeWidth = v),
-                  onChangeEnd: (_) => _pushConfig(),
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      text: config.text.copyWith(strokeWidth: v),
+                    ),
+                  ),
                 ),
                 Row(
                   children: [
                     const Expanded(child: Text('Text Align')),
                     DropdownButton<TextAlign>(
-                      value: _textAlign,
+                      value: textAlign,
                       items: const [
                         DropdownMenuItem(
                           value: TextAlign.start,
@@ -300,10 +303,13 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                           child: Text('End'),
                         ),
                       ],
-                      onChanged: (v) async {
+                      onChanged: (v) {
                         if (v == null) return;
-                        setState(() => _textAlign = v);
-                        await _pushConfig();
+                        unawaited(_apply(
+                          (config) => config.copyWith(
+                            text: config.text.copyWith(textAlign: v),
+                          ),
+                        ));
                       },
                     ),
                   ],
@@ -312,7 +318,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   children: [
                     const Expanded(child: Text('Font Weight')),
                     DropdownButton<FontWeight>(
-                      value: _fontWeight,
+                      value: fontWeight,
                       items: const [
                         DropdownMenuItem(
                           value: FontWeight.w300,
@@ -335,37 +341,42 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                           child: Text('w700'),
                         ),
                       ],
-                      onChanged: (v) async {
+                      onChanged: (v) {
                         if (v == null) return;
-                        setState(() => _fontWeight = v);
-                        await _pushConfig();
+                        unawaited(_apply(
+                          (config) => config.copyWith(
+                            text: config.text.copyWith(fontWeight: v),
+                          ),
+                        ));
                       },
                     ),
                   ],
                 ),
                 _colorRow(
                   label: 'Text Color',
-                  value: _textColor,
-                  onChanged: (v) async {
-                    setState(() => _textColor = v);
-                    await _pushConfig();
-                  },
+                  value: textColor,
+                  onChanged: (v) => _apply(
+                    (config) =>
+                        config.copyWith(text: config.text.copyWith(textColor: Color(v))),
+                  ),
                 ),
                 _colorRow(
                   label: 'Shadow Color',
-                  value: _shadowColor,
-                  onChanged: (v) async {
-                    setState(() => _shadowColor = v);
-                    await _pushConfig();
-                  },
+                  value: shadowColor,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      text: config.text.copyWith(shadowColor: Color(v)),
+                    ),
+                  ),
                 ),
                 _colorRow(
                   label: 'Stroke Color',
-                  value: _strokeColor,
-                  onChanged: (v) async {
-                    setState(() => _strokeColor = v);
-                    await _pushConfig();
-                  },
+                  value: strokeColor,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      text: config.text.copyWith(strokeColor: Color(v)),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -376,43 +387,70 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
               children: [
                 _colorRow(
                   label: 'Background Base',
-                  value: _backgroundBaseColor,
-                  onChanged: (v) async {
-                    setState(() => _backgroundBaseColor = v);
-                    await _pushConfig();
-                  },
+                  value: backgroundBaseColor,
+                  onChanged: (v) => _apply(
+                    (config) {
+                      final a = ((config.background.backgroundColor?.toARGB32() ??
+                                  0x7A220A35) >>
+                              24) &
+                          0xFF;
+                      final bg = (a << 24) | (v & 0x00FFFFFF);
+                      return config.copyWith(
+                        background: config.background.copyWith(
+                          backgroundColor: Color(bg),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 _slider(
                   label: 'Background Opacity',
-                  value: _backgroundOpacity,
+                  value: backgroundOpacity,
                   min: 0,
                   max: 1,
-                  onChanged: (v) => setState(() => _backgroundOpacity = v),
-                  onChangeEnd: (_) => _pushConfig(),
+                  onChanged: (v) => _apply(
+                    (config) {
+                      final rgb = (config.background.backgroundColor?.toARGB32() ??
+                              0x7A220A35) &
+                          0x00FFFFFF;
+                      final bg = ((255 * v).round() << 24) | rgb;
+                      return config.copyWith(
+                        background: config.background.copyWith(
+                          backgroundColor: Color(bg),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 SwitchListTile(
                   title: const Text('Text Gradient'),
-                  value: _gradientEnabled,
-                  onChanged: (v) async {
-                    setState(() => _gradientEnabled = v);
-                    await _pushConfig();
-                  },
+                  value: gradientEnabled,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      gradient:
+                          config.gradient.copyWith(textGradientEnabled: v),
+                    ),
+                  ),
                 ),
                 _colorRow(
                   label: 'Gradient Start',
-                  value: _gradientStartColor,
-                  onChanged: (v) async {
-                    setState(() => _gradientStartColor = v);
-                    await _pushConfig();
-                  },
+                  value: gradientStartColor,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      gradient: config.gradient
+                          .copyWith(textGradientStartColor: Color(v)),
+                    ),
+                  ),
                 ),
                 _colorRow(
                   label: 'Gradient End',
-                  value: _gradientEndColor,
-                  onChanged: (v) async {
-                    setState(() => _gradientEndColor = v);
-                    await _pushConfig();
-                  },
+                  value: gradientEndColor,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      gradient:
+                          config.gradient.copyWith(textGradientEndColor: Color(v)),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -423,27 +461,37 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
               children: [
                 _slider(
                   label: 'Overlay Width',
-                  value: _overlayWidth,
+                  value: overlayWidth,
                   min: 480,
                   max: 1800,
-                  onChanged: (v) => setState(() => _overlayWidth = v),
-                  onChangeEnd: (_) => _pushConfig(),
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      layout: config.layout.copyWith(overlayWidth: v),
+                    ),
+                  ),
                 ),
                 SwitchListTile(
                   title: const Text('Custom Overlay Height'),
-                  value: _overlayHeightCustomized,
-                  onChanged: (v) async {
-                    setState(() => _overlayHeightCustomized = v);
-                    await _pushConfig();
-                  },
+                  value: overlayHeightCustomized,
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      layout: config.layout.copyWith(
+                        overlayHeight:
+                            v ? (config.layout.overlayHeight ?? 160.0) : null,
+                      ),
+                    ),
+                  ),
                 ),
                 _slider(
                   label: 'Overlay Height',
-                  value: _overlayHeight,
+                  value: overlayHeight,
                   min: 90,
                   max: 400,
-                  onChanged: (v) => setState(() => _overlayHeight = v),
-                  onChangeEnd: (_) => _pushConfig(),
+                  onChanged: (v) => _apply(
+                    (config) => config.copyWith(
+                      layout: config.layout.copyWith(overlayHeight: v),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -476,7 +524,6 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     required double min,
     required double max,
     required ValueChanged<double> onChanged,
-    required ValueChanged<double> onChangeEnd,
   }) {
     return Row(
       children: [
@@ -490,7 +537,6 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
             min: min,
             max: max,
             onChanged: onChanged,
-            onChangeEnd: onChangeEnd,
           ),
         ),
       ],
@@ -502,6 +548,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     required int value,
     required ValueChanged<int> onChanged,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -521,7 +568,9 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                     decoration: BoxDecoration(
                       color: Color(color),
                       border: Border.all(
-                        color: active ? Colors.black : Colors.black26,
+                        color: active
+                            ? colorScheme.onSurface
+                            : colorScheme.outline.withValues(alpha: 0.5),
                         width: active ? 2 : 1,
                       ),
                       borderRadius: BorderRadius.circular(6),

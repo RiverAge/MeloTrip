@@ -12,9 +12,9 @@ Flutter 桌面悬浮歌词插件。
 
 - 桌面置顶悬浮歌词窗口。
 - 支持单行歌词与逐词/逐字卡拉 OK 进度渲染。
-- 运行时可配置样式（字体、对齐、描边、阴影、渐变、背景）。
+- 支持运行时样式配置（字体、对齐、描边、阴影、渐变、背景）。
 - 支持交互控制（启用/禁用、点击穿透）。
-- 支持布局控制（宽度 + 自动高度）。
+- 支持布局控制（宽度 + 可选自动高度）。
 
 ## 平台支持
 
@@ -36,21 +36,22 @@ import 'package:desktop_lyrics/desktop_lyrics.dart';
 
 final lyrics = DesktopLyrics();
 
-await lyrics.applyConfig(
-  const DesktopLyricsConfig(
-    interaction: DesktopLyricsInteractionConfig(
+void onLyricsChanged() {
+  final enabled = lyrics.state.interaction.enabled;
+  // 使用 state 字段更新 UI
+}
+
+lyrics.addListener(onLyricsChanged);
+
+await lyrics.apply(
+  lyrics.state.copyWith(
+    interaction: lyrics.state.interaction.copyWith(
       enabled: true,
       clickThrough: false,
     ),
-    text: DesktopLyricsTextConfig(
-      fontSize: 34,
-    ),
-    background: DesktopLyricsBackgroundConfig(
-      opacity: 0.93,
-    ),
-    layout: DesktopLyricsLayoutConfig(
-      overlayWidth: 980,
-    ),
+    text: lyrics.state.text.copyWith(fontSize: 34),
+    background: lyrics.state.background.copyWith(opacity: 0.93),
+    layout: lyrics.state.layout.copyWith(overlayWidth: 980),
   ),
 );
 
@@ -60,6 +61,9 @@ await lyrics.render(
     lineProgress: 1.0,
   ),
 );
+
+lyrics.removeListener(onLyricsChanged);
+lyrics.dispose();
 ```
 
 ## 卡拉 OK 帧构建
@@ -102,15 +106,18 @@ await lyrics.render(frame);
 
 ## API 摘要
 
-- `DesktopLyrics.applyConfig(DesktopLyricsConfig config)`
-- `DesktopLyrics.setEnabled(bool enabled)`
-- `DesktopLyrics.config` / `DesktopLyrics.enabled`（只读状态快照）
+- `DesktopLyrics.apply(DesktopLyricsConfig config)`
+- `DesktopLyrics.state`（唯一读取入口）
 - `DesktopLyrics.render(DesktopLyricsFrame frame)`
-- `DesktopLyrics.state` + `addListener(...)`（用于响应式配置 UI）
+- `DesktopLyrics.addListener(...)` / `removeListener(...)`
 - `DesktopLyrics.dispose()`
 
 ## 说明
 
 - 插件不负责持久化配置。
-- 建议宿主应用自行保存配置并在启动后重新应用。
+- 建议宿主应用自行保存配置，并在启动后重新应用。
 - `DesktopLyricsFrame.line` 默认 `lineProgress = 1.0`，确保文本可见。
+- 可见性行为：
+  - 初始状态默认 `enabled=true`，因此可以直接 `render(...)` 显示歌词。
+  - 若通过 `apply` 将 `interaction.enabled=false`，后续 `render(...)` 只更新内容，不会显示窗口。
+  - 需要再次通过 `apply` 将 `interaction.enabled=true` 才会显示悬浮歌词。

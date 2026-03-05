@@ -117,6 +117,7 @@ bool DesktopLyricsOverlay::Create() {
 
 void DesktopLyricsOverlay::Show() {
   if (!enabled_) return;
+  if (current_line_.empty()) return;
   if (!hwnd_ && !Create()) return;
   PositionNearBottomCenter(false);
   ShowWindow(hwnd_, SW_SHOWNOACTIVATE);

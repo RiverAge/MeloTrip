@@ -16,10 +16,19 @@ void main() {
 
   testWidgets('plugin channel smoke test', (WidgetTester tester) async {
     final plugin = DesktopLyrics();
-    await plugin.setEnabled(true);
+    await plugin.apply(
+      plugin.state.copyWith(
+        interaction: plugin.state.interaction.copyWith(enabled: true),
+      ),
+    );
     await plugin.render(const DesktopLyricsFrame.line(currentLine: 'Hello'));
-    await plugin.setEnabled(false);
-    await plugin.shutdown();
+    await plugin.apply(
+      plugin.state.copyWith(
+        interaction: plugin.state.interaction.copyWith(enabled: false),
+      ),
+    );
+    plugin.dispose();
+    await Future<void>.delayed(Duration.zero);
     expect(true, isTrue);
   });
 }

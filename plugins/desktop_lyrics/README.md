@@ -36,21 +36,22 @@ import 'package:desktop_lyrics/desktop_lyrics.dart';
 
 final lyrics = DesktopLyrics();
 
-await lyrics.applyConfig(
-  const DesktopLyricsConfig(
-    interaction: DesktopLyricsInteractionConfig(
+void onLyricsChanged() {
+  final enabled = lyrics.state.interaction.enabled;
+  // update UI with state fields
+}
+
+lyrics.addListener(onLyricsChanged);
+
+await lyrics.apply(
+  lyrics.state.copyWith(
+    interaction: lyrics.state.interaction.copyWith(
       enabled: true,
       clickThrough: false,
     ),
-    text: DesktopLyricsTextConfig(
-      fontSize: 34,
-    ),
-    background: DesktopLyricsBackgroundConfig(
-      opacity: 0.93,
-    ),
-    layout: DesktopLyricsLayoutConfig(
-      overlayWidth: 980,
-    ),
+    text: lyrics.state.text.copyWith(fontSize: 34),
+    background: lyrics.state.background.copyWith(opacity: 0.93),
+    layout: lyrics.state.layout.copyWith(overlayWidth: 980),
   ),
 );
 
@@ -60,6 +61,9 @@ await lyrics.render(
     lineProgress: 1.0,
   ),
 );
+
+lyrics.removeListener(onLyricsChanged);
+lyrics.dispose();
 ```
 
 ## Karaoke Frames
@@ -102,11 +106,10 @@ await lyrics.render(frame);
 
 ## API Summary
 
-- `DesktopLyrics.applyConfig(DesktopLyricsConfig config)`
-- `DesktopLyrics.setEnabled(bool enabled)`
-- `DesktopLyrics.config` / `DesktopLyrics.enabled` (read-only state snapshot)
+- `DesktopLyrics.apply(DesktopLyricsConfig config)`
+- `DesktopLyrics.state` (single read entry)
 - `DesktopLyrics.render(DesktopLyricsFrame frame)`
-- `DesktopLyrics.state` + `addListener(...)` for reactive config UI
+- `DesktopLyrics.addListener(...)` / `removeListener(...)`
 - `DesktopLyrics.dispose()`
 
 ## Notes
@@ -114,3 +117,7 @@ await lyrics.render(frame);
 - The plugin does not persist settings.
 - Host apps should store config and re-apply it on startup.
 - `DesktopLyricsFrame.line` defaults to `lineProgress = 1.0` for visible text.
+- Visibility behavior:
+  - Initial state is enabled by default, so `render(...)` can show lyrics directly.
+  - If you apply config with `interaction.enabled=false`, later `render(...)` only updates content and will not show.
+  - Apply config with `interaction.enabled=true` again to make the overlay visible.

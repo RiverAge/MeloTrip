@@ -24,11 +24,20 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('setEnabled uses applyConfig path and dispose call', () async {
+  test('apply toggles enabled flag and dispose call', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.setEnabled(false);
-    await lyrics.setEnabled(true);
-    await lyrics.shutdown();
+    await lyrics.apply(
+      lyrics.state.copyWith(
+        interaction: lyrics.state.interaction.copyWith(enabled: false),
+      ),
+    );
+    await lyrics.apply(
+      lyrics.state.copyWith(
+        interaction: lyrics.state.interaction.copyWith(enabled: true),
+      ),
+    );
+    lyrics.dispose();
+    await Future<void>.delayed(Duration.zero);
 
     expect(calls.map((e) => e.method),
         ['updateConfig', 'updateConfig', 'dispose']);
@@ -41,7 +50,7 @@ void main() {
   test('serializes render/config payloads', () async {
     final lyrics = DesktopLyrics(channel: channel);
     await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
-    await lyrics.applyConfig(
+    await lyrics.apply(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,
@@ -77,7 +86,7 @@ void main() {
 
   test('serializes full config contract for native parity', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.applyConfig(
+    await lyrics.apply(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: false,
@@ -137,7 +146,7 @@ void main() {
 
   test('omits overlayHeight in auto-height mode', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.applyConfig(
+    await lyrics.apply(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
           enabled: true,
@@ -182,30 +191,4 @@ void main() {
     expect(third['lineProgress'], 1.0);
   });
 
-  test('render rate limit throttles tiny progress deltas on same line',
-      () async {
-    final lyrics = DesktopLyrics(channel: channel);
-    lyrics.setRenderRateLimit(maxFps: 30, minProgressDelta: 0.01);
-
-    await lyrics.render(
-      const DesktopLyricsFrame.line(
-          currentLine: 'same line', lineProgress: 0.50),
-    );
-    await lyrics.render(
-      const DesktopLyricsFrame.line(
-          currentLine: 'same line', lineProgress: 0.505),
-    );
-    await lyrics.render(
-      const DesktopLyricsFrame.line(
-          currentLine: 'line changed', lineProgress: 0.505),
-    );
-
-    final renderCalls =
-        calls.where((call) => call.method == 'updateLyricFrame').toList();
-    expect(renderCalls.length, 2);
-    final first = renderCalls[0].arguments as Map<Object?, Object?>;
-    final second = renderCalls[1].arguments as Map<Object?, Object?>;
-    expect(first['currentLine'], 'same line');
-    expect(second['currentLine'], 'line changed');
-  });
 }
