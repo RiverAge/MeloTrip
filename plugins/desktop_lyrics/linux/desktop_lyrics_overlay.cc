@@ -93,11 +93,17 @@ void DesktopLyricsOverlay::Show() {
   if (!Create()) return;
   gtk_widget_show(window_);
   PositionNearBottomCenter(false);
-  g_idle_add_full(
+  if (pending_show_idle_source_id_ != 0) {
+    g_source_remove(pending_show_idle_source_id_);
+    pending_show_idle_source_id_ = 0;
+  }
+  pending_show_idle_source_id_ = g_idle_add_full(
       G_PRIORITY_DEFAULT_IDLE,
       +[](gpointer user_data) -> gboolean {
         auto* self = static_cast<DesktopLyricsOverlay*>(user_data);
-        if (self != nullptr) self->PositionNearBottomCenter(false);
+        if (self == nullptr) return G_SOURCE_REMOVE;
+        self->pending_show_idle_source_id_ = 0;
+        if (self->window_ != nullptr) self->PositionNearBottomCenter(false);
         return G_SOURCE_REMOVE;
       },
       this, nullptr);
@@ -114,6 +120,10 @@ void DesktopLyricsOverlay::Hide() {
 
 void DesktopLyricsOverlay::Dispose() {
   dragging_ = false;
+  if (pending_show_idle_source_id_ != 0) {
+    g_source_remove(pending_show_idle_source_id_);
+    pending_show_idle_source_id_ = 0;
+  }
   if (window_ != nullptr) {
     gtk_widget_destroy(window_);
     window_ = nullptr;
@@ -236,6 +246,10 @@ gboolean DesktopLyricsOverlay::Draw(cairo_t* cr) {
     if (window_ != nullptr) {
       gtk_window_resize(GTK_WINDOW(window_), overlay_width_, overlay_height_);
     }
+    if (drawing_area_ != nullptr) {
+      gtk_widget_queue_draw(drawing_area_);
+    }
+    return FALSE;
   }
   if (width <= 0 || height <= 0) return FALSE;
 
@@ -298,8 +312,16 @@ gboolean DesktopLyricsOverlay::Draw(cairo_t* cr) {
     const uint32_t base_alpha = (base_argb >> 24) & 0xFFU;
     const uint32_t softened_alpha = std::max(base_alpha / 2, static_cast<uint32_t>(0x88));
     base_argb = (base_argb & 0x00FFFFFFU) | (softened_alpha << 24);
+    // Avoid overdrawing antialiased edges by drawing base only in the
+    // unplayed segment.
+    cairo_save(cr);
+    cairo_rectangle(cr, text_x + area_width * frame_line_progress_, text_y,
+                    area_width * (1.0 - frame_line_progress_),
+                    static_cast<double>(text_height));
+    cairo_clip(cr);
     DrawTextLayer(cr, layout, text_x, text_y, area_width, static_cast<double>(text_height),
                   false, base_argb);
+    cairo_restore(cr);
 
     cairo_save(cr);
     cairo_rectangle(cr, text_x, text_y, area_width * frame_line_progress_,

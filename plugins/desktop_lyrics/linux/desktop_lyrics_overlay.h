@@ -118,6 +118,7 @@ class DesktopLyricsOverlay {
 
   bool has_custom_position_ = false;
   bool dragging_ = false;
+  guint pending_show_idle_source_id_ = 0;
 };
 
 }  // namespace desktop_lyrics
