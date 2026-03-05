@@ -11,7 +11,7 @@ import 'test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('DesktopSettingsPage renders setting actions and logout button', (
+  testWidgets('DesktopSettingsPage renders header and tabs', (
     tester,
   ) async {
     tester.view.devicePixelRatio = 1;
@@ -36,22 +36,14 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.byIcon(Icons.logout_rounded),
-      240,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    expect(find.byType(GridView), findsOneWidget);
-    expect(find.byIcon(Icons.contrast_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.high_quality_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.language_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.logout_rounded), findsOneWidget);
+    expect(find.byType(TabBar), findsOneWidget);
+    expect(find.byType(TabBarView), findsOneWidget);
+    expect(find.byIcon(Icons.tune_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.search_rounded), findsOneWidget);
+    expect(find.byType(Scrollable), findsWidgets);
   });
 
-  testWidgets('DesktopSettingsPage logout opens dialog and can cancel', (
-    tester,
-  ) async {
+  testWidgets('DesktopSettingsPage can switch tabs', (tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1600, 1200);
     addTearDown(() {
@@ -74,34 +66,36 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.byIcon(Icons.logout_rounded),
-      240,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.logout_rounded));
+    await tester.tap(find.byType(Tab).at(1));
     await tester.pumpAndSettle();
 
-    final dialogFinder = find.byType(AlertDialog);
-    expect(dialogFinder, findsOneWidget);
-    final context = tester.element(dialogFinder);
-    final l10n = AppLocalizations.of(context)!;
-    final cancelFinder = find.descendant(
-      of: dialogFinder,
-      matching: find.text(l10n.cancel),
-    );
-    final confirmFinder = find.descendant(
-      of: dialogFinder,
-      matching: find.text(l10n.confirm),
-    );
-    expect(cancelFinder, findsOneWidget);
-    expect(confirmFinder, findsOneWidget);
+    expect(find.textContaining('Coming Soon'), findsOneWidget);
+  });
 
-    await tester.tap(cancelFinder);
+  testWidgets('DesktopSettingsPage keeps basic actions visible', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1600, 1200);
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: DesktopSettingsPage()),
+        ),
+      ),
+    );
+
     await tester.pumpAndSettle();
-
-    expect(find.byType(AlertDialog), findsNothing);
-    expect(find.byType(DesktopSettingsPage), findsOneWidget);
+    expect(find.byType(TextButton), findsOneWidget);
+    expect(find.byType(ListView), findsWidgets);
   });
 }

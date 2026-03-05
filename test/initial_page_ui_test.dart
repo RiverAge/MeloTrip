@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -27,14 +26,6 @@ class _CountingAppPlayerHandler extends AppPlayerHandler {
 }
 
 void main() {
-  setUp(() {
-    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
-  });
-
-  tearDown(() {
-    debugDefaultTargetPlatformOverride = null;
-  });
-
   Widget buildApp(List<Override> overrides) {
     return ProviderScope(
       overrides: overrides,
@@ -73,7 +64,7 @@ void main() {
       pendingAuth.complete(null);
     }
     await tester.pumpAndSettle();
-  });
+  }, variant: const TargetPlatformVariant({TargetPlatform.linux}));
 
   testWidgets(
     'InitialPage logged-out flow does not eagerly initialize player',
@@ -101,5 +92,6 @@ void main() {
       expect(find.byType(LoginPage), findsOneWidget);
       expect(_appPlayerBuildCalls, 0);
     },
+    variant: const TargetPlatformVariant({TargetPlatform.linux}),
   );
 }
