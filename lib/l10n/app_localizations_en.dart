@@ -411,6 +411,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retryStartup => 'Retry startup';
 
   @override
+  String get startupInitializing => 'Starting MeloTrip...';
+
+  @override
   String get checkForUpdates => 'Check for updates';
 
   @override

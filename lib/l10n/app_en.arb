@@ -593,6 +593,10 @@
    "@retryStartup": {
       "description": "Retry action text shown on startup page"
    },
+   "startupInitializing": "Starting MeloTrip...",
+   "@startupInitializing": {
+      "description": "Status text shown while app bootstrap tasks are running"
+   },
 
    "checkForUpdates": "Check for updates",
    "@checkForUpdates": {

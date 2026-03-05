@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
@@ -14,7 +15,11 @@ class StartupNavigator {
       InitialBootstrapResult.loggedOut => const LoginPage(),
     };
 
-    FlutterNativeSplash.remove();
+    if (!kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS)) {
+      FlutterNativeSplash.remove();
+    }
     Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
         pageBuilder: (context, _, _) => targetPage,

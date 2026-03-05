@@ -73,4 +73,111 @@ void main() {
     expect(configMap['strokeColorArgb'], 0xFFFF0000);
     expect(configMap['strokeWidth'], 1.5);
   });
+
+  test('serializes full config contract for native parity', () async {
+    final lyrics = DesktopLyrics(channel: channel);
+    await lyrics.setConfig(
+      const DesktopLyricsConfig(
+        interaction: DesktopLyricsInteractionConfig(
+          enabled: false,
+          clickThrough: true,
+        ),
+        text: DesktopLyricsTextConfig(
+          fontSize: 42,
+          textColor: Color(0xFF123456),
+          shadowColor: Color(0x88223344),
+          strokeColor: Color(0xAA445566),
+          strokeWidth: 2.25,
+          fontFamily: 'Noto Sans CJK',
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w700,
+        ),
+        background: DesktopLyricsBackgroundConfig(
+          opacity: 0.7,
+          backgroundColor: Color(0xCC010203),
+          backgroundRadius: 18.0,
+          backgroundPadding: 14.0,
+        ),
+        gradient: DesktopLyricsGradientConfig(
+          textGradientEnabled: true,
+          textGradientStartColor: Color(0xFFFFAA00),
+          textGradientEndColor: Color(0xFF00AABB),
+          textGradientAngle: 35.0,
+        ),
+        layout: DesktopLyricsLayoutConfig(
+          overlayWidth: 1200.0,
+          overlayHeight: 220.0,
+        ),
+      ),
+    );
+
+    final configMap = calls.single.arguments as Map<Object?, Object?>;
+    expect(configMap['enabled'], false);
+    expect(configMap['clickThrough'], true);
+    expect(configMap['fontSize'], 42.0);
+    expect(configMap['opacity'], 0.7);
+    expect(configMap['textColorArgb'], 0xFF123456);
+    expect(configMap['shadowColorArgb'], 0x88223344);
+    expect(configMap['strokeColorArgb'], 0xAA445566);
+    expect(configMap['strokeWidth'], 2.25);
+    expect(configMap['backgroundColorArgb'], 0xCC010203);
+    expect(configMap['backgroundRadius'], 18.0);
+    expect(configMap['backgroundPadding'], 14.0);
+    expect(configMap['textGradientEnabled'], true);
+    expect(configMap['textGradientStartArgb'], 0xFFFFAA00);
+    expect(configMap['textGradientEndArgb'], 0xFF00AABB);
+    expect(configMap['textGradientAngle'], 35.0);
+    expect(configMap['overlayWidth'], 1200.0);
+    expect(configMap['overlayHeight'], 220.0);
+    expect(configMap['fontFamily'], 'Noto Sans CJK');
+    expect(configMap['textAlign'], 2);
+    expect(configMap['fontWeightValue'], 700);
+  });
+
+  test('omits overlayHeight in auto-height mode', () async {
+    final lyrics = DesktopLyrics(channel: channel);
+    await lyrics.setConfig(
+      const DesktopLyricsConfig(
+        interaction: DesktopLyricsInteractionConfig(
+          enabled: true,
+          clickThrough: false,
+        ),
+        text: DesktopLyricsTextConfig(fontSize: 30),
+        layout: DesktopLyricsLayoutConfig(overlayWidth: 960.0),
+      ),
+    );
+
+    final configMap = calls.single.arguments as Map<Object?, Object?>;
+    expect(configMap['overlayWidth'], 960.0);
+    expect(configMap.containsKey('overlayHeight'), false);
+  });
+
+  test('render clamps out-of-range and invalid progress', () async {
+    final lyrics = DesktopLyrics(channel: channel);
+    await lyrics.render(
+      const DesktopLyricsFrame.tokenized(
+        tokens: [DesktopLyricsToken(text: 'A', progress: 1.0)],
+        lineProgress: -3.0,
+      ),
+    );
+    await lyrics.render(
+      const DesktopLyricsFrame.tokenized(
+        tokens: [DesktopLyricsToken(text: 'B', progress: 1.0)],
+        lineProgress: 5.0,
+      ),
+    );
+    await lyrics.render(
+      const DesktopLyricsFrame.tokenized(
+        tokens: [DesktopLyricsToken(text: 'C', progress: 1.0)],
+        lineProgress: double.nan,
+      ),
+    );
+
+    final first = calls[0].arguments as Map<Object?, Object?>;
+    final second = calls[1].arguments as Map<Object?, Object?>;
+    final third = calls[2].arguments as Map<Object?, Object?>;
+    expect(first['lineProgress'], 0.0);
+    expect(second['lineProgress'], 1.0);
+    expect(third['lineProgress'], 1.0);
+  });
 }

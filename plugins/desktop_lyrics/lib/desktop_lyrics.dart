@@ -518,7 +518,7 @@ class DesktopLyrics extends ChangeNotifier {
       clickThrough: false,
     ),
     text: DesktopLyricsTextConfig(
-      fontSize: 38.0,
+      fontSize: 30.0,
       textColor: Color(0xFFF6F7FF),
       shadowColor: Color(0x00000000),
       strokeColor: Color(0x00000000),
@@ -531,7 +531,7 @@ class DesktopLyrics extends ChangeNotifier {
       opacity: 0.96,
       backgroundColor: Color(0x7A220A35),
       backgroundRadius: 16.0,
-      backgroundPadding: 10.0,
+      backgroundPadding: 8.0,
     ),
     gradient: DesktopLyricsGradientConfig(
       textGradientEnabled: true,
@@ -540,7 +540,7 @@ class DesktopLyrics extends ChangeNotifier {
       textGradientAngle: 0.0,
     ),
     layout: DesktopLyricsLayoutConfig(
-      overlayWidth: 980.0,
+      overlayWidth: 720.0,
       overlayHeight: null,
     ),
   );

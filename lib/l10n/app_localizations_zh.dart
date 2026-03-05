@@ -410,6 +410,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get retryStartup => '重试启动';
 
   @override
+  String get startupInitializing => '正在启动 MeloTrip...';
+
+  @override
   String get checkForUpdates => '检查更新';
 
   @override
@@ -925,6 +928,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get retryStartup => '重试启动';
+
+  @override
+  String get startupInitializing => '正在启动 MeloTrip...';
 
   @override
   String get checkForUpdates => '检查更新';

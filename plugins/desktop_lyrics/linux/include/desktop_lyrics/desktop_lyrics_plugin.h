@@ -5,6 +5,12 @@
 
 G_BEGIN_DECLS
 
+#ifdef FLUTTER_PLUGIN_IMPL
+#define FLUTTER_PLUGIN_EXPORT __attribute__((visibility("default")))
+#else
+#define FLUTTER_PLUGIN_EXPORT
+#endif
+
 #ifdef G_DECLARE_FINAL_TYPE
 G_DECLARE_FINAL_TYPE(DesktopLyricsPlugin,
                      desktop_lyrics_plugin,
@@ -20,7 +26,8 @@ typedef struct {
 GType desktop_lyrics_plugin_get_type(void);
 #endif
 
-void desktop_lyrics_plugin_register_with_registrar(FlPluginRegistrar* registrar);
+FLUTTER_PLUGIN_EXPORT void desktop_lyrics_plugin_register_with_registrar(
+    FlPluginRegistrar* registrar);
 
 G_END_DECLS
 

@@ -885,6 +885,12 @@ abstract class AppLocalizations {
   /// **'Retry startup'**
   String get retryStartup;
 
+  /// Status text shown while app bootstrap tasks are running
+  ///
+  /// In en, this message translates to:
+  /// **'Starting MeloTrip...'**
+  String get startupInitializing;
+
   /// Settings action text for checking app updates
   ///
   /// In en, this message translates to:

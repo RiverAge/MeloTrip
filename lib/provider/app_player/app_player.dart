@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,6 +9,8 @@ part 'app_player.g.dart';
 class AppPlayerHandler extends _$AppPlayerHandler {
   @override
   Future<AppPlayer?> build() async {
+    MediaKit.ensureInitialized();
+
     final audioHandler = await AudioService.init(
       builder: () => AppPlayer(), // AppPlayer 是你的 AudioHandler 实现
       config: const AudioServiceConfig(

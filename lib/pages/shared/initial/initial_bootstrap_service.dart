@@ -90,7 +90,11 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((ref) 
     return SubsonicResponse.fromJson(data).subsonicResponse?.playQueue;
   }
 
-  final playerFuture = ref.read(appPlayerHandlerProvider.future);
+  Future<AppPlayer?>? playerFuture;
+  Future<AppPlayer?> ensurePlayerFuture() {
+    playerFuture ??= ref.read(appPlayerHandlerProvider.future);
+    return playerFuture!;
+  }
 
   return InitialBootstrapService(
     loadAuthUser: () => ref.read(currentUserProvider.future),
@@ -101,13 +105,13 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((ref) 
       Isolate.spawn(runHttpServer, {'dirPath': dirPath, 'host': host});
     },
     restorePlaylist: ({required songs, initialId}) async {
-      final player = await playerFuture;
+      final player = await ensurePlayerFuture();
       if (player != null) {
         await player.setPlaylist(songs: songs, initialId: initialId);
       }
     },
     restorePlaylistMode: (mode) async {
-      final player = await playerFuture;
+      final player = await ensurePlayerFuture();
       if (player != null) {
         await player.setPlaylistMode(mode);
       }

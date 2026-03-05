@@ -7,6 +7,7 @@ set(PLUGIN_NAME "desktop_lyrics_plugin")
 
 add_library(${PLUGIN_NAME} SHARED
   "desktop_lyrics_plugin.cc"
+  "desktop_lyrics_overlay.cc"
 )
 
 apply_standard_settings(${PLUGIN_NAME})
@@ -21,7 +22,6 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
-target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
+target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 
-list(APPEND PLUGIN_BUNDLED_LIBRARIES ${PLUGIN_NAME})
-set(PLUGIN_BUNDLED_LIBRARIES "${PLUGIN_BUNDLED_LIBRARIES}" PARENT_SCOPE)
+set(desktop_lyrics_bundled_libraries "" PARENT_SCOPE)
