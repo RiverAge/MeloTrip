@@ -36,8 +36,9 @@ class DesktopLyricsTimelineToken {
 class DesktopLyricsFrame {
   // `.line` is for static single-line display by default, so progress defaults
   // to fully visible. Callers can pass a custom value when they need sweeping.
-  const DesktopLyricsFrame.line({required this.currentLine, this.lineProgress = 1.0})
-    : tokens = const [];
+  const DesktopLyricsFrame.line(
+      {required this.currentLine, this.lineProgress = 1.0})
+      : tokens = const [];
 
   const DesktopLyricsFrame.tokenized({
     required this.tokens,
@@ -180,15 +181,15 @@ class DesktopLyricsTextConfig {
 
   @override
   int get hashCode => Object.hash(
-    fontSize,
-    textColor,
-    shadowColor,
-    strokeColor,
-    strokeWidth,
-    fontFamily,
-    textAlign,
-    fontWeight,
-  );
+        fontSize,
+        textColor,
+        shadowColor,
+        strokeColor,
+        strokeWidth,
+        fontFamily,
+        textAlign,
+        fontWeight,
+      );
 }
 
 @immutable
@@ -215,8 +216,8 @@ class DesktopLyricsBackgroundConfig {
           backgroundPadding == other.backgroundPadding;
 
   @override
-  int get hashCode =>
-      Object.hash(opacity, backgroundColor, backgroundRadius, backgroundPadding);
+  int get hashCode => Object.hash(
+      opacity, backgroundColor, backgroundRadius, backgroundPadding);
 }
 
 @immutable
@@ -244,11 +245,11 @@ class DesktopLyricsGradientConfig {
 
   @override
   int get hashCode => Object.hash(
-    textGradientEnabled,
-    textGradientStartColor,
-    textGradientEndColor,
-    textGradientAngle,
-  );
+        textGradientEnabled,
+        textGradientStartColor,
+        textGradientEndColor,
+        textGradientAngle,
+      );
 }
 
 @immutable
@@ -296,7 +297,8 @@ class DesktopLyricsConfig {
           layout == other.layout;
 
   @override
-  int get hashCode => Object.hash(interaction, text, background, gradient, layout);
+  int get hashCode =>
+      Object.hash(interaction, text, background, gradient, layout);
 
   DesktopLyricsConfig copyWith({
     DesktopLyricsInteractionConfig? interaction,
@@ -391,33 +393,33 @@ class DesktopLyricsStateSnapshot {
 
   @override
   int get hashCode => Object.hashAll([
-    enabled,
-    clickThrough,
-    fontSize,
-    backgroundOpacity,
-    textColorArgb,
-    shadowColorArgb,
-    strokeColorArgb,
-    strokeWidth,
-    textGradientEnabled,
-    textGradientStartArgb,
-    textGradientEndArgb,
-    textGradientAngle,
-    backgroundColorArgb,
-    backgroundRadius,
-    backgroundPadding,
-    textAlign,
-    fontFamily,
-    fontWeightValue,
-    autoOverlayHeight,
-    overlayWidth,
-    overlayHeight,
-  ]);
+        enabled,
+        clickThrough,
+        fontSize,
+        backgroundOpacity,
+        textColorArgb,
+        shadowColorArgb,
+        strokeColorArgb,
+        strokeWidth,
+        textGradientEnabled,
+        textGradientStartArgb,
+        textGradientEndArgb,
+        textGradientAngle,
+        backgroundColorArgb,
+        backgroundRadius,
+        backgroundPadding,
+        textAlign,
+        fontFamily,
+        fontWeightValue,
+        autoOverlayHeight,
+        overlayWidth,
+        overlayHeight,
+      ]);
 }
 
 class _DesktopLyricsService {
   _DesktopLyricsService({MethodChannel? channel})
-    : _channel = channel ?? const MethodChannel(_channelName);
+      : _channel = channel ?? const MethodChannel(_channelName);
 
   static const _channelName = 'desktop_lyrics';
 
@@ -439,7 +441,8 @@ class _DesktopLyricsService {
         : 1.0;
     final now = DateTime.now();
     final sameLine = currentLine == _lastRenderLine;
-    final smallDelta = (currentProgress - _lastRenderProgress).abs() < _minProgressDelta;
+    final smallDelta =
+        (currentProgress - _lastRenderProgress).abs() < _minProgressDelta;
     final withinInterval = now.difference(_lastRenderAt) < _minRenderInterval;
     if (_minRenderInterval > Duration.zero &&
         sameLine &&
@@ -541,12 +544,11 @@ class _DesktopLyricsService {
       return null;
     }
   }
-
 }
 
 class DesktopLyrics extends ChangeNotifier {
   DesktopLyrics({MethodChannel? channel})
-    : _service = _DesktopLyricsService(channel: channel);
+      : _service = _DesktopLyricsService(channel: channel);
 
   final _DesktopLyricsService _service;
   DesktopLyricsConfig _config = const DesktopLyricsConfig(
@@ -587,31 +589,32 @@ class DesktopLyrics extends ChangeNotifier {
   DesktopLyricsConfig get config => _config;
   bool get enabled => _config.interaction.enabled;
   DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
-    enabled: _config.interaction.enabled,
-    clickThrough: _config.interaction.clickThrough,
-    fontSize: _config.text.fontSize,
-    backgroundOpacity: _config.background.opacity,
-    textColorArgb: _config.text.textColor?.toARGB32() ?? 0xFFF6F7FF,
-    shadowColorArgb: _config.text.shadowColor?.toARGB32() ?? 0x00000000,
-    strokeColorArgb: _config.text.strokeColor?.toARGB32() ?? 0x00000000,
-    strokeWidth: _config.text.strokeWidth ?? 0.0,
-    textGradientEnabled: _config.gradient.textGradientEnabled,
-    textGradientStartArgb:
-        _config.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E,
-    textGradientEndArgb:
-        _config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
-    textGradientAngle: _config.gradient.textGradientAngle,
-    backgroundColorArgb:
-        _config.background.backgroundColor?.toARGB32() ?? 0x7A220A35,
-    backgroundRadius: _config.background.backgroundRadius,
-    backgroundPadding: _config.background.backgroundPadding,
-    textAlign: _config.text.textAlign ?? TextAlign.start,
-    fontFamily: _config.text.fontFamily ?? 'Segoe UI',
-    fontWeightValue: _config.text.fontWeight?.value ?? FontWeight.w400.value,
-    autoOverlayHeight: _config.layout.overlayHeight == null,
-    overlayWidth: _config.layout.overlayWidth ?? 980.0,
-    overlayHeight: _config.layout.overlayHeight ?? 160.0,
-  );
+        enabled: _config.interaction.enabled,
+        clickThrough: _config.interaction.clickThrough,
+        fontSize: _config.text.fontSize,
+        backgroundOpacity: _config.background.opacity,
+        textColorArgb: _config.text.textColor?.toARGB32() ?? 0xFFF6F7FF,
+        shadowColorArgb: _config.text.shadowColor?.toARGB32() ?? 0x00000000,
+        strokeColorArgb: _config.text.strokeColor?.toARGB32() ?? 0x00000000,
+        strokeWidth: _config.text.strokeWidth ?? 0.0,
+        textGradientEnabled: _config.gradient.textGradientEnabled,
+        textGradientStartArgb:
+            _config.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E,
+        textGradientEndArgb:
+            _config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
+        textGradientAngle: _config.gradient.textGradientAngle,
+        backgroundColorArgb:
+            _config.background.backgroundColor?.toARGB32() ?? 0x7A220A35,
+        backgroundRadius: _config.background.backgroundRadius,
+        backgroundPadding: _config.background.backgroundPadding,
+        textAlign: _config.text.textAlign ?? TextAlign.start,
+        fontFamily: _config.text.fontFamily ?? 'Segoe UI',
+        fontWeightValue:
+            _config.text.fontWeight?.value ?? FontWeight.w400.value,
+        autoOverlayHeight: _config.layout.overlayHeight == null,
+        overlayWidth: _config.layout.overlayWidth ?? 980.0,
+        overlayHeight: _config.layout.overlayHeight ?? 160.0,
+      );
 
   Future<void> applyConfig(DesktopLyricsConfig value) {
     if (value == _config) return Future.value();
@@ -724,5 +727,4 @@ class _PerformanceTracker {
     sampleCount = 0;
     totalMs = 0.0;
   }
-
 }

@@ -6,10 +6,13 @@ void main() {
     final frame = DesktopLyricsFrame.fromTimedTokens(
       lineProgress: 0.5,
       tokens: const [
-        DesktopLyricsTokenTiming(text: 'Never ', duration: Duration(seconds: 1)),
-        DesktopLyricsTokenTiming(text: 'gonna ', duration: Duration(seconds: 1)),
+        DesktopLyricsTokenTiming(
+            text: 'Never ', duration: Duration(seconds: 1)),
+        DesktopLyricsTokenTiming(
+            text: 'gonna ', duration: Duration(seconds: 1)),
         DesktopLyricsTokenTiming(text: 'give ', duration: Duration(seconds: 1)),
-        DesktopLyricsTokenTiming(text: 'you up', duration: Duration(seconds: 1)),
+        DesktopLyricsTokenTiming(
+            text: 'you up', duration: Duration(seconds: 1)),
       ],
     );
 

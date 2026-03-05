@@ -14,9 +14,9 @@ void main() {
     calls.clear();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
-          calls.add(call);
-          return null;
-        });
+      calls.add(call);
+      return null;
+    });
   });
 
   tearDown(() {
@@ -30,7 +30,8 @@ void main() {
     await lyrics.setEnabled(true);
     await lyrics.shutdown();
 
-    expect(calls.map((e) => e.method), ['updateConfig', 'updateConfig', 'dispose']);
+    expect(calls.map((e) => e.method),
+        ['updateConfig', 'updateConfig', 'dispose']);
     final hideArgs = calls[0].arguments as Map<Object?, Object?>;
     final showArgs = calls[1].arguments as Map<Object?, Object?>;
     expect(hideArgs['enabled'], false);
@@ -181,18 +182,22 @@ void main() {
     expect(third['lineProgress'], 1.0);
   });
 
-  test('render rate limit throttles tiny progress deltas on same line', () async {
+  test('render rate limit throttles tiny progress deltas on same line',
+      () async {
     final lyrics = DesktopLyrics(channel: channel);
     lyrics.setRenderRateLimit(maxFps: 30, minProgressDelta: 0.01);
 
     await lyrics.render(
-      const DesktopLyricsFrame.line(currentLine: 'same line', lineProgress: 0.50),
+      const DesktopLyricsFrame.line(
+          currentLine: 'same line', lineProgress: 0.50),
     );
     await lyrics.render(
-      const DesktopLyricsFrame.line(currentLine: 'same line', lineProgress: 0.505),
+      const DesktopLyricsFrame.line(
+          currentLine: 'same line', lineProgress: 0.505),
     );
     await lyrics.render(
-      const DesktopLyricsFrame.line(currentLine: 'line changed', lineProgress: 0.505),
+      const DesktopLyricsFrame.line(
+          currentLine: 'line changed', lineProgress: 0.505),
     );
 
     final renderCalls =

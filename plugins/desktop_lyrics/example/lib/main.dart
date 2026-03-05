@@ -128,10 +128,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     for (var i = 0; i <= steps; i++) {
       if (!mounted) return;
       await _lyrics.render(
-        DesktopLyricsFrame.line(
-          currentLine: text,
-          lineProgress: i / steps,
-        ),
+        DesktopLyricsFrame.line(currentLine: text, lineProgress: i / steps),
       );
       await Future.delayed(const Duration(milliseconds: 40));
     }
@@ -183,7 +180,10 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
         }
 
         final safeTokenMs = tokenMs <= 0 ? 1 : tokenMs;
-        final local = ((elapsedMs - consumedDuration) / safeTokenMs).clamp(0.0, 1.0);
+        final local = ((elapsedMs - consumedDuration) / safeTokenMs).clamp(
+          0.0,
+          1.0,
+        );
         mappedProgress = ((idx + local) / segmentCount).clamp(0.0, 1.0);
         break;
       }
@@ -289,9 +289,18 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                     DropdownButton<TextAlign>(
                       value: _textAlign,
                       items: const [
-                        DropdownMenuItem(value: TextAlign.start, child: Text('Start')),
-                        DropdownMenuItem(value: TextAlign.center, child: Text('Center')),
-                        DropdownMenuItem(value: TextAlign.end, child: Text('End')),
+                        DropdownMenuItem(
+                          value: TextAlign.start,
+                          child: Text('Start'),
+                        ),
+                        DropdownMenuItem(
+                          value: TextAlign.center,
+                          child: Text('Center'),
+                        ),
+                        DropdownMenuItem(
+                          value: TextAlign.end,
+                          child: Text('End'),
+                        ),
                       ],
                       onChanged: (v) async {
                         if (v == null) return;
@@ -307,11 +316,26 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                     DropdownButton<FontWeight>(
                       value: _fontWeight,
                       items: const [
-                        DropdownMenuItem(value: FontWeight.w300, child: Text('w300')),
-                        DropdownMenuItem(value: FontWeight.w400, child: Text('w400')),
-                        DropdownMenuItem(value: FontWeight.w500, child: Text('w500')),
-                        DropdownMenuItem(value: FontWeight.w600, child: Text('w600')),
-                        DropdownMenuItem(value: FontWeight.w700, child: Text('w700')),
+                        DropdownMenuItem(
+                          value: FontWeight.w300,
+                          child: Text('w300'),
+                        ),
+                        DropdownMenuItem(
+                          value: FontWeight.w400,
+                          child: Text('w400'),
+                        ),
+                        DropdownMenuItem(
+                          value: FontWeight.w500,
+                          child: Text('w500'),
+                        ),
+                        DropdownMenuItem(
+                          value: FontWeight.w600,
+                          child: Text('w600'),
+                        ),
+                        DropdownMenuItem(
+                          value: FontWeight.w700,
+                          child: Text('w700'),
+                        ),
                       ],
                       onChanged: (v) async {
                         if (v == null) return;
@@ -458,7 +482,10 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   }) {
     return Row(
       children: [
-        SizedBox(width: 170, child: Text('$label (${value.toStringAsFixed(2)})')),
+        SizedBox(
+          width: 170,
+          child: Text('$label (${value.toStringAsFixed(2)})'),
+        ),
         Expanded(
           child: Slider(
             value: value,
