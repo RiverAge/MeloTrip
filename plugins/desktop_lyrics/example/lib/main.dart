@@ -77,7 +77,8 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   }
 
   Future<void> _apply(
-      DesktopLyricsConfig Function(DesktopLyricsConfig config) transform) async {
+    DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
+  ) async {
     final current = _lyrics.state.toConfig();
     final next = transform(current);
     await _lyrics.apply(next);
@@ -86,9 +87,11 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   Future<void> _playLineDemo() async {
     if (_playingLineDemo) return;
     setState(() => _playingLineDemo = true);
-    await _apply((config) => config.copyWith(
-          interaction: config.interaction.copyWith(enabled: true),
-        ));
+    await _apply(
+      (config) => config.copyWith(
+        interaction: config.interaction.copyWith(enabled: true),
+      ),
+    );
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final text = 'Desktop Lyrics live preview $stamp';
     const steps = 28;
@@ -105,9 +108,11 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   Future<void> _playTokenDemo() async {
     if (_playingTokenDemo) return;
     setState(() => _playingTokenDemo = true);
-    await _apply((config) => config.copyWith(
-          interaction: config.interaction.copyWith(enabled: true),
-        ));
+    await _apply(
+      (config) => config.copyWith(
+        interaction: config.interaction.copyWith(enabled: true),
+      ),
+    );
     final stamp = DateTime.now().second.toString().padLeft(2, '0');
     final timedTokens = <DesktopLyricsTokenTiming>[
       const DesktopLyricsTokenTiming(
@@ -221,10 +226,11 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   title: const Text('Enabled'),
                   value: enabled,
                   onChanged: (v) async {
-                    await _apply((config) => config.copyWith(
-                          interaction:
-                              config.interaction.copyWith(enabled: v),
-                        ));
+                    await _apply(
+                      (config) => config.copyWith(
+                        interaction: config.interaction.copyWith(enabled: v),
+                      ),
+                    );
                     if (v) {
                       await _lyrics.render(
                         const DesktopLyricsFrame.line(
@@ -305,11 +311,13 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                       ],
                       onChanged: (v) {
                         if (v == null) return;
-                        unawaited(_apply(
-                          (config) => config.copyWith(
-                            text: config.text.copyWith(textAlign: v),
+                        unawaited(
+                          _apply(
+                            (config) => config.copyWith(
+                              text: config.text.copyWith(textAlign: v),
+                            ),
                           ),
-                        ));
+                        );
                       },
                     ),
                   ],
@@ -343,11 +351,13 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                       ],
                       onChanged: (v) {
                         if (v == null) return;
-                        unawaited(_apply(
-                          (config) => config.copyWith(
-                            text: config.text.copyWith(fontWeight: v),
+                        unawaited(
+                          _apply(
+                            (config) => config.copyWith(
+                              text: config.text.copyWith(fontWeight: v),
+                            ),
                           ),
-                        ));
+                        );
                       },
                     ),
                   ],
@@ -356,8 +366,9 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   label: 'Text Color',
                   value: textColor,
                   onChanged: (v) => _apply(
-                    (config) =>
-                        config.copyWith(text: config.text.copyWith(textColor: Color(v))),
+                    (config) => config.copyWith(
+                      text: config.text.copyWith(textColor: Color(v)),
+                    ),
                   ),
                 ),
                 _colorRow(
@@ -388,47 +399,46 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                 _colorRow(
                   label: 'Background Base',
                   value: backgroundBaseColor,
-                  onChanged: (v) => _apply(
-                    (config) {
-                      final a = ((config.background.backgroundColor?.toARGB32() ??
-                                  0x7A220A35) >>
-                              24) &
-                          0xFF;
-                      final bg = (a << 24) | (v & 0x00FFFFFF);
-                      return config.copyWith(
-                        background: config.background.copyWith(
-                          backgroundColor: Color(bg),
-                        ),
-                      );
-                    },
-                  ),
+                  onChanged: (v) => _apply((config) {
+                    final a =
+                        ((config.background.backgroundColor?.toARGB32() ??
+                                0x7A220A35) >>
+                            24) &
+                        0xFF;
+                    final bg = (a << 24) | (v & 0x00FFFFFF);
+                    return config.copyWith(
+                      background: config.background.copyWith(
+                        backgroundColor: Color(bg),
+                      ),
+                    );
+                  }),
                 ),
                 _slider(
                   label: 'Background Opacity',
                   value: backgroundOpacity,
                   min: 0,
                   max: 1,
-                  onChanged: (v) => _apply(
-                    (config) {
-                      final rgb = (config.background.backgroundColor?.toARGB32() ??
-                              0x7A220A35) &
-                          0x00FFFFFF;
-                      final bg = ((255 * v).round() << 24) | rgb;
-                      return config.copyWith(
-                        background: config.background.copyWith(
-                          backgroundColor: Color(bg),
-                        ),
-                      );
-                    },
-                  ),
+                  onChanged: (v) => _apply((config) {
+                    final rgb =
+                        (config.background.backgroundColor?.toARGB32() ??
+                            0x7A220A35) &
+                        0x00FFFFFF;
+                    final bg = ((255 * v).round() << 24) | rgb;
+                    return config.copyWith(
+                      background: config.background.copyWith(
+                        backgroundColor: Color(bg),
+                      ),
+                    );
+                  }),
                 ),
                 SwitchListTile(
                   title: const Text('Text Gradient'),
                   value: gradientEnabled,
                   onChanged: (v) => _apply(
                     (config) => config.copyWith(
-                      gradient:
-                          config.gradient.copyWith(textGradientEnabled: v),
+                      gradient: config.gradient.copyWith(
+                        textGradientEnabled: v,
+                      ),
                     ),
                   ),
                 ),
@@ -437,8 +447,9 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   value: gradientStartColor,
                   onChanged: (v) => _apply(
                     (config) => config.copyWith(
-                      gradient: config.gradient
-                          .copyWith(textGradientStartColor: Color(v)),
+                      gradient: config.gradient.copyWith(
+                        textGradientStartColor: Color(v),
+                      ),
                     ),
                   ),
                 ),
@@ -447,8 +458,9 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   value: gradientEndColor,
                   onChanged: (v) => _apply(
                     (config) => config.copyWith(
-                      gradient:
-                          config.gradient.copyWith(textGradientEndColor: Color(v)),
+                      gradient: config.gradient.copyWith(
+                        textGradientEndColor: Color(v),
+                      ),
                     ),
                   ),
                 ),
@@ -476,8 +488,9 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   onChanged: (v) => _apply(
                     (config) => config.copyWith(
                       layout: config.layout.copyWith(
-                        overlayHeight:
-                            v ? (config.layout.overlayHeight ?? 160.0) : null,
+                        overlayHeight: v
+                            ? (config.layout.overlayHeight ?? 160.0)
+                            : null,
                       ),
                     ),
                   ),
@@ -532,12 +545,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
           child: Text('$label (${value.toStringAsFixed(2)})'),
         ),
         Expanded(
-          child: Slider(
-            value: value,
-            min: min,
-            max: max,
-            onChanged: onChanged,
-          ),
+          child: Slider(value: value, min: min, max: max, onChanged: onChanged),
         ),
       ],
     );

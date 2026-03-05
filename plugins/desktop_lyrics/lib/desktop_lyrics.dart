@@ -435,7 +435,8 @@ class DesktopLyricsStateSnapshot {
           layout == other.layout;
 
   @override
-  int get hashCode => Object.hash(interaction, text, background, gradient, layout);
+  int get hashCode =>
+      Object.hash(interaction, text, background, gradient, layout);
 }
 
 class _DesktopLyricsService {

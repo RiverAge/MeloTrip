@@ -190,5 +190,4 @@ void main() {
     expect(second['lineProgress'], 1.0);
     expect(third['lineProgress'], 1.0);
   });
-
 }
