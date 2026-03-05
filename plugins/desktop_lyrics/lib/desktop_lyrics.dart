@@ -3,24 +3,33 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+/// A token segment for karaoke-style lyric rendering.
+///
+/// [text] is the token content and [progress] is its local highlight progress
+/// in range `0.0..1.0`.
 @immutable
 class DesktopLyricsToken {
+  /// Creates a token segment with text and local progress.
   const DesktopLyricsToken({required this.text, required this.progress});
 
   final String text;
   final double progress;
 }
 
+/// A token with a relative duration used to build karaoke frames.
 @immutable
 class DesktopLyricsTokenTiming {
+  /// Creates a timed token.
   const DesktopLyricsTokenTiming({required this.text, required this.duration});
 
   final String text;
   final Duration duration;
 }
 
+/// A token with absolute time range used to build karaoke frames.
 @immutable
 class DesktopLyricsTimelineToken {
+  /// Creates a timeline token.
   const DesktopLyricsTimelineToken({
     required this.text,
     required this.start,
@@ -32,14 +41,21 @@ class DesktopLyricsTimelineToken {
   final Duration end;
 }
 
+/// A render frame consumed by the desktop lyrics overlay.
 @immutable
 class DesktopLyricsFrame {
+  /// Builds a static line frame.
+  ///
+  /// [lineProgress] defaults to `1.0` to keep text fully visible.
   // `.line` is for static single-line display by default, so progress defaults
   // to fully visible. Callers can pass a custom value when they need sweeping.
   const DesktopLyricsFrame.line(
       {required this.currentLine, this.lineProgress = 1.0})
       : tokens = const [];
 
+  /// Builds a tokenized frame for karaoke rendering.
+  ///
+  /// If [resolvedLine] is omitted, line text is derived from [tokens].
   const DesktopLyricsFrame.tokenized({
     required this.tokens,
     this.lineProgress,
@@ -49,9 +65,12 @@ class DesktopLyricsFrame {
   final String currentLine;
   final double? lineProgress;
   final List<DesktopLyricsToken> tokens;
+
+  /// Returns the effective line text for native rendering.
   String get effectiveLine =>
       tokens.isNotEmpty ? tokens.map((e) => e.text).join() : currentLine;
 
+  /// Creates a frame from relative token durations.
   factory DesktopLyricsFrame.fromTimedTokens({
     required List<DesktopLyricsTokenTiming> tokens,
     required double lineProgress,
@@ -83,6 +102,7 @@ class DesktopLyricsFrame {
     );
   }
 
+  /// Creates a frame from absolute timeline tokens and current playback [position].
   factory DesktopLyricsFrame.fromKaraokeTimeline({
     required Duration position,
     required List<DesktopLyricsTimelineToken> tokens,
@@ -113,8 +133,10 @@ class DesktopLyricsFrame {
   }
 }
 
+/// Interaction options for the overlay window.
 @immutable
 class DesktopLyricsInteractionConfig {
+  /// Creates interaction configuration.
   const DesktopLyricsInteractionConfig({
     required this.enabled,
     required this.clickThrough,
@@ -133,6 +155,7 @@ class DesktopLyricsInteractionConfig {
   @override
   int get hashCode => Object.hash(enabled, clickThrough);
 
+  /// Returns a copy with selective overrides.
   DesktopLyricsInteractionConfig copyWith({
     bool? enabled,
     bool? clickThrough,
@@ -144,8 +167,10 @@ class DesktopLyricsInteractionConfig {
   }
 }
 
+/// Text style configuration for lyrics content.
 @immutable
 class DesktopLyricsTextConfig {
+  /// Creates text style configuration.
   const DesktopLyricsTextConfig({
     required this.fontSize,
     this.textColor,
@@ -191,6 +216,7 @@ class DesktopLyricsTextConfig {
         fontWeight,
       );
 
+  /// Returns a copy with selective overrides.
   DesktopLyricsTextConfig copyWith({
     double? fontSize,
     Color? textColor,
@@ -214,8 +240,10 @@ class DesktopLyricsTextConfig {
   }
 }
 
+/// Background style configuration for the overlay panel.
 @immutable
 class DesktopLyricsBackgroundConfig {
+  /// Creates background style configuration.
   const DesktopLyricsBackgroundConfig({
     this.opacity = 0.96,
     this.backgroundColor,
@@ -241,6 +269,7 @@ class DesktopLyricsBackgroundConfig {
   int get hashCode => Object.hash(
       opacity, backgroundColor, backgroundRadius, backgroundPadding);
 
+  /// Returns a copy with selective overrides.
   DesktopLyricsBackgroundConfig copyWith({
     double? opacity,
     Color? backgroundColor,
@@ -256,8 +285,10 @@ class DesktopLyricsBackgroundConfig {
   }
 }
 
+/// Gradient configuration for lyric text fill.
 @immutable
 class DesktopLyricsGradientConfig {
+  /// Creates gradient style configuration.
   const DesktopLyricsGradientConfig({
     this.textGradientEnabled = false,
     this.textGradientStartColor,
@@ -287,6 +318,7 @@ class DesktopLyricsGradientConfig {
         textGradientAngle,
       );
 
+  /// Returns a copy with selective overrides.
   DesktopLyricsGradientConfig copyWith({
     bool? textGradientEnabled,
     Color? textGradientStartColor,
@@ -303,8 +335,10 @@ class DesktopLyricsGradientConfig {
   }
 }
 
+/// Layout configuration for the overlay window.
 @immutable
 class DesktopLyricsLayoutConfig {
+  /// Creates layout configuration.
   const DesktopLyricsLayoutConfig({this.overlayWidth});
 
   final double? overlayWidth;
@@ -317,6 +351,7 @@ class DesktopLyricsLayoutConfig {
   @override
   int get hashCode => overlayWidth.hashCode;
 
+  /// Returns a copy with selective overrides.
   DesktopLyricsLayoutConfig copyWith({
     double? overlayWidth,
   }) {
@@ -326,8 +361,10 @@ class DesktopLyricsLayoutConfig {
   }
 }
 
+/// Complete configuration object for desktop lyrics overlay.
 @immutable
 class DesktopLyricsConfig {
+  /// Creates full overlay configuration.
   const DesktopLyricsConfig({
     required this.interaction,
     required this.text,
@@ -356,6 +393,7 @@ class DesktopLyricsConfig {
   int get hashCode =>
       Object.hash(interaction, text, background, gradient, layout);
 
+  /// Returns a copy with selective overrides.
   DesktopLyricsConfig copyWith({
     DesktopLyricsInteractionConfig? interaction,
     DesktopLyricsTextConfig? text,
@@ -373,8 +411,10 @@ class DesktopLyricsConfig {
   }
 }
 
+/// Read-only snapshot of current runtime state.
 @immutable
 class DesktopLyricsStateSnapshot {
+  /// Creates a state snapshot.
   const DesktopLyricsStateSnapshot({
     required this.interaction,
     required this.text,
@@ -389,6 +429,7 @@ class DesktopLyricsStateSnapshot {
   final DesktopLyricsGradientConfig gradient;
   final DesktopLyricsLayoutConfig layout;
 
+  /// Converts current snapshot into a full config object.
   DesktopLyricsConfig toConfig() {
     return DesktopLyricsConfig(
       interaction: interaction,
@@ -399,6 +440,7 @@ class DesktopLyricsStateSnapshot {
     );
   }
 
+  /// Creates a config from this snapshot with selective overrides.
   DesktopLyricsConfig copyWith({
     DesktopLyricsInteractionConfig? interaction,
     DesktopLyricsTextConfig? text,
@@ -524,6 +566,7 @@ class _DesktopLyricsService {
 }
 
 class DesktopLyrics extends ChangeNotifier {
+  /// Creates a desktop lyrics controller.
   DesktopLyrics({MethodChannel? channel})
       : _service = _DesktopLyricsService(channel: channel);
 
@@ -562,6 +605,7 @@ class DesktopLyrics extends ChangeNotifier {
   bool _disposed = false;
   Future<void> _configWriteQueue = Future.value();
 
+  /// Current state snapshot used for state-driven UI updates.
   DesktopLyricsStateSnapshot get state => DesktopLyricsStateSnapshot(
         interaction: _config.interaction,
         text: _config.text,
@@ -570,6 +614,9 @@ class DesktopLyrics extends ChangeNotifier {
         layout: _config.layout,
       );
 
+  /// Applies a full config update to native overlay.
+  ///
+  /// Updates are serialized to preserve order when called rapidly.
   Future<void> apply(DesktopLyricsConfig value) {
     if (value == _config) return Future.value();
     _configWriteQueue = _configWriteQueue.then((_) async {
@@ -581,9 +628,12 @@ class DesktopLyrics extends ChangeNotifier {
     return _configWriteQueue;
   }
 
+  /// Renders one lyric frame.
   Future<void> render(DesktopLyricsFrame frame) => _service.render(frame);
 
   @override
+
+  /// Disposes native resources and removes listeners.
   void dispose() {
     if (_disposed) return;
     _disposed = true;

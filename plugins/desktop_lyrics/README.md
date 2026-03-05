@@ -113,6 +113,20 @@ await lyrics.render(frame);
 - `DesktopLyrics.addListener(...)` / `removeListener(...)`
 - `DesktopLyrics.dispose()`
 
+## Publish (Tag + Trusted Publisher)
+
+1. Ensure `pubspec.yaml` version matches your target tag version.
+2. Create and push tag:
+   - `git tag v0.0.1`
+   - `git push origin v0.0.1`
+3. The `desktop_lyrics_publish` workflow will run and publish automatically.
+
+Trusted Publisher setup (one-time on pub.dev):
+
+1. Go to package admin page on pub.dev.
+2. Add trusted publisher for GitHub repository `587626/desktop_lyrics`.
+3. Keep workflow permission `id-token: write` (already configured in `publish.yml`).
+
 ## Notes
 
 - Linux known issue: overlay size/position does not automatically follow system scaling or resolution changes (can occur on both X11 and Wayland).

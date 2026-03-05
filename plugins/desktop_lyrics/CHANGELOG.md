@@ -1,3 +1,9 @@
+## 0.0.2
+
+* Added GitHub Actions tag-based publish workflow for pub.dev.
+* Added public API dartdoc comments to improve pub.dev documentation score.
+* Updated README with Trusted Publisher + tag release instructions.
+
 ## 0.0.1
 
 * Initial desktop floating lyrics implementation (Windows/Linux).
