@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-const Object _kUnset = Object();
-
 @immutable
 class DesktopLyricsToken {
   const DesktopLyricsToken({required this.text, required this.progress});
@@ -307,30 +305,24 @@ class DesktopLyricsGradientConfig {
 
 @immutable
 class DesktopLyricsLayoutConfig {
-  const DesktopLyricsLayoutConfig({this.overlayWidth, this.overlayHeight});
+  const DesktopLyricsLayoutConfig({this.overlayWidth});
 
   final double? overlayWidth;
-  final double? overlayHeight;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is DesktopLyricsLayoutConfig &&
-          overlayWidth == other.overlayWidth &&
-          overlayHeight == other.overlayHeight;
+          overlayWidth == other.overlayWidth;
 
   @override
-  int get hashCode => Object.hash(overlayWidth, overlayHeight);
+  int get hashCode => overlayWidth.hashCode;
 
   DesktopLyricsLayoutConfig copyWith({
     double? overlayWidth,
-    Object? overlayHeight = _kUnset,
   }) {
     return DesktopLyricsLayoutConfig(
       overlayWidth: overlayWidth ?? this.overlayWidth,
-      overlayHeight: identical(overlayHeight, _kUnset)
-          ? this.overlayHeight
-          : overlayHeight as double?,
     );
   }
 }
@@ -502,9 +494,6 @@ class _DesktopLyricsService {
           config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
       'textGradientAngle': config.gradient.textGradientAngle,
       'overlayWidth': config.layout.overlayWidth ?? 980.0,
-      // overlayHeight is omitted from payload to signal auto-height mode.
-      if (config.layout.overlayHeight != null)
-        'overlayHeight': config.layout.overlayHeight,
       'fontFamily': config.text.fontFamily ?? 'Segoe UI',
       'textAlign': _toNativeTextAlign(config.text.textAlign ?? TextAlign.start),
       'fontWeightValue': config.text.fontWeight?.value ?? FontWeight.w400.value,
@@ -569,7 +558,6 @@ class DesktopLyrics extends ChangeNotifier {
     ),
     layout: DesktopLyricsLayoutConfig(
       overlayWidth: 720.0,
-      overlayHeight: null,
     ),
   );
   bool _disposed = false;

@@ -116,7 +116,6 @@ void main() {
         ),
         layout: DesktopLyricsLayoutConfig(
           overlayWidth: 1200.0,
-          overlayHeight: 220.0,
         ),
       ),
     );
@@ -138,7 +137,7 @@ void main() {
     expect(configMap['textGradientEndArgb'], 0xFF00AABB);
     expect(configMap['textGradientAngle'], 35.0);
     expect(configMap['overlayWidth'], 1200.0);
-    expect(configMap['overlayHeight'], 220.0);
+    expect(configMap.containsKey('overlayHeight'), false);
     expect(configMap['fontFamily'], 'Noto Sans CJK');
     expect(configMap['textAlign'], 2);
     expect(configMap['fontWeightValue'], 700);

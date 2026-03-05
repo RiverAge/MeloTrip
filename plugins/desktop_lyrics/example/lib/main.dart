@@ -182,8 +182,6 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
     final opacity = state.background.opacity;
     final strokeWidth = state.text.strokeWidth ?? 0.0;
     final overlayWidth = state.layout.overlayWidth ?? 980.0;
-    final overlayHeight = state.layout.overlayHeight ?? 160.0;
-    final overlayHeightCustomized = state.layout.overlayHeight != null;
     final textAlign = state.text.textAlign ?? TextAlign.start;
     final fontWeight = state.text.fontWeight ?? FontWeight.w400;
     final textColor = state.text.textColor?.toARGB32() ?? 0xFFF2F2F8;
@@ -479,30 +477,6 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   onChanged: (v) => _apply(
                     (config) => config.copyWith(
                       layout: config.layout.copyWith(overlayWidth: v),
-                    ),
-                  ),
-                ),
-                SwitchListTile(
-                  title: const Text('Custom Overlay Height'),
-                  value: overlayHeightCustomized,
-                  onChanged: (v) => _apply(
-                    (config) => config.copyWith(
-                      layout: config.layout.copyWith(
-                        overlayHeight: v
-                            ? (config.layout.overlayHeight ?? 160.0)
-                            : null,
-                      ),
-                    ),
-                  ),
-                ),
-                _slider(
-                  label: 'Overlay Height',
-                  value: overlayHeight,
-                  min: 90,
-                  max: 400,
-                  onChanged: (v) => _apply(
-                    (config) => config.copyWith(
-                      layout: config.layout.copyWith(overlayHeight: v),
                     ),
                   ),
                 ),

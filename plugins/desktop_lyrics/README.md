@@ -19,7 +19,8 @@ Desktop floating lyrics overlay plugin for Flutter.
 ## Platform Support
 
 - Windows: supported
-- Linux: supported (Wayland has limited support; X11 is recommended for full behavior)
+- Linux: supported
+  - Wayland: click-through is currently not supported due to technical limitations.
 - macOS: currently not implemented (calls return safely)
 
 ## Installation
@@ -114,11 +115,4 @@ await lyrics.render(frame);
 
 ## Notes
 
-- The plugin does not persist settings.
-- Host apps should store config and re-apply it on startup.
-- `DesktopLyricsFrame.line` defaults to `lineProgress = 1.0` for visible text.
-- Linux Wayland note: always-on-top, click-through, and window stacking behavior may vary by compositor.
-- Visibility behavior:
-  - Initial state is enabled by default, so `render(...)` can show lyrics directly.
-  - If you apply config with `interaction.enabled=false`, later `render(...)` only updates content and will not show.
-  - Apply config with `interaction.enabled=true` again to make the overlay visible.
+- Linux known issue: overlay size/position does not automatically follow system scaling or resolution changes (can occur on both X11 and Wayland).

@@ -98,7 +98,6 @@ void main() {
         ),
         layout: DesktopLyricsLayoutConfig(
           overlayWidth: 1111,
-          overlayHeight: 222,
         ),
       ),
     );
@@ -123,6 +122,5 @@ void main() {
     expect(state.text.fontFamily, 'Segoe UI');
     expect(state.text.fontWeight, FontWeight.w700);
     expect(state.layout.overlayWidth, 1111);
-    expect(state.layout.overlayHeight, 222);
   });
 }
