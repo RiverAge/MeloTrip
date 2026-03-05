@@ -11,7 +11,7 @@ class _BottomSheetShuffleMode extends StatelessWidget {
           provider: player.playlistModeStream,
           builder: (_, playlistMode) {
             return IconButton(
-              onPressed: playlistMode == .single
+              onPressed: playlistMode == PlaylistMode.single
                   ? null
                   : () async {
                       await player.setShuffleModeEnabled(!player.shuffle);

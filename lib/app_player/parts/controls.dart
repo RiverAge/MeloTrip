@@ -12,7 +12,7 @@ extension PlayerControls on AppPlayer {
     await session.setActive(
       true,
       androidAudioFocusGainType: .gain,
-      androidAudioAttributes: AndroidAudioAttributes(
+      androidAudioAttributes: const AndroidAudioAttributes(
         contentType: .music,
         usage: .media,
       ),

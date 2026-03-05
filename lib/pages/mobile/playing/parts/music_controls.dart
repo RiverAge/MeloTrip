@@ -10,10 +10,10 @@ class _MusicControls extends StatelessWidget {
       elevation: 0,
       content: Text(
         text,
-        textAlign: .center,
+        textAlign: TextAlign.center,
         style: const TextStyle(color: Colors.white),
       ),
-      behavior: .floating,
+      behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(bottom: bottom, left: padding, right: padding),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       duration: const Duration(seconds: 2),
@@ -33,7 +33,7 @@ class _MusicControls extends StatelessWidget {
                 ? null
                 : playQueue.songs[playQueue.index];
             return Row(
-              mainAxisAlignment: .center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AsyncValueBuilder(
                   provider: lyricsProvider(current?.id),
@@ -64,13 +64,13 @@ class _MusicControls extends StatelessWidget {
                         style: TextStyle(
                           height: 1.0,
                           fontSize: 12,
-                          fontWeight: .bold,
+                          fontWeight: FontWeight.bold,
                           color: color,
                         ),
                         textHeightBehavior: const TextHeightBehavior(
                           applyHeightToFirstAscent: false,
                           applyHeightToLastDescent: false,
-                          leadingDistribution: .even,
+                          leadingDistribution: TextLeadingDistribution.even,
                         ),
                       ),
                     );
@@ -90,16 +90,16 @@ class _MusicControls extends StatelessWidget {
                     final playModeSingleText = AppLocalizations.of(
                       context,
                     )!.playModeSingle;
-                    if (player.playlistMode == .loop) {
-                      player.setPlaylistMode(.none);
+                    if (player.playlistMode == PlaylistMode.loop) {
+                      player.setPlaylistMode(PlaylistMode.none);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(_buildSnack(playModeNoneText, size));
-                    } else if (player.playlistMode == .none) {
-                      player.setPlaylistMode(.single);
+                    } else if (player.playlistMode == PlaylistMode.none) {
+                      player.setPlaylistMode(PlaylistMode.single);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(_buildSnack(playModeSingleText, size));
-                    } else if (player.playlistMode == .single) {
-                      player.setPlaylistMode(.loop);
+                    } else if (player.playlistMode == PlaylistMode.single) {
+                      player.setPlaylistMode(PlaylistMode.loop);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(_buildSnack(playModeLoopText, size));
                     }
@@ -108,9 +108,9 @@ class _MusicControls extends StatelessWidget {
                     provider: player.playlistModeStream,
                     builder: (_, playlistMode) {
                       return Icon(switch (playlistMode) {
-                        .none => Icons.queue_music_outlined,
-                        .loop => Icons.repeat,
-                        .single => Icons.repeat_one,
+                        PlaylistMode.none => Icons.queue_music_outlined,
+                        PlaylistMode.loop => Icons.repeat,
+                        PlaylistMode.single => Icons.repeat_one,
                       });
                     },
                   ),

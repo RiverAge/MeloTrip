@@ -85,7 +85,7 @@ extension PlayerInit on AppPlayer {
     _animateVolume(volume / 2);
 
     _duckingTimeout = Timer(const Duration(seconds: 30), () {
-      if (_duckingState == .ducking) {
+      if (_duckingState == DuckingState.ducking) {
         _restoreVolumeAfterDucking();
       }
     });

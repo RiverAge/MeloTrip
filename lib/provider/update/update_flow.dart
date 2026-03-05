@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/app_logic/app_update_service.dart';
 
 final appUpdateServiceProvider = Provider<AppUpdateService>((ref) {
@@ -14,7 +15,7 @@ class UpdateFlowState {
     this.totalBytes = 0,
     this.downloadBytesPerSecond = 0,
     this.etaSeconds,
-    this.stage = .idle,
+    this.stage = UpdateUiStage.idle,
   });
 
   final bool isChecking;
@@ -95,7 +96,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
       totalBytes: update.fileSize,
       downloadBytesPerSecond: 0,
       clearEtaSeconds: true,
-      stage: .downloading,
+      stage: UpdateUiStage.downloading,
     );
     var lastReceived = 0;
     DateTime? lastTick;
@@ -104,12 +105,12 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
       final apkFile = await _service.downloadAndVerifyApk(
         update: update,
         onStageChanged: (stage) {
-          if (stage == .downloading) {
-            state = state.copyWith(stage: .downloading);
+          if (stage == UpdateDownloadStage.downloading) {
+            state = state.copyWith(stage: UpdateUiStage.downloading);
             return;
           }
           state = state.copyWith(
-            stage: .verifying,
+            stage: UpdateUiStage.verifying,
             downloadBytesPerSecond: 0,
             clearEtaSeconds: true,
           );
@@ -157,7 +158,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
             : update.fileSize,
       );
       state = state.copyWith(
-        stage: .openingInstaller,
+        stage: UpdateUiStage.openingInstaller,
         downloadBytesPerSecond: 0,
         clearEtaSeconds: true,
       );
@@ -168,7 +169,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
     } finally {
       state = state.copyWith(
         isUpdating: false,
-        stage: .idle,
+        stage: UpdateUiStage.idle,
         downloadBytesPerSecond: 0,
         clearEtaSeconds: true,
       );

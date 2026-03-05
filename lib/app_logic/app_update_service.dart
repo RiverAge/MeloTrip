@@ -142,7 +142,7 @@ class AppUpdateService {
       await file.delete();
     }
 
-    onStageChanged?.call(.downloading);
+    onStageChanged?.call(UpdateDownloadStage.downloading);
     await Dio().download(
       update.downloadUrl,
       filePath,
@@ -174,7 +174,7 @@ class AppUpdateService {
       );
     }
 
-    onStageChanged?.call(.verifying);
+    onStageChanged?.call(UpdateDownloadStage.verifying);
     final checksum = update.sha256.trim().toLowerCase();
     if (checksum.isNotEmpty) {
       final digest = await sha256.bind(file.openRead()).first;

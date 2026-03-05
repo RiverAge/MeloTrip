@@ -20,43 +20,43 @@ class AppThemePage extends StatelessWidget {
           return ListView(
             children: [
               ListTile(
-                onTap: () => _onTap(ref, .system),
+                onTap: () => _onTap(ref, ThemeMode.system),
                 leading: Icon(
-                  config.theme == .system
+                  config.theme == ThemeMode.system
                       ? Icons.auto_mode
                       : Icons.auto_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.systemDefault),
                 trailing:
-                    config.theme == .system
+                    config.theme == ThemeMode.system
                         ? const Icon(Icons.check)
                         : null,
               ),
               Divider(),
               ListTile(
-                onTap: () => _onTap(ref, .light),
+                onTap: () => _onTap(ref, ThemeMode.light),
                 leading: Icon(
-                  config.theme == .light
+                  config.theme == ThemeMode.light
                       ? Icons.light_mode
                       : Icons.light_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.themeLight),
                 trailing:
-                    config.theme == .light
+                    config.theme == ThemeMode.light
                         ? const Icon(Icons.check)
                         : null,
               ),
               Divider(),
               ListTile(
-                onTap: () => _onTap(ref, .dark),
+                onTap: () => _onTap(ref, ThemeMode.dark),
                 leading: Icon(
-                  config.theme == .dark
+                  config.theme == ThemeMode.dark
                       ? Icons.dark_mode
                       : Icons.dark_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.themeDark),
                 trailing:
-                    config.theme == .dark
+                    config.theme == ThemeMode.dark
                         ? const Icon(Icons.check)
                         : null,
               ),
