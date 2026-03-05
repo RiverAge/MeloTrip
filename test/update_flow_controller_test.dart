@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +10,6 @@ class _FakeUpdateService extends AppUpdateService {
     this.installSupported = true,
     this.canInstallPermission = true,
     this.downloadError,
-    this.installError,
     this.downloadDelay = Duration.zero,
   }) : super(checkUrl: 'https://example.com/check');
 
@@ -19,7 +17,6 @@ class _FakeUpdateService extends AppUpdateService {
   final bool installSupported;
   final bool canInstallPermission;
   final Object? downloadError;
-  final Object? installError;
   final Duration downloadDelay;
 
   bool openInstallSettingsCalled = false;
@@ -68,9 +65,6 @@ class _FakeUpdateService extends AppUpdateService {
 
   @override
   Future<void> installDownloadedPackage(File file) async {
-    if (installError != null) {
-      throw installError!;
-    }
     installCalled = true;
   }
 }
