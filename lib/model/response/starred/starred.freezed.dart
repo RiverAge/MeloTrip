@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StarredEntity {
 
- List<SongEntity>? get song; List<AlbumEntity>? get album;
+ List<SongEntity>? get song; List<AlbumEntity>? get album; List<ArtistEntity>? get artist;
 /// Create a copy of StarredEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $StarredEntityCopyWith<StarredEntity> get copyWith => _$StarredEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StarredEntity&&const DeepCollectionEquality().equals(other.song, song)&&const DeepCollectionEquality().equals(other.album, album));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StarredEntity&&const DeepCollectionEquality().equals(other.song, song)&&const DeepCollectionEquality().equals(other.album, album)&&const DeepCollectionEquality().equals(other.artist, artist));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(song),const DeepCollectionEquality().hash(album));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(song),const DeepCollectionEquality().hash(album),const DeepCollectionEquality().hash(artist));
 
 @override
 String toString() {
-  return 'StarredEntity(song: $song, album: $album)';
+  return 'StarredEntity(song: $song, album: $album, artist: $artist)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $StarredEntityCopyWith<$Res>  {
   factory $StarredEntityCopyWith(StarredEntity value, $Res Function(StarredEntity) _then) = _$StarredEntityCopyWithImpl;
 @useResult
 $Res call({
- List<SongEntity>? song, List<AlbumEntity>? album
+ List<SongEntity>? song, List<AlbumEntity>? album, List<ArtistEntity>? artist
 });
 
 
@@ -65,11 +65,12 @@ class _$StarredEntityCopyWithImpl<$Res>
 
 /// Create a copy of StarredEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? song = freezed,Object? album = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? song = freezed,Object? album = freezed,Object? artist = freezed,}) {
   return _then(_self.copyWith(
 song: freezed == song ? _self.song : song // ignore: cast_nullable_to_non_nullable
 as List<SongEntity>?,album: freezed == album ? _self.album : album // ignore: cast_nullable_to_non_nullable
-as List<AlbumEntity>?,
+as List<AlbumEntity>?,artist: freezed == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
+as List<ArtistEntity>?,
   ));
 }
 
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<SongEntity>? song,  List<AlbumEntity>? album)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<SongEntity>? song,  List<AlbumEntity>? album,  List<ArtistEntity>? artist)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StarredEntity() when $default != null:
-return $default(_that.song,_that.album);case _:
+return $default(_that.song,_that.album,_that.artist);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.song,_that.album);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<SongEntity>? song,  List<AlbumEntity>? album)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<SongEntity>? song,  List<AlbumEntity>? album,  List<ArtistEntity>? artist)  $default,) {final _that = this;
 switch (_that) {
 case _StarredEntity():
-return $default(_that.song,_that.album);case _:
+return $default(_that.song,_that.album,_that.artist);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.song,_that.album);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<SongEntity>? song,  List<AlbumEntity>? album)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<SongEntity>? song,  List<AlbumEntity>? album,  List<ArtistEntity>? artist)?  $default,) {final _that = this;
 switch (_that) {
 case _StarredEntity() when $default != null:
-return $default(_that.song,_that.album);case _:
+return $default(_that.song,_that.album,_that.artist);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.song,_that.album);case _:
 @JsonSerializable()
 
 class _StarredEntity implements StarredEntity {
-  const _StarredEntity({final  List<SongEntity>? song, final  List<AlbumEntity>? album}): _song = song,_album = album;
+  const _StarredEntity({final  List<SongEntity>? song, final  List<AlbumEntity>? album, final  List<ArtistEntity>? artist}): _song = song,_album = album,_artist = artist;
   factory _StarredEntity.fromJson(Map<String, dynamic> json) => _$StarredEntityFromJson(json);
 
  final  List<SongEntity>? _song;
@@ -231,6 +232,15 @@ class _StarredEntity implements StarredEntity {
   return EqualUnmodifiableListView(value);
 }
 
+ final  List<ArtistEntity>? _artist;
+@override List<ArtistEntity>? get artist {
+  final value = _artist;
+  if (value == null) return null;
+  if (_artist is EqualUnmodifiableListView) return _artist;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of StarredEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StarredEntity&&const DeepCollectionEquality().equals(other._song, _song)&&const DeepCollectionEquality().equals(other._album, _album));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StarredEntity&&const DeepCollectionEquality().equals(other._song, _song)&&const DeepCollectionEquality().equals(other._album, _album)&&const DeepCollectionEquality().equals(other._artist, _artist));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_song),const DeepCollectionEquality().hash(_album));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_song),const DeepCollectionEquality().hash(_album),const DeepCollectionEquality().hash(_artist));
 
 @override
 String toString() {
-  return 'StarredEntity(song: $song, album: $album)';
+  return 'StarredEntity(song: $song, album: $album, artist: $artist)';
 }
 
 
@@ -265,7 +275,7 @@ abstract mixin class _$StarredEntityCopyWith<$Res> implements $StarredEntityCopy
   factory _$StarredEntityCopyWith(_StarredEntity value, $Res Function(_StarredEntity) _then) = __$StarredEntityCopyWithImpl;
 @override @useResult
 $Res call({
- List<SongEntity>? song, List<AlbumEntity>? album
+ List<SongEntity>? song, List<AlbumEntity>? album, List<ArtistEntity>? artist
 });
 
 
@@ -282,11 +292,12 @@ class __$StarredEntityCopyWithImpl<$Res>
 
 /// Create a copy of StarredEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? song = freezed,Object? album = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? song = freezed,Object? album = freezed,Object? artist = freezed,}) {
   return _then(_StarredEntity(
 song: freezed == song ? _self._song : song // ignore: cast_nullable_to_non_nullable
 as List<SongEntity>?,album: freezed == album ? _self._album : album // ignore: cast_nullable_to_non_nullable
-as List<AlbumEntity>?,
+as List<AlbumEntity>?,artist: freezed == artist ? _self._artist : artist // ignore: cast_nullable_to_non_nullable
+as List<ArtistEntity>?,
   ));
 }
 

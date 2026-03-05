@@ -6,177 +6,172 @@ part of 'album_detail.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumDetailHash() => r'271e6bdebbf7054d4e35a3985048777e570a7933';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [albumDetail].
 @ProviderFor(albumDetail)
-const albumDetailProvider = AlbumDetailFamily();
+final albumDetailProvider = AlbumDetailFamily._();
 
-/// See also [albumDetail].
-class AlbumDetailFamily extends Family<AsyncValue<SubsonicResponse?>> {
-  /// See also [albumDetail].
-  const AlbumDetailFamily();
+final class AlbumDetailProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SubsonicResponse?>,
+          SubsonicResponse?,
+          FutureOr<SubsonicResponse?>
+        >
+    with
+        $FutureModifier<SubsonicResponse?>,
+        $FutureProvider<SubsonicResponse?> {
+  AlbumDetailProvider._({
+    required AlbumDetailFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'albumDetailProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [albumDetail].
-  AlbumDetailProvider call(String? albumId) {
-    return AlbumDetailProvider(albumId);
+  @override
+  String debugGetCreateSourceHash() => _$albumDetailHash();
+
+  @override
+  String toString() {
+    return r'albumDetailProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AlbumDetailProvider getProviderOverride(
-    covariant AlbumDetailProvider provider,
-  ) {
-    return call(provider.albumId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  $FutureProviderElement<SubsonicResponse?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'albumDetailProvider';
-}
-
-/// See also [albumDetail].
-class AlbumDetailProvider extends AutoDisposeFutureProvider<SubsonicResponse?> {
-  /// See also [albumDetail].
-  AlbumDetailProvider(String? albumId)
-    : this._internal(
-        (ref) => albumDetail(ref as AlbumDetailRef, albumId),
-        from: albumDetailProvider,
-        name: r'albumDetailProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$albumDetailHash,
-        dependencies: AlbumDetailFamily._dependencies,
-        allTransitiveDependencies: AlbumDetailFamily._allTransitiveDependencies,
-        albumId: albumId,
-      );
-
-  AlbumDetailProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.albumId,
-  }) : super.internal();
-
-  final String? albumId;
-
-  @override
-  Override overrideWith(
-    FutureOr<SubsonicResponse?> Function(AlbumDetailRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: AlbumDetailProvider._internal(
-        (ref) => create(ref as AlbumDetailRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        albumId: albumId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<SubsonicResponse?> createElement() {
-    return _AlbumDetailProviderElement(this);
+  FutureOr<SubsonicResponse?> create(Ref ref) {
+    final argument = this.argument as String?;
+    return albumDetail(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is AlbumDetailProvider && other.albumId == albumId;
+    return other is AlbumDetailProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, albumId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin AlbumDetailRef on AutoDisposeFutureProviderRef<SubsonicResponse?> {
-  /// The parameter `albumId` of this provider.
-  String? get albumId;
-}
+String _$albumDetailHash() => r'271e6bdebbf7054d4e35a3985048777e570a7933';
 
-class _AlbumDetailProviderElement
-    extends AutoDisposeFutureProviderElement<SubsonicResponse?>
-    with AlbumDetailRef {
-  _AlbumDetailProviderElement(super.provider);
+final class AlbumDetailFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {
+  AlbumDetailFamily._()
+    : super(
+        retry: null,
+        name: r'albumDetailProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AlbumDetailProvider call(String? albumId) =>
+      AlbumDetailProvider._(argument: albumId, from: this);
 
   @override
-  String? get albumId => (origin as AlbumDetailProvider).albumId;
+  String toString() => r'albumDetailProvider';
+}
+
+@ProviderFor(AlbumFavorite)
+final albumFavoriteProvider = AlbumFavoriteProvider._();
+
+final class AlbumFavoriteProvider
+    extends $AsyncNotifierProvider<AlbumFavorite, SubsonicResponse?> {
+  AlbumFavoriteProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'albumFavoriteProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$albumFavoriteHash();
+
+  @$internal
+  @override
+  AlbumFavorite create() => AlbumFavorite();
 }
 
 String _$albumFavoriteHash() => r'1e34f0843dfb477310a62b2693a5b95ff6483b0a';
 
-/// See also [AlbumFavorite].
-@ProviderFor(AlbumFavorite)
-final albumFavoriteProvider =
-    AutoDisposeAsyncNotifierProvider<AlbumFavorite, SubsonicResponse?>.internal(
-      AlbumFavorite.new,
-      name: r'albumFavoriteProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$albumFavoriteHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$AlbumFavorite extends $AsyncNotifier<SubsonicResponse?> {
+  FutureOr<SubsonicResponse?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
+              AsyncValue<SubsonicResponse?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
 
-typedef _$AlbumFavorite = AutoDisposeAsyncNotifier<SubsonicResponse?>;
+@ProviderFor(AlbumRating)
+final albumRatingProvider = AlbumRatingProvider._();
+
+final class AlbumRatingProvider
+    extends $AsyncNotifierProvider<AlbumRating, SubsonicResponse?> {
+  AlbumRatingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'albumRatingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$albumRatingHash();
+
+  @$internal
+  @override
+  AlbumRating create() => AlbumRating();
+}
+
 String _$albumRatingHash() => r'b4c0b56a734ac43cd5c5694606093249765737d4';
 
-/// See also [AlbumRating].
-@ProviderFor(AlbumRating)
-final albumRatingProvider =
-    AutoDisposeAsyncNotifierProvider<AlbumRating, SubsonicResponse?>.internal(
-      AlbumRating.new,
-      name: r'albumRatingProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$albumRatingHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$AlbumRating = AutoDisposeAsyncNotifier<SubsonicResponse?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$AlbumRating extends $AsyncNotifier<SubsonicResponse?> {
+  FutureOr<SubsonicResponse?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
+              AsyncValue<SubsonicResponse?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

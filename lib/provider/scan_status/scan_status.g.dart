@@ -6,23 +6,46 @@ part of 'scan_status.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$scanStatusHash() => r'b16d39a11153a2f07ce7396a024279f1f0fa62f6';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [scanStatus].
 @ProviderFor(scanStatus)
-final scanStatusProvider =
-    AutoDisposeFutureProvider<SubsonicResponse?>.internal(
-      scanStatus,
-      name: r'scanStatusProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$scanStatusHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final scanStatusProvider = ScanStatusProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ScanStatusRef = AutoDisposeFutureProviderRef<SubsonicResponse?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ScanStatusProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SubsonicResponse?>,
+          SubsonicResponse?,
+          FutureOr<SubsonicResponse?>
+        >
+    with
+        $FutureModifier<SubsonicResponse?>,
+        $FutureProvider<SubsonicResponse?> {
+  ScanStatusProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'scanStatusProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$scanStatusHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<SubsonicResponse?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<SubsonicResponse?> create(Ref ref) {
+    return scanStatus(ref);
+  }
+}
+
+String _$scanStatusHash() => r'b16d39a11153a2f07ce7396a024279f1f0fa62f6';

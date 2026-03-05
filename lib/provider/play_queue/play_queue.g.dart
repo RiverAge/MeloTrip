@@ -6,22 +6,46 @@ part of 'play_queue.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$playQueueHash() => r'904c12f36b62560a3c72ef2a339997fbf79c6941';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [playQueue].
 @ProviderFor(playQueue)
-final playQueueProvider = AutoDisposeFutureProvider<SubsonicResponse?>.internal(
-  playQueue,
-  name: r'playQueueProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$playQueueHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final playQueueProvider = PlayQueueProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef PlayQueueRef = AutoDisposeFutureProviderRef<SubsonicResponse?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class PlayQueueProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SubsonicResponse?>,
+          SubsonicResponse?,
+          FutureOr<SubsonicResponse?>
+        >
+    with
+        $FutureModifier<SubsonicResponse?>,
+        $FutureProvider<SubsonicResponse?> {
+  PlayQueueProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'playQueueProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$playQueueHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<SubsonicResponse?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<SubsonicResponse?> create(Ref ref) {
+    return playQueue(ref);
+  }
+}
+
+String _$playQueueHash() => r'904c12f36b62560a3c72ef2a339997fbf79c6941';

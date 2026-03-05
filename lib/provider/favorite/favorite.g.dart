@@ -6,21 +6,50 @@ part of 'favorite.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(Favorite)
+final favoriteProvider = FavoriteProvider._();
+
+final class FavoriteProvider
+    extends $AsyncNotifierProvider<Favorite, SubsonicResponse?> {
+  FavoriteProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'favoriteProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$favoriteHash();
+
+  @$internal
+  @override
+  Favorite create() => Favorite();
+}
+
 String _$favoriteHash() => r'691bda688e85a148ec4f8499c00033474e851f8f';
 
-/// See also [Favorite].
-@ProviderFor(Favorite)
-final favoriteProvider =
-    AutoDisposeAsyncNotifierProvider<Favorite, SubsonicResponse?>.internal(
-      Favorite.new,
-      name: r'favoriteProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$favoriteHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$Favorite = AutoDisposeAsyncNotifier<SubsonicResponse?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$Favorite extends $AsyncNotifier<SubsonicResponse?> {
+  FutureOr<SubsonicResponse?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
+              AsyncValue<SubsonicResponse?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

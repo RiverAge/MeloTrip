@@ -6,21 +6,49 @@ part of 'app_player.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appPlayerHandlerHash() => r'2a013aad2f4f1548df21998ad31564757c091fc1';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [AppPlayerHandler].
 @ProviderFor(AppPlayerHandler)
-final appPlayerHandlerProvider =
-    AsyncNotifierProvider<AppPlayerHandler, AppPlayer?>.internal(
-      AppPlayerHandler.new,
-      name: r'appPlayerHandlerProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$appPlayerHandlerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final appPlayerHandlerProvider = AppPlayerHandlerProvider._();
 
-typedef _$AppPlayerHandler = AsyncNotifier<AppPlayer?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AppPlayerHandlerProvider
+    extends $AsyncNotifierProvider<AppPlayerHandler, AppPlayer?> {
+  AppPlayerHandlerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appPlayerHandlerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appPlayerHandlerHash();
+
+  @$internal
+  @override
+  AppPlayerHandler create() => AppPlayerHandler();
+}
+
+String _$appPlayerHandlerHash() => r'ef6c289d1c02f151097426b5409b9e734376c580';
+
+abstract class _$AppPlayerHandler extends $AsyncNotifier<AppPlayer?> {
+  FutureOr<AppPlayer?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<AppPlayer?>, AppPlayer?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<AppPlayer?>, AppPlayer?>,
+              AsyncValue<AppPlayer?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

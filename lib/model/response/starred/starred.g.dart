@@ -14,7 +14,14 @@ _StarredEntity _$StarredEntityFromJson(Map<String, dynamic> json) =>
       album: (json['album'] as List<dynamic>?)
           ?.map((e) => AlbumEntity.fromJson(e as Map<String, dynamic>))
           .toList(),
+      artist: (json['artist'] as List<dynamic>?)
+          ?.map((e) => ArtistEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$StarredEntityToJson(_StarredEntity instance) =>
-    <String, dynamic>{'song': instance.song, 'album': instance.album};
+    <String, dynamic>{
+      'song': instance.song,
+      'album': instance.album,
+      'artist': instance.artist,
+    };

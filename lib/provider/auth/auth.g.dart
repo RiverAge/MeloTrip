@@ -6,214 +6,172 @@ part of 'auth.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginHash() => r'a2b67028a639fe2fbec4c5960142166cc48053b1';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(CurrentUser)
+final currentUserProvider = CurrentUserProvider._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
+final class CurrentUserProvider
+    extends $AsyncNotifierProvider<CurrentUser, AuthUser?> {
+  CurrentUserProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentUserProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  @override
+  String debugGetCreateSourceHash() => _$currentUserHash();
+
+  @$internal
+  @override
+  CurrentUser create() => CurrentUser();
+}
+
+String _$currentUserHash() => r'8c1bb12127e1cf51a084648957c730d329dd2e0c';
+
+abstract class _$CurrentUser extends $AsyncNotifier<AuthUser?> {
+  FutureOr<AuthUser?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<AuthUser?>, AuthUser?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<AuthUser?>, AuthUser?>,
+              AsyncValue<AuthUser?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
   }
 }
 
-/// See also [login].
 @ProviderFor(login)
-const loginProvider = LoginFamily();
+final loginProvider = LoginFamily._();
 
-/// See also [login].
-class LoginFamily extends Family<AsyncValue<AuthUser?>> {
-  /// See also [login].
-  const LoginFamily();
-
-  /// See also [login].
-  LoginProvider call({
-    required String host,
-    required String username,
-    required String password,
-  }) {
-    return LoginProvider(host: host, username: username, password: password);
-  }
-
-  @override
-  LoginProvider getProviderOverride(covariant LoginProvider provider) {
-    return call(
-      host: provider.host,
-      username: provider.username,
-      password: provider.password,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loginProvider';
-}
-
-/// See also [login].
-class LoginProvider extends AutoDisposeFutureProvider<AuthUser?> {
-  /// See also [login].
-  LoginProvider({
-    required String host,
-    required String username,
-    required String password,
-  }) : this._internal(
-         (ref) => login(
-           ref as LoginRef,
-           host: host,
-           username: username,
-           password: password,
-         ),
-         from: loginProvider,
+final class LoginProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<AuthUser?>,
+          AuthUser?,
+          FutureOr<AuthUser?>
+        >
+    with $FutureModifier<AuthUser?>, $FutureProvider<AuthUser?> {
+  LoginProvider._({
+    required LoginFamily super.from,
+    required ({String host, String username, String password}) super.argument,
+  }) : super(
+         retry: null,
          name: r'loginProvider',
-         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-             ? null
-             : _$loginHash,
-         dependencies: LoginFamily._dependencies,
-         allTransitiveDependencies: LoginFamily._allTransitiveDependencies,
-         host: host,
-         username: username,
-         password: password,
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
        );
 
-  LoginProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.host,
-    required this.username,
-    required this.password,
-  }) : super.internal();
-
-  final String host;
-  final String username;
-  final String password;
+  @override
+  String debugGetCreateSourceHash() => _$loginHash();
 
   @override
-  Override overrideWith(
-    FutureOr<AuthUser?> Function(LoginRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: LoginProvider._internal(
-        (ref) => create(ref as LoginRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        host: host,
-        username: username,
-        password: password,
-      ),
-    );
+  String toString() {
+    return r'loginProvider'
+        ''
+        '$argument';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<AuthUser?> createElement() {
-    return _LoginProviderElement(this);
+  $FutureProviderElement<AuthUser?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<AuthUser?> create(Ref ref) {
+    final argument =
+        this.argument as ({String host, String username, String password});
+    return login(
+      ref,
+      host: argument.host,
+      username: argument.username,
+      password: argument.password,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is LoginProvider &&
-        other.host == host &&
-        other.username == username &&
-        other.password == password;
+    return other is LoginProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, host.hashCode);
-    hash = _SystemHash.combine(hash, username.hashCode);
-    hash = _SystemHash.combine(hash, password.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LoginRef on AutoDisposeFutureProviderRef<AuthUser?> {
-  /// The parameter `host` of this provider.
-  String get host;
+String _$loginHash() => r'a2b67028a639fe2fbec4c5960142166cc48053b1';
 
-  /// The parameter `username` of this provider.
-  String get username;
+final class LoginFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<AuthUser?>,
+          ({String host, String username, String password})
+        > {
+  LoginFamily._()
+    : super(
+        retry: null,
+        name: r'loginProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
-  /// The parameter `password` of this provider.
-  String get password;
+  LoginProvider call({
+    required String host,
+    required String username,
+    required String password,
+  }) => LoginProvider._(
+    argument: (host: host, username: username, password: password),
+    from: this,
+  );
+
+  @override
+  String toString() => r'loginProvider';
 }
 
-class _LoginProviderElement extends AutoDisposeFutureProviderElement<AuthUser?>
-    with LoginRef {
-  _LoginProviderElement(super.provider);
+@ProviderFor(logout)
+final logoutProvider = LogoutProvider._();
+
+final class LogoutProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+    with $FutureModifier<void>, $FutureProvider<void> {
+  LogoutProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'logoutProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  String get host => (origin as LoginProvider).host;
+  String debugGetCreateSourceHash() => _$logoutHash();
+
+  @$internal
   @override
-  String get username => (origin as LoginProvider).username;
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
   @override
-  String get password => (origin as LoginProvider).password;
+  FutureOr<void> create(Ref ref) {
+    return logout(ref);
+  }
 }
 
 String _$logoutHash() => r'572745a7e4d85a7f18f536b25647056bbdb491d9';
-
-/// See also [logout].
-@ProviderFor(logout)
-final logoutProvider = AutoDisposeFutureProvider<void>.internal(
-  logout,
-  name: r'logoutProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$logoutHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LogoutRef = AutoDisposeFutureProviderRef<void>;
-String _$currentUserHash() => r'8c1bb12127e1cf51a084648957c730d329dd2e0c';
-
-/// See also [CurrentUser].
-@ProviderFor(CurrentUser)
-final currentUserProvider =
-    AutoDisposeAsyncNotifierProvider<CurrentUser, AuthUser?>.internal(
-      CurrentUser.new,
-      name: r'currentUserProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$currentUserHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$CurrentUser = AutoDisposeAsyncNotifier<AuthUser?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
