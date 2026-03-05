@@ -25,28 +25,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
   FlutterWindow window(project);
-  POINT cursor_pos{};
-  GetCursorPos(&cursor_pos);
-  HMONITOR monitor = MonitorFromPoint(cursor_pos, MONITOR_DEFAULTTONEAREST);
-  MONITORINFO monitor_info{};
-  monitor_info.cbSize = sizeof(MONITORINFO);
-  GetMonitorInfo(monitor, &monitor_info);
-  const RECT work = monitor_info.rcWork;
-  const int screen_width = work.right - work.left;
-  const int screen_height = work.bottom - work.top;
-  const int default_width = 1360;
-  const int default_height = 860;
-  const int width =
-      default_width < screen_width ? default_width : screen_width;
-  const int height =
-      default_height < screen_height ? default_height : screen_height;
-  const int left = work.left +
-      ((screen_width - width) > 0 ? (screen_width - width) / 2 : 0);
-  const int top = work.top +
-      ((screen_height - height) > 0 ? (screen_height - height) / 2 : 0);
-
-  Win32Window::Point origin(left, top);
-  Win32Window::Size size(width, height);
+  Win32Window::Point origin(10, 10);
+  Win32Window::Size size(1360, 860);
   if (!window.Create(L"MeloTrip", origin, size)) {
     return EXIT_FAILURE;
   }
