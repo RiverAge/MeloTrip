@@ -1,6 +1,6 @@
 name: desktop_lyrics
 description: "Desktop floating lyrics overlay for Flutter with karaoke progress and runtime styling (Windows/Linux)."
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/587626/desktop_lyrics
 repository: https://github.com/587626/desktop_lyrics
 issue_tracker: https://github.com/587626/desktop_lyrics/issues

@@ -1,4 +1,4 @@
-## 0.0.2
+## 0.0.3
 
 * Added GitHub Actions tag-based publish workflow for pub.dev.
 * Added public API dartdoc comments to improve pub.dev documentation score.
