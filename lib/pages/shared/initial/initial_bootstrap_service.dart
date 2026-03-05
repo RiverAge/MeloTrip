@@ -81,7 +81,9 @@ class InitialBootstrapService {
   }
 }
 
-final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((ref) {
+final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
+  ref,
+) {
   Future<PlayQueueEntity?> loadPlayQueue() async {
     final api = await ref.read(apiProvider.future);
     final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
@@ -119,9 +121,8 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((ref) 
   );
 });
 
-final initialBootstrapResultProvider = FutureProvider.autoDispose<
-  InitialBootstrapResult
->((ref) {
-  final service = ref.read(initialBootstrapServiceProvider);
-  return service.bootstrap();
-});
+final initialBootstrapResultProvider =
+    FutureProvider.autoDispose<InitialBootstrapResult>((ref) {
+      final service = ref.read(initialBootstrapServiceProvider);
+      return service.bootstrap();
+    });

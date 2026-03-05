@@ -17,13 +17,12 @@ class EditPlaylistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
-        provider: playlistDetailProvider(playlistId),
-        builder: (context, data, ref) {
-          final playlist = data.subsonicResponse?.playlist;
-          if (playlist == null) return const Center(child: NoData());
-          return _EditPlaylistBuilder(
-            playlist: playlist,
-          );
-        });
+      provider: playlistDetailProvider(playlistId),
+      builder: (context, data, ref) {
+        final playlist = data.subsonicResponse?.playlist;
+        if (playlist == null) return const Center(child: NoData());
+        return _EditPlaylistBuilder(playlist: playlist);
+      },
+    );
   }
 }

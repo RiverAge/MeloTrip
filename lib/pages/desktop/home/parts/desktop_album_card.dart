@@ -27,7 +27,9 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: DesktopMotionTokens.medium);
+      vsync: this,
+      duration: DesktopMotionTokens.medium,
+    );
     _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -70,11 +72,14 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final overlayBackground = Colors.black.withValues(alpha: isDark ? .52 : .46);
+    final overlayBackground = Colors.black.withValues(
+      alpha: isDark ? .52 : .46,
+    );
     final overlayForeground = Colors.white.withValues(alpha: .94);
     final overlayForegroundMuted = Colors.white.withValues(alpha: .82);
-    final mainButtonBackground =
-        Colors.white.withValues(alpha: isDark ? .98 : .94);
+    final mainButtonBackground = Colors.white.withValues(
+      alpha: isDark ? .98 : .94,
+    );
     final mainButtonForeground = Colors.black.withValues(alpha: .9);
     final secondaryButtonBackground = Colors.white.withValues(alpha: .24);
     final isStarred = widget.album.starred != null;
@@ -285,11 +290,7 @@ class _ActionCircle extends StatelessWidget {
           child: SizedBox(
             width: size,
             height: size,
-            child: Icon(
-              icon,
-              size: size * 0.6,
-              color: foreground,
-            ),
+            child: Icon(icon, size: size * 0.6, color: foreground),
           ),
         ),
       ),

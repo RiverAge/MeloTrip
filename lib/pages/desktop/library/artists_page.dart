@@ -16,14 +16,9 @@ class DesktopArtistsPage extends ConsumerWidget {
       body: Column(
         crossAxisAlignment: .start,
         children: [
-          _PageHeader(
-            title: l10n.artist,
-            count: 521,
-          ),
+          _PageHeader(title: l10n.artist, count: 521),
           _Toolbar(),
-          Expanded(
-            child: _ArtistGrid(),
-          ),
+          Expanded(child: _ArtistGrid()),
         ],
       ),
     );
@@ -54,7 +49,11 @@ class _PageHeader extends StatelessWidget {
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Text(
@@ -79,10 +78,7 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -111,9 +107,24 @@ class _Toolbar extends StatelessWidget {
 
 class _ArtistGrid extends StatelessWidget {
   final dummyArtists = [
-    '伯远', '韩寒', '张铠麟', '丁子高', '谢军', '钟易轩',
-    '曾小敏', '周厚安', 'Robin', 'Taylor Swift', '天空之城音乐制作', '信',
-    '信泽宣明', '王赫野', '吕薇', '张文成', '张雨生', 'Win and Woo'
+    '伯远',
+    '韩寒',
+    '张铠麟',
+    '丁子高',
+    '谢军',
+    '钟易轩',
+    '曾小敏',
+    '周厚安',
+    'Robin',
+    'Taylor Swift',
+    '天空之城音乐制作',
+    '信',
+    '信泽宣明',
+    '王赫野',
+    '吕薇',
+    '张文成',
+    '张雨生',
+    'Win and Woo',
   ];
 
   @override
@@ -147,7 +158,9 @@ class _ArtistCard extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .3),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: .3,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -164,9 +177,7 @@ class _ArtistCard extends StatelessWidget {
           name,
           maxLines: 1,
           overflow: .ellipsis,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: .bold,
-          ),
+          style: theme.textTheme.titleSmall?.copyWith(fontWeight: .bold),
         ),
       ],
     );

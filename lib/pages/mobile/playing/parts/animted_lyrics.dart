@@ -34,7 +34,10 @@ class _AnimtedLyrics extends StatelessWidget {
             lyricsLines: lines,
             textAlign: .center,
             crossAxisAlignment: .center,
-            itemPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            itemPadding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 12,
+            ),
             primaryFontSize: 20,
             secondaryFontSize: 14,
             blurFactor: 2,

@@ -13,8 +13,9 @@ String _$imageCacheHash() => r'24bb57c0e89b957d0f5e62e560b40636edccea00';
 final imageCacheProvider = AutoDisposeFutureProvider<double>.internal(
   imageCache,
   name: r'imageCacheProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$imageCacheHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$imageCacheHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -27,8 +28,9 @@ String _$streamCacheHash() => r'adbcda7394d3a5e78ff01090d262896cec320d56';
 final streamCacheProvider = AutoDisposeFutureProvider<double>.internal(
   streamCache,
   name: r'streamCacheProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$streamCacheHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$streamCacheHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

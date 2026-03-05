@@ -64,9 +64,9 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                               size: 36,
                               color: colorScheme.onSurface,
                             ),
-                            tooltip:
-                                MaterialLocalizations.of(context)
-                                    .backButtonTooltip,
+                            tooltip: MaterialLocalizations.of(
+                              context,
+                            ).backButtonTooltip,
                           ),
                         ],
                       ),
@@ -104,10 +104,8 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                               vertical: 24,
                                             ),
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  .center,
-                                              crossAxisAlignment:
-                                                  .center,
+                                              mainAxisAlignment: .center,
+                                              crossAxisAlignment: .center,
                                               children: [
                                                 Container(
                                                   width: coverSize,
@@ -118,8 +116,11 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                           16,
                                                         ),
                                                     border: Border.all(
-                                                      color: colorScheme.onSurface
-                                                          .withValues(alpha: .12),
+                                                      color: colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: .12,
+                                                          ),
                                                     ),
                                                     boxShadow: [
                                                       BoxShadow(
@@ -154,17 +155,15 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                       .textTheme
                                                       .headlineMedium
                                                       ?.copyWith(
-                                                        color:
-                                                            colorScheme.onSurface,
-                                                        fontWeight:
-                                                            .w900,
+                                                        color: colorScheme
+                                                            .onSurface,
+                                                        fontWeight: .w900,
                                                         fontSize: isNarrow
                                                             ? 20
                                                             : 28,
                                                       ),
                                                   maxLines: 3,
-                                                  overflow:
-                                                      .visible,
+                                                  overflow: .visible,
                                                 ),
                                                 const SizedBox(height: 12),
                                                 Text(
@@ -174,17 +173,18 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                       .textTheme
                                                       .titleMedium
                                                       ?.copyWith(
-                                                        color: colorScheme.onSurface
-                                                            .withValues(alpha: .74),
-                                                        fontWeight:
-                                                            .w500,
+                                                        color: colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: .74,
+                                                            ),
+                                                        fontWeight: .w500,
                                                         fontSize: isNarrow
                                                             ? 14
                                                             : 17,
                                                       ),
                                                   maxLines: 3,
-                                                  overflow:
-                                                      .visible,
+                                                  overflow: .visible,
                                                 ),
                                                 const SizedBox(height: 24),
                                                 const PlaybackMediaMetaBadge(),

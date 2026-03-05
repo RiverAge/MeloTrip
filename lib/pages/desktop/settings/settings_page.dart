@@ -7,10 +7,12 @@ class DesktopSettingsPage extends ConsumerStatefulWidget {
   const DesktopSettingsPage({super.key});
 
   @override
-  ConsumerState<DesktopSettingsPage> createState() => _DesktopSettingsPageState();
+  ConsumerState<DesktopSettingsPage> createState() =>
+      _DesktopSettingsPageState();
 }
 
-class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> with SingleTickerProviderStateMixin {
+class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -70,20 +72,23 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> with 
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
           const SizedBox(width: 12),
           TextButton(
             onPressed: () {},
             style: TextButton.styleFrom(
-              backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .3),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: .3),
               foregroundColor: theme.colorScheme.onSurface,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
-            child: const Text('重置为默认状态', style: TextStyle(fontSize: 13, fontWeight: .bold)),
+            child: const Text(
+              '重置为默认状态',
+              style: TextStyle(fontSize: 13, fontWeight: .bold),
+            ),
           ),
         ],
       ),
@@ -100,7 +105,9 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> with 
           controller: _tabController,
           isScrollable: true,
           labelColor: theme.colorScheme.onSurface,
-          unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withValues(alpha: .6),
+          unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withValues(
+            alpha: .6,
+          ),
           indicatorColor: theme.colorScheme.primary,
           indicatorSize: TabBarIndicatorSize.label,
           dividerColor: Colors.transparent,

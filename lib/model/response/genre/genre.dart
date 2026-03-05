@@ -5,9 +5,7 @@ part 'genre.g.dart';
 
 @freezed
 abstract class GenresEntity with _$GenresEntity {
-  const factory GenresEntity({
-    List<GenreEntity>? genre,
-  }) = _GenresEntity;
+  const factory GenresEntity({List<GenreEntity>? genre}) = _GenresEntity;
 
   factory GenresEntity.fromJson(Map<String, dynamic> json) =>
       _$GenresEntityFromJson(json);

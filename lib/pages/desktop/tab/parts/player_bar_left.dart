@@ -15,10 +15,7 @@ class _DesktopPlayerBarLeft extends StatelessWidget {
 
     return Row(
       children: [
-        _PlayerBarArtwork(
-          id: current!.id,
-          onTap: onToggleFullPlayer,
-        ),
+        _PlayerBarArtwork(id: current!.id, onTap: onToggleFullPlayer),
         const SizedBox(width: 12),
         Expanded(
           child: Column(

@@ -21,11 +21,7 @@ class PlaybackArtworkBackground extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return SizedBox.expand(
-      child: ArtworkImage(
-        id: artworkId!,
-        fit: fit,
-        size: size,
-      ),
+      child: ArtworkImage(id: artworkId!, fit: fit, size: size),
     );
   }
 }

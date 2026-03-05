@@ -54,10 +54,9 @@ class _RatingState extends State<Rating> {
         children: List.generate(5, (index) {
           return Icon(
             (index + 1) <= effectiveRating ? Icons.star : Icons.star_outline,
-            color: Theme.of(context)
-                .colorScheme
-                .primary
-                .withValues(alpha: _isDraging ? 0.5 : 1),
+            color: Theme.of(
+              context,
+            ).colorScheme.primary.withValues(alpha: _isDraging ? 0.5 : 1),
             size: 15,
           );
         }),

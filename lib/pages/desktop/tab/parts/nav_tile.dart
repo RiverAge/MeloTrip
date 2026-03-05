@@ -63,7 +63,9 @@ class _NavTileState extends State<_NavTile> {
               : Theme.of(context).colorScheme.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: widget.selected || _hovered ? hoverBorder : Colors.transparent,
+            color: widget.selected || _hovered
+                ? hoverBorder
+                : Colors.transparent,
           ),
         ),
         child: Row(

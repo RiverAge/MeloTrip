@@ -9,7 +9,9 @@ extension PlayerInit on AppPlayer {
     _player.stream.playlistMode.listen(_playlistModeSubject.add);
     _player.stream.duration.listen(_durationSubject.add);
 
-    _positionSubscription = _player.stream.position.listen(_positionSubject.add);
+    _positionSubscription = _player.stream.position.listen(
+      _positionSubject.add,
+    );
 
     _player.stream.buffer.listen((duration) {
       _bufferedPositionSubject.add(duration);
@@ -24,7 +26,9 @@ extension PlayerInit on AppPlayer {
     _player.stream.playlist.listen((playlist) {
       final playQueue = PlayQueue(
         songs: playlist.medias
-            .map((media) => media.extras?['song'] as SongEntity? ?? SongEntity())
+            .map(
+              (media) => media.extras?['song'] as SongEntity? ?? SongEntity(),
+            )
             .toList(),
         index: playlist.index,
       );

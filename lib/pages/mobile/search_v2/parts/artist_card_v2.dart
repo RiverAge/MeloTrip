@@ -47,9 +47,9 @@ class _ArtistCardV2 extends StatelessWidget {
                   children: [
                     Text(
                       artist.name ?? '',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: .bold,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(fontWeight: .bold),
                       maxLines: 1,
                       overflow: .ellipsis,
                     ),

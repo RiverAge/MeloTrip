@@ -76,21 +76,19 @@ class _AddPlaylistPageState extends State<AddPlaylistPage> {
                       ),
                     ),
                   ),
-                  onPressed:
-                      _controller.text.isEmpty || _loading
-                          ? null
-                          : () => _onAdd(ref),
-                  child:
-                      _loading
-                          ? const SizedBox(
-                            width: 15,
-                            height: 15,
-                            child: CircularProgressIndicator(strokeWidth: 1.5),
-                          )
-                          : Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: Text(AppLocalizations.of(context)!.confirm),
-                          ),
+                  onPressed: _controller.text.isEmpty || _loading
+                      ? null
+                      : () => _onAdd(ref),
+                  child: _loading
+                      ? const SizedBox(
+                          width: 15,
+                          height: 15,
+                          child: CircularProgressIndicator(strokeWidth: 1.5),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Text(AppLocalizations.of(context)!.confirm),
+                        ),
                 );
               },
             ),

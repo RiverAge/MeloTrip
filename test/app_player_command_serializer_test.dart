@@ -29,10 +29,12 @@ void main() {
     final results = await Future.wait([first, second]);
 
     expect(results, [1, 2]);
-    expect(
-      timeline,
-      ['first:start', 'first:end', 'second:start', 'second:end'],
-    );
+    expect(timeline, [
+      'first:start',
+      'first:end',
+      'second:start',
+      'second:end',
+    ]);
   });
 
   test('continues processing later commands after an error', () async {

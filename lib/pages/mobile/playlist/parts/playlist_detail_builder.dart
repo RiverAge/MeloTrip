@@ -103,7 +103,9 @@ class _PlaylistDetailBuilder extends StatelessWidget {
               Expanded(child: Text(song?.title ?? '')),
             ],
           ),
-          subtitle: Text('${song?.artist} ${durationFormatter(song?.duration)}'),
+          subtitle: Text(
+            '${song?.artist} ${durationFormatter(song?.duration)}',
+          ),
           trailing: Row(
             mainAxisSize: .min,
             children: [

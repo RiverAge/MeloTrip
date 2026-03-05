@@ -46,34 +46,33 @@ class _SearchHistory extends StatelessWidget {
                     runSpacing: 5.0,
                     alignment: .start,
                     runAlignment: .center,
-                    children:
-                        effectiveSearches
-                            .split(',')
-                            .map(
-                              (e) => InkWell(
-                                onTap: () {
-                                  onTap(e);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 5,
-                                    horizontal: 10,
-                                  ),
-                                  color: Theme.of(context).colorScheme.onSurface
-                                      .withValues(alpha: 0.1),
-                                  child: Text(
-                                    e,
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
+                    children: effectiveSearches
+                        .split(',')
+                        .map(
+                          (e) => InkWell(
+                            onTap: () {
+                              onTap(e);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 10,
+                              ),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.1),
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                            )
-                            .toList(),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   );
                 },
               ),

@@ -40,7 +40,11 @@ SubsonicResponse _playlistDetailResponse({
   );
 }
 
-SongEntity _song({required String id, required String title, int duration = 90}) {
+SongEntity _song({
+  required String id,
+  required String title,
+  int duration = 90,
+}) {
   return SongEntity(id: id, title: title, duration: duration, artist: 'tester');
 }
 

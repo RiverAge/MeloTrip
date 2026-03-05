@@ -28,7 +28,7 @@ abstract class SubsonicResponse with _$SubsonicResponse {
       _$SubsonicResponseFromJson(json);
 }
 
-  @freezed
+@freezed
 abstract class SubsonicResponseClass with _$SubsonicResponseClass {
   const factory SubsonicResponseClass({
     String? status,

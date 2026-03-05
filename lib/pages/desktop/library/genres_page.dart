@@ -58,7 +58,11 @@ class _PageHeader extends StatelessWidget {
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Text(
@@ -69,10 +73,7 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -112,9 +113,26 @@ class _GenreTable extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 30, child: Text('#', style: _headerStyle)),
-              const Expanded(flex: 4, child: Text('TITLE', style: _headerStyle)),
-              const SizedBox(width: 100, child: Text('TRACKS', style: _headerStyle, textAlign: TextAlign.right)),
-              const SizedBox(width: 100, child: Text('ALBUMS', style: _headerStyle, textAlign: TextAlign.right)),
+              const Expanded(
+                flex: 4,
+                child: Text('TITLE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 100,
+                child: Text(
+                  'TRACKS',
+                  style: _headerStyle,
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              const SizedBox(
+                width: 100,
+                child: Text(
+                  'ALBUMS',
+                  style: _headerStyle,
+                  textAlign: TextAlign.right,
+                ),
+              ),
               const SizedBox(width: 30),
             ],
           ),
@@ -168,13 +186,19 @@ class _GenreRow extends StatelessWidget {
             ),
             SizedBox(
               width: 100,
-              child: Text('${genre.songCount ?? 0}', 
-                style: theme.textTheme.bodySmall, textAlign: TextAlign.right),
+              child: Text(
+                '${genre.songCount ?? 0}',
+                style: theme.textTheme.bodySmall,
+                textAlign: TextAlign.right,
+              ),
             ),
             SizedBox(
               width: 100,
-              child: Text('${genre.albumCount ?? 0}', 
-                style: theme.textTheme.bodySmall, textAlign: TextAlign.right),
+              child: Text(
+                '${genre.albumCount ?? 0}',
+                style: theme.textTheme.bodySmall,
+                textAlign: TextAlign.right,
+              ),
             ),
             const SizedBox(width: 30),
           ],

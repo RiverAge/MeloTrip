@@ -75,12 +75,11 @@ class _PlaylistPageState extends State<PlaylistPage> {
             itemBuilder: (_, index) {
               final item = playlist[index];
               return ListTile(
-                onTap:
-                    () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => PlaylistDetailPage(playlistId: item.id),
-                      ),
-                    ),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => PlaylistDetailPage(playlistId: item.id),
+                  ),
+                ),
                 leading: Container(
                   width: 50,
                   clipBehavior: .antiAlias,

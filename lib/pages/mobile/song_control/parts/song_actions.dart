@@ -17,10 +17,9 @@ class _SongActions extends StatelessWidget {
       builder: (context, playQueue, ref) {
         final index = playQueue.index;
         final songs = playQueue.songs;
-        final current =
-            playQueue.index >= playQueue.songs.length
-                ? null
-                : playQueue.songs[playQueue.index];
+        final current = playQueue.index >= playQueue.songs.length
+            ? null
+            : playQueue.songs[playQueue.index];
 
         final isCurrent = current?.id == song.id;
         final isNext =

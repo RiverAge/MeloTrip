@@ -19,20 +19,23 @@ class _SongsBuilder extends StatelessWidget {
               return ListTile(
                 title: Text(song.title ?? '', overflow: .ellipsis),
                 subtitle: Text(
-                    overflow: .ellipsis,
-                    '${song.album} - ${song.artist} - ${durationFormatter(song.duration)}',
-                    style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant
-                            .withValues(alpha: 0.5),
-                        fontSize: 12)),
+                  overflow: .ellipsis,
+                  '${song.album} - ${song.artist} - ${durationFormatter(song.duration)}',
+                  style: TextStyle(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    fontSize: 12,
+                  ),
+                ),
                 leading: Container(
-                    width: 50,
-                    clipBehavior: .antiAlias,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: ArtworkImage(id: song.id)),
+                  width: 50,
+                  clipBehavior: .antiAlias,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: ArtworkImage(id: song.id),
+                ),
                 trailing: IconButton(
                   onPressed: () => onToggleFavorite(song),
                   icon: const Icon(Icons.heart_broken),

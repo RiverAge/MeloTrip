@@ -13,8 +13,7 @@ class MobileTabPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MobileTabPageState();
 }
 
-class _MobileTabPageState extends ConsumerState<MobileTabPage>
-    with RouteAware {
+class _MobileTabPageState extends ConsumerState<MobileTabPage> with RouteAware {
   int _currentIndex = 0;
   bool _visible = true;
   RouteObserver<PageRoute<dynamic>>? _routeObserver;
@@ -97,10 +96,7 @@ class _MobileTabPageState extends ConsumerState<MobileTabPage>
         showUnselectedLabels: false,
         items: items,
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: tabViews,
-      ),
+      body: IndexedStack(index: _currentIndex, children: tabViews),
     );
   }
 }

@@ -28,14 +28,11 @@ class PlayQueueBuilder extends StatelessWidget {
       builder: (context, player, ref) {
         return AsyncStreamBuilder(
           provider: player.playQueueStream,
-          loading:
-              (ctx) =>
-                  loadingBuilder == null
-                      ? const SizedBox.shrink()
-                      : loadingBuilder!(ctx, ref),
-          emptyBuilder:
-              (context) =>
-                  builder(context, PlayQueue(songs: [], index: 0), ref),
+          loading: (ctx) => loadingBuilder == null
+              ? const SizedBox.shrink()
+              : loadingBuilder!(ctx, ref),
+          emptyBuilder: (context) =>
+              builder(context, PlayQueue(songs: [], index: 0), ref),
           builder: (_, playQueue) {
             return builder(context, playQueue, ref);
           },

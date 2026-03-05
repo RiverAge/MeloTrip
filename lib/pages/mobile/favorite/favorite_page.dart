@@ -72,10 +72,9 @@ class _FavoritePageState extends State<FavoritePage>
               actions: [
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
-                  child:
-                      canPlayAll
-                          ? _FavoritePlayAll(songs: songs)
-                          : const SizedBox.shrink(),
+                  child: canPlayAll
+                      ? _FavoritePlayAll(songs: songs)
+                      : const SizedBox.shrink(),
                 ),
               ],
               bottom: TabBar(

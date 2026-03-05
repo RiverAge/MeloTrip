@@ -89,7 +89,9 @@ void main() {
               ),
             ]),
           ),
-          albumDetailProvider('a1').overrideWith((_) async => _albumDetailResponse('a1')),
+          albumDetailProvider(
+            'a1',
+          ).overrideWith((_) async => _albumDetailResponse('a1')),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,

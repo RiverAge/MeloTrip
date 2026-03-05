@@ -98,9 +98,7 @@ class ArtistDetailPage extends StatelessWidget {
                                   Text(
                                     item.name ?? '',
                                     overflow: .ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: .bold,
-                                    ),
+                                    style: const TextStyle(fontWeight: .bold),
                                   ),
                                   Text(
                                     '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',

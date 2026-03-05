@@ -12,7 +12,8 @@ class DesktopFavoritesPage extends ConsumerStatefulWidget {
   const DesktopFavoritesPage({super.key});
 
   @override
-  ConsumerState<DesktopFavoritesPage> createState() => _DesktopFavoritesPageState();
+  ConsumerState<DesktopFavoritesPage> createState() =>
+      _DesktopFavoritesPageState();
 }
 
 class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
@@ -90,7 +91,11 @@ class _PageHeader extends StatelessWidget {
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Column(
@@ -115,22 +120,25 @@ class _PageHeader extends StatelessWidget {
                       const PopupMenuItem(value: 'albums', child: Text('专辑')),
                       const PopupMenuItem(value: 'artists', child: Text('艺术家')),
                     ],
-                    child: Icon(Icons.keyboard_arrow_down_rounded, 
-                      color: theme.colorScheme.onSurfaceVariant),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
               Text(
-                currentType == 'songs' ? l10n.song : (currentType == 'albums' ? l10n.album : l10n.artist),
-                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                currentType == 'songs'
+                    ? l10n.song
+                    : (currentType == 'albums' ? l10n.album : l10n.artist),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -168,7 +176,11 @@ class _TrackList extends StatelessWidget {
         leading: Text('${index + 1}'),
         title: Text(songs[index].title ?? '-'),
         subtitle: Text(songs[index].artist ?? '-'),
-        trailing: const Icon(Icons.favorite_rounded, color: Colors.redAccent, size: 16),
+        trailing: const Icon(
+          Icons.favorite_rounded,
+          color: Colors.redAccent,
+          size: 16,
+        ),
       ),
     );
   }
@@ -191,9 +203,16 @@ class _AlbumGrid extends StatelessWidget {
       itemCount: albums.length,
       itemBuilder: (context, index) => Column(
         children: [
-          AspectRatio(aspectRatio: 1, child: Container(color: Colors.grey.withValues(alpha: .2))),
+          AspectRatio(
+            aspectRatio: 1,
+            child: Container(color: Colors.grey.withValues(alpha: .2)),
+          ),
           const SizedBox(height: 8),
-          Text(albums[index].name ?? '-', maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(
+            albums[index].name ?? '-',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );
@@ -219,7 +238,11 @@ class _ArtistGrid extends StatelessWidget {
         children: [
           const CircleAvatar(radius: 40),
           const SizedBox(height: 8),
-          Text(artists[index].name ?? '-', maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(
+            artists[index].name ?? '-',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );

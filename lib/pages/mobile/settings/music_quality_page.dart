@@ -37,10 +37,9 @@ class MusicQualityPage extends StatelessWidget {
                     '',
                   ][index],
                 ),
-                trailing:
-                    data.maxRate == _list[index]
-                        ? const Icon(Icons.check)
-                        : null,
+                trailing: data.maxRate == _list[index]
+                    ? const Icon(Icons.check)
+                    : null,
                 onTap: () {
                   ref
                       .read(userConfigProvider.notifier)

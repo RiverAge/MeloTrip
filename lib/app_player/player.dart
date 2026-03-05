@@ -19,7 +19,8 @@ part 'parts/controls.dart';
 
 class AppPlayer extends BaseAudioHandler {
   final _player = Player();
-  final BehaviorSubject<Duration> _positionSubject = BehaviorSubject<Duration>();
+  final BehaviorSubject<Duration> _positionSubject =
+      BehaviorSubject<Duration>();
   final _durationSubject = BehaviorSubject<Duration>();
   final _bufferedPositionSubject = BehaviorSubject<Duration>();
   final _shuffleSubject = BehaviorSubject<bool>();

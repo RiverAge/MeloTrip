@@ -147,9 +147,8 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                         Text(
                           l10n.album,
                           style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant.withValues(
-                              alpha: .85,
-                            ),
+                            color: theme.colorScheme.onSurfaceVariant
+                                .withValues(alpha: .85),
                             fontWeight: .bold,
                           ),
                         ),
@@ -178,18 +177,29 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                         const SizedBox(height: 20),
                         Row(
                           children: [
-                            Consumer(builder: (context, ref, _) {
-                              return FilledButton.icon(
-                                onPressed: widget.songs.isEmpty ? null : () => _playAlbum(ref, widget.songs),
-                                icon: const Icon(Icons.play_arrow_rounded, size: 24),
-                                label: Text(l10n.play),
-                                style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                  backgroundColor: theme.colorScheme.primary,
-                                  foregroundColor: theme.colorScheme.onPrimary,
-                                ),
-                              );
-                            }),
+                            Consumer(
+                              builder: (context, ref, _) {
+                                return FilledButton.icon(
+                                  onPressed: widget.songs.isEmpty
+                                      ? null
+                                      : () => _playAlbum(ref, widget.songs),
+                                  icon: const Icon(
+                                    Icons.play_arrow_rounded,
+                                    size: 24,
+                                  ),
+                                  label: Text(l10n.play),
+                                  style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor:
+                                        theme.colorScheme.onPrimary,
+                                  ),
+                                );
+                              },
+                            ),
                             const SizedBox(width: 12),
                             _HeaderOutlineButton(
                               icon: Icons.shuffle_rounded,
@@ -220,22 +230,41 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
     );
   }
 
-  Widget _buildAlbumMetaRow(AlbumEntity album, List<SongEntity> songs, ThemeData theme) {
+  Widget _buildAlbumMetaRow(
+    AlbumEntity album,
+    List<SongEntity> songs,
+    ThemeData theme,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    final year = album.year == null ? '' : '${l10n.songMetaYear}: ${album.year}';
+    final year = album.year == null
+        ? ''
+        : '${l10n.songMetaYear}: ${album.year}';
     final count = '${songs.length} ${l10n.songCountUnit}';
     final duration = _formatTotalDuration(songs);
-    final summary = [year, count, duration].where((it) => it.isNotEmpty).join(' · ');
+    final summary = [
+      year,
+      count,
+      duration,
+    ].where((it) => it.isNotEmpty).join(' · ');
     return Row(
       children: [
-        Icon(Icons.music_note_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
+        Icon(
+          Icons.music_note_rounded,
+          size: 14,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+        ),
         const SizedBox(width: 4),
-        Text(summary, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7))),
+        Text(
+          summary,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+          ),
+        ),
       ],
     );
   }
 
-/* Continue original methods from here */
+  /* Continue original methods from here */
 
   Widget _buildTrackListToolbar(BuildContext context) {
     final theme = Theme.of(context);
@@ -247,28 +276,84 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
           children: [
             Row(
               children: [
-                Icon(Icons.search_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.search_rounded,
+                  size: 18,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 const SizedBox(width: 12),
-                Text(l10n.searchHint, style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+                Text(
+                  l10n.searchHint,
+                  style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                ),
                 const Spacer(),
-                Text('#', style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontSize: 13)),
+                Text(
+                  '#',
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
                 const SizedBox(width: 24),
-                Icon(Icons.swap_vert_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.swap_vert_rounded,
+                  size: 18,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 const SizedBox(width: 24),
-                Icon(Icons.tune_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.tune_rounded,
+                  size: 18,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            Divider(height: 1, thickness: 0.5, color: theme.colorScheme.outlineVariant),
+            Divider(
+              height: 1,
+              thickness: 0.5,
+              color: theme.colorScheme.outlineVariant,
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
-                SizedBox(width: 38, child: Icon(Icons.music_note_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
-                Text(l10n.song.toUpperCase(), style: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 11, fontWeight: .bold, letterSpacing: 1)),
+                SizedBox(
+                  width: 38,
+                  child: Icon(
+                    Icons.music_note_rounded,
+                    size: 14,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.5,
+                    ),
+                  ),
+                ),
+                Text(
+                  l10n.song.toUpperCase(),
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.5,
+                    ),
+                    fontSize: 11,
+                    fontWeight: .bold,
+                    letterSpacing: 1,
+                  ),
+                ),
                 const Spacer(),
-                Icon(Icons.access_time_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
+                Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
                 const SizedBox(width: 48),
-                Icon(Icons.favorite_border_rounded, size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
+                Icon(
+                  Icons.favorite_border_rounded,
+                  size: 14,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
                 const SizedBox(width: 8),
               ],
             ),
@@ -282,15 +367,18 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final song = widget.songs[index];
-            return Consumer(builder: (context, ref, _) {
-              return _TrackListTile(index: index + 1, song: song, onPlay: () => _playSong(ref, song));
-            });
-          },
-          childCount: widget.songs.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final song = widget.songs[index];
+          return Consumer(
+            builder: (context, ref, _) {
+              return _TrackListTile(
+                index: index + 1,
+                song: song,
+                onPlay: () => _playSong(ref, song),
+              );
+            },
+          );
+        }, childCount: widget.songs.length),
       ),
     );
   }
@@ -304,12 +392,20 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            Text(l10n.recommendedToday, style: theme.textTheme.titleLarge?.copyWith(fontWeight: .w900, fontSize: 24)),
+            Text(
+              l10n.recommendedToday,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: .w900,
+                fontSize: 24,
+              ),
+            ),
             const SizedBox(height: 16),
             SizedBox(
               height: 240,
               child: AsyncValueBuilder(
-                provider: albumsProvider(AlumsType.random), // Simplified for "More by Artist" mock
+                provider: albumsProvider(
+                  AlumsType.random,
+                ), // Simplified for "More by Artist" mock
                 builder: (context, data, _) {
                   final albums = data.subsonicResponse?.albumList?.album ?? [];
                   return ListView.builder(
@@ -371,7 +467,11 @@ class _HeaderOutlineButton extends StatelessWidget {
 }
 
 class _TrackListTile extends StatelessWidget {
-  const _TrackListTile({required this.index, required this.song, required this.onPlay});
+  const _TrackListTile({
+    required this.index,
+    required this.song,
+    required this.onPlay,
+  });
   final int index;
   final SongEntity song;
   final VoidCallback onPlay;
@@ -388,7 +488,15 @@ class _TrackListTile extends StatelessWidget {
           children: [
             SizedBox(
               width: 30,
-              child: Text('$index', style: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6), fontSize: 13)),
+              child: Text(
+                '$index',
+                style: TextStyle(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.6,
+                  ),
+                  fontSize: 13,
+                ),
+              ),
             ),
             Expanded(
               child: Text(
@@ -396,7 +504,7 @@ class _TrackListTile extends StatelessWidget {
                 maxLines: 1,
                 overflow: .ellipsis,
                 style: TextStyle(
-                  fontWeight: .w600, 
+                  fontWeight: .w600,
                   fontSize: 14,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -405,10 +513,19 @@ class _TrackListTile extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               _formatSec(song.duration ?? 0),
-              style: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6), fontSize: 13),
+              style: TextStyle(
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.6,
+                ),
+                fontSize: 13,
+              ),
             ),
             const SizedBox(width: 40),
-            Icon(Icons.favorite_border_rounded, size: 16, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4)),
+            Icon(
+              Icons.favorite_border_rounded,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+            ),
           ],
         ),
       ),
@@ -438,12 +555,41 @@ class _MiniAlbumCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: ArtworkImage(id: album.id, size: 300, width: 150, height: 150, fit: .cover),
+              child: ArtworkImage(
+                id: album.id,
+                size: 300,
+                width: 150,
+                height: 150,
+                fit: .cover,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(album.name ?? '', maxLines: 1, overflow: .ellipsis, style: TextStyle(fontWeight: .bold, color: theme.colorScheme.onSurface)),
-            Text(album.artist ?? '', maxLines: 1, overflow: .ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-            Text('${album.year ?? ""}', style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7))),
+            Text(
+              album.name ?? '',
+              maxLines: 1,
+              overflow: .ellipsis,
+              style: TextStyle(
+                fontWeight: .bold,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              album.artist ?? '',
+              maxLines: 1,
+              overflow: .ellipsis,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              '${album.year ?? ""}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 10,
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
+              ),
+            ),
           ],
         ),
       ),

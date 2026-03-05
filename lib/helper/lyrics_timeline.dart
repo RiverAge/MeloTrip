@@ -20,12 +20,16 @@ double lyricLineProgressByStartMs({
   required int positionMs,
   int trailingDurationMs = 4000,
 }) {
-  if (sortedStartMs.isEmpty || currentIndex < 0 || currentIndex >= sortedStartMs.length) {
+  if (sortedStartMs.isEmpty ||
+      currentIndex < 0 ||
+      currentIndex >= sortedStartMs.length) {
     return 0.0;
   }
   final currentStart = sortedStartMs[currentIndex];
   final isLast = currentIndex == sortedStartMs.length - 1;
-  final nextStart = isLast ? currentStart + trailingDurationMs : sortedStartMs[currentIndex + 1];
+  final nextStart = isLast
+      ? currentStart + trailingDurationMs
+      : sortedStartMs[currentIndex + 1];
   final span = (nextStart - currentStart).clamp(1, 1 << 30);
   return ((positionMs - currentStart) / span).clamp(0.0, 1.0);
 }

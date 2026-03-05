@@ -69,7 +69,11 @@ class _PageHeader extends StatelessWidget {
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Text(
@@ -94,10 +98,7 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -139,11 +140,30 @@ class _TrackTable extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 30, child: Text('#', style: _headerStyle)),
-              const Expanded(flex: 4, child: Text('TITLE', style: _headerStyle)),
-              const SizedBox(width: 60, child: Icon(Icons.access_time_rounded, size: 14, color: Colors.grey)),
-              const Expanded(flex: 3, child: Text('ALBUM', style: _headerStyle)),
-              const Expanded(flex: 2, child: Text('GENRE', style: _headerStyle)),
-              const SizedBox(width: 60, child: Text('YEAR', style: _headerStyle)),
+              const Expanded(
+                flex: 4,
+                child: Text('TITLE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 60,
+                child: Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const Expanded(
+                flex: 3,
+                child: Text('ALBUM', style: _headerStyle),
+              ),
+              const Expanded(
+                flex: 2,
+                child: Text('GENRE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 60,
+                child: Text('YEAR', style: _headerStyle),
+              ),
               const SizedBox(width: 30),
             ],
           ),
@@ -197,7 +217,12 @@ class _TrackRow extends ConsumerWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
-                    child: ArtworkImage(id: song.id, size: 80, width: 40, height: 40),
+                    child: ArtworkImage(
+                      id: song.id,
+                      size: 80,
+                      width: 40,
+                      height: 40,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -217,7 +242,8 @@ class _TrackRow extends ConsumerWidget {
                           maxLines: 1,
                           overflow: .ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                            color: theme.colorScheme.onSurfaceVariant
+                                .withValues(alpha: .7),
                           ),
                         ),
                       ],
@@ -228,7 +254,10 @@ class _TrackRow extends ConsumerWidget {
             ),
             SizedBox(
               width: 60,
-              child: Text(_formatDuration(song.duration), style: theme.textTheme.bodySmall),
+              child: Text(
+                _formatDuration(song.duration),
+                style: theme.textTheme.bodySmall,
+              ),
             ),
             Expanded(
               flex: 3,
@@ -250,9 +279,16 @@ class _TrackRow extends ConsumerWidget {
             ),
             SizedBox(
               width: 60,
-              child: Text('${song.year ?? ""}', style: theme.textTheme.bodySmall),
+              child: Text(
+                '${song.year ?? ""}',
+                style: theme.textTheme.bodySmall,
+              ),
             ),
-            const Icon(Icons.favorite_border_rounded, size: 16, color: Colors.grey),
+            const Icon(
+              Icons.favorite_border_rounded,
+              size: 16,
+              color: Colors.grey,
+            ),
           ],
         ),
       ),

@@ -93,15 +93,21 @@ class _MusicControls extends StatelessWidget {
                     if (player.playlistMode == PlaylistMode.loop) {
                       player.setPlaylistMode(PlaylistMode.none);
                       messenger.clearSnackBars();
-                      messenger.showSnackBar(_buildSnack(playModeNoneText, size));
+                      messenger.showSnackBar(
+                        _buildSnack(playModeNoneText, size),
+                      );
                     } else if (player.playlistMode == PlaylistMode.none) {
                       player.setPlaylistMode(PlaylistMode.single);
                       messenger.clearSnackBars();
-                      messenger.showSnackBar(_buildSnack(playModeSingleText, size));
+                      messenger.showSnackBar(
+                        _buildSnack(playModeSingleText, size),
+                      );
                     } else if (player.playlistMode == PlaylistMode.single) {
                       player.setPlaylistMode(PlaylistMode.loop);
                       messenger.clearSnackBars();
-                      messenger.showSnackBar(_buildSnack(playModeLoopText, size));
+                      messenger.showSnackBar(
+                        _buildSnack(playModeLoopText, size),
+                      );
                     }
                   },
                   icon: AsyncStreamBuilder(

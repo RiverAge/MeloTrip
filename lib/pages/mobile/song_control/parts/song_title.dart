@@ -9,10 +9,9 @@ class _SongTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: PlayQueueBuilder(
         builder: (context, playQueue, ref) {
-          final current =
-              playQueue.index >= playQueue.songs.length
-                  ? null
-                  : playQueue.songs[playQueue.index];
+          final current = playQueue.index >= playQueue.songs.length
+              ? null
+              : playQueue.songs[playQueue.index];
           return AsyncValueBuilder(
             provider: appPlayerHandlerProvider,
             builder: (context, player, _) {
@@ -45,10 +44,9 @@ class _SongTitle extends StatelessWidget {
                           song.title ?? '',
                           style: TextStyle(
                             fontSize: 18,
-                            color:
-                                isCurrent
-                                    ? Theme.of(context).colorScheme.primary
-                                    : null,
+                            color: isCurrent
+                                ? Theme.of(context).colorScheme.primary
+                                : null,
                           ),
                         ),
                       ),

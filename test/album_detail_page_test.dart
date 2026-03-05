@@ -81,40 +81,45 @@ void main() {
   testWidgets(
     'Album detail shows playing indicator for current song only',
     (tester) async {
-    final songs = [song(id: 's1', title: 'Song 1', track: 1), song(id: 's2', title: 'Song 2', track: 2)];
-    final stubPlayer = _StubAppPlayer(
-      playQueueStream: Stream.value(PlayQueue(songs: songs, index: 0)),
-      playingStream: Stream.value(true),
-    );
+      final songs = [
+        song(id: 's1', title: 'Song 1', track: 1),
+        song(id: 's2', title: 'Song 2', track: 2),
+      ];
+      final stubPlayer = _StubAppPlayer(
+        playQueueStream: Stream.value(PlayQueue(songs: songs, index: 0)),
+        playingStream: Stream.value(true),
+      );
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          appPlayerHandlerProvider.overrideWith(
-            () => _FakeAppPlayerHandler(stubPlayer),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appPlayerHandlerProvider.overrideWith(
+              () => _FakeAppPlayerHandler(stubPlayer),
+            ),
+            albumDetailProvider(
+              'album-1',
+            ).overrideWith((_) async => fakeAlbumResponse(songs)),
+            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const AlbumDetailPage(albumId: 'album-1'),
           ),
-          albumDetailProvider('album-1').overrideWith((_) async => fakeAlbumResponse(songs)),
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-        ],
-        child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const AlbumDetailPage(albumId: 'album-1'),
         ),
-      ),
-    );
+      );
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    final playingGif = find.byWidgetPredicate((widget) {
-      if (widget is! Image) return false;
-      final image = widget.image;
-      return image is AssetImage && image.assetName == 'images/playing.gif';
-    });
+      final playingGif = find.byWidgetPredicate((widget) {
+        if (widget is! Image) return false;
+        final image = widget.image;
+        return image is AssetImage && image.assetName == 'images/playing.gif';
+      });
 
-    expect(playingGif, findsOneWidget);
-    expect(find.text('Song 1'), findsOneWidget);
-    expect(find.text('Song 2'), findsOneWidget);
+      expect(playingGif, findsOneWidget);
+      expect(find.text('Song 1'), findsOneWidget);
+      expect(find.text('Song 2'), findsOneWidget);
     },
     // Depends on AppPlayer extension internals; covered by integration flows.
     skip: true,
@@ -123,36 +128,41 @@ void main() {
   testWidgets(
     'Album detail tap song calls insertAndPlay with tapped song',
     (tester) async {
-    final songs = [song(id: 's1', title: 'Song 1', track: 1), song(id: 's2', title: 'Song 2', track: 2)];
-    SongEntity? insertedSong;
-    final stubPlayer = _StubAppPlayer(
-      playQueueStream: Stream.value(PlayQueue(songs: songs, index: 0)),
-      playingStream: Stream.value(false),
-      onInsertAndPlay: (value) => insertedSong = value,
-    );
+      final songs = [
+        song(id: 's1', title: 'Song 1', track: 1),
+        song(id: 's2', title: 'Song 2', track: 2),
+      ];
+      SongEntity? insertedSong;
+      final stubPlayer = _StubAppPlayer(
+        playQueueStream: Stream.value(PlayQueue(songs: songs, index: 0)),
+        playingStream: Stream.value(false),
+        onInsertAndPlay: (value) => insertedSong = value,
+      );
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          appPlayerHandlerProvider.overrideWith(
-            () => _FakeAppPlayerHandler(stubPlayer),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appPlayerHandlerProvider.overrideWith(
+              () => _FakeAppPlayerHandler(stubPlayer),
+            ),
+            albumDetailProvider(
+              'album-1',
+            ).overrideWith((_) async => fakeAlbumResponse(songs)),
+            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const AlbumDetailPage(albumId: 'album-1'),
           ),
-          albumDetailProvider('album-1').overrideWith((_) async => fakeAlbumResponse(songs)),
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-        ],
-        child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const AlbumDetailPage(albumId: 'album-1'),
         ),
-      ),
-    );
+      );
 
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Song 2'));
-    await tester.pump();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Song 2'));
+      await tester.pump();
 
-    expect(insertedSong?.id, 's2');
+      expect(insertedSong?.id, 's2');
     },
     // Depends on AppPlayer extension internals; covered by integration flows.
     skip: true,

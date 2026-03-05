@@ -27,10 +27,9 @@ class AppThemePage extends StatelessWidget {
                       : Icons.auto_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.systemDefault),
-                trailing:
-                    config.theme == ThemeMode.system
-                        ? const Icon(Icons.check)
-                        : null,
+                trailing: config.theme == ThemeMode.system
+                    ? const Icon(Icons.check)
+                    : null,
               ),
               Divider(),
               ListTile(
@@ -41,10 +40,9 @@ class AppThemePage extends StatelessWidget {
                       : Icons.light_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.themeLight),
-                trailing:
-                    config.theme == ThemeMode.light
-                        ? const Icon(Icons.check)
-                        : null,
+                trailing: config.theme == ThemeMode.light
+                    ? const Icon(Icons.check)
+                    : null,
               ),
               Divider(),
               ListTile(
@@ -55,10 +53,9 @@ class AppThemePage extends StatelessWidget {
                       : Icons.dark_mode_outlined,
                 ),
                 title: Text(AppLocalizations.of(context)!.themeDark),
-                trailing:
-                    config.theme == ThemeMode.dark
-                        ? const Icon(Icons.check)
-                        : null,
+                trailing: config.theme == ThemeMode.dark
+                    ? const Icon(Icons.check)
+                    : null,
               ),
             ],
           );

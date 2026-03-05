@@ -73,13 +73,12 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
             builder: (context, ref, child) {
               return AnimatedSize(
                 duration: const Duration(milliseconds: 300),
-                child:
-                    _current != null
-                        ? IconButton(
-                          onPressed: () => _onAddToPlaylist(ref),
-                          icon: const Icon(Icons.check),
-                        )
-                        : const SizedBox.shrink(),
+                child: _current != null
+                    ? IconButton(
+                        onPressed: () => _onAddToPlaylist(ref),
+                        icon: const Icon(Icons.check),
+                      )
+                    : const SizedBox.shrink(),
               );
             },
           ),

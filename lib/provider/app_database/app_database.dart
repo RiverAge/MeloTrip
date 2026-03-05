@@ -48,7 +48,6 @@ class AppDatabase extends _$AppDatabase {
         await db.execute(_createPlayHistorySql);
         await db.execute(_createUserConfigSql);
         await db.execute(_createCurrentUserSql);
-
       },
     );
 

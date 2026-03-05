@@ -15,11 +15,7 @@ class _AlbumInfo extends StatelessWidget {
         children: [
           Text(album.name ?? '', style: TextStyle(fontWeight: .bold)),
           SizedBox(height: 4),
-          Text(
-            album.artist ?? '',
-            overflow: .ellipsis,
-            maxLines: 1,
-          ),
+          Text(album.artist ?? '', overflow: .ellipsis, maxLines: 1),
           SizedBox(height: 4),
           Rating(rating: album.userRating, onRating: onUpdateRating),
         ],

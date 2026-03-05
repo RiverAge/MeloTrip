@@ -38,13 +38,12 @@ bool _isSubsonicStream(HttpRequest request) {
 String _buildSubsonicStreamDigest(HttpRequest request) {
   return request.uri
       .replace(
-        queryParameters:
-            Map.from(request.uri.queryParameters)
-              ..remove('u')
-              ..remove('t')
-              ..remove('s')
-              ..remove('c')
-              ..remove('_'),
+        queryParameters: Map.from(request.uri.queryParameters)
+          ..remove('u')
+          ..remove('t')
+          ..remove('s')
+          ..remove('c')
+          ..remove('_'),
       )
       .toString();
 }

@@ -18,20 +18,29 @@ void main() {
     );
   }
 
-  test('buildMediaItemFromPlayQueue returns fallback when index is invalid', () {
-    final item = buildMediaItemFromPlayQueue(
-      playQueue: PlayQueue(songs: [song(id: '1', title: 'A', duration: 120)], index: 3),
-    );
+  test(
+    'buildMediaItemFromPlayQueue returns fallback when index is invalid',
+    () {
+      final item = buildMediaItemFromPlayQueue(
+        playQueue: PlayQueue(
+          songs: [song(id: '1', title: 'A', duration: 120)],
+          index: 3,
+        ),
+      );
 
-    expect(item.id, '-1');
-    expect(item.title, 'MeloTrip');
-    expect(item.playable, false);
-    expect(item.duration, Duration.zero);
-  });
+      expect(item.id, '-1');
+      expect(item.title, 'MeloTrip');
+      expect(item.playable, false);
+      expect(item.duration, Duration.zero);
+    },
+  );
 
   test('buildMediaItemFromPlayQueue maps current song metadata', () {
     final item = buildMediaItemFromPlayQueue(
-      playQueue: PlayQueue(songs: [song(id: '2', title: 'B', duration: 90)], index: 0),
+      playQueue: PlayQueue(
+        songs: [song(id: '2', title: 'B', duration: 90)],
+        index: 0,
+      ),
     );
 
     expect(item.id, '2');

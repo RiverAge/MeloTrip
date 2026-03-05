@@ -14,14 +14,9 @@ class DesktopFoldersPage extends ConsumerWidget {
       body: Column(
         crossAxisAlignment: .start,
         children: [
-          _PageHeader(
-            title: l10n.songMetaPath,
-            count: 521,
-          ),
+          _PageHeader(title: l10n.songMetaPath, count: 521),
           _Toolbar(),
-          Expanded(
-            child: _FolderTable(),
-          ),
+          Expanded(child: _FolderTable()),
         ],
       ),
     );
@@ -62,10 +57,7 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -80,13 +72,32 @@ class _Toolbar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
-          const Text('Id', style: TextStyle(fontSize: 12, fontWeight: .bold, color: Colors.grey)),
+          const Text(
+            'Id',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: .bold,
+              color: Colors.grey,
+            ),
+          ),
           const SizedBox(width: 24),
-          Icon(Icons.sort_by_alpha_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
+          Icon(
+            Icons.sort_by_alpha_rounded,
+            size: 18,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           const SizedBox(width: 16),
-          Icon(Icons.refresh_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
+          Icon(
+            Icons.refresh_rounded,
+            size: 18,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           const Spacer(),
-          Icon(Icons.tune_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
+          Icon(
+            Icons.tune_rounded,
+            size: 18,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ],
       ),
     );
@@ -95,7 +106,16 @@ class _Toolbar extends StatelessWidget {
 
 class _FolderTable extends StatelessWidget {
   final dummyFolders = [
-    'A-Lin', 'Adele', 'AGA', 'Aimer', 'Alan Walker', 'Alesso', 'Alex Goot', 'Arcane', 'Avicii', 'Backstreet Boys'
+    'A-Lin',
+    'Adele',
+    'AGA',
+    'Aimer',
+    'Alan Walker',
+    'Alesso',
+    'Alex Goot',
+    'Arcane',
+    'Avicii',
+    'Backstreet Boys',
   ];
 
   @override
@@ -107,11 +127,30 @@ class _FolderTable extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 30, child: Text('#', style: _headerStyle)),
-              const Expanded(flex: 4, child: Text('TITLE', style: _headerStyle)),
-              const SizedBox(width: 60, child: Icon(Icons.access_time_rounded, size: 14, color: Colors.grey)),
-              const Expanded(flex: 3, child: Text('ALBUM', style: _headerStyle)),
-              const Expanded(flex: 2, child: Text('GENRE', style: _headerStyle)),
-              const SizedBox(width: 60, child: Text('YEAR', style: _headerStyle)),
+              const Expanded(
+                flex: 4,
+                child: Text('TITLE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 60,
+                child: Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const Expanded(
+                flex: 3,
+                child: Text('ALBUM', style: _headerStyle),
+              ),
+              const Expanded(
+                flex: 2,
+                child: Text('GENRE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 60,
+                child: Text('YEAR', style: _headerStyle),
+              ),
               const SizedBox(width: 30),
             ],
           ),
@@ -159,7 +198,11 @@ class _FolderRow extends StatelessWidget {
               flex: 4,
               child: Row(
                 children: [
-                  const Icon(Icons.folder_rounded, color: Colors.amber, size: 20),
+                  const Icon(
+                    Icons.folder_rounded,
+                    color: Colors.amber,
+                    size: 20,
+                  ),
                   const SizedBox(width: 16),
                   Text(
                     name,
@@ -174,7 +217,11 @@ class _FolderRow extends StatelessWidget {
             const Expanded(flex: 3, child: SizedBox()),
             const Expanded(flex: 2, child: SizedBox()),
             const SizedBox(width: 60),
-            const Icon(Icons.favorite_border_rounded, size: 16, color: Colors.grey),
+            const Icon(
+              Icons.favorite_border_rounded,
+              size: 16,
+              color: Colors.grey,
+            ),
           ],
         ),
       ),

@@ -84,20 +84,20 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
               builder: (_, playlistMode) {
                 final (icon, tooltip, color) = switch (playlistMode) {
                   .none => (
-                      Icons.queue_music_outlined,
-                      l10n.playModeNone,
-                      iconMutedColor,
-                    ),
+                    Icons.queue_music_outlined,
+                    l10n.playModeNone,
+                    iconMutedColor,
+                  ),
                   .loop => (
-                      Icons.repeat_rounded,
-                      l10n.playModeLoop,
-                      colorScheme.primary,
-                    ),
+                    Icons.repeat_rounded,
+                    l10n.playModeLoop,
+                    colorScheme.primary,
+                  ),
                   .single => (
-                      Icons.repeat_one_rounded,
-                      l10n.playModeSingle,
-                      colorScheme.primary,
-                    ),
+                    Icons.repeat_one_rounded,
+                    l10n.playModeSingle,
+                    colorScheme.primary,
+                  ),
                 };
 
                 return IconButton(
@@ -123,15 +123,14 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerLow,
                   isScrollControlled: true,
                   builder: (_) => const _DesktopQueueSheet(),
                 );
               },
-              icon: Icon(
-                Icons.playlist_play_rounded,
-                color: iconMutedColor,
-              ),
+              icon: Icon(Icons.playlist_play_rounded, color: iconMutedColor),
             ),
           ],
         ),

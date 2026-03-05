@@ -31,37 +31,37 @@ void main() {
     expect(playedSong, isNull);
   });
 
-  test('dispatchSongTapPlayback plays target when tapping non-current song', () async {
-    final playQueue = PlayQueue(
-      songs: [buildSong('1'), buildSong('2')],
-      index: 0,
-    );
-    var toggleCalls = 0;
-    SongEntity? playedSong;
-    final target = buildSong('2');
+  test(
+    'dispatchSongTapPlayback plays target when tapping non-current song',
+    () async {
+      final playQueue = PlayQueue(
+        songs: [buildSong('1'), buildSong('2')],
+        index: 0,
+      );
+      var toggleCalls = 0;
+      SongEntity? playedSong;
+      final target = buildSong('2');
 
-    await dispatchSongTapPlayback(
-      playQueue: playQueue,
-      song: target,
-      onToggleCurrent: () async {
-        toggleCalls++;
-      },
-      onPlayTarget: (song) async {
-        playedSong = song;
-      },
-    );
+      await dispatchSongTapPlayback(
+        playQueue: playQueue,
+        song: target,
+        onToggleCurrent: () async {
+          toggleCalls++;
+        },
+        onPlayTarget: (song) async {
+          playedSong = song;
+        },
+      );
 
-    expect(toggleCalls, 0);
-    expect(playedSong?.id, target.id);
-  });
+      expect(toggleCalls, 0);
+      expect(playedSong?.id, target.id);
+    },
+  );
 
   test('isCurrentSongTap returns false for out-of-range index', () {
     final playQueue = PlayQueue(songs: [buildSong('1')], index: 3);
 
-    final result = isCurrentSongTap(
-      playQueue: playQueue,
-      song: buildSong('1'),
-    );
+    final result = isCurrentSongTap(playQueue: playQueue, song: buildSong('1'));
 
     expect(result, isFalse);
   });

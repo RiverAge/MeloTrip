@@ -8,8 +8,7 @@ class _SidebarServerCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final scanStatus = ref.watch(scanStatusProvider);
-    final isOnline =
-        scanStatus.asData?.value?.subsonicResponse?.status == 'ok';
+    final isOnline = scanStatus.asData?.value?.subsonicResponse?.status == 'ok';
     final statusText = isOnline ? l10n.serverOnline : l10n.serverOffline;
     return AsyncValueBuilder(
       provider: currentUserProvider,

@@ -34,9 +34,7 @@ extension PlayerMediaItem on AppPlayer {
   }
 }
 
-MediaItem buildMediaItemFromPlayQueue({
-  required PlayQueue playQueue,
-}) {
+MediaItem buildMediaItemFromPlayQueue({required PlayQueue playQueue}) {
   if (playQueue.index < 0 || playQueue.index >= playQueue.songs.length) {
     return const MediaItem(
       id: '-1',
@@ -55,6 +53,8 @@ MediaItem buildMediaItemFromPlayQueue({
     album: song.album,
     title: song.title ?? '',
     artist: song.artist,
-    duration: durationValue != null ? Duration(seconds: durationValue) : Duration.zero,
+    duration: durationValue != null
+        ? Duration(seconds: durationValue)
+        : Duration.zero,
   );
 }

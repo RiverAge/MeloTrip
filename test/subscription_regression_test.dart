@@ -13,7 +13,9 @@ String _readFile(String relativePath) {
 
 void main() {
   test('music bar subscription count regression guard', () {
-    final musicBar = _readFile('lib/pages/mobile/music_bar/parts/music_bar.dart');
+    final musicBar = _readFile(
+      'lib/pages/mobile/music_bar/parts/music_bar.dart',
+    );
     final bottomSheet = _readFile(
       'lib/pages/mobile/music_bar/parts/bottom_sheet_play_queue.dart',
     );
@@ -22,13 +24,18 @@ void main() {
     expect(_countPattern(musicBar, 'provider:\\s*player\\.playingStream'), 1);
     expect(_countPattern(bottomSheet, 'appPlayerHandlerProvider'), 1);
     expect(
-      _countPattern(bottomSheet, 'provider:\\s*widget\\.player\\.playingStream'),
+      _countPattern(
+        bottomSheet,
+        'provider:\\s*widget\\.player\\.playingStream',
+      ),
       1,
     );
   });
 
   test('list item pages avoid nested player provider reads', () {
-    final albumListItem = _readFile('lib/pages/mobile/album/parts/list_item.dart');
+    final albumListItem = _readFile(
+      'lib/pages/mobile/album/parts/list_item.dart',
+    );
     final playlistBuilder = _readFile(
       'lib/pages/mobile/playlist/parts/playlist_detail_builder.dart',
     );
@@ -46,16 +53,24 @@ void main() {
     final musicControls = _readFile(
       'lib/pages/mobile/playing/parts/music_controls.dart',
     );
-    final timerAxis = _readFile('lib/pages/mobile/playing/parts/timer_axis.dart');
+    final timerAxis = _readFile(
+      'lib/pages/mobile/playing/parts/timer_axis.dart',
+    );
     final playerControls = _readFile(
       'lib/pages/mobile/playing/parts/player_controls.dart',
     );
 
     expect(_countPattern(musicControls, 'appPlayerHandlerProvider'), 1);
-    expect(_countPattern(musicControls, 'provider:\\s*player\\.playlistModeStream'), 1);
+    expect(
+      _countPattern(musicControls, 'provider:\\s*player\\.playlistModeStream'),
+      1,
+    );
     expect(_countPattern(timerAxis, 'appPlayerHandlerProvider'), 1);
     expect(_countPattern(timerAxis, 'provider:\\s*player\\.durationStream'), 1);
     expect(_countPattern(playerControls, 'appPlayerHandlerProvider'), 1);
-    expect(_countPattern(playerControls, 'provider:\\s*player\\.playingStream'), 1);
+    expect(
+      _countPattern(playerControls, 'provider:\\s*player\\.playingStream'),
+      1,
+    );
   });
 }

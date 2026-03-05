@@ -45,9 +45,9 @@ SongControlNavigation _defaultNavigation() {
       );
     },
     openAddToPlaylist: (context, song) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => AddToPlaylistPage(song: song)),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => AddToPlaylistPage(song: song)));
     },
   );
 }

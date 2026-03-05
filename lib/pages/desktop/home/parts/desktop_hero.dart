@@ -31,21 +31,21 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
             },
             child: Container(
               height: 280,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    PlaybackArtworkBackground(
-                      artworkId: album.id,
-                      size: 1400,
-                    ),
-                    const PlaybackBlurOverlay(
-                      surfaceAlpha: .34,
-                    ),
+                    PlaybackArtworkBackground(artworkId: album.id, size: 1400),
+                    const PlaybackBlurOverlay(surfaceAlpha: .34),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 32,
+                      ),
                       child: Row(
                         children: [
                           Container(
@@ -55,7 +55,9 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                               borderRadius: BorderRadius.circular(8),
                               boxShadow: [
                                 BoxShadow(
-                                  color: theme.shadowColor.withValues(alpha: .4),
+                                  color: theme.shadowColor.withValues(
+                                    alpha: .4,
+                                  ),
                                   blurRadius: 30,
                                   offset: const Offset(0, 10),
                                 ),
@@ -85,10 +87,11 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                                 const SizedBox(height: 12),
                                 Text(
                                   album.artist ?? '-',
-                                  style: theme.textTheme.headlineSmall?.copyWith(
-                                    color: textColor.withValues(alpha: .9),
-                                    fontWeight: .w600,
-                                  ),
+                                  style: theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                        color: textColor.withValues(alpha: .9),
+                                        fontWeight: .w600,
+                                      ),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(

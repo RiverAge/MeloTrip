@@ -157,7 +157,10 @@ void main() {
     expect(find.text('Hero Album'), findsAtLeastNWidgets(1));
     expect(find.text('Hero Artist'), findsAtLeastNWidgets(1));
     expect(find.text('Recent Album 0'), findsAtLeastNWidgets(1));
-    await tester.drag(find.byType(CustomScrollView).first, const Offset(0, -700));
+    await tester.drag(
+      find.byType(CustomScrollView).first,
+      const Offset(0, -700),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Newest Album 0'), findsWidgets);
     expect(find.byIcon(Icons.play_arrow_rounded), findsWidgets);

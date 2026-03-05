@@ -80,9 +80,9 @@ class _BottomSheetItem extends StatelessWidget {
         style: TextStyle(
           color: currentPlayingIndex == index
               ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.5,
-                ),
+              : Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           fontSize: 12,
         ),
       ),

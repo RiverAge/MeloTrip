@@ -31,9 +31,9 @@ class PlaybackMediaMetaBadge extends StatelessWidget {
               )
             : '';
         final bitrate = track.bitrate != null
-            ? AppLocalizations.of(context)!.audioBitrateKbps(
-                (track.bitrate! / 1000).round().toString(),
-              )
+            ? AppLocalizations.of(
+                context,
+              )!.audioBitrateKbps((track.bitrate! / 1000).round().toString())
             : '';
         final infoText = samplerate.isNotEmpty && bitrate.isNotEmpty
             ? '$samplerate / $bitrate'

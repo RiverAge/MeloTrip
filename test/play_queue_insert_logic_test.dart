@@ -7,29 +7,17 @@ void main() {
   SongEntity song(String id) => SongEntity(id: id, title: 'Song $id');
 
   test('returns existing index when song is already in queue', () {
-    final queue = PlayQueue(
-      songs: [song('1'), song('2'), song('3')],
-      index: 1,
-    );
+    final queue = PlayQueue(songs: [song('1'), song('2'), song('3')], index: 1);
 
-    final index = resolveInsertToNextIndex(
-      playQueue: queue,
-      song: song('3'),
-    );
+    final index = resolveInsertToNextIndex(playQueue: queue, song: song('3'));
 
     expect(index, 2);
   });
 
   test('returns next index when song is not in queue', () {
-    final queue = PlayQueue(
-      songs: [song('1'), song('2'), song('3')],
-      index: 1,
-    );
+    final queue = PlayQueue(songs: [song('1'), song('2'), song('3')], index: 1);
 
-    final index = resolveInsertToNextIndex(
-      playQueue: queue,
-      song: song('9'),
-    );
+    final index = resolveInsertToNextIndex(playQueue: queue, song: song('9'));
 
     expect(index, 2);
   });
@@ -37,24 +25,15 @@ void main() {
   test('returns zero for empty queue', () {
     final queue = PlayQueue(songs: const [], index: -1);
 
-    final index = resolveInsertToNextIndex(
-      playQueue: queue,
-      song: song('9'),
-    );
+    final index = resolveInsertToNextIndex(playQueue: queue, song: song('9'));
 
     expect(index, 0);
   });
 
   test('clamps to queue length when current index is out of range', () {
-    final queue = PlayQueue(
-      songs: [song('1'), song('2')],
-      index: 10,
-    );
+    final queue = PlayQueue(songs: [song('1'), song('2')], index: 10);
 
-    final index = resolveInsertToNextIndex(
-      playQueue: queue,
-      song: song('9'),
-    );
+    final index = resolveInsertToNextIndex(playQueue: queue, song: song('9'));
 
     expect(index, 2);
   });

@@ -51,9 +51,7 @@ void main() {
         username: 'tester',
         host: 'https://example.com',
       ),
-      loadConfig: () async => const Configuration(
-        playlistMode: .loop,
-      ),
+      loadConfig: () async => const Configuration(playlistMode: .loop),
       loadPlayQueue: () async => const PlayQueueEntity(
         current: 'song_1',
         entry: [SongEntity(id: 'song_1', title: 'Song 1')],

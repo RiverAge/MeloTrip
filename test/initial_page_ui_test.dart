@@ -61,9 +61,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      buildApp([
-        initialBootstrapServiceProvider.overrideWithValue(service),
-      ]),
+      buildApp([initialBootstrapServiceProvider.overrideWithValue(service)]),
     );
 
     expect(find.byIcon(Icons.music_note_rounded), findsOneWidget);
@@ -85,7 +83,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            appPlayerHandlerProvider.overrideWith(_CountingAppPlayerHandler.new),
+            appPlayerHandlerProvider.overrideWith(
+              _CountingAppPlayerHandler.new,
+            ),
             currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           ],
           child: MaterialApp(

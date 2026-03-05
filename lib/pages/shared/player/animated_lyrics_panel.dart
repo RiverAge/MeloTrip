@@ -43,7 +43,8 @@ class AnimatedLyricsPanel extends ConsumerStatefulWidget {
   final double edgeFadeBottomStop;
 
   @override
-  ConsumerState<AnimatedLyricsPanel> createState() => _AnimatedLyricsPanelState();
+  ConsumerState<AnimatedLyricsPanel> createState() =>
+      _AnimatedLyricsPanelState();
 }
 
 class _AnimatedLyricsPanelState extends ConsumerState<AnimatedLyricsPanel> {
@@ -92,10 +93,9 @@ class _AnimatedLyricsPanelState extends ConsumerState<AnimatedLyricsPanel> {
     if (gContext == null || !context.mounted) return;
     Scrollable.ensureVisible(
       gContext,
-      alignment:
-          _currentIndex == -1
-              ? widget.firstScrollAlignment
-              : widget.activeScrollAlignment,
+      alignment: _currentIndex == -1
+          ? widget.firstScrollAlignment
+          : widget.activeScrollAlignment,
       duration: animateDuration,
     );
   }
@@ -104,36 +104,29 @@ class _AnimatedLyricsPanelState extends ConsumerState<AnimatedLyricsPanel> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return LayoutBuilder(
-      builder:
-          (context, constraints) => ShaderMask(
-            shaderCallback:
-                (bounds) => LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: const [
-                    Colors.transparent,
-                    Colors.black,
-                    Colors.black,
-                    Colors.transparent,
-                  ],
-                  stops: [
-                    0,
-                    widget.edgeFadeTopStop,
-                    widget.edgeFadeBottomStop,
-                    1,
-                  ],
-                ).createShader(bounds),
-            blendMode: BlendMode.dstIn,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: constraints.maxHeight / 2),
-                  ..._items(colorScheme),
-                  SizedBox(height: constraints.maxHeight / 2),
-                ],
-              ),
-            ),
+      builder: (context, constraints) => ShaderMask(
+        shaderCallback: (bounds) => LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: const [
+            Colors.transparent,
+            Colors.black,
+            Colors.black,
+            Colors.transparent,
+          ],
+          stops: [0, widget.edgeFadeTopStop, widget.edgeFadeBottomStop, 1],
+        ).createShader(bounds),
+        blendMode: BlendMode.dstIn,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: constraints.maxHeight / 2),
+              ..._items(colorScheme),
+              SizedBox(height: constraints.maxHeight / 2),
+            ],
           ),
+        ),
+      ),
     );
   }
 
@@ -216,7 +209,9 @@ class _AnimatedLyricsItem extends StatelessWidget {
                       colorScheme.primary,
                       value,
                     ),
-                    fontWeight: value > .5 ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: value > .5
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 );
 
@@ -234,4 +229,3 @@ class _AnimatedLyricsItem extends StatelessWidget {
     );
   }
 }
-

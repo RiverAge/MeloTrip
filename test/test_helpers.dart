@@ -57,10 +57,7 @@ class FakeApiScanStatus extends Api {
   Future<Dio> build() async {
     final dio = Dio();
     dio.httpClientAdapter = StaticJsonAdapter({
-      'subsonic-response': {
-        'status': 'ok',
-        'version': '1.2.3',
-      },
+      'subsonic-response': {'status': 'ok', 'version': '1.2.3'},
     });
     return dio;
   }
@@ -84,7 +81,9 @@ class StaticJsonAdapter implements HttpClientAdapter {
     return ResponseBody.fromBytes(
       utf8.encode(payload),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

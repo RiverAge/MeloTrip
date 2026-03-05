@@ -79,8 +79,9 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
               TextField(
                 controller: _commentController,
                 decoration: InputDecoration(
-                  hintText:
-                      AppLocalizations.of(context)!.playlistInputCommentHint,
+                  hintText: AppLocalizations.of(
+                    context,
+                  )!.playlistInputCommentHint,
                   labelText: AppLocalizations.of(context)!.comment,
                 ),
               ),
@@ -105,11 +106,10 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
                     Expanded(
                       child: AsyncValueBuilder(
                         provider: playlistUpdateProvider,
-                        loading:
-                            (context, _) => const ElevatedButton(
-                              onPressed: null,
-                              child: FixedCenterCircular(size: 15),
-                            ),
+                        loading: (context, _) => const ElevatedButton(
+                          onPressed: null,
+                          child: FixedCenterCircular(size: 15),
+                        ),
                         empty: (context, ref) => _buildLoginButton(ref),
                         builder: (context, data, ref) => _buildLoginButton(ref),
                       ),

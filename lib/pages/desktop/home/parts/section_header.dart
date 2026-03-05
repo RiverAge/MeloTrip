@@ -33,14 +33,22 @@ class _SectionHeader extends StatelessWidget {
               child: Text(
                 AppLocalizations.of(context)!.viewAll,
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .8),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: .8,
+                  ),
                 ),
               ),
             ),
           const SizedBox(width: 10),
-          _ScrollButton(icon: Icons.arrow_back_ios_new_rounded, onPressed: () {}),
+          _ScrollButton(
+            icon: Icons.arrow_back_ios_new_rounded,
+            onPressed: () {},
+          ),
           const SizedBox(width: 8),
-          _ScrollButton(icon: Icons.arrow_forward_ios_rounded, onPressed: () {}),
+          _ScrollButton(
+            icon: Icons.arrow_forward_ios_rounded,
+            onPressed: () {},
+          ),
         ],
       ),
     );

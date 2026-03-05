@@ -116,7 +116,9 @@ class _SettingRow extends StatelessWidget {
                 Text(
                   description,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: .7,
+                    ),
                   ),
                 ),
               ],

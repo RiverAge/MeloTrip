@@ -47,9 +47,9 @@ class _AlbumCardV2 extends StatelessWidget {
                   children: [
                     Text(
                       album.name ?? '',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: .w600,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(fontWeight: .w600),
                       maxLines: 1,
                       overflow: .ellipsis,
                     ),

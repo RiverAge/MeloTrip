@@ -54,7 +54,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                     alpha: .4,
                                   )
                                 : theme.colorScheme.surfaceContainerHigh
-                                    .withValues(alpha: .35),
+                                      .withValues(alpha: .35),
                             borderRadius: BorderRadius.circular(10),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(10),
@@ -97,10 +97,10 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                             overflow: .ellipsis,
                                             style: theme.textTheme.bodyMedium
                                                 ?.copyWith(
-                                              fontWeight: isActive
-                                                  ? .w700
-                                                  : .w500,
-                                            ),
+                                                  fontWeight: isActive
+                                                      ? .w700
+                                                      : .w500,
+                                                ),
                                           ),
                                           Text(
                                             '${song.displayArtist ?? '-'} · ${durationFormatter(song.duration)}',
@@ -108,10 +108,10 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                             overflow: .ellipsis,
                                             style: theme.textTheme.bodySmall
                                                 ?.copyWith(
-                                              color: theme
-                                                  .colorScheme
-                                                  .onSurfaceVariant,
-                                            ),
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -124,7 +124,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                       color: isActive
                                           ? theme.colorScheme.primary
                                           : theme.colorScheme.onSurfaceVariant
-                                              .withValues(alpha: .7),
+                                                .withValues(alpha: .7),
                                     ),
                                   ],
                                 ),

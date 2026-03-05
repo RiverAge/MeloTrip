@@ -83,7 +83,11 @@ class _PageHeader extends StatelessWidget {
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Text(
@@ -153,7 +157,11 @@ class _ViewSwitcher extends StatelessWidget {
 }
 
 class _ViewItem extends StatelessWidget {
-  const _ViewItem({required this.icon, required this.selected, required this.onTap});
+  const _ViewItem({
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
   final IconData icon;
   final bool selected;
   final VoidCallback onTap;
@@ -170,7 +178,13 @@ class _ViewItem extends StatelessWidget {
           color: selected ? theme.colorScheme.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Icon(icon, size: 18, color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant),
+        child: Icon(
+          icon,
+          size: 18,
+          color: selected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -229,10 +243,26 @@ class _AlbumTable extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 30, child: Text('#', style: _headerStyle)),
-              const Expanded(flex: 4, child: Text('TITLE', style: _headerStyle)),
-              const SizedBox(width: 80, child: Icon(Icons.access_time_rounded, size: 14, color: Colors.grey)),
-              const Expanded(flex: 3, child: Text('GENRE', style: _headerStyle)),
-              const SizedBox(width: 80, child: Text('YEAR', style: _headerStyle)),
+              const Expanded(
+                flex: 4,
+                child: Text('TITLE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 80,
+                child: Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const Expanded(
+                flex: 3,
+                child: Text('GENRE', style: _headerStyle),
+              ),
+              const SizedBox(
+                width: 80,
+                child: Text('YEAR', style: _headerStyle),
+              ),
               const SizedBox(width: 30),
             ],
           ),
@@ -283,7 +313,12 @@ class _AlbumTableRow extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
-                    child: ArtworkImage(id: album.id, size: 80, width: 40, height: 40),
+                    child: ArtworkImage(
+                      id: album.id,
+                      size: 80,
+                      width: 40,
+                      height: 40,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -294,13 +329,18 @@ class _AlbumTableRow extends StatelessWidget {
                           album.name ?? '-',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: .bold,
+                          ),
                         ),
                         Text(
                           album.artist ?? '-',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7)),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant
+                                .withValues(alpha: .7),
+                          ),
                         ),
                       ],
                     ),
@@ -310,7 +350,10 @@ class _AlbumTableRow extends StatelessWidget {
             ),
             SizedBox(
               width: 80,
-              child: Text('35:54', style: theme.textTheme.bodySmall), // Mock or sum tracks
+              child: Text(
+                '35:54',
+                style: theme.textTheme.bodySmall,
+              ), // Mock or sum tracks
             ),
             Expanded(
               flex: 3,
@@ -323,9 +366,16 @@ class _AlbumTableRow extends StatelessWidget {
             ),
             SizedBox(
               width: 80,
-              child: Text('${album.year ?? ""}', style: theme.textTheme.bodySmall),
+              child: Text(
+                '${album.year ?? ""}',
+                style: theme.textTheme.bodySmall,
+              ),
             ),
-            const Icon(Icons.favorite_border_rounded, size: 16, color: Colors.grey),
+            const Icon(
+              Icons.favorite_border_rounded,
+              size: 16,
+              color: Colors.grey,
+            ),
           ],
         ),
       ),
@@ -367,23 +417,34 @@ class _AlbumDetailItem extends ConsumerWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: ArtworkImage(id: album.id, size: 500, width: 240, height: 240),
+                  child: ArtworkImage(
+                    id: album.id,
+                    size: 500,
+                    width: 240,
+                    height: 240,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   album.name ?? '-',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: .bold),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: .bold,
+                  ),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                 ),
                 Text(
                   album.artist ?? '-',
-                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   '${album.year ?? ""} • ${album.songCount ?? 0} Songs',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
                 ),
               ],
             ),
@@ -395,7 +456,16 @@ class _AlbumDetailItem extends ConsumerWidget {
               builder: (context, data, ref) {
                 final songs = data.subsonicResponse?.album?.song ?? [];
                 return Column(
-                  children: songs.asMap().entries.map((entry) => _AlbumDetailTrackRow(index: entry.key + 1, song: entry.value)).toList(),
+                  children: songs
+                      .asMap()
+                      .entries
+                      .map(
+                        (entry) => _AlbumDetailTrackRow(
+                          index: entry.key + 1,
+                          song: entry.value,
+                        ),
+                      )
+                      .toList(),
                 );
               },
             ),
@@ -418,16 +488,30 @@ class _AlbumDetailTrackRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Row(
         children: [
-            SizedBox(
-              width: 40,
-              child: Text(index.toString().padLeft(2, '0'), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
+          SizedBox(
+            width: 40,
+            child: Text(
+              index.toString().padLeft(2, '0'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.outline,
+              ),
             ),
+          ),
           Expanded(
             child: Text(song.title ?? '-', style: theme.textTheme.bodyMedium),
           ),
-          Text(_formatDuration(song.duration), style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
+          Text(
+            _formatDuration(song.duration),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.outline,
+            ),
+          ),
           const SizedBox(width: 16),
-          const Icon(Icons.favorite_border_rounded, size: 14, color: Colors.grey),
+          const Icon(
+            Icons.favorite_border_rounded,
+            size: 14,
+            color: Colors.grey,
+          ),
         ],
       ),
     );

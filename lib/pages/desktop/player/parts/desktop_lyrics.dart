@@ -25,7 +25,10 @@ class _DesktopLyrics extends ConsumerWidget {
           return Center(
             child: Text(
               AppLocalizations.of(context)!.noLyricsFound,
-              style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 18),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 18,
+              ),
             ),
           );
         }
