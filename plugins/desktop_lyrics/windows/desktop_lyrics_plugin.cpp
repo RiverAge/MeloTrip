@@ -106,7 +106,6 @@ void DesktopLyricsPlugin::RegisterWithRegistrar(
 
 DesktopLyricsPlugin::DesktopLyricsPlugin() {
   overlay_ = std::make_unique<DesktopLyricsOverlay>();
-  overlay_->Create();
 }
 
 DesktopLyricsPlugin::~DesktopLyricsPlugin() {

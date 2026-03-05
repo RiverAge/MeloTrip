@@ -178,6 +178,18 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   text_align_ = std::clamp(config.text_align, 0, 2);
   font_weight_value_ = std::clamp(config.font_weight_value, 100, 900);
 
+  if (!enabled_) {
+    if (hwnd_) Hide();
+    return;
+  }
+
+  // Only cache config before first lyric frame arrives. This avoids creating
+  // and showing an empty native overlay during enable.
+  if (current_line_.empty()) {
+    if (hwnd_) Hide();
+    return;
+  }
+
   if (!hwnd_ && !Create()) return;
 
   if (auto_overlay_height_) {
@@ -191,10 +203,7 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   ApplyWindowStyles();
   SetWindowPos(hwnd_, HWND_TOPMOST, 0, 0, overlay_width_, overlay_height_,
                SWP_NOMOVE | SWP_NOACTIVATE);
-  if (!enabled_) {
-    Hide();
-    return;
-  }
+
   Show();
 }
 

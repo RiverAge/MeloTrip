@@ -30,8 +30,9 @@ class _DesktopLyricsDemoPage extends StatefulWidget {
 
 class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   final _lyrics = DesktopLyrics();
+  static const _previewLine = 'Desktop Lyrics Enabled';
 
-  bool _enabled = true;
+  bool _enabled = false;
   bool _clickThrough = false;
   bool _gradientEnabled = true;
   double _fontSize = 34;
@@ -69,7 +70,8 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   @override
   void initState() {
     super.initState();
-    _pushConfig();
+    // Delay native overlay initialization until user action to avoid
+    // startup-time native window instability on some Windows environments.
   }
 
   @override
@@ -210,18 +212,6 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
             runSpacing: 8,
             children: [
               FilledButton(
-                onPressed: () => _lyrics.setEnabled(true),
-                child: const Text('Show'),
-              ),
-              FilledButton(
-                onPressed: () => _lyrics.setEnabled(false),
-                child: const Text('Hide'),
-              ),
-              FilledButton(
-                onPressed: _pushConfig,
-                child: const Text('Apply Config'),
-              ),
-              FilledButton(
                 onPressed: _playingLineDemo ? null : _playLineDemo,
                 child: const Text('Play Line Preview'),
               ),
@@ -242,6 +232,14 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
                   onChanged: (v) async {
                     setState(() => _enabled = v);
                     await _pushConfig();
+                    if (v) {
+                      await _lyrics.render(
+                        const DesktopLyricsFrame.line(
+                          currentLine: _previewLine,
+                          lineProgress: 1.0,
+                        ),
+                      );
+                    }
                   },
                 ),
                 SwitchListTile(
