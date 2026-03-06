@@ -7,7 +7,6 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
-import 'package:melo_trip/model/response/play_queue/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -68,7 +67,7 @@ class InitialBootstrapService {
   }
 }
 
-final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
+final initialBootstrapServiceProvider = Provider.autoDispose<InitialBootstrapService>((
   ref,
 ) {
   Future<AppPlayer?>? playerFuture;
@@ -99,71 +98,48 @@ final initialBootstrapResultProvider =
       return service.bootstrap();
     });
 
-class PlayQueueBootstrapService {
-  PlayQueueBootstrapService({
-    required this.loadAuthUser,
-    required this.loadPlayQueue,
-    required this.ensurePlayer,
-  });
+String? _restoredPlayQueueUserKey;
+Future<void>? _restorePlayQueueInFlight;
 
-  final Future<AuthUser?> Function() loadAuthUser;
-  final Future<PlayQueueEntity?> Function() loadPlayQueue;
-  final Future<AppPlayer?> Function() ensurePlayer;
+Future<void> ensurePlayQueueRestored(WidgetRef ref) async {
+  final running = _restorePlayQueueInFlight;
+  if (running != null) return running;
 
-  String? _restoredUserKey;
-  Future<void>? _inFlight;
-
-  Future<void> ensureRestored() {
-    final running = _inFlight;
-    if (running != null) return running;
-    final future = _restoreInternal();
-    _inFlight = future;
-    return future.whenComplete(() {
-      if (identical(_inFlight, future)) {
-        _inFlight = null;
-      }
-    });
-  }
-
-  Future<void> _restoreInternal() async {
+  final future = () async {
     try {
-      final auth = await loadAuthUser();
+      final auth = await ref.read(currentUserProvider.future);
       final userKey = '${auth?.host}|${auth?.username}|${auth?.token}';
-      if (_restoredUserKey == userKey) return;
+      if (_restoredPlayQueueUserKey == userKey) return;
 
-      final queue = await loadPlayQueue();
-      final player = await ensurePlayer();
+      final api = await ref.read(apiProvider.future);
+      final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
+      final data = res.data;
+      final queue = data == null
+          ? null
+          : SubsonicResponse.fromJson(data).subsonicResponse?.playQueue;
+
+      final player = await ref.read(appPlayerHandlerProvider.future);
       if (player == null) return;
 
       await player.setPlaylist(
         songs: queue?.entry ?? const <SongEntity>[],
         initialId: queue?.current,
       );
-      _restoredUserKey = userKey;
+      _restoredPlayQueueUserKey = userKey;
     } catch (_) {
       // Keep tab rendering resilient when queue restore dependencies are missing.
     }
-  }
+  }();
+
+  _restorePlayQueueInFlight = future;
+  await future.whenComplete(() {
+    if (identical(_restorePlayQueueInFlight, future)) {
+      _restorePlayQueueInFlight = null;
+    }
+  });
 }
 
-final playQueueBootstrapServiceProvider = Provider<PlayQueueBootstrapService>((
-  ref,
-) {
-  Future<PlayQueueEntity?> loadPlayQueue() async {
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data).subsonicResponse?.playQueue;
-  }
-
-  Future<AppPlayer?> ensurePlayer() async {
-    return ref.read(appPlayerHandlerProvider.future);
-  }
-
-  return PlayQueueBootstrapService(
-    loadAuthUser: () => ref.read(currentUserProvider.future),
-    loadPlayQueue: loadPlayQueue,
-    ensurePlayer: ensurePlayer,
-  );
-});
+void resetPlayQueueRestoreStateForTest() {
+  _restoredPlayQueueUserKey = null;
+  _restorePlayQueueInFlight = null;
+}

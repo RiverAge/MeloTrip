@@ -61,7 +61,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
   @override
   void initState() {
     super.initState();
-    unawaited(ref.read(playQueueBootstrapServiceProvider).ensureRestored());
+    unawaited(ensurePlayQueueRestored(ref));
   }
 
   void _setDesktopTab(int index) {

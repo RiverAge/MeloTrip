@@ -25,7 +25,7 @@ class _MobileTabPageState extends ConsumerState<MobileTabPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    unawaited(ref.read(playQueueBootstrapServiceProvider).ensureRestored());
+    unawaited(ensurePlayQueueRestored(ref));
   }
 
   @override
