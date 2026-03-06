@@ -154,16 +154,7 @@ extension _PlayerListenerLogic on _MyAppState {
       lyricsLines = null;
       final requestId = ++lyricsRequestId;
       final resp = await ref.read(lyricsProvider(songId).future);
-      if (requestId != lyricsRequestId) {
-        return;
-      }
-      final confirmedSongId =
-          (player.playQueue.index >= player.playQueue.songs.length ||
-                      player.playQueue.index < 0
-                  ? null
-                  : player.playQueue.songs[player.playQueue.index])
-              ?.id;
-      lyricsLines = confirmedSongId == songId
+      lyricsLines = requestId == lyricsRequestId
           ? resp
                 ?.subsonicResponse
                 ?.lyricsList

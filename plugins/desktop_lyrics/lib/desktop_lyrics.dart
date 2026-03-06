@@ -567,10 +567,30 @@ class _DesktopLyricsService {
 
 class DesktopLyrics extends ChangeNotifier {
   /// Creates a desktop lyrics controller.
-  DesktopLyrics({MethodChannel? channel})
-      : _service = _DesktopLyricsService(channel: channel);
+  ///
+  /// By default this returns a shared singleton instance to avoid state split
+  /// between `apply` and `render` call sites.
+  factory DesktopLyrics({MethodChannel? channel}) {
+    if (channel != null) {
+      return DesktopLyrics._internal(channel: channel, shared: false);
+    }
+    final existing = _sharedInstance;
+    if (existing != null && !existing._disposed) {
+      return existing;
+    }
+    final created = DesktopLyrics._internal(shared: true);
+    _sharedInstance = created;
+    return created;
+  }
+
+  DesktopLyrics._internal({MethodChannel? channel, required bool shared})
+      : _service = _DesktopLyricsService(channel: channel),
+        _shared = shared;
+
+  static DesktopLyrics? _sharedInstance;
 
   final _DesktopLyricsService _service;
+  final bool _shared;
   DesktopLyricsConfig _config = const DesktopLyricsConfig(
     interaction: DesktopLyricsInteractionConfig(
       enabled: false,
@@ -640,6 +660,9 @@ class DesktopLyrics extends ChangeNotifier {
   void dispose() {
     if (_disposed) return;
     _disposed = true;
+    if (_shared && identical(_sharedInstance, this)) {
+      _sharedInstance = null;
+    }
     unawaited(_service.dispose());
     super.dispose();
   }
