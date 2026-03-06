@@ -39,7 +39,6 @@ void main() {
   testWidgets('InitialPage routes to TabPage when bootstrap succeeds', (
     WidgetTester tester,
   ) async {
-    var playlistRestored = false;
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -54,12 +53,8 @@ void main() {
                 host: 'https://example.com',
               ),
               loadConfig: () async => null,
-              loadPlayQueue: () async => null,
               resolveCachePath: () async => '/tmp/cache',
               startCacheServer: (_, _) {},
-              restorePlaylist: ({required songs, initialId}) async {
-                playlistRestored = true;
-              },
               restorePlaylistMode: (_) async {},
             ),
           ),
@@ -74,7 +69,6 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(playlistRestored, isTrue);
     expect(find.byType(TabPage), findsOneWidget);
   });
 }

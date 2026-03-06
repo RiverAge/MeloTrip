@@ -44,10 +44,8 @@ void main() {
     final service = InitialBootstrapService(
       loadAuthUser: () => pendingAuth.future,
       loadConfig: () async => null,
-      loadPlayQueue: () async => null,
       resolveCachePath: () async => '/tmp/cache',
       startCacheServer: (_, _) {},
-      restorePlaylist: ({required songs, initialId}) async {},
       restorePlaylistMode: (_) async {},
     );
 

@@ -9,7 +9,7 @@ import 'package:melo_trip/pages/shared/login/login_page.dart';
 class StartupNavigator {
   const StartupNavigator();
 
-  void navigate(BuildContext context, InitialBootstrapResult result) {
+  void navigate(NavigatorState navigator, InitialBootstrapResult result) {
     final targetPage = switch (result) {
       InitialBootstrapResult.loggedIn => const TabPage(),
       InitialBootstrapResult.loggedOut => const LoginPage(),
@@ -20,7 +20,7 @@ class StartupNavigator {
             defaultTargetPlatform == TargetPlatform.iOS)) {
       FlutterNativeSplash.remove();
     }
-    Navigator.of(context).pushAndRemoveUntil(
+    navigator.pushAndRemoveUntil(
       PageRouteBuilder(
         pageBuilder: (context, _, _) => targetPage,
         transitionDuration: Duration.zero,

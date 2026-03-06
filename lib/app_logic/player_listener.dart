@@ -145,23 +145,29 @@ extension _PlayerListenerLogic on _MyAppState {
       }
       unawaited(desktopLyrics.render(DesktopLyricsFrame.line(currentLine: '')));
       lastSongId = songId;
-      if (songId == null) {
+      if (songId != null) {
+        currentLyricsIndex = -1;
         lyricsLines = null;
-        return;
+        final requestId = ++lyricsRequestId;
+        final resp = await ref.read(lyricsProvider(songId).future);
+        lyricsLines = requestId == lyricsRequestId
+            ? resp
+                  ?.subsonicResponse
+                  ?.lyricsList
+                  ?.structuredLyrics
+                  ?.firstOrNull
+                  ?.line
+            : null;
+      } else {
+        lyricsLines = null;
       }
-
-      currentLyricsIndex = -1;
-      lyricsLines = null;
-      final requestId = ++lyricsRequestId;
-      final resp = await ref.read(lyricsProvider(songId).future);
-      lyricsLines = requestId == lyricsRequestId
-          ? resp
-                ?.subsonicResponse
-                ?.lyricsList
-                ?.structuredLyrics
-                ?.firstOrNull
-                ?.line
-          : null;
+      unawaited(
+        desktopLyrics.render(
+          DesktopLyricsFrame.line(
+            currentLine: lyricsLines?.firstOrNull?.value?.firstOrNull ?? '',
+          ),
+        ),
+      );
     });
 
     _positionSubscription = player.positionStream.listen((duration) async {

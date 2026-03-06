@@ -1,3 +1,4 @@
+import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,12 +29,19 @@ class _InitState extends ConsumerState<InitialPage> {
     );
   }
 
-  void _handleBootstrapResult(InitialBootstrapResult result) {
+  Future<void> _handleBootstrapResult(InitialBootstrapResult result) async {
     if (!mounted || _navigationHandled) return;
     _navigationHandled = true;
 
+    final desktopLyrics = DesktopLyrics();
+    final navigator = Navigator.of(context);
+    await desktopLyrics.apply(
+      desktopLyrics.state.copyWith(
+        interaction: desktopLyrics.state.interaction.copyWith(enabled: true),
+      ),
+    );
     final startupNavigator = ref.read(startupNavigatorProvider);
-    startupNavigator.navigate(context, result);
+    startupNavigator.navigate(navigator, result);
   }
 
   @override

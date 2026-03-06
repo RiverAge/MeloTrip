@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
@@ -15,6 +17,7 @@ import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
+import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -54,6 +57,12 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
   bool _showFullPlayer = false; // 控制详情页显示的局部状态
   final GlobalKey<NavigatorState> contentNavigatorKey =
       GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(ref.read(playQueueBootstrapServiceProvider).ensureRestored());
+  }
 
   void _setDesktopTab(int index) {
     if (_desktopIndex == index) {

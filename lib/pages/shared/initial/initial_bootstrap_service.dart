@@ -22,24 +22,16 @@ class InitialBootstrapService {
   InitialBootstrapService({
     required this.loadAuthUser,
     required this.loadConfig,
-    required this.loadPlayQueue,
     required this.resolveCachePath,
     required this.startCacheServer,
-    required this.restorePlaylist,
     required this.restorePlaylistMode,
     this.bootstrapTimeout = const Duration(seconds: 8),
   });
 
   final Future<AuthUser?> Function() loadAuthUser;
   final Future<Configuration?> Function() loadConfig;
-  final Future<PlayQueueEntity?> Function() loadPlayQueue;
   final Future<String> Function() resolveCachePath;
   final void Function(String dirPath, String host) startCacheServer;
-  final Future<void> Function({
-    required List<SongEntity> songs,
-    String? initialId,
-  })
-  restorePlaylist;
   final Future<void> Function(PlaylistMode mode) restorePlaylistMode;
   final Duration bootstrapTimeout;
 
@@ -66,11 +58,6 @@ class InitialBootstrapService {
     startCacheServer(dirPath, host);
 
     final config = await loadConfig();
-    final playQueue = await loadPlayQueue();
-    await restorePlaylist(
-      songs: playQueue?.entry ?? const <SongEntity>[],
-      initialId: playQueue?.current,
-    );
 
     final playlistMode = config?.playlistMode;
     if (playlistMode != null) {
@@ -84,14 +71,6 @@ class InitialBootstrapService {
 final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
   ref,
 ) {
-  Future<PlayQueueEntity?> loadPlayQueue() async {
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data).subsonicResponse?.playQueue;
-  }
-
   Future<AppPlayer?>? playerFuture;
   Future<AppPlayer?> ensurePlayerFuture() {
     playerFuture ??= ref.read(appPlayerHandlerProvider.future);
@@ -101,16 +80,9 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
   return InitialBootstrapService(
     loadAuthUser: () => ref.read(currentUserProvider.future),
     loadConfig: () => ref.read(userConfigProvider.future),
-    loadPlayQueue: loadPlayQueue,
     resolveCachePath: getCacheFilePath,
     startCacheServer: (dirPath, host) {
       Isolate.spawn(runHttpServer, {'dirPath': dirPath, 'host': host});
-    },
-    restorePlaylist: ({required songs, initialId}) async {
-      final player = await ensurePlayerFuture();
-      if (player != null) {
-        await player.setPlaylist(songs: songs, initialId: initialId);
-      }
     },
     restorePlaylistMode: (mode) async {
       final player = await ensurePlayerFuture();
@@ -126,3 +98,72 @@ final initialBootstrapResultProvider =
       final service = ref.read(initialBootstrapServiceProvider);
       return service.bootstrap();
     });
+
+class PlayQueueBootstrapService {
+  PlayQueueBootstrapService({
+    required this.loadAuthUser,
+    required this.loadPlayQueue,
+    required this.ensurePlayer,
+  });
+
+  final Future<AuthUser?> Function() loadAuthUser;
+  final Future<PlayQueueEntity?> Function() loadPlayQueue;
+  final Future<AppPlayer?> Function() ensurePlayer;
+
+  String? _restoredUserKey;
+  Future<void>? _inFlight;
+
+  Future<void> ensureRestored() {
+    final running = _inFlight;
+    if (running != null) return running;
+    final future = _restoreInternal();
+    _inFlight = future;
+    return future.whenComplete(() {
+      if (identical(_inFlight, future)) {
+        _inFlight = null;
+      }
+    });
+  }
+
+  Future<void> _restoreInternal() async {
+    try {
+      final auth = await loadAuthUser();
+      final userKey = '${auth?.host}|${auth?.username}|${auth?.token}';
+      if (_restoredUserKey == userKey) return;
+
+      final queue = await loadPlayQueue();
+      final player = await ensurePlayer();
+      if (player == null) return;
+
+      await player.setPlaylist(
+        songs: queue?.entry ?? const <SongEntity>[],
+        initialId: queue?.current,
+      );
+      _restoredUserKey = userKey;
+    } catch (_) {
+      // Keep tab rendering resilient when queue restore dependencies are missing.
+    }
+  }
+}
+
+final playQueueBootstrapServiceProvider = Provider<PlayQueueBootstrapService>((
+  ref,
+) {
+  Future<PlayQueueEntity?> loadPlayQueue() async {
+    final api = await ref.read(apiProvider.future);
+    final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
+    final data = res.data;
+    if (data == null) return null;
+    return SubsonicResponse.fromJson(data).subsonicResponse?.playQueue;
+  }
+
+  Future<AppPlayer?> ensurePlayer() async {
+    return ref.read(appPlayerHandlerProvider.future);
+  }
+
+  return PlayQueueBootstrapService(
+    loadAuthUser: () => ref.read(currentUserProvider.future),
+    loadPlayQueue: loadPlayQueue,
+    ensurePlayer: ensurePlayer,
+  );
+});
