@@ -158,7 +158,7 @@ void DesktopLyricsPlugin::HandleMethodCall(
       return;
     }
     OverlayConfig config;
-    config.enabled = ReadBoolFromMap(*arguments, "enabled", true);
+    config.enabled = ReadBoolFromMap(*arguments, "enabled", false);
     config.click_through = ReadBoolFromMap(*arguments, "clickThrough", false);
     config.font_size = ReadDoubleFromMap(*arguments, "fontSize", 38.0);
     config.opacity = ReadDoubleFromMap(*arguments, "opacity", 0.96);

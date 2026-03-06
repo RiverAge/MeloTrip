@@ -22,6 +22,11 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
+  test('default state starts disabled', () {
+    final controller = DesktopLyrics(channel: channel);
+    expect(controller.state.interaction.enabled, false);
+  });
+
   test('apply notifies listeners once', () async {
     final controller = DesktopLyrics(channel: channel);
     var notified = 0;
@@ -46,23 +51,23 @@ void main() {
 
     await controller.apply(
       controller.state.copyWith(
-        interaction: controller.state.interaction.copyWith(enabled: false),
+        interaction: controller.state.interaction.copyWith(enabled: true),
       ),
     );
     await controller.apply(
       controller.state.copyWith(
-        interaction: controller.state.interaction.copyWith(enabled: true),
+        interaction: controller.state.interaction.copyWith(enabled: false),
       ),
     );
 
     final methodCalls =
         calls.where((call) => call.method == 'updateConfig').toList();
     expect(methodCalls.length, 2);
-    final hideArgs = methodCalls[0].arguments as Map<Object?, Object?>;
-    final showArgs = methodCalls[1].arguments as Map<Object?, Object?>;
-    expect(hideArgs['enabled'], false);
+    final showArgs = methodCalls[0].arguments as Map<Object?, Object?>;
+    final hideArgs = methodCalls[1].arguments as Map<Object?, Object?>;
     expect(showArgs['enabled'], true);
-    expect(controller.state.interaction.enabled, true);
+    expect(hideArgs['enabled'], false);
+    expect(controller.state.interaction.enabled, false);
   });
 
   test('state snapshot reflects applied config fields', () async {

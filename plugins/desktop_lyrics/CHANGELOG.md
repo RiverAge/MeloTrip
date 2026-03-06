@@ -1,3 +1,10 @@
+## 0.0.4
+
+* Changed default visibility to disabled (`enabled: false`) to avoid showing overlay during app startup.
+* Aligned Windows/Linux native default `enabled` behavior with Dart-side default.
+* Updated README usage notes for explicit enable flow.
+* Added tests for default disabled state and adjusted toggle tests.
+
 ## 0.0.3
 
 * Added GitHub Actions tag-based publish workflow for pub.dev.

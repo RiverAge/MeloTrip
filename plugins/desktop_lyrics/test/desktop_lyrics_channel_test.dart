@@ -28,12 +28,12 @@ void main() {
     final lyrics = DesktopLyrics(channel: channel);
     await lyrics.apply(
       lyrics.state.copyWith(
-        interaction: lyrics.state.interaction.copyWith(enabled: false),
+        interaction: lyrics.state.interaction.copyWith(enabled: true),
       ),
     );
     await lyrics.apply(
       lyrics.state.copyWith(
-        interaction: lyrics.state.interaction.copyWith(enabled: true),
+        interaction: lyrics.state.interaction.copyWith(enabled: false),
       ),
     );
     lyrics.dispose();
@@ -41,10 +41,10 @@ void main() {
 
     expect(calls.map((e) => e.method),
         ['updateConfig', 'updateConfig', 'dispose']);
-    final hideArgs = calls[0].arguments as Map<Object?, Object?>;
-    final showArgs = calls[1].arguments as Map<Object?, Object?>;
-    expect(hideArgs['enabled'], false);
+    final showArgs = calls[0].arguments as Map<Object?, Object?>;
+    final hideArgs = calls[1].arguments as Map<Object?, Object?>;
     expect(showArgs['enabled'], true);
+    expect(hideArgs['enabled'], false);
   });
 
   test('serializes render/config payloads', () async {

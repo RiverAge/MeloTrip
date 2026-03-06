@@ -36,6 +36,7 @@ dependencies:
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
 final lyrics = DesktopLyrics();
+// Default: disabled. Call apply(enabled: true) before showing overlay.
 
 void onLyricsChanged() {
   final enabled = lyrics.state.interaction.enabled;
@@ -116,3 +117,6 @@ await lyrics.render(frame);
 ## 说明
 
 - Linux 已知问题：悬浮窗不会自动跟随系统缩放或分辨率变化（X11 与 Wayland 都可能出现）。
+
+
+- Default visibility is `enabled: false`.

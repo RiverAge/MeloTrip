@@ -29,6 +29,7 @@ Desktop floating lyrics overlay plugin for Flutter.
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
 final lyrics = DesktopLyrics();
+// Default: disabled. You must enable explicitly before showing overlay.
 
 void onLyricsChanged() {
   final enabled = lyrics.state.interaction.enabled;
@@ -122,4 +123,6 @@ Trusted Publisher setup (one-time on pub.dev):
 
 ## Notes
 
+- Default visibility is `enabled: false`. Call `apply(...)` with
+  `interaction.enabled: true` before expecting overlay display.
 - Linux known issue: overlay size/position does not automatically follow system scaling or resolution changes (can occur on both X11 and Wayland).

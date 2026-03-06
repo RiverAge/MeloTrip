@@ -15,7 +15,7 @@ class GraphicsPath;
 namespace desktop_lyrics {
 
 struct OverlayConfig {
-  bool enabled = true;
+  bool enabled = false;
   bool click_through = false;
   double font_size = 38.0;
   double opacity = 0.96;
@@ -71,7 +71,7 @@ class DesktopLyricsOverlay {
   std::wstring current_line_;
   double frame_line_progress_ = 1.0;
   bool has_frame_ = false;
-  bool enabled_ = true;
+  bool enabled_ = false;
   bool click_through_ = false;
   double font_size_ = 38.0;
   double opacity_ = 0.96;

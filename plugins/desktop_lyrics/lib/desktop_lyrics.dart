@@ -573,7 +573,7 @@ class DesktopLyrics extends ChangeNotifier {
   final _DesktopLyricsService _service;
   DesktopLyricsConfig _config = const DesktopLyricsConfig(
     interaction: DesktopLyricsInteractionConfig(
-      enabled: true,
+      enabled: false,
       clickThrough: false,
     ),
     text: DesktopLyricsTextConfig(
