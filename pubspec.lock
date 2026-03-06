@@ -303,7 +303,7 @@ packages:
       path: "plugins/desktop_lyrics"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.4"
   dio:
     dependency: "direct main"
     description:

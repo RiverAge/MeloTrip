@@ -6,17 +6,19 @@ extension _PlayerListenerLogic on _MyAppState {
     _setScrobbleListener();
     _setPlaylistModeListener();
     _setPlayerErrorListener();
-    _setDesktopLyricsListeners();
+
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      _setDesktopLyricsListener();
+    }
   }
 
   void _cancelPlayerSubscriptions() {
     _playlistModeSubscription?.cancel();
     _scrobbleSubscription?.cancel();
     _errorSubscription?.cancel();
-    _desktopLyricsTrackSubscription?.cancel();
-    _desktopLyricsProgressSubscription?.cancel();
     _nowPlayingTimer?.cancel();
-    ref.read(desktopLyricsServiceProvider).dispose();
+    _positionSubscription?.cancel();
+    _playQueueSubscription?.cancel();
   }
 
   void _setPlayerMediaResolver() async {
@@ -122,85 +124,74 @@ extension _PlayerListenerLogic on _MyAppState {
     );
   }
 
-  void _setDesktopLyricsListeners() async {
+  void _setDesktopLyricsListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
     if (player == null) return;
+    final desktopLyrics = DesktopLyrics();
 
-    final lyricsService = ref.read(desktopLyricsServiceProvider);
+    List<Line>? lyricsLines;
+    int currentLyricsIndex = -1;
+    int lyricsRequestId = 0;
     String? lastSongId;
-    List<Line> lyricLines = const [];
-    List<int> lyricStartMs = const [];
 
-    _desktopLyricsTrackSubscription = player.playQueueStream.listen((
-      queue,
-    ) async {
-      if (ref.read(desktopLyricsPreviewingProvider)) return;
-      if (queue.songs.isEmpty ||
-          queue.index < 0 ||
-          queue.index >= queue.songs.length) {
-        await lyricsService.apply(
-          lyricsService.state.copyWith(
-            interaction: lyricsService.state.interaction.copyWith(
-              enabled: false,
-            ),
-          ),
-        );
+    _playQueueSubscription = player.playQueueStream.listen((queue) async {
+      final songId =
+          (queue.index >= queue.songs.length || queue.index < 0
+                  ? null
+                  : queue.songs[queue.index])
+              ?.id;
+      if (songId == lastSongId && lastSongId != null) {
+        return;
+      }
+      unawaited(desktopLyrics.render(DesktopLyricsFrame.line(currentLine: '')));
+      lastSongId = songId;
+      if (songId == null) {
+        lyricsLines = null;
         return;
       }
 
-      final song = queue.songs[queue.index];
-      if (song.id == lastSongId) return;
-      lastSongId = song.id;
-
-      final lyricsResponse = await ref.read(lyricsProvider(song.id).future);
-      final lines =
-          lyricsResponse
-              ?.subsonicResponse
-              ?.lyricsList
-              ?.structuredLyrics
-              ?.firstOrNull
-              ?.line ??
-          const <Line>[];
-      lyricLines = lines;
-      lyricStartMs = lyricLines
-          .map((line) => line.start ?? 0)
-          .toList(growable: false);
-
-      if (lyricLines.isNotEmpty) {
-        final firstLine = (lyricLines.first.value ?? const <String>[]).join(
-          '  ',
-        );
-        await lyricsService.render(
-          DesktopLyricsFrame.line(currentLine: firstLine),
-        );
+      currentLyricsIndex = -1;
+      lyricsLines = null;
+      final requestId = ++lyricsRequestId;
+      final resp = await ref.read(lyricsProvider(songId).future);
+      if (requestId != lyricsRequestId) {
+        return;
       }
-      await lyricsService.apply(
-        lyricsService.state.copyWith(
-          interaction: lyricsService.state.interaction.copyWith(enabled: true),
-        ),
-      );
+      final confirmedSongId =
+          (player.playQueue.index >= player.playQueue.songs.length ||
+                      player.playQueue.index < 0
+                  ? null
+                  : player.playQueue.songs[player.playQueue.index])
+              ?.id;
+      lyricsLines = confirmedSongId == songId
+          ? resp
+                ?.subsonicResponse
+                ?.lyricsList
+                ?.structuredLyrics
+                ?.firstOrNull
+                ?.line
+          : null;
     });
 
-    _desktopLyricsProgressSubscription =
-        CombineLatestStream.combine2(
-          player.positionStream,
-          player.durationStream,
-          (position, duration) => (position, duration),
-        ).listen((data) async {
-          if (ref.read(desktopLyricsPreviewingProvider)) return;
-          if (lyricLines.isEmpty) return;
-          final positionMs = data.$1.inMilliseconds;
-          final currentIndex = lyricIndexByStartMs(
-            sortedStartMs: lyricStartMs,
-            positionMs: positionMs,
-          );
-          final current = lyricLines[currentIndex];
-          final currentLine = (current.value ?? const <String>[]).join('  ');
+    _positionSubscription = player.positionStream.listen((duration) async {
+      final lines = lyricsLines;
+      if (lines == null) {
+        return;
+      }
+      final idx = indexOfLyrics(sortedLyrics: lines, position: duration);
+      if (currentLyricsIndex == idx || idx < 0 || idx >= lines.length) {
+        return;
+      }
+      final line = lines[idx].value?.firstOrNull;
+      currentLyricsIndex = idx;
+      if (line == null) {
+        return;
+      }
 
-          await lyricsService.render(
-            DesktopLyricsFrame.line(currentLine: currentLine),
-          );
-        });
+      unawaited(
+        desktopLyrics.render(DesktopLyricsFrame.line(currentLine: line)),
+      );
+    });
   }
 
   void _savePlayQueue(AppPlayer player, dynamic api) {

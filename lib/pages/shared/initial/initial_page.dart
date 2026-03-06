@@ -1,3 +1,4 @@
+import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,15 @@ class _InitState extends ConsumerState<InitialPage> {
   void _handleBootstrapResult(InitialBootstrapResult result) {
     if (!mounted || _navigationHandled) return;
     _navigationHandled = true;
+
+    final destopLyrics = DesktopLyrics();
+    destopLyrics.apply(
+      destopLyrics.state.copyWith(
+        interaction: destopLyrics.state.interaction.copyWith(
+          enabled: result == InitialBootstrapResult.loggedIn,
+        ),
+      ),
+    );
 
     final startupNavigator = ref.read(startupNavigatorProvider);
     startupNavigator.navigate(context, result);

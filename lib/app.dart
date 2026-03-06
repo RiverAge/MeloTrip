@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -7,14 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/const/index.dart';
-import 'package:melo_trip/helper/lyrics_timeline.dart';
+import 'package:melo_trip/helper/index_of_lyrics.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/provider/desktop_lyrics/desktop_lyrics.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
@@ -48,8 +48,8 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   StreamSubscription? _playlistModeSubscription;
   StreamSubscription? _scrobbleSubscription;
   StreamSubscription? _errorSubscription;
-  StreamSubscription? _desktopLyricsTrackSubscription;
-  StreamSubscription? _desktopLyricsProgressSubscription;
+  StreamSubscription? _positionSubscription;
+  StreamSubscription? _playQueueSubscription;
 
   @override
   void initState() {
