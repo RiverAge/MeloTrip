@@ -11,7 +11,7 @@ Flutter 桌面悬浮歌词插件。
 ## 功能特性
 
 - 桌面置顶悬浮歌词窗口。
-- 支持单行歌词与逐词/逐字卡拉 OK 进度渲染。
+- 支持静态单行歌词与逐词/逐字卡拉 OK 进度渲染。
 - 支持运行时样式配置（字体、对齐、描边、阴影、渐变、背景）。
 - 支持交互控制（启用/禁用、点击穿透）。
 - 支持布局控制（宽度 + 可选自动高度）。
@@ -23,20 +23,13 @@ Flutter 桌面悬浮歌词插件。
   - Wayland：由于技术原因，暂不支持点击穿透。
 - macOS：暂未实现（调用会安全返回）
 
-## 安装
-
-```yaml
-dependencies:
-  desktop_lyrics: ^0.0.1
-```
-
 ## 快速开始
 
 ```dart
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 
 final lyrics = DesktopLyrics();
-// Default: disabled. Call apply(enabled: true) before showing overlay.
+// 默认 disabled，需要先 apply(enabled: true) 才会显示悬浮歌词。
 
 void onLyricsChanged() {
   final enabled = lyrics.state.interaction.enabled;
@@ -109,14 +102,12 @@ await lyrics.render(frame);
 ## API 摘要
 
 - `DesktopLyrics.apply(DesktopLyricsConfig config)`
-- `DesktopLyrics.state`（唯一读取入口）
+- `DesktopLyrics.state`（单一读取入口）
 - `DesktopLyrics.render(DesktopLyricsFrame frame)`
 - `DesktopLyrics.addListener(...)` / `removeListener(...)`
 - `DesktopLyrics.dispose()`
 
 ## 说明
 
+- 默认可见状态是 `enabled: false`。显示前请先 `apply(...)` 并设置 `interaction.enabled: true`。
 - Linux 已知问题：悬浮窗不会自动跟随系统缩放或分辨率变化（X11 与 Wayland 都可能出现）。
-
-
-- Default visibility is `enabled: false`.
