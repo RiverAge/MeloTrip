@@ -629,7 +629,10 @@ class DesktopLyrics extends ChangeNotifier {
   }
 
   /// Renders one lyric frame.
-  Future<void> render(DesktopLyricsFrame frame) => _service.render(frame);
+  Future<void> render(DesktopLyricsFrame frame) {
+    if (!_config.interaction.enabled) return Future.value();
+    return _service.render(frame);
+  }
 
   @override
 

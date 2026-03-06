@@ -79,6 +79,11 @@ void main() {
 
   test('line frame uses visible default progress when omitted', () async {
     final lyrics = DesktopLyrics(channel: channel);
+    await lyrics.apply(
+      lyrics.state.copyWith(
+        interaction: lyrics.state.interaction.copyWith(enabled: true),
+      ),
+    );
     await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'Visible'));
     final renderCalls =
         calls.where((call) => call.method == 'updateLyricFrame').toList();

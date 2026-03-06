@@ -49,7 +49,6 @@ void main() {
 
   test('serializes render/config payloads', () async {
     final lyrics = DesktopLyrics(channel: channel);
-    await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
     await lyrics.apply(
       const DesktopLyricsConfig(
         interaction: DesktopLyricsInteractionConfig(
@@ -66,14 +65,10 @@ void main() {
         background: DesktopLyricsBackgroundConfig(opacity: 0.8),
       ),
     );
+    await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'line1'));
 
-    final frameMap = calls[0].arguments as Map<Object?, Object?>;
-    expect(calls[0].method, 'updateLyricFrame');
-    expect(frameMap['currentLine'], 'line1');
-    expect(frameMap['lineProgress'], 1.0);
-
-    final configMap = calls[1].arguments as Map<Object?, Object?>;
-    expect(calls[1].method, 'updateConfig');
+    final configMap = calls[0].arguments as Map<Object?, Object?>;
+    expect(calls[0].method, 'updateConfig');
     expect(configMap['enabled'], true);
     expect(configMap['clickThrough'], false);
     expect(configMap['fontSize'], 30.0);
@@ -82,6 +77,11 @@ void main() {
     expect(configMap['shadowColorArgb'], 0xFF000000);
     expect(configMap['strokeColorArgb'], 0xFFFF0000);
     expect(configMap['strokeWidth'], 1.5);
+
+    final frameMap = calls[1].arguments as Map<Object?, Object?>;
+    expect(calls[1].method, 'updateLyricFrame');
+    expect(frameMap['currentLine'], 'line1');
+    expect(frameMap['lineProgress'], 1.0);
   });
 
   test('serializes full config contract for native parity', () async {
@@ -163,6 +163,11 @@ void main() {
 
   test('render clamps out-of-range and invalid progress', () async {
     final lyrics = DesktopLyrics(channel: channel);
+    await lyrics.apply(
+      lyrics.state.copyWith(
+        interaction: lyrics.state.interaction.copyWith(enabled: true),
+      ),
+    );
     await lyrics.render(
       const DesktopLyricsFrame.tokenized(
         tokens: [DesktopLyricsToken(text: 'A', progress: 1.0)],
@@ -182,11 +187,19 @@ void main() {
       ),
     );
 
-    final first = calls[0].arguments as Map<Object?, Object?>;
-    final second = calls[1].arguments as Map<Object?, Object?>;
-    final third = calls[2].arguments as Map<Object?, Object?>;
+    final renderCalls =
+        calls.where((call) => call.method == 'updateLyricFrame').toList();
+    final first = renderCalls[0].arguments as Map<Object?, Object?>;
+    final second = renderCalls[1].arguments as Map<Object?, Object?>;
+    final third = renderCalls[2].arguments as Map<Object?, Object?>;
     expect(first['lineProgress'], 0.0);
     expect(second['lineProgress'], 1.0);
     expect(third['lineProgress'], 1.0);
+  });
+
+  test('render is skipped while disabled', () async {
+    final lyrics = DesktopLyrics(channel: channel);
+    await lyrics.render(const DesktopLyricsFrame.line(currentLine: 'hidden'));
+    expect(calls, isEmpty);
   });
 }
