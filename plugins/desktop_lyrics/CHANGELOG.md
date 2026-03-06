@@ -1,3 +1,9 @@
+## 0.0.5
+
+* Refactored `DesktopLyrics` to default to a shared singleton instance.
+* Prevented state split between `apply` and `render` when called from different app layers.
+* Added singleton lifecycle tests (`same instance`, `dispose -> recreate`, `shared state across references`).
+
 ## 0.0.4
 
 * Changed default visibility to disabled (`enabled: false`) to avoid showing overlay during app startup.
