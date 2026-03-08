@@ -80,6 +80,48 @@ class AppUpdateService {
     return _installerGateway.installPackage(file.path);
   }
 
+  Future<void> openUpdateDownloadPage(AppUpdateInfo update) async {
+    final rawUrl = update.downloadUrl.trim();
+    if (rawUrl.isEmpty) {
+      throw StateError('Download URL is empty.');
+    }
+    final uri = Uri.tryParse(rawUrl);
+    if (uri == null || !uri.hasScheme) {
+      throw StateError('Invalid download URL: $rawUrl');
+    }
+
+    if (Platform.isWindows) {
+      final result = await Process.run('cmd', <String>[
+        '/c',
+        'start',
+        '',
+        rawUrl,
+      ]);
+      if (result.exitCode != 0) {
+        throw StateError('Failed to open URL on Windows: ${result.stderr}');
+      }
+      return;
+    }
+    if (Platform.isLinux) {
+      final result = await Process.run('xdg-open', <String>[rawUrl]);
+      if (result.exitCode != 0) {
+        throw StateError('Failed to open URL on Linux: ${result.stderr}');
+      }
+      return;
+    }
+    if (Platform.isMacOS) {
+      final result = await Process.run('open', <String>[rawUrl]);
+      if (result.exitCode != 0) {
+        throw StateError('Failed to open URL on macOS: ${result.stderr}');
+      }
+      return;
+    }
+
+    throw UnsupportedError(
+      'Open download page is unsupported on this platform.',
+    );
+  }
+
   Future<AppUpdateCheckResult> checkForUpdate() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final currentVersionCode = int.tryParse(packageInfo.buildNumber) ?? 0;

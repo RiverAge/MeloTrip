@@ -86,6 +86,15 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
     return _service.openInstallPermissionSettings();
   }
 
+  Future<String?> openDownloadPage(AppUpdateInfo update) async {
+    try {
+      await _service.openUpdateDownloadPage(update);
+      return null;
+    } catch (err) {
+      return '$err';
+    }
+  }
+
   Future<String?> downloadAndInstall(AppUpdateInfo update) async {
     if (state.isUpdating) return 'Update is already in progress.';
 
