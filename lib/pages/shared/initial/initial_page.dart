@@ -13,19 +13,18 @@ class InitialPage extends ConsumerStatefulWidget {
 }
 
 class _InitState extends ConsumerState<InitialPage> {
-  ProviderSubscription<AsyncValue<InitialBootstrapResult>>? _bootstrapSub;
   var _navigationHandled = false;
 
   @override
   void initState() {
     super.initState();
-    _bootstrapSub = ref.listenManual<AsyncValue<InitialBootstrapResult>>(
-      initialBootstrapResultProvider,
-      (_, next) {
-        next.whenData(_handleBootstrapResult);
-      },
-      fireImmediately: true,
-    );
+    _bootstrap();
+  }
+
+  Future<void> _bootstrap() async {
+    final service = ref.read(initialBootstrapServiceProvider);
+    final result = await service.bootstrap();
+    await _handleBootstrapResult(result);
   }
 
   Future<void> _handleBootstrapResult(InitialBootstrapResult result) async {
@@ -34,12 +33,6 @@ class _InitState extends ConsumerState<InitialPage> {
 
     final startupNavigator = ref.read(startupNavigatorProvider);
     startupNavigator.navigate(Navigator.of(context), result);
-  }
-
-  @override
-  void dispose() {
-    _bootstrapSub?.close();
-    super.dispose();
   }
 
   @override

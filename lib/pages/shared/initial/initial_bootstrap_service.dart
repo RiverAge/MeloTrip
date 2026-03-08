@@ -55,9 +55,7 @@ class InitialBootstrapService {
 
     final dirPath = await resolveCachePath();
     startCacheServer(dirPath, host);
-
     final config = await loadConfig();
-
     final playlistMode = config?.playlistMode;
     if (playlistMode != null) {
       await restorePlaylistMode(playlistMode);
@@ -67,7 +65,7 @@ class InitialBootstrapService {
   }
 }
 
-final initialBootstrapServiceProvider = Provider.autoDispose<InitialBootstrapService>((
+final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
   ref,
 ) {
   Future<AppPlayer?>? playerFuture;
