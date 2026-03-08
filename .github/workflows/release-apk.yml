@@ -1,4 +1,4 @@
-name: Release APK
+name: Release Multi Platform
 
 on:
   push:
@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: release-apk-${{ github.ref }}
+  group: release-multi-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build-and-release:
+  build-android:
     runs-on: ubuntu-latest
 
     steps:
@@ -52,8 +52,15 @@ jobs:
           keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
           EOF
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build release APKs (split by ABI)
+        run: flutter build apk --release --split-per-abi
+
+      - name: Prepare primary APK for updater metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" \
+             "build/app/outputs/flutter-apk/app-release.apk"
 
       - name: Generate release metadata block
         shell: bash
@@ -80,9 +87,133 @@ jobs:
           METADATA -->
           EOF
 
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-artifacts
+          path: |
+            build/app/outputs/flutter-apk/*.apk
+            release-body.md
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.0-0.2.pre"
+          channel: beta
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Pack Windows bundle
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath "melotrip-windows-x64.zip"
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: melotrip-windows-x64.zip
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.0-0.2.pre"
+          channel: beta
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Linux release
+        run: flutter build linux --release
+
+      - name: Pack Linux bundle
+        shell: bash
+        run: |
+          tar -C build/linux/x64/release -czf melotrip-linux-x64.tar.gz bundle
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifacts
+          path: melotrip-linux-x64.tar.gz
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.0-0.2.pre"
+          channel: beta
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build macOS release
+        run: flutter build macos --release
+
+      - name: Pack macOS app bundle
+        shell: bash
+        run: |
+          cd build/macos/Build/Products/Release
+          zip -r ../../../../../melotrip-macos.zip MeloTrip.app
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-artifacts
+          path: melotrip-macos.zip
+
+  publish-release:
+    needs:
+      - build-android
+      - build-windows
+      - build-linux
+      - build-macos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Collect files
+        shell: bash
+        run: |
+          mkdir -p release-files
+          find dist -type f -name "*.apk" -exec cp {} release-files/ \;
+          find dist -type f -name "*.zip" -exec cp {} release-files/ \;
+          find dist -type f -name "*.tar.gz" -exec cp {} release-files/ \;
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
-          body_path: release-body.md
+          files: release-files/*
+          body_path: dist/android-artifacts/release-body.md
           generate_release_notes: true
