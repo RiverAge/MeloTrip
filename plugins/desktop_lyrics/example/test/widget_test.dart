@@ -13,9 +13,9 @@ void main() {
   testWidgets('renders example controls', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
     expect(find.text('Desktop Lyrics Full Demo'), findsOneWidget);
-    expect(find.text('Show'), findsOneWidget);
-    expect(find.text('Hide'), findsOneWidget);
-    expect(find.text('Apply Config'), findsOneWidget);
+    expect(find.text('Interaction'), findsOneWidget);
+    expect(find.text('Enabled'), findsOneWidget);
+    expect(find.text('Click Through'), findsOneWidget);
     expect(find.text('Play Line Preview'), findsOneWidget);
     expect(find.text('Play Token Preview'), findsOneWidget);
   });

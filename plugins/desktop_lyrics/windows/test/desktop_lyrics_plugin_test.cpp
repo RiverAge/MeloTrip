@@ -69,5 +69,21 @@ TEST(DesktopLyricsPlugin, EnableWithoutLyricFrameReturnsSuccess) {
   EXPECT_TRUE(succeeded);
 }
 
+TEST(DesktopLyricsPlugin, UpdateLyricFrameReturnsSuccess) {
+  DesktopLyricsPlugin plugin;
+  bool succeeded = false;
+  EncodableMap frame;
+  frame[EncodableValue("currentLine")] = EncodableValue("hello");
+  frame[EncodableValue("lineProgress")] = EncodableValue(2.0);
+  plugin.HandleMethodCall(
+      MethodCall("updateLyricFrame", std::make_unique<EncodableValue>(frame)),
+      std::make_unique<MethodResultFunctions<>>(
+          [&succeeded](const EncodableValue* result) {
+            succeeded = result == nullptr;
+          },
+          nullptr, nullptr));
+  EXPECT_TRUE(succeeded);
+}
+
 }  // namespace test
 }  // namespace desktop_lyrics
