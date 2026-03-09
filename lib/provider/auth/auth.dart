@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -56,6 +57,7 @@ Future<AuthUser?> login(
   required String password,
 }) async {
   final api = await ref.read(apiProvider.future);
+  final db = await ref.read(appDatabaseProvider.future);
 
   try {
     final salt = _generateSalt();
@@ -83,7 +85,6 @@ Future<AuthUser?> login(
           'username': username,
           'host': host,
         });
-        final db = await ref.read(appDatabaseProvider.future);
         await db.transaction((tnx) async {
           await tnx.insert('current_user', {
             'salt': auth.salt,
@@ -93,15 +94,18 @@ Future<AuthUser?> login(
             'update_at': DateTime.now().millisecondsSinceEpoch,
           }, conflictAlgorithm: ConflictAlgorithm.replace);
         });
-        ref.invalidate(currentUserProvider);
-        ref.invalidate(userConfigProvider);
         return auth;
       }
+
+      final errorMsg = subsonicResponse.subsonicResponse?.error?.message;
+      throw Exception(errorMsg ?? 'Login failed');
     }
 
-    return null;
-  } catch (e) {
-    return null;
+    throw Exception('Login failed');
+  } catch (e, stackTrace) {
+    debugPrint('Login failed: $e');
+    debugPrintStack(stackTrace: stackTrace);
+    rethrow;
   }
 }
 
