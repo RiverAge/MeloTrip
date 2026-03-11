@@ -211,9 +211,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         const SizedBox(height: 12),
         Text(
           _hostController.text,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
