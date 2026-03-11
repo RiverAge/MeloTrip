@@ -1,16 +1,13 @@
 #ifndef FLUTTER_PLUGIN_DESKTOP_LYRICS_OVERLAY_H_
 #define FLUTTER_PLUGIN_DESKTOP_LYRICS_OVERLAY_H_
 
+#include <d2d1.h>
+#include <dwrite.h>
+#include <wrl/client.h>
 #include <windows.h>
 
 #include <cstdint>
-#include <memory>
 #include <string>
-#include <vector>
-
-namespace Gdiplus {
-class GraphicsPath;
-}
 
 namespace desktop_lyrics {
 
@@ -63,9 +60,17 @@ class DesktopLyricsOverlay {
   void RequestRepaint();
   void ApplyWindowStyles();
   void RenderLayeredWindow();
-  int ComputeAutoOverlayHeight(HDC reference_dc, int width) const;
+  int ComputeAutoOverlayHeight(int width) const;
   bool EnsureBackBuffer(HDC screen_dc, int width, int height);
   void ReleaseBackBuffer();
+  bool EnsureFactories();
+  bool EnsureRenderTarget();
+  void ReleaseRenderTarget();
+  bool EnsureTextFormats();
+  void ResetTextFormats();
+  D2D1_COLOR_F ToColorF(uint32_t argb) const;
+  DWRITE_TEXT_ALIGNMENT ToTextAlignment() const;
+  DWRITE_FONT_WEIGHT ToFontWeight() const;
 
   HWND hwnd_ = nullptr;
   std::wstring current_line_;
@@ -104,15 +109,15 @@ class DesktopLyricsOverlay {
   int backbuffer_height_ = 0;
   void* backbuffer_bits_ = nullptr;
 
-  std::wstring cached_text_;
-  std::wstring cached_font_family_;
-  int cached_width_ = 0;
-  int cached_height_ = 0;
-  int cached_text_align_ = -1;
-  int cached_font_weight_ = -1;
-  float cached_font_size_ = 0.0f;
-  float cached_stroke_width_ = 0.0f;
-  std::unique_ptr<Gdiplus::GraphicsPath> cached_text_path_;
+  mutable std::wstring cached_text_for_measure_;
+  mutable int cached_measure_width_ = 0;
+  mutable int cached_measure_height_ = 0;
+
+  Microsoft::WRL::ComPtr<ID2D1Factory> d2d_factory_;
+  Microsoft::WRL::ComPtr<IDWriteFactory> dwrite_factory_;
+  Microsoft::WRL::ComPtr<ID2D1DCRenderTarget> render_target_;
+  Microsoft::WRL::ComPtr<IDWriteTextFormat> text_format_;
+  Microsoft::WRL::ComPtr<IDWriteTextFormat> measure_text_format_;
 };
 
 }  // namespace desktop_lyrics

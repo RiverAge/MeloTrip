@@ -3,93 +3,23 @@
 #endif
 #include "desktop_lyrics_overlay.h"
 
-#include <gdiplus.h>
-
 #include <algorithm>
 #include <cmath>
-#include <mutex>
 
 namespace desktop_lyrics {
 namespace {
 
-using Gdiplus::Color;
-using Gdiplus::Font;
-using Gdiplus::Graphics;
-using Gdiplus::GraphicsPath;
-using Gdiplus::LinearGradientBrush;
-using Gdiplus::PointF;
-using Gdiplus::RectF;
-using Gdiplus::SolidBrush;
-using Gdiplus::StringFormat;
-
 constexpr const wchar_t kLyricsWindowClassName[] = L"DESKTOP_LYRICS_OVERLAY";
 constexpr int kBottomMargin = 120;
 
-std::once_flag g_gdiplus_once;
-ULONG_PTR g_gdiplus_token = 0;
-
-void EnsureGdiplusInitialized() {
-  std::call_once(g_gdiplus_once, []() {
-    Gdiplus::GdiplusStartupInput startup_input;
-    Gdiplus::GdiplusStartup(&g_gdiplus_token, &startup_input, nullptr);
-  });
-}
-
-Color ArgbToColor(uint32_t argb) {
-  const BYTE a = static_cast<BYTE>((argb >> 24) & 0xFF);
-  const BYTE r = static_cast<BYTE>((argb >> 16) & 0xFF);
-  const BYTE g = static_cast<BYTE>((argb >> 8) & 0xFF);
-  const BYTE b = static_cast<BYTE>(argb & 0xFF);
-  return Color(a, r, g, b);
-}
-
-void BuildRoundedRectPath(GraphicsPath* path, const RectF& rect, float radius) {
-  if (!path) return;
-  if (radius <= 0.1f) {
-    path->AddRectangle(rect);
-    return;
-  }
-  const float r = (std::min)(radius, (std::min)(rect.Width, rect.Height) * 0.5f);
-  const float d = r * 2.0f;
-  path->AddArc(rect.X, rect.Y, d, d, 180.0f, 90.0f);
-  path->AddArc(rect.GetRight() - d, rect.Y, d, d, 270.0f, 90.0f);
-  path->AddArc(rect.GetRight() - d, rect.GetBottom() - d, d, d, 0.0f, 90.0f);
-  path->AddArc(rect.X, rect.GetBottom() - d, d, d, 90.0f, 90.0f);
-  path->CloseFigure();
-}
-
-void BuildTextPathWithFallback(GraphicsPath* path,
-                               const std::wstring& text,
-                               const RectF& rect,
-                               const StringFormat& format,
-                               const wchar_t* preferred_family,
-                               int font_style,
-                               float font_size) {
-  if (!path) return;
-  path->Reset();
-  const wchar_t* candidates[] = {
-      preferred_family,
-      L"Segoe UI",
-      L"Microsoft YaHei UI",
-      L"Microsoft YaHei",
-      L"Yu Gothic UI",
-      L"Meiryo",
-      L"Malgun Gothic",
-  };
-  for (const auto* family_name : candidates) {
-    if (!family_name || family_name[0] == L'\0') continue;
-    const int before = path->GetPointCount();
-    Gdiplus::FontFamily family(family_name);
-    if (family.GetLastStatus() != Gdiplus::Ok) continue;
-    path->AddString(text.c_str(), -1, &family, font_style, font_size, rect, &format);
-    if (path->GetPointCount() > before) return;
-  }
+template <typename T>
+T ClampValue(T value, T min, T max) {
+  return (std::max)(min, (std::min)(value, max));
 }
 
 }  // namespace
 
-DesktopLyricsOverlay::DesktopLyricsOverlay()
-    : cached_text_path_(std::make_unique<Gdiplus::GraphicsPath>()) {}
+DesktopLyricsOverlay::DesktopLyricsOverlay() = default;
 DesktopLyricsOverlay::~DesktopLyricsOverlay() { Dispose(); }
 
 bool DesktopLyricsOverlay::Create() {
@@ -116,8 +46,7 @@ bool DesktopLyricsOverlay::Create() {
 }
 
 void DesktopLyricsOverlay::Show() {
-  if (!enabled_) return;
-  if (current_line_.empty()) return;
+  if (!enabled_ || current_line_.empty()) return;
   if (!hwnd_ && !Create()) return;
   PositionNearBottomCenter(false);
   ShowWindow(hwnd_, SW_SHOWNOACTIVATE);
@@ -133,6 +62,7 @@ void DesktopLyricsOverlay::Hide() {
 }
 
 void DesktopLyricsOverlay::Dispose() {
+  ReleaseRenderTarget();
   ReleaseBackBuffer();
   if (!hwnd_) return;
   DestroyWindow(hwnd_);
@@ -142,8 +72,10 @@ void DesktopLyricsOverlay::Dispose() {
 void DesktopLyricsOverlay::UpdateLyricFrame(const std::wstring& current_line,
                                             double line_progress) {
   has_frame_ = true;
+  frame_line_progress_ = ClampValue(line_progress, 0.0, 1.0);
   current_line_ = current_line;
-  frame_line_progress_ = std::clamp(line_progress, 0.0, 1.0);
+  cached_measure_width_ = 0;
+  cached_measure_height_ = 0;
   if (current_line_.empty()) {
     Hide();
     return;
@@ -155,37 +87,38 @@ void DesktopLyricsOverlay::UpdateLyricFrame(const std::wstring& current_line,
 void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   enabled_ = config.enabled;
   click_through_ = config.click_through;
-  font_size_ = std::clamp(config.font_size, 20.0, 72.0);
-  opacity_ = std::clamp(config.opacity, 0.25, 1.0);
+  font_size_ = ClampValue(config.font_size, 20.0, 72.0);
+  opacity_ = ClampValue(config.opacity, 0.25, 1.0);
   text_argb_ = config.text_argb;
   shadow_argb_ = config.shadow_argb;
   stroke_argb_ = config.stroke_argb;
-  stroke_width_ = std::clamp(config.stroke_width, 0.0, 6.0);
+  stroke_width_ = ClampValue(config.stroke_width, 0.0, 6.0);
   background_argb_ = config.background_argb;
-  background_radius_ = std::clamp(config.background_radius, 0.0, 48.0);
-  background_padding_ = std::clamp(config.background_padding, 0.0, 36.0);
+  background_radius_ = ClampValue(config.background_radius, 0.0, 48.0);
+  background_padding_ = ClampValue(config.background_padding, 0.0, 36.0);
   text_gradient_enabled_ = config.text_gradient_enabled;
   text_gradient_start_argb_ = config.text_gradient_start_argb;
   text_gradient_end_argb_ = config.text_gradient_end_argb;
   text_gradient_angle_ = config.text_gradient_angle;
-  overlay_width_ =
-      static_cast<int>(std::round(std::clamp(config.overlay_width, 480.0, 2600.0)));
+  overlay_width_ = static_cast<int>(
+      std::round(ClampValue(config.overlay_width, 480.0, 2600.0)));
   auto_overlay_height_ = config.overlay_height <= 0.0;
   if (!auto_overlay_height_) {
-    overlay_height_ =
-        static_cast<int>(std::round(std::clamp(config.overlay_height, 90.0, 800.0)));
+    overlay_height_ = static_cast<int>(
+        std::round(ClampValue(config.overlay_height, 90.0, 800.0)));
   }
   font_family_ = config.font_family.empty() ? L"Segoe UI" : config.font_family;
-  text_align_ = std::clamp(config.text_align, 0, 2);
-  font_weight_value_ = std::clamp(config.font_weight_value, 100, 900);
+  text_align_ = ClampValue(config.text_align, 0, 2);
+  font_weight_value_ = ClampValue(config.font_weight_value, 100, 900);
+  ResetTextFormats();
+  cached_measure_width_ = 0;
+  cached_measure_height_ = 0;
 
   if (!enabled_) {
     if (hwnd_) Hide();
     return;
   }
 
-  // Only cache config before first lyric frame arrives. This avoids creating
-  // and showing an empty native overlay during enable.
   if (current_line_.empty()) {
     if (hwnd_) Hide();
     return;
@@ -194,45 +127,54 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   if (!hwnd_ && !Create()) return;
 
   if (auto_overlay_height_) {
-    HDC screen_dc = GetDC(hwnd_);
-    if (screen_dc) {
-      overlay_height_ = ComputeAutoOverlayHeight(screen_dc, overlay_width_);
-      ReleaseDC(hwnd_, screen_dc);
-    }
+    overlay_height_ = ComputeAutoOverlayHeight(overlay_width_);
   }
 
   ApplyWindowStyles();
   SetWindowPos(hwnd_, HWND_TOPMOST, 0, 0, overlay_width_, overlay_height_,
                SWP_NOMOVE | SWP_NOACTIVATE);
-
   Show();
 }
 
-int DesktopLyricsOverlay::ComputeAutoOverlayHeight(HDC reference_dc, int width) const {
-  if (!reference_dc || width <= 0) return overlay_height_;
-
-  const int font_style =
-      font_weight_value_ >= 600 ? Gdiplus::FontStyleBold
-                                : Gdiplus::FontStyleRegular;
-  Gdiplus::Graphics measure_graphics(reference_dc);
-  measure_graphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-  Gdiplus::Font font(font_family_.c_str(), static_cast<float>(font_size_), font_style,
-                     Gdiplus::UnitPixel);
-  Gdiplus::StringFormat format;
-  format.SetFormatFlags(Gdiplus::StringFormatFlagsNoWrap);
-  const float layout_width = static_cast<float>((std::max)(width - 48, 120));
-  const Gdiplus::RectF layout(0.0f, 0.0f, layout_width, 2000.0f);
-  Gdiplus::RectF measured{};
+int DesktopLyricsOverlay::ComputeAutoOverlayHeight(int width) const {
+  if (width <= 0) return overlay_height_;
   const std::wstring sample =
       current_line_.empty() ? std::wstring(L"Ag") : current_line_;
-  measure_graphics.MeasureString(sample.c_str(), -1, &font, layout, &format, &measured);
+  if (sample == cached_text_for_measure_ && width == cached_measure_width_ &&
+      cached_measure_height_ > 0) {
+    return cached_measure_height_;
+  }
 
-  const float text_height = (std::max)(measured.Height, static_cast<float>(font_size_) * 1.2f);
+  if (!dwrite_factory_) {
+    const_cast<DesktopLyricsOverlay*>(this)->EnsureFactories();
+  }
+  if (!dwrite_factory_) return overlay_height_;
+  if (!measure_text_format_) {
+    const_cast<DesktopLyricsOverlay*>(this)->EnsureTextFormats();
+  }
+  if (!measure_text_format_) return overlay_height_;
+
+  const float layout_width = static_cast<float>((std::max)(width - 48, 120));
+  Microsoft::WRL::ComPtr<IDWriteTextLayout> layout;
+  const HRESULT hr = dwrite_factory_->CreateTextLayout(
+      sample.c_str(), static_cast<UINT32>(sample.size()),
+      measure_text_format_.Get(), layout_width, 2048.0f, &layout);
+  if (FAILED(hr) || !layout) return overlay_height_;
+
+  DWRITE_TEXT_METRICS metrics{};
+  if (FAILED(layout->GetMetrics(&metrics))) return overlay_height_;
+
+  const float text_height =
+      (std::max)(metrics.height, static_cast<float>(font_size_) * 1.2f);
   const float content_height =
       text_height + 20.0f + static_cast<float>(background_padding_) * 2.0f +
-      static_cast<float>((std::max)(0.0, stroke_width_)) * 2.0f + 4.0f;
-  return static_cast<int>(
-      std::round(std::clamp(content_height, 90.0f, 800.0f)));
+      static_cast<float>(stroke_width_) * 2.0f + 4.0f;
+  const int resolved_height =
+      static_cast<int>(std::round(ClampValue(content_height, 90.0f, 800.0f)));
+  cached_text_for_measure_ = sample;
+  cached_measure_width_ = width;
+  cached_measure_height_ = resolved_height;
+  return resolved_height;
 }
 
 LRESULT CALLBACK DesktopLyricsOverlay::WndProc(HWND hwnd,
@@ -347,8 +289,8 @@ void DesktopLyricsOverlay::ApplyWindowStyles() {
 
 bool DesktopLyricsOverlay::EnsureBackBuffer(HDC screen_dc, int width, int height) {
   if (!screen_dc || width <= 0 || height <= 0) return false;
-  if (backbuffer_dc_ && backbuffer_bitmap_ &&
-      backbuffer_width_ == width && backbuffer_height_ == height) {
+  if (backbuffer_dc_ && backbuffer_bitmap_ && backbuffer_width_ == width &&
+      backbuffer_height_ == height) {
     return true;
   }
 
@@ -374,6 +316,7 @@ bool DesktopLyricsOverlay::EnsureBackBuffer(HDC screen_dc, int width, int height
   backbuffer_old_bitmap_ = SelectObject(backbuffer_dc_, backbuffer_bitmap_);
   backbuffer_width_ = width;
   backbuffer_height_ = height;
+  ReleaseRenderTarget();
   return true;
 }
 
@@ -391,9 +334,105 @@ void DesktopLyricsOverlay::ReleaseBackBuffer() {
   backbuffer_height_ = 0;
 }
 
+bool DesktopLyricsOverlay::EnsureFactories() {
+  if (!d2d_factory_) {
+    if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
+                                 d2d_factory_.ReleaseAndGetAddressOf()))) {
+      return false;
+    }
+  }
+  if (!dwrite_factory_) {
+    if (FAILED(DWriteCreateFactory(
+            DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),
+            reinterpret_cast<IUnknown**>(
+                dwrite_factory_.ReleaseAndGetAddressOf())))) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool DesktopLyricsOverlay::EnsureRenderTarget() {
+  if (render_target_) return true;
+  if (!EnsureFactories() || !backbuffer_dc_) return false;
+
+  const D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+      D2D1_RENDER_TARGET_TYPE_DEFAULT,
+      D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM,
+                        D2D1_ALPHA_MODE_PREMULTIPLIED));
+  if (FAILED(d2d_factory_->CreateDCRenderTarget(
+          &props, render_target_.ReleaseAndGetAddressOf()))) {
+    return false;
+  }
+  return true;
+}
+
+void DesktopLyricsOverlay::ReleaseRenderTarget() { render_target_.Reset(); }
+
+bool DesktopLyricsOverlay::EnsureTextFormats() {
+  if (!EnsureFactories()) return false;
+  if (text_format_ && measure_text_format_) return true;
+
+  Microsoft::WRL::ComPtr<IDWriteTextFormat> text_format;
+  if (FAILED(dwrite_factory_->CreateTextFormat(
+          font_family_.c_str(), nullptr, ToFontWeight(),
+          DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+          static_cast<FLOAT>(font_size_), L"", &text_format))) {
+    return false;
+  }
+  text_format->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+  text_format->SetTextAlignment(ToTextAlignment());
+  text_format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+  Microsoft::WRL::ComPtr<IDWriteTextFormat> measure_format;
+  if (FAILED(dwrite_factory_->CreateTextFormat(
+          font_family_.c_str(), nullptr, ToFontWeight(),
+          DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+          static_cast<FLOAT>(font_size_), L"", &measure_format))) {
+    return false;
+  }
+  measure_format->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+  measure_format->SetTextAlignment(ToTextAlignment());
+  measure_format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+
+  text_format_ = text_format;
+  measure_text_format_ = measure_format;
+  return true;
+}
+
+void DesktopLyricsOverlay::ResetTextFormats() {
+  text_format_.Reset();
+  measure_text_format_.Reset();
+}
+
+D2D1_COLOR_F DesktopLyricsOverlay::ToColorF(uint32_t argb) const {
+  const float a = static_cast<float>((argb >> 24) & 0xFF) / 255.0f;
+  const float r = static_cast<float>((argb >> 16) & 0xFF) / 255.0f;
+  const float g = static_cast<float>((argb >> 8) & 0xFF) / 255.0f;
+  const float b = static_cast<float>(argb & 0xFF) / 255.0f;
+  return D2D1::ColorF(r, g, b, a);
+}
+
+DWRITE_TEXT_ALIGNMENT DesktopLyricsOverlay::ToTextAlignment() const {
+  switch (text_align_) {
+    case 1:
+      return DWRITE_TEXT_ALIGNMENT_CENTER;
+    case 2:
+      return DWRITE_TEXT_ALIGNMENT_TRAILING;
+    default:
+      return DWRITE_TEXT_ALIGNMENT_LEADING;
+  }
+}
+
+DWRITE_FONT_WEIGHT DesktopLyricsOverlay::ToFontWeight() const {
+  if (font_weight_value_ >= 700) return DWRITE_FONT_WEIGHT_BOLD;
+  if (font_weight_value_ >= 600) return DWRITE_FONT_WEIGHT_SEMI_BOLD;
+  if (font_weight_value_ >= 500) return DWRITE_FONT_WEIGHT_MEDIUM;
+  return DWRITE_FONT_WEIGHT_NORMAL;
+}
+
 void DesktopLyricsOverlay::RenderLayeredWindow() {
   if (!hwnd_ || !enabled_ || !IsWindowVisible(hwnd_)) return;
-  EnsureGdiplusInitialized();
 
   RECT window_rect{};
   if (!GetWindowRect(hwnd_, &window_rect)) return;
@@ -404,7 +443,7 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
   HDC screen_dc = GetDC(nullptr);
   if (!screen_dc) return;
   if (auto_overlay_height_) {
-    const int desired_height = ComputeAutoOverlayHeight(screen_dc, width);
+    const int desired_height = ComputeAutoOverlayHeight(width);
     if (desired_height != height) {
       overlay_height_ = desired_height;
       if (!has_custom_position_) {
@@ -418,193 +457,152 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
       height = window_rect.bottom - window_rect.top;
     }
   }
-  if (!EnsureBackBuffer(screen_dc, width, height)) {
+  if (!EnsureBackBuffer(screen_dc, width, height) || !EnsureRenderTarget() ||
+      !EnsureTextFormats()) {
     ReleaseDC(nullptr, screen_dc);
     return;
   }
 
-  {
-    Graphics graphics(backbuffer_dc_);
-    graphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-    graphics.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
-    graphics.Clear(Color(0, 0, 0, 0));
+  RECT update_rect{0, 0, width, height};
+  if (FAILED(render_target_->BindDC(backbuffer_dc_, &update_rect))) {
+    ReleaseDC(nullptr, screen_dc);
+    return;
+  }
 
-    const float pad = static_cast<float>(background_padding_);
-    const RectF bg_rect(pad, pad, static_cast<float>(width) - pad * 2.0f,
-                        static_cast<float>(height) - pad * 2.0f);
-    GraphicsPath bg_path;
-    const bool has_background = ((background_argb_ >> 24) & 0xFF) > 0;
-    if (has_background) {
-      BuildRoundedRectPath(&bg_path, bg_rect, static_cast<float>(background_radius_));
-      SolidBrush bg_brush(ArgbToColor(background_argb_));
-      graphics.FillPath(&bg_brush, &bg_path);
-      // Keep text layers inside rounded container so stroke/shadow will not
-      // visually cut rounded corners on the right edge.
-      graphics.SetClip(&bg_path, Gdiplus::CombineModeIntersect);
+  render_target_->BeginDraw();
+  render_target_->Clear(D2D1::ColorF(0, 0.0f));
+
+  const float pad = static_cast<float>(background_padding_);
+  const D2D1_ROUNDED_RECT bg_rect = D2D1::RoundedRect(
+      D2D1::RectF(pad, pad, static_cast<float>(width) - pad,
+                  static_cast<float>(height) - pad),
+      static_cast<float>(background_radius_),
+      static_cast<float>(background_radius_));
+
+  Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> background_brush;
+  const bool has_background = ((background_argb_ >> 24) & 0xFF) > 0;
+  if (has_background &&
+      SUCCEEDED(render_target_->CreateSolidColorBrush(
+          ToColorF(background_argb_), &background_brush))) {
+    render_target_->FillRoundedRectangle(&bg_rect, background_brush.Get());
+  }
+
+  const D2D1_RECT_F text_rect = D2D1::RectF(
+      24.0f + static_cast<float>(stroke_width_),
+      8.0f + static_cast<float>(stroke_width_),
+      static_cast<float>(width) - 24.0f - static_cast<float>(stroke_width_),
+      static_cast<float>(height) - 8.0f - static_cast<float>(stroke_width_));
+
+  if (!current_line_.empty()) {
+    if (((shadow_argb_ >> 24) & 0xFF) > 0) {
+      Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> shadow_brush;
+      if (SUCCEEDED(render_target_->CreateSolidColorBrush(
+              ToColorF(shadow_argb_), &shadow_brush))) {
+        const D2D1_RECT_F shadow_rect = D2D1::RectF(
+            text_rect.left + 2.5f, text_rect.top + 2.5f, text_rect.right + 2.5f,
+            text_rect.bottom + 2.5f);
+        render_target_->DrawTextW(
+            current_line_.c_str(), static_cast<UINT32>(current_line_.size()),
+            text_format_.Get(), shadow_rect, shadow_brush.Get(),
+            D2D1_DRAW_TEXT_OPTIONS_CLIP);
+      }
     }
 
-    const std::wstring text = current_line_;
-    if (!text.empty()) {
-      const float stroke_safe_pad =
-          static_cast<float>((std::max)(0.0, stroke_width_)) + 2.0f;
-      const float left = 24.0f + stroke_safe_pad;
-      const float top = 10.0f + stroke_safe_pad * 0.5f;
-      const float w = static_cast<float>((std::max)(
-          width - static_cast<int>(left * 2.0f), 80));
-      const float h = static_cast<float>((std::max)(
-          height - static_cast<int>(top * 2.0f), 28));
-      const RectF text_rect(left, top, w, h);
-      StringFormat format;
-      const Gdiplus::StringAlignment horizontal_alignment =
-          text_align_ == 1
-              ? Gdiplus::StringAlignmentCenter
-              : (text_align_ == 2 ? Gdiplus::StringAlignmentFar
-                                  : Gdiplus::StringAlignmentNear);
-      format.SetAlignment(horizontal_alignment);
-      format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-      format.SetTrimming(Gdiplus::StringTrimmingEllipsisCharacter);
-      format.SetFormatFlags(Gdiplus::StringFormatFlagsNoWrap);
-      const int font_style =
-          font_weight_value_ >= 600 ? Gdiplus::FontStyleBold
-                                    : Gdiplus::FontStyleRegular;
-      Font font(font_family_.c_str(), static_cast<float>(font_size_), font_style,
-                Gdiplus::UnitPixel);
-      const bool cache_miss = cached_text_ != text ||
-                              cached_font_family_ != font_family_ ||
-                              cached_width_ != width ||
-                              cached_height_ != height ||
-                              cached_text_align_ != text_align_ ||
-                              cached_font_weight_ != font_weight_value_ ||
-                              std::abs(cached_font_size_ -
-                                       static_cast<float>(font_size_)) > 0.01f ||
-                              std::abs(cached_stroke_width_ -
-                                       static_cast<float>(stroke_width_)) > 0.01f;
-      if (cache_miss) {
-        cached_text_ = text;
-        cached_font_family_ = font_family_;
-        cached_width_ = width;
-        cached_height_ = height;
-        cached_text_align_ = text_align_;
-        cached_font_weight_ = font_weight_value_;
-        cached_font_size_ = static_cast<float>(font_size_);
-        cached_stroke_width_ = static_cast<float>(stroke_width_);
-        BuildTextPathWithFallback(cached_text_path_.get(), text, text_rect, format,
-                                  font_family_.c_str(), font_style,
-                                  static_cast<float>(font_size_));
-      }
-      const bool has_text_path =
-          cached_text_path_ && cached_text_path_->GetPointCount() > 0;
-
-      if (((shadow_argb_ >> 24) & 0xFF) > 0) {
-        SolidBrush shadow_brush(ArgbToColor(shadow_argb_));
-        RectF shadow_rect(text_rect.X + 2.5f, text_rect.Y + 2.5f, text_rect.Width,
-                          text_rect.Height);
-        graphics.DrawString(text.c_str(), -1, &font, shadow_rect, &format,
-                            &shadow_brush);
-      }
-
-      const bool should_stroke =
-          stroke_width_ > 0.01 && ((stroke_argb_ >> 24) & 0xFF) > 0;
-      if (!has_text_path && should_stroke) {
-        // DrawString fallback path caps radius for performance; wide values are
-        // still honored when path rendering is available (Pen + GraphicsPath).
-        const int radius = (std::min)(
-            2, (std::max)(1, static_cast<int>(std::round(stroke_width_))));
-        SolidBrush stroke_brush(ArgbToColor(stroke_argb_));
-        for (int dx = -radius; dx <= radius; ++dx) {
-          for (int dy = -radius; dy <= radius; ++dy) {
-            if (dx == 0 && dy == 0) continue;
-            RectF stroke_rect(text_rect.X + static_cast<float>(dx),
-                              text_rect.Y + static_cast<float>(dy),
-                              text_rect.Width, text_rect.Height);
-            graphics.DrawString(text.c_str(), -1, &font, stroke_rect, &format,
-                                &stroke_brush);
+    if (stroke_width_ > 0.01 && ((stroke_argb_ >> 24) & 0xFF) > 0) {
+      Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> stroke_brush;
+      if (SUCCEEDED(render_target_->CreateSolidColorBrush(
+              ToColorF(stroke_argb_), &stroke_brush))) {
+        const float offsets[] = {-1.4f, 0.0f, 1.4f};
+        for (float dx : offsets) {
+          for (float dy : offsets) {
+            if (std::abs(dx) < 0.01f && std::abs(dy) < 0.01f) continue;
+            const D2D1_RECT_F stroke_rect = D2D1::RectF(
+                text_rect.left + dx, text_rect.top + dy, text_rect.right + dx,
+                text_rect.bottom + dy);
+            render_target_->DrawTextW(
+                current_line_.c_str(),
+                static_cast<UINT32>(current_line_.size()), text_format_.Get(),
+                stroke_rect, stroke_brush.Get(), D2D1_DRAW_TEXT_OPTIONS_CLIP);
           }
         }
       }
+    }
 
-      const bool has_frame_progress = has_frame_ && frame_line_progress_ < 0.999;
-      const auto paint_gradient = [&]() {
-        const float cx = text_rect.X + text_rect.Width * 0.5f;
-        const float cy = text_rect.Y + text_rect.Height * 0.5f;
-        const float rad =
-            static_cast<float>(text_gradient_angle_ * 3.141592653589793 / 180.0);
-        const float half = (std::max)(text_rect.Width, text_rect.Height) * 0.5f;
-        const float dx = std::cos(rad) * half;
-        const float dy = std::sin(rad) * half;
-        LinearGradientBrush gradient(PointF(cx - dx, cy - dy), PointF(cx + dx, cy + dy),
-                                     ArgbToColor(text_gradient_start_argb_),
-                                     ArgbToColor(text_gradient_end_argb_));
-        if (has_text_path) {
-          graphics.FillPath(&gradient, cached_text_path_.get());
-        } else {
-          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &gradient);
-        }
+    const bool has_progress = has_frame_ && frame_line_progress_ < 0.999;
+    if (has_progress) {
+      uint32_t base_argb =
+          text_gradient_enabled_ ? text_gradient_start_argb_ : text_argb_;
+      const uint32_t base_alpha = (base_argb >> 24) & 0xFF;
+      const uint32_t softened_alpha =
+          (std::max)(base_alpha / 2, static_cast<uint32_t>(0x88));
+      base_argb = (base_argb & 0x00FFFFFF) | (softened_alpha << 24);
+      Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> base_brush;
+      if (SUCCEEDED(render_target_->CreateSolidColorBrush(
+              ToColorF(base_argb), &base_brush))) {
+        render_target_->DrawTextW(
+            current_line_.c_str(), static_cast<UINT32>(current_line_.size()),
+            text_format_.Get(), text_rect, base_brush.Get(),
+            D2D1_DRAW_TEXT_OPTIONS_CLIP);
+      }
+      const D2D1_RECT_F progress_clip = D2D1::RectF(
+          text_rect.left, text_rect.top,
+          text_rect.left +
+              (text_rect.right - text_rect.left) *
+                  static_cast<float>(frame_line_progress_),
+          text_rect.bottom);
+      render_target_->PushAxisAlignedClip(progress_clip,
+                                          D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+    }
+
+    if (text_gradient_enabled_) {
+      const float angle =
+          static_cast<float>(text_gradient_angle_ * 3.141592653589793 / 180.0);
+      const float center_x = (text_rect.left + text_rect.right) * 0.5f;
+      const float center_y = (text_rect.top + text_rect.bottom) * 0.5f;
+      const float half_extent =
+          (std::max)(text_rect.right - text_rect.left,
+                     text_rect.bottom - text_rect.top) *
+          0.5f;
+      const float dx = std::cos(angle) * half_extent;
+      const float dy = std::sin(angle) * half_extent;
+      D2D1_GRADIENT_STOP stops[2] = {
+          {0.0f, ToColorF(text_gradient_start_argb_)},
+          {1.0f, ToColorF(text_gradient_end_argb_)},
       };
-      if (has_frame_progress) {
-        // Draw a softer full-line base, then overlay the active progress fill.
-        // In gradient mode, use gradient start color as base to avoid invisible
-        // "unplayed" text when text color alpha is low/transparent.
-        uint32_t base_argb =
-            text_gradient_enabled_ ? text_gradient_start_argb_ : text_argb_;
-        const uint32_t base_alpha = (base_argb >> 24) & 0xFF;
-        const uint32_t softened_alpha =
-            (std::max)(base_alpha / 2, static_cast<uint32_t>(0x88));
-        base_argb = (base_argb & 0x00FFFFFF) | (softened_alpha << 24);
-        SolidBrush base_brush(ArgbToColor(base_argb));
-        if (has_text_path) {
-          graphics.FillPath(&base_brush, cached_text_path_.get());
-        } else {
-          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &base_brush);
-        }
-
-        const RectF progress_rect(
-            text_rect.X,
-            text_rect.Y,
-            text_rect.Width * static_cast<float>(frame_line_progress_),
-            text_rect.Height);
-        graphics.SetClip(progress_rect, Gdiplus::CombineModeReplace);
-
-        if (text_gradient_enabled_) {
-          paint_gradient();
-        } else {
-          SolidBrush text_brush(ArgbToColor(text_argb_));
-          if (has_text_path) {
-            graphics.FillPath(&text_brush, cached_text_path_.get());
-          } else {
-            graphics.DrawString(text.c_str(), -1, &font, text_rect, &format, &text_brush);
-          }
-        }
-        graphics.ResetClip();
-      } else if (text_gradient_enabled_) {
-        paint_gradient();
-      } else {
-        SolidBrush text_brush(ArgbToColor(text_argb_));
-        if (has_text_path) {
-          graphics.FillPath(&text_brush, cached_text_path_.get());
-        } else {
-          graphics.DrawString(text.c_str(), -1, &font, text_rect, &format,
-                              &text_brush);
-        }
+      Microsoft::WRL::ComPtr<ID2D1GradientStopCollection> stop_collection;
+      Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush> gradient_brush;
+      if (SUCCEEDED(render_target_->CreateGradientStopCollection(
+              stops, 2, D2D1_GAMMA_2_2, D2D1_EXTEND_MODE_CLAMP,
+              &stop_collection)) &&
+          SUCCEEDED(render_target_->CreateLinearGradientBrush(
+              D2D1::LinearGradientBrushProperties(
+                  D2D1::Point2F(center_x - dx, center_y - dy),
+                  D2D1::Point2F(center_x + dx, center_y + dy)),
+              stop_collection.Get(), &gradient_brush))) {
+        render_target_->DrawTextW(
+            current_line_.c_str(), static_cast<UINT32>(current_line_.size()),
+            text_format_.Get(), text_rect, gradient_brush.Get(),
+            D2D1_DRAW_TEXT_OPTIONS_CLIP);
       }
-
-      if (has_text_path && should_stroke) {
-        const float visible_width =
-            (std::max)(static_cast<float>(stroke_width_), 1.1f);
-        const uint32_t glow_argb =
-            (stroke_argb_ & 0x00FFFFFF) | (static_cast<uint32_t>(0x66) << 24);
-        Gdiplus::Pen glow_pen(ArgbToColor(glow_argb), visible_width + 1.0f);
-        glow_pen.SetLineJoin(Gdiplus::LineJoinRound);
-        graphics.DrawPath(&glow_pen, cached_text_path_.get());
-
-        Gdiplus::Pen stroke_pen(ArgbToColor(stroke_argb_), visible_width);
-        stroke_pen.SetLineJoin(Gdiplus::LineJoinRound);
-        graphics.DrawPath(&stroke_pen, cached_text_path_.get());
+    } else {
+      Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> text_brush;
+      if (SUCCEEDED(render_target_->CreateSolidColorBrush(ToColorF(text_argb_),
+                                                          &text_brush))) {
+        render_target_->DrawTextW(
+            current_line_.c_str(), static_cast<UINT32>(current_line_.size()),
+            text_format_.Get(), text_rect, text_brush.Get(),
+            D2D1_DRAW_TEXT_OPTIONS_CLIP);
       }
     }
-    if (has_background) {
-      graphics.ResetClip();
+
+    if (has_progress) {
+      render_target_->PopAxisAlignedClip();
     }
+  }
+
+  const HRESULT end_draw = render_target_->EndDraw();
+  if (end_draw == D2DERR_RECREATE_TARGET) {
+    ReleaseRenderTarget();
   }
 
   POINT src_pt{0, 0};
@@ -613,10 +611,10 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
   BLENDFUNCTION blend{};
   blend.BlendOp = AC_SRC_OVER;
   blend.SourceConstantAlpha =
-      static_cast<BYTE>(std::round(std::clamp(opacity_, 0.0, 1.0) * 255.0));
+      static_cast<BYTE>(std::round(ClampValue(opacity_, 0.0, 1.0) * 255.0));
   blend.AlphaFormat = AC_SRC_ALPHA;
-  UpdateLayeredWindow(hwnd_, screen_dc, &dst_pt, &size, backbuffer_dc_, &src_pt, 0, &blend,
-                      ULW_ALPHA);
+  UpdateLayeredWindow(hwnd_, screen_dc, &dst_pt, &size, backbuffer_dc_, &src_pt,
+                      0, &blend, ULW_ALPHA);
   ReleaseDC(nullptr, screen_dc);
 }
 
