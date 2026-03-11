@@ -13,7 +13,11 @@ part of 'albums.dart';
 final paginatedAlbumListProvider = PaginatedAlbumListFamily._();
 
 final class PaginatedAlbumListProvider
-    extends $NotifierProvider<PaginatedAlbumList, PaginatedAlbumListState> {
+    extends
+        $NotifierProvider<
+          PaginatedAlbumList,
+          PaginatedListSnapshot<AlbumEntity>
+        > {
   PaginatedAlbumListProvider._({
     required PaginatedAlbumListFamily super.from,
     required AlbumListQuery super.argument,
@@ -40,10 +44,12 @@ final class PaginatedAlbumListProvider
   PaginatedAlbumList create() => PaginatedAlbumList();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(PaginatedAlbumListState value) {
+  Override overrideWithValue(PaginatedListSnapshot<AlbumEntity> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<PaginatedAlbumListState>(value),
+      providerOverride: $SyncValueProvider<PaginatedListSnapshot<AlbumEntity>>(
+        value,
+      ),
     );
   }
 
@@ -59,15 +65,15 @@ final class PaginatedAlbumListProvider
 }
 
 String _$paginatedAlbumListHash() =>
-    r'0a1fdae59f1f52a220f788abe270cd3e81a349ad';
+    r'3f2bc317f8007fc45bc9e6103c28d6f75b27813f';
 
 final class PaginatedAlbumListFamily extends $Family
     with
         $ClassFamilyOverride<
           PaginatedAlbumList,
-          PaginatedAlbumListState,
-          PaginatedAlbumListState,
-          PaginatedAlbumListState,
+          PaginatedListSnapshot<AlbumEntity>,
+          PaginatedListSnapshot<AlbumEntity>,
+          PaginatedListSnapshot<AlbumEntity>,
           AlbumListQuery
         > {
   PaginatedAlbumListFamily._()
@@ -86,21 +92,29 @@ final class PaginatedAlbumListFamily extends $Family
   String toString() => r'paginatedAlbumListProvider';
 }
 
-abstract class _$PaginatedAlbumList extends $Notifier<PaginatedAlbumListState> {
+abstract class _$PaginatedAlbumList
+    extends $Notifier<PaginatedListSnapshot<AlbumEntity>> {
   late final _$args = ref.$arg as AlbumListQuery;
   AlbumListQuery get query => _$args;
 
-  PaginatedAlbumListState build(AlbumListQuery query);
+  PaginatedListSnapshot<AlbumEntity> build(AlbumListQuery query);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<PaginatedAlbumListState, PaginatedAlbumListState>;
+        this.ref
+            as $Ref<
+              PaginatedListSnapshot<AlbumEntity>,
+              PaginatedListSnapshot<AlbumEntity>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<PaginatedAlbumListState, PaginatedAlbumListState>,
-              PaginatedAlbumListState,
+              AnyNotifier<
+                PaginatedListSnapshot<AlbumEntity>,
+                PaginatedListSnapshot<AlbumEntity>
+              >,
+              PaginatedListSnapshot<AlbumEntity>,
               Object?,
               Object?
             >;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/pages/desktop/library/parts/albums_views.dart';
+import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 
 // 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
@@ -78,7 +80,7 @@ class _DesktopAlbumsPageState extends ConsumerState<DesktopAlbumsPage> {
   }
 
   Widget _buildContent(
-    PaginatedAlbumListState albumState,
+    PaginatedListSnapshot<AlbumEntity> albumState,
     ThemeData theme,
     AppLocalizations l10n,
   ) {

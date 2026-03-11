@@ -39,19 +39,22 @@ class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(paginatedArtistsProvider);
+    final visibleArtists = state.items.take(state.offset).toList(
+      growable: false,
+    );
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ArtistPageHeader(title: l10n.artist, count: state.allArtists.length),
+          ArtistPageHeader(title: l10n.artist, count: state.items.length),
           ArtistPageToolbar(l10n: l10n),
           Expanded(
-            child: state.allArtists.isEmpty && state.isLoading
+            child: state.items.isEmpty && state.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ArtistGrid(
-                    artists: state.visibleArtists,
+                    artists: visibleArtists,
                     hasMore: state.hasMore,
                     scrollController: _scrollController,
                   ),

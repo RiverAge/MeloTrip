@@ -1,3 +1,4 @@
+import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/repository/song/song_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,65 +61,34 @@ class SongSearchQuery {
       Object.hash(query, songCount, songOffset, albumCount, artistCount);
 }
 
-class PaginatedSongListState {
-  const PaginatedSongListState({
-    this.items = const <SongEntity>[],
-    this.isLoading = false,
-    this.hasMore = true,
-    this.offset = 0,
-    this.error,
-  });
-
-  final List<SongEntity> items;
-  final bool isLoading;
-  final bool hasMore;
-  final int offset;
-  final Object? error;
-
-  PaginatedSongListState copyWith({
-    List<SongEntity>? items,
-    bool? isLoading,
-    bool? hasMore,
-    int? offset,
-    Object? error = _sentinel,
-  }) {
-    return PaginatedSongListState(
-      items: items ?? this.items,
-      isLoading: isLoading ?? this.isLoading,
-      hasMore: hasMore ?? this.hasMore,
-      offset: offset ?? this.offset,
-      error: identical(error, _sentinel) ? this.error : error,
-    );
-  }
-}
-
-const Object _sentinel = Object();
-
 @Riverpod(keepAlive: true)
 class PaginatedSongList extends _$PaginatedSongList {
   late final SongSearchQuery _query;
 
   @override
-  PaginatedSongListState build(SongSearchQuery query) {
+  PaginatedListSnapshot<SongEntity> build(SongSearchQuery query) {
     _query = query;
     Future<void>.microtask(loadInitial);
-    return const PaginatedSongListState();
+    return const PaginatedListSnapshot<SongEntity>();
   }
 
   Future<void> loadInitial() async {
-    state = const PaginatedSongListState(isLoading: true);
+    state = const PaginatedListSnapshot<SongEntity>(isLoading: true);
     try {
       final result = await _fetchPage(0);
       if (!ref.mounted) return;
       final pageSize = _query.songCount ?? result.length;
-      state = PaginatedSongListState(
+      state = PaginatedListSnapshot<SongEntity>(
         items: result,
         offset: result.length,
         hasMore: pageSize > 0 && result.length >= pageSize,
       );
     } catch (error) {
       if (!ref.mounted) return;
-      state = PaginatedSongListState(hasMore: false, error: error);
+      state = PaginatedListSnapshot<SongEntity>(
+        hasMore: false,
+        error: error,
+      );
     }
   }
 

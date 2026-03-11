@@ -13,7 +13,11 @@ part of 'artists.dart';
 final paginatedArtistsProvider = PaginatedArtistsProvider._();
 
 final class PaginatedArtistsProvider
-    extends $NotifierProvider<PaginatedArtists, PaginatedArtistsState> {
+    extends
+        $NotifierProvider<
+          PaginatedArtists,
+          PaginatedListSnapshot<ArtistIndexEntry>
+        > {
   PaginatedArtistsProvider._()
     : super(
         from: null,
@@ -33,27 +37,37 @@ final class PaginatedArtistsProvider
   PaginatedArtists create() => PaginatedArtists();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(PaginatedArtistsState value) {
+  Override overrideWithValue(PaginatedListSnapshot<ArtistIndexEntry> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<PaginatedArtistsState>(value),
+      providerOverride:
+          $SyncValueProvider<PaginatedListSnapshot<ArtistIndexEntry>>(value),
     );
   }
 }
 
-String _$paginatedArtistsHash() => r'fd37d80867caaf1dde9b2495cf36a30f41e05d16';
+String _$paginatedArtistsHash() => r'ba74f013d31b452e296af66542d368ed9d35cf52';
 
-abstract class _$PaginatedArtists extends $Notifier<PaginatedArtistsState> {
-  PaginatedArtistsState build();
+abstract class _$PaginatedArtists
+    extends $Notifier<PaginatedListSnapshot<ArtistIndexEntry>> {
+  PaginatedListSnapshot<ArtistIndexEntry> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<PaginatedArtistsState, PaginatedArtistsState>;
+    final ref =
+        this.ref
+            as $Ref<
+              PaginatedListSnapshot<ArtistIndexEntry>,
+              PaginatedListSnapshot<ArtistIndexEntry>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<PaginatedArtistsState, PaginatedArtistsState>,
-              PaginatedArtistsState,
+              AnyNotifier<
+                PaginatedListSnapshot<ArtistIndexEntry>,
+                PaginatedListSnapshot<ArtistIndexEntry>
+              >,
+              PaginatedListSnapshot<ArtistIndexEntry>,
               Object?,
               Object?
             >;

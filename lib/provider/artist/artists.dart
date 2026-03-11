@@ -1,3 +1,4 @@
+import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,69 +20,41 @@ class ArtistIndexEntry {
   final int? albumCount;
 }
 
-class PaginatedArtistsState {
-  const PaginatedArtistsState({
-    this.allArtists = const <ArtistIndexEntry>[],
-    this.visibleCount = 0,
-    this.isLoading = false,
-  });
-
-  final List<ArtistIndexEntry> allArtists;
-  final int visibleCount;
-  final bool isLoading;
-
-  List<ArtistIndexEntry> get visibleArtists {
-    final int safeCount = visibleCount.clamp(0, allArtists.length);
-    return allArtists.take(safeCount).toList(growable: false);
-  }
-
-  bool get hasMore => visibleCount < allArtists.length;
-
-  PaginatedArtistsState copyWith({
-    List<ArtistIndexEntry>? allArtists,
-    int? visibleCount,
-    bool? isLoading,
-  }) {
-    return PaginatedArtistsState(
-      allArtists: allArtists ?? this.allArtists,
-      visibleCount: visibleCount ?? this.visibleCount,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
-}
-
 @Riverpod(keepAlive: true)
 class PaginatedArtists extends _$PaginatedArtists {
   @override
-  PaginatedArtistsState build() {
+  PaginatedListSnapshot<ArtistIndexEntry> build() {
     Future<void>.microtask(loadInitial);
-    return const PaginatedArtistsState();
+    return const PaginatedListSnapshot<ArtistIndexEntry>();
   }
 
   Future<void> loadInitial() async {
-    state = const PaginatedArtistsState(isLoading: true);
+    state = const PaginatedListSnapshot<ArtistIndexEntry>(isLoading: true);
     try {
       final List<ArtistIndexEntry> artists = await fetchAllArtists(ref);
       if (!ref.mounted) return;
-      state = PaginatedArtistsState(
-        allArtists: artists,
-        visibleCount: artists.length < kArtistPageSize
-            ? artists.length
-            : kArtistPageSize,
+      final int visibleCount = artists.length < kArtistPageSize
+          ? artists.length
+          : kArtistPageSize;
+      state = PaginatedListSnapshot<ArtistIndexEntry>(
+        items: artists,
+        offset: visibleCount,
+        hasMore: visibleCount < artists.length,
       );
     } catch (_) {
       if (!ref.mounted) return;
-      state = const PaginatedArtistsState();
+      state = const PaginatedListSnapshot<ArtistIndexEntry>();
     }
   }
 
   void loadMore() {
     if (state.isLoading || !state.hasMore) return;
-    final int nextVisibleCount = state.visibleCount + kArtistPageSize;
+    final int nextVisibleCount = state.offset + kArtistPageSize;
     state = state.copyWith(
-      visibleCount: nextVisibleCount > state.allArtists.length
-          ? state.allArtists.length
+      offset: nextVisibleCount > state.items.length
+          ? state.items.length
           : nextVisibleCount,
+      hasMore: nextVisibleCount < state.items.length,
     );
   }
 }

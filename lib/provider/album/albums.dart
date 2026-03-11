@@ -1,3 +1,4 @@
+import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:melo_trip/repository/album/album_repository.dart';
@@ -41,65 +42,34 @@ class AlbumListQuery {
   int get hashCode => Object.hash(type, size, offset);
 }
 
-class PaginatedAlbumListState {
-  const PaginatedAlbumListState({
-    this.items = const <AlbumEntity>[],
-    this.isLoading = false,
-    this.hasMore = true,
-    this.offset = 0,
-    this.error,
-  });
-
-  final List<AlbumEntity> items;
-  final bool isLoading;
-  final bool hasMore;
-  final int offset;
-  final Object? error;
-
-  PaginatedAlbumListState copyWith({
-    List<AlbumEntity>? items,
-    bool? isLoading,
-    bool? hasMore,
-    int? offset,
-    Object? error = _sentinel,
-  }) {
-    return PaginatedAlbumListState(
-      items: items ?? this.items,
-      isLoading: isLoading ?? this.isLoading,
-      hasMore: hasMore ?? this.hasMore,
-      offset: offset ?? this.offset,
-      error: identical(error, _sentinel) ? this.error : error,
-    );
-  }
-}
-
-const Object _sentinel = Object();
-
 @Riverpod(keepAlive: true)
 class PaginatedAlbumList extends _$PaginatedAlbumList {
   late final AlbumListQuery _query;
 
   @override
-  PaginatedAlbumListState build(AlbumListQuery query) {
+  PaginatedListSnapshot<AlbumEntity> build(AlbumListQuery query) {
     _query = query;
     Future<void>.microtask(loadInitial);
-    return const PaginatedAlbumListState();
+    return const PaginatedListSnapshot<AlbumEntity>();
   }
 
   Future<void> loadInitial() async {
-    state = const PaginatedAlbumListState(isLoading: true);
+    state = const PaginatedListSnapshot<AlbumEntity>(isLoading: true);
     try {
       final result = await _fetchPage(0);
       if (!ref.mounted) return;
       final pageSize = _query.size ?? result.length;
-      state = PaginatedAlbumListState(
+      state = PaginatedListSnapshot<AlbumEntity>(
         items: result,
         offset: result.length,
         hasMore: pageSize > 0 && result.length >= pageSize,
       );
     } catch (error) {
       if (!ref.mounted) return;
-      state = PaginatedAlbumListState(hasMore: false, error: error);
+      state = PaginatedListSnapshot<AlbumEntity>(
+        hasMore: false,
+        error: error,
+      );
     }
   }
 
