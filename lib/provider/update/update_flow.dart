@@ -1,10 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/app_logic/app_update_service.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final appUpdateServiceProvider = Provider<AppUpdateService>((ref) {
+part 'update_flow.g.dart';
+
+@Riverpod(keepAlive: true)
+AppUpdateService appUpdateService(Ref ref) {
   return AppUpdateService();
-});
+}
 
 class UpdateFlowState {
   const UpdateFlowState({
@@ -57,17 +59,24 @@ enum UpdateUiStage { idle, downloading, verifying, openingInstaller }
 
 enum InstallCapability { supported, notSupported, permissionRequired }
 
-class UpdateFlowController extends StateNotifier<UpdateFlowState> {
-  UpdateFlowController(this._service) : super(const UpdateFlowState());
+@Riverpod(keepAlive: true)
+class UpdateFlowController extends _$UpdateFlowController {
+  late final AppUpdateService _service;
 
-  final AppUpdateService _service;
+  @override
+  UpdateFlowState build() {
+    _service = ref.watch(appUpdateServiceProvider);
+    return const UpdateFlowState();
+  }
 
   Future<AppUpdateCheckResult> checkForUpdate() async {
     state = state.copyWith(isChecking: true);
     try {
       return await _service.checkForUpdate();
     } finally {
-      state = state.copyWith(isChecking: false);
+      if (ref.mounted) {
+        state = state.copyWith(isChecking: false);
+      }
     }
   }
 
@@ -114,6 +123,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
       final apkFile = await _service.downloadAndVerifyApk(
         update: update,
         onStageChanged: (stage) {
+          if (!ref.mounted) return;
           if (stage == UpdateDownloadStage.downloading) {
             state = state.copyWith(stage: UpdateUiStage.downloading);
             return;
@@ -125,6 +135,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
           );
         },
         onProgress: (received, total, progress) {
+          if (!ref.mounted) return;
           final percent = (progress * 100).clamp(0, 100).toDouble();
           final now = DateTime.now();
           var speed = state.downloadBytesPerSecond;
@@ -160,6 +171,7 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
           );
         },
       );
+      if (!ref.mounted) return null;
       state = state.copyWith(
         downloadProgressPercent: 100,
         downloadedBytes: state.totalBytes > 0
@@ -176,18 +188,14 @@ class UpdateFlowController extends StateNotifier<UpdateFlowState> {
     } catch (err) {
       return '$err';
     } finally {
-      state = state.copyWith(
-        isUpdating: false,
-        stage: UpdateUiStage.idle,
-        downloadBytesPerSecond: 0,
-        clearEtaSeconds: true,
-      );
+      if (ref.mounted) {
+        state = state.copyWith(
+          isUpdating: false,
+          stage: UpdateUiStage.idle,
+          downloadBytesPerSecond: 0,
+          clearEtaSeconds: true,
+        );
+      }
     }
   }
 }
-
-final updateFlowControllerProvider =
-    StateNotifierProvider<UpdateFlowController, UpdateFlowState>((ref) {
-      final service = ref.watch(appUpdateServiceProvider);
-      return UpdateFlowController(service);
-    });

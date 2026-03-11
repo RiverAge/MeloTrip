@@ -9,6 +9,105 @@ part of 'albums.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(PaginatedAlbumList)
+final paginatedAlbumListProvider = PaginatedAlbumListFamily._();
+
+final class PaginatedAlbumListProvider
+    extends $NotifierProvider<PaginatedAlbumList, PaginatedAlbumListState> {
+  PaginatedAlbumListProvider._({
+    required PaginatedAlbumListFamily super.from,
+    required AlbumListQuery super.argument,
+  }) : super(
+         retry: null,
+         name: r'paginatedAlbumListProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$paginatedAlbumListHash();
+
+  @override
+  String toString() {
+    return r'paginatedAlbumListProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  PaginatedAlbumList create() => PaginatedAlbumList();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PaginatedAlbumListState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PaginatedAlbumListState>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PaginatedAlbumListProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$paginatedAlbumListHash() =>
+    r'856aecc4b81b89727c24e5968d45a7513311b973';
+
+final class PaginatedAlbumListFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          PaginatedAlbumList,
+          PaginatedAlbumListState,
+          PaginatedAlbumListState,
+          PaginatedAlbumListState,
+          AlbumListQuery
+        > {
+  PaginatedAlbumListFamily._()
+    : super(
+        retry: null,
+        name: r'paginatedAlbumListProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  PaginatedAlbumListProvider call(AlbumListQuery query) =>
+      PaginatedAlbumListProvider._(argument: query, from: this);
+
+  @override
+  String toString() => r'paginatedAlbumListProvider';
+}
+
+abstract class _$PaginatedAlbumList extends $Notifier<PaginatedAlbumListState> {
+  late final _$args = ref.$arg as AlbumListQuery;
+  AlbumListQuery get query => _$args;
+
+  PaginatedAlbumListState build(AlbumListQuery query);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<PaginatedAlbumListState, PaginatedAlbumListState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PaginatedAlbumListState, PaginatedAlbumListState>,
+              PaginatedAlbumListState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
+
 @ProviderFor(albums)
 final albumsProvider = AlbumsFamily._();
 

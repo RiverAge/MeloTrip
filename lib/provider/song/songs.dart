@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'songs.g.dart';
 
 class SongSearchQuery {
   const SongSearchQuery({
@@ -125,19 +126,22 @@ class PaginatedSongListState {
 
 const Object _sentinel = Object();
 
-class PaginatedSongListNotifier extends StateNotifier<PaginatedSongListState> {
-  PaginatedSongListNotifier(this._ref, this._query)
-    : super(const PaginatedSongListState()) {
-    loadInitial();
-  }
+@Riverpod(keepAlive: true)
+class PaginatedSongList extends _$PaginatedSongList {
+  late final SongSearchQuery _query;
 
-  final Ref _ref;
-  final SongSearchQuery _query;
+  @override
+  PaginatedSongListState build(SongSearchQuery query) {
+    _query = query;
+    Future<void>.microtask(loadInitial);
+    return const PaginatedSongListState();
+  }
 
   Future<void> loadInitial() async {
     state = const PaginatedSongListState(isLoading: true);
     try {
       final result = await _fetchPage(0);
+      if (!ref.mounted) return;
       final pageSize = _query.songCount ?? result.length;
       state = PaginatedSongListState(
         items: result,
@@ -145,6 +149,7 @@ class PaginatedSongListNotifier extends StateNotifier<PaginatedSongListState> {
         hasMore: pageSize > 0 && result.length >= pageSize,
       );
     } catch (error) {
+      if (!ref.mounted) return;
       state = PaginatedSongListState(hasMore: false, error: error);
     }
   }
@@ -154,6 +159,7 @@ class PaginatedSongListNotifier extends StateNotifier<PaginatedSongListState> {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final result = await _fetchPage(state.offset);
+      if (!ref.mounted) return;
       final pageSize = _query.songCount ?? result.length;
       state = state.copyWith(
         items: <SongEntity>[...state.items, ...result],
@@ -162,6 +168,7 @@ class PaginatedSongListNotifier extends StateNotifier<PaginatedSongListState> {
         isLoading: false,
       );
     } catch (error) {
+      if (!ref.mounted) return;
       state = state.copyWith(isLoading: false, error: error);
     }
   }
@@ -171,17 +178,10 @@ class PaginatedSongListNotifier extends StateNotifier<PaginatedSongListState> {
   }
 
   Future<List<SongEntity>> _fetchPage(int offset) async {
-    final api = await _ref.read(apiProvider.future);
+    final api = await ref.read(apiProvider.future);
     return fetchSongSearchItems(
       api,
       query: _query.copyWith(songOffset: offset),
     );
   }
 }
-
-final paginatedSongListProvider =
-    StateNotifierProvider.family<
-      PaginatedSongListNotifier,
-      PaginatedSongListState,
-      SongSearchQuery
-    >((ref, query) => PaginatedSongListNotifier(ref, query));

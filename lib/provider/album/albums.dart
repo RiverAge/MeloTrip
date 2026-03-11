@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -100,20 +99,22 @@ class PaginatedAlbumListState {
 
 const Object _sentinel = Object();
 
-class PaginatedAlbumListNotifier
-    extends StateNotifier<PaginatedAlbumListState> {
-  PaginatedAlbumListNotifier(this._ref, this._query)
-    : super(const PaginatedAlbumListState()) {
-    loadInitial();
-  }
+@Riverpod(keepAlive: true)
+class PaginatedAlbumList extends _$PaginatedAlbumList {
+  late final AlbumListQuery _query;
 
-  final Ref _ref;
-  final AlbumListQuery _query;
+  @override
+  PaginatedAlbumListState build(AlbumListQuery query) {
+    _query = query;
+    Future<void>.microtask(loadInitial);
+    return const PaginatedAlbumListState();
+  }
 
   Future<void> loadInitial() async {
     state = const PaginatedAlbumListState(isLoading: true);
     try {
       final result = await _fetchPage(0);
+      if (!ref.mounted) return;
       final pageSize = _query.size ?? result.length;
       state = PaginatedAlbumListState(
         items: result,
@@ -121,6 +122,7 @@ class PaginatedAlbumListNotifier
         hasMore: pageSize > 0 && result.length >= pageSize,
       );
     } catch (error) {
+      if (!ref.mounted) return;
       state = PaginatedAlbumListState(hasMore: false, error: error);
     }
   }
@@ -130,6 +132,7 @@ class PaginatedAlbumListNotifier
     state = state.copyWith(isLoading: true, error: null);
     try {
       final result = await _fetchPage(state.offset);
+      if (!ref.mounted) return;
       final pageSize = _query.size ?? result.length;
       state = state.copyWith(
         items: <AlbumEntity>[...state.items, ...result],
@@ -138,6 +141,7 @@ class PaginatedAlbumListNotifier
         isLoading: false,
       );
     } catch (error) {
+      if (!ref.mounted) return;
       state = state.copyWith(isLoading: false, error: error);
     }
   }
@@ -147,17 +151,10 @@ class PaginatedAlbumListNotifier
   }
 
   Future<List<AlbumEntity>> _fetchPage(int offset) async {
-    final api = await _ref.read(apiProvider.future);
+    final api = await ref.read(apiProvider.future);
     return fetchAlbumListItems(api, query: _query.copyWith(offset: offset));
   }
 }
-
-final paginatedAlbumListProvider =
-    StateNotifierProvider.family<
-      PaginatedAlbumListNotifier,
-      PaginatedAlbumListState,
-      AlbumListQuery
-    >((ref, query) => PaginatedAlbumListNotifier(ref, query));
 
 @riverpod
 Future<List<AlbumEntity>> albums(Ref ref, AlumsType type) async {

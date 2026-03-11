@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/app_logic/app_update_service.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
@@ -70,6 +71,14 @@ class _FakeUpdateService extends AppUpdateService {
 }
 
 void main() {
+  ProviderContainer createContainer(_FakeUpdateService service) {
+    final container = ProviderContainer(
+      overrides: [appUpdateServiceProvider.overrideWith((_) => service)],
+    );
+    addTearDown(container.dispose);
+    return container;
+  }
+
   test('UpdateFlowState copyWith and clearEtaSeconds', () {
     const base = UpdateFlowState(
       isChecking: true,
@@ -99,7 +108,8 @@ void main() {
       hasUpdate: true,
     );
     final service = _FakeUpdateService(checkResult: result);
-    final controller = UpdateFlowController(service);
+    final container = createContainer(service);
+    final controller = container.read(updateFlowControllerProvider.notifier);
 
     expect(controller.state.isChecking, isFalse);
     final ret = await controller.checkForUpdate();
@@ -108,38 +118,49 @@ void main() {
   });
 
   test('getInstallCapability returns all branches', () async {
-    final notSupported = UpdateFlowController(
+    final notSupportedContainer = createContainer(
       _FakeUpdateService(installSupported: false),
+    );
+    final notSupported = notSupportedContainer.read(
+      updateFlowControllerProvider.notifier,
     );
     expect(
       await notSupported.getInstallCapability(),
       InstallCapability.notSupported,
     );
 
-    final permissionRequired = UpdateFlowController(
+    final permissionRequiredContainer = createContainer(
       _FakeUpdateService(installSupported: true, canInstallPermission: false),
+    );
+    final permissionRequired = permissionRequiredContainer.read(
+      updateFlowControllerProvider.notifier,
     );
     expect(
       await permissionRequired.getInstallCapability(),
       InstallCapability.permissionRequired,
     );
 
-    final supported = UpdateFlowController(
+    final supportedContainer = createContainer(
       _FakeUpdateService(installSupported: true, canInstallPermission: true),
+    );
+    final supported = supportedContainer.read(
+      updateFlowControllerProvider.notifier,
     );
     expect(await supported.getInstallCapability(), InstallCapability.supported);
   });
 
   test('openInstallPermissionSettings delegates to service', () async {
     final service = _FakeUpdateService();
-    final controller = UpdateFlowController(service);
+    final container = createContainer(service);
+    final controller = container.read(updateFlowControllerProvider.notifier);
     await controller.openInstallPermissionSettings();
     expect(service.openInstallSettingsCalled, isTrue);
   });
 
   test('downloadAndInstall succeeds and resets state', () async {
     final service = _FakeUpdateService();
-    final controller = UpdateFlowController(service);
+    final container = createContainer(service);
+    final controller = container.read(updateFlowControllerProvider.notifier);
     const update = AppUpdateInfo(
       versionName: '1.0.1',
       versionCode: 2,
@@ -160,7 +181,8 @@ void main() {
     final service = _FakeUpdateService(
       downloadDelay: const Duration(milliseconds: 120),
     );
-    final controller = UpdateFlowController(service);
+    final container = createContainer(service);
+    final controller = container.read(updateFlowControllerProvider.notifier);
     const update = AppUpdateInfo(
       versionName: '1.0.1',
       versionCode: 2,
@@ -179,9 +201,10 @@ void main() {
   });
 
   test('downloadAndInstall returns error message on failure', () async {
-    final controller = UpdateFlowController(
+    final container = createContainer(
       _FakeUpdateService(downloadError: StateError('download failed')),
     );
+    final controller = container.read(updateFlowControllerProvider.notifier);
     const update = AppUpdateInfo(
       versionName: '1.0.1',
       versionCode: 2,

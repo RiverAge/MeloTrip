@@ -1,6 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'artists.g.dart';
 
 const int kArtistPageSize = 60;
 
@@ -49,17 +50,19 @@ class PaginatedArtistsState {
   }
 }
 
-class PaginatedArtistsNotifier extends StateNotifier<PaginatedArtistsState> {
-  PaginatedArtistsNotifier(this._ref) : super(const PaginatedArtistsState()) {
-    loadInitial();
+@Riverpod(keepAlive: true)
+class PaginatedArtists extends _$PaginatedArtists {
+  @override
+  PaginatedArtistsState build() {
+    Future<void>.microtask(loadInitial);
+    return const PaginatedArtistsState();
   }
-
-  final Ref _ref;
 
   Future<void> loadInitial() async {
     state = const PaginatedArtistsState(isLoading: true);
     try {
-      final List<ArtistIndexEntry> artists = await fetchAllArtists(_ref);
+      final List<ArtistIndexEntry> artists = await fetchAllArtists(ref);
+      if (!ref.mounted) return;
       state = PaginatedArtistsState(
         allArtists: artists,
         visibleCount: artists.length < kArtistPageSize
@@ -67,6 +70,7 @@ class PaginatedArtistsNotifier extends StateNotifier<PaginatedArtistsState> {
             : kArtistPageSize,
       );
     } catch (_) {
+      if (!ref.mounted) return;
       state = const PaginatedArtistsState();
     }
   }
@@ -107,8 +111,3 @@ Future<List<ArtistIndexEntry>> fetchAllArtists(Ref ref) async {
   }
   return entries;
 }
-
-final paginatedArtistsProvider =
-    StateNotifierProvider<PaginatedArtistsNotifier, PaginatedArtistsState>(
-      (ref) => PaginatedArtistsNotifier(ref),
-    );
