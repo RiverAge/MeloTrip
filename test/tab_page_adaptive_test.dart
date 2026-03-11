@@ -7,6 +7,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
+import 'package:melo_trip/pages/desktop/tab/tab_page.dart';
 import 'package:melo_trip/pages/shared/initial/tab_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
@@ -143,6 +144,28 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(DesktopPlaylistDetailPage), findsNothing);
+  });
+
+  testWidgets('Desktop content routes use zero transition duration', (
+    tester,
+  ) async {
+    await pumpTabPage(tester, size: const Size(1440, 960));
+
+    final navigatorFinder = find.descendant(
+      of: find.byType(DesktopTabPage),
+      matching: find.byType(Navigator),
+    );
+    expect(navigatorFinder, findsOneWidget);
+
+    final navigatorWidget = tester.widget<Navigator>(navigatorFinder);
+    final route = navigatorWidget.onGenerateRoute!(
+      const RouteSettings(name: '/settings'),
+    );
+
+    expect(route, isA<PageRouteBuilder<dynamic>>());
+    final pageRoute = route! as PageRouteBuilder<dynamic>;
+    expect(pageRoute.transitionDuration, Duration.zero);
+    expect(pageRoute.reverseTransitionDuration, Duration.zero);
   });
 }
 
