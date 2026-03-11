@@ -450,6 +450,22 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get updateCheckingInline => '正在检查更新...';
+
+  @override
+  String updateAvailableInline(String versionName) {
+    return '发现新版本 v$versionName';
+  }
+
+  @override
+  String updateAlreadyLatestInline(String versionName, int versionCode) {
+    return '当前版本 $versionName ($versionCode) 已是最新版本';
+  }
+
+  @override
+  String get updateCheckFailedInline => '检查更新失败，点击重试。';
+
+  @override
   String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
 
   @override
@@ -480,6 +496,15 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get updateReadyToInstallTitle => '准备安装更新';
+
+  @override
+  String get updateReadyToInstallMessage => '应用将关闭以应用更新，并在安装完成后重新启动。';
+
+  @override
+  String get updateRestartToInstallAction => '关闭并安装';
+
+  @override
   String get updateOpeningInstaller => '下载完成，正在打开安装器...';
 
   @override
@@ -492,6 +517,53 @@ class AppLocalizationsZh extends AppLocalizations {
   String updateFailed(String error) {
     return '更新失败：$error';
   }
+
+  @override
+  String get updateInstallerWindowTitle => 'MeloTrip 更新器';
+
+  @override
+  String updateInstallerVersionLine(String versionName, int versionCode) {
+    return '版本 $versionName ($versionCode)';
+  }
+
+  @override
+  String get updateInstallerPreparing => '正在准备更新...';
+
+  @override
+  String get updateInstallerWaitingForApp => '正在等待 MeloTrip 关闭...';
+
+  @override
+  String get updateInstallerExtractingArchive => '正在解压更新包...';
+
+  @override
+  String get updateInstallerCopyingFiles => '正在安装更新...';
+
+  @override
+  String get updateInstallerRestartingApp => '正在重新启动 MeloTrip...';
+
+  @override
+  String get updateInstallerFailed => '更新失败';
+
+  @override
+  String get updateInstallerInvalidArguments => '更新器启动参数无效。';
+
+  @override
+  String get updateInstallerInitFailed => '初始化更新器所需的 Windows 组件失败。';
+
+  @override
+  String get updateInstallerWaitFailed => '等待 MeloTrip 退出失败。';
+
+  @override
+  String get updateInstallerTempPathFailed => '无法获取临时目录。';
+
+  @override
+  String get updateInstallerTempDirFailed => '无法创建更新暂存目录。';
+
+  @override
+  String get updateInstallerExtractFailed => '解压更新包失败。';
+
+  @override
+  String get updateInstallerCopyFailed => '安装更新文件失败。';
 
   @override
   String get unknownError => '未知错误';
@@ -991,6 +1063,22 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   }
 
   @override
+  String get updateCheckingInline => '正在检查更新...';
+
+  @override
+  String updateAvailableInline(String versionName) {
+    return '发现新版本 v$versionName';
+  }
+
+  @override
+  String updateAlreadyLatestInline(String versionName, int versionCode) {
+    return '当前版本 $versionName ($versionCode) 已是最新版本';
+  }
+
+  @override
+  String get updateCheckFailedInline => '检查更新失败，点击重试。';
+
+  @override
   String get otaAndroidOnly => '仅支持 Android 平台 OTA 更新';
 
   @override
@@ -1021,6 +1109,15 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   }
 
   @override
+  String get updateReadyToInstallTitle => '准备安装更新';
+
+  @override
+  String get updateReadyToInstallMessage => '应用将关闭以应用更新，并在安装完成后重新启动。';
+
+  @override
+  String get updateRestartToInstallAction => '关闭并安装';
+
+  @override
   String get updateOpeningInstaller => '下载完成，正在打开安装器...';
 
   @override
@@ -1033,6 +1130,53 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String updateFailed(String error) {
     return '更新失败：$error';
   }
+
+  @override
+  String get updateInstallerWindowTitle => 'MeloTrip 更新器';
+
+  @override
+  String updateInstallerVersionLine(String versionName, int versionCode) {
+    return '版本 $versionName ($versionCode)';
+  }
+
+  @override
+  String get updateInstallerPreparing => '正在准备更新...';
+
+  @override
+  String get updateInstallerWaitingForApp => '正在等待 MeloTrip 关闭...';
+
+  @override
+  String get updateInstallerExtractingArchive => '正在解压更新包...';
+
+  @override
+  String get updateInstallerCopyingFiles => '正在安装更新...';
+
+  @override
+  String get updateInstallerRestartingApp => '正在重新启动 MeloTrip...';
+
+  @override
+  String get updateInstallerFailed => '更新失败';
+
+  @override
+  String get updateInstallerInvalidArguments => '更新器启动参数无效。';
+
+  @override
+  String get updateInstallerInitFailed => '初始化更新器所需的 Windows 组件失败。';
+
+  @override
+  String get updateInstallerWaitFailed => '等待 MeloTrip 退出失败。';
+
+  @override
+  String get updateInstallerTempPathFailed => '无法获取临时目录。';
+
+  @override
+  String get updateInstallerTempDirFailed => '无法创建更新暂存目录。';
+
+  @override
+  String get updateInstallerExtractFailed => '解压更新包失败。';
+
+  @override
+  String get updateInstallerCopyFailed => '安装更新文件失败。';
 
   @override
   String get unknownError => '未知错误';

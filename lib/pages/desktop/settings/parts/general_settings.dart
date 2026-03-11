@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/app_logic/app_update_service.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
+import 'package:melo_trip/update/app_update_service.dart';
+import 'package:update_installer/update_installer.dart';
 
 class GeneralSettings extends ConsumerStatefulWidget {
   const GeneralSettings({super.key});
@@ -13,13 +14,25 @@ class GeneralSettings extends ConsumerStatefulWidget {
 
 class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeAutoCheck();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final updateState = ref.watch(updateFlowControllerProvider);
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final UpdateFlowState updateState = ref.watch(updateFlowControllerProvider);
+    final bool isReadyToInstall =
+        updateState.stage == UpdateUiStage.readyToInstall &&
+        updateState.pendingPackagePath != null;
+    final AppUpdateInfo? availableUpdate = updateState.availableUpdate;
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      children: [
+      children: <Widget>[
         _SectionHeader(title: l10n.theme),
         _SettingRow(
           label: l10n.systemDefault,
@@ -35,9 +48,8 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
         ),
         _SettingRow(
           label: l10n.checkForUpdates,
-          description: updateState.isUpdating
-              ? _buildUpdateSubtitle(context, updateState)
-              : l10n.checkForUpdates,
+          description: _buildUpdateSubtitle(context, updateState),
+          progress: _buildUpdateProgress(context, updateState),
           trailing: updateState.isChecking
               ? const SizedBox(
                   width: 18,
@@ -47,107 +59,67 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
               : FilledButton.tonal(
                   onPressed: (updateState.isChecking || updateState.isUpdating)
                       ? null
+                      : isReadyToInstall
+                      ? _restartAndInstallPending
+                      : availableUpdate != null
+                      ? () => _startUpdate(availableUpdate)
                       : _onCheckUpdate,
-                  child: Text(l10n.checkForUpdates),
+                  child: Text(
+                    isReadyToInstall
+                        ? l10n.updateRestartToInstallAction
+                        : availableUpdate != null
+                        ? l10n.updateNow
+                        : l10n.checkForUpdates,
+                  ),
                 ),
         ),
       ],
     );
   }
 
-  Future<void> _onCheckUpdate() async {
-    final l10n = AppLocalizations.of(context)!;
-    final controller = ref.read(updateFlowControllerProvider.notifier);
-
-    try {
-      final result = await controller.checkForUpdate();
-      if (!mounted) return;
-
-      if (!result.hasUpdate || result.remote == null) {
-        await showDialog<void>(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(l10n.noUpdateTitle),
-            content: Text(
-              l10n.upToDateMessage(
-                result.currentVersionName,
-                result.currentVersionCode,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(l10n.confirm),
-              ),
-            ],
-          ),
-        );
-        return;
-      }
-
-      final update = result.remote!;
-      await showDialog<void>(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text(l10n.updateAvailableTitle),
-          content: SingleChildScrollView(
-            child: Text(
-              '${l10n.updateCurrentVersion(result.currentVersionName, result.currentVersionCode)}\n'
-              '${l10n.updateLatestVersion(update.versionName, update.versionCode)}\n'
-              '${l10n.updateSizeMb((update.fileSize / 1024 / 1024).toStringAsFixed(1))}\n\n'
-              '${update.changelog}',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(l10n.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _startUpdate(update);
-              },
-              child: Text(l10n.updateNow),
-            ),
-          ],
-        ),
-      );
-    } catch (err) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.updateCheckFailed('$err'))));
+  Future<void> _maybeAutoCheck() async {
+    final UpdateFlowState state = ref.read(updateFlowControllerProvider);
+    if (state.hasChecked || state.isChecking || state.isUpdating) {
+      return;
     }
+    final UpdateFlowController controller = ref.read(
+      updateFlowControllerProvider.notifier,
+    );
+    try {
+      await controller.checkForUpdate(silent: true);
+    } catch (_) {}
+  }
+
+  Future<void> _onCheckUpdate() async {
+    final UpdateFlowController controller = ref.read(
+      updateFlowControllerProvider.notifier,
+    );
+    try {
+      await controller.checkForUpdate();
+    } catch (_) {}
   }
 
   Future<void> _startUpdate(AppUpdateInfo update) async {
-    final l10n = AppLocalizations.of(context)!;
-    final controller = ref.read(updateFlowControllerProvider.notifier);
-    final messenger = ScaffoldMessenger.of(context);
-    final capability = await controller.getInstallCapability();
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final UpdateFlowController controller = ref.read(
+      updateFlowControllerProvider.notifier,
+    );
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    final InstallCapability capability = await controller
+        .getInstallCapability();
 
     if (capability == InstallCapability.supported) {
-      if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.updateDownloadingPackage)),
-      );
-      final error = await controller.downloadAndInstall(update);
+      final String? error = await controller.downloadAndInstall(update);
       if (!mounted) return;
       if (error != null) {
         messenger.showSnackBar(
           SnackBar(content: Text(l10n.updateFailed(error))),
         );
-        return;
       }
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.updateOpeningInstaller)),
-      );
       return;
     }
 
-    messenger.showSnackBar(SnackBar(content: Text(update.downloadUrl)));
-    final error = await controller.openDownloadPage(update);
+    final String? error = await controller.openDownloadPage(update);
     if (!mounted) return;
     if (error != null) {
       messenger.showSnackBar(
@@ -156,24 +128,112 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     }
   }
 
+  Future<void> _restartAndInstallPending() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final UpdateFlowController controller = ref.read(
+      updateFlowControllerProvider.notifier,
+    );
+    final UpdateFlowState updateState = ref.read(updateFlowControllerProvider);
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+    final String? error = await controller.installPendingPackage(
+      updaterStrings: _buildWindowsUpdaterStrings(l10n, updateState),
+    );
+    if (!mounted) return;
+    if (error != null) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.updateFailed(error))));
+    }
+  }
+
+  WindowsUpdaterStrings _buildWindowsUpdaterStrings(
+    AppLocalizations l10n,
+    UpdateFlowState state,
+  ) {
+    return WindowsUpdaterStrings(
+      windowTitle: l10n.updateInstallerWindowTitle,
+      versionLine: l10n.updateInstallerVersionLine(
+        state.pendingVersionName ?? '-',
+        state.pendingVersionCode ?? 0,
+      ),
+      preparing: l10n.updateInstallerPreparing,
+      waitingForApp: l10n.updateInstallerWaitingForApp,
+      extractingArchive: l10n.updateInstallerExtractingArchive,
+      copyingFiles: l10n.updateInstallerCopyingFiles,
+      restartingApp: l10n.updateInstallerRestartingApp,
+      failed: l10n.updateInstallerFailed,
+      invalidArguments: l10n.updateInstallerInvalidArguments,
+      initFailed: l10n.updateInstallerInitFailed,
+      waitFailed: l10n.updateInstallerWaitFailed,
+      tempPathFailed: l10n.updateInstallerTempPathFailed,
+      tempDirFailed: l10n.updateInstallerTempDirFailed,
+      extractFailed: l10n.updateInstallerExtractFailed,
+      copyFailed: l10n.updateInstallerCopyFailed,
+    );
+  }
+
+  Widget? _buildUpdateProgress(BuildContext context, UpdateFlowState state) {
+    if (!state.isUpdating || state.stage != UpdateUiStage.downloading) {
+      return null;
+    }
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final double? progress = state.totalBytes > 0
+        ? (state.downloadProgressPercent / 100).clamp(0.0, 1.0)
+        : null;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(999),
+        child: LinearProgressIndicator(
+          minHeight: 6,
+          value: progress,
+          backgroundColor: colorScheme.surfaceContainerHighest,
+          valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+        ),
+      ),
+    );
+  }
+
   String _buildUpdateSubtitle(BuildContext context, UpdateFlowState state) {
-    final l10n = AppLocalizations.of(context)!;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    if (state.isChecking) {
+      return l10n.updateCheckingInline;
+    }
+    if (state.stage == UpdateUiStage.readyToInstall) {
+      return l10n.updateReadyToInstallTitle;
+    }
     if (state.stage == UpdateUiStage.verifying) {
       return l10n.updateStageVerifying;
     }
     if (state.stage == UpdateUiStage.openingInstaller) {
       return l10n.updateStageOpeningInstaller;
     }
-
-    final percent = '${state.downloadProgressPercent.toStringAsFixed(0)}%';
-    final size =
-        '${_formatBytes(state.downloadedBytes)}/${_formatBytes(state.totalBytes)}';
-    final speed = state.downloadBytesPerSecond > 0
-        ? '${_formatBytes(state.downloadBytesPerSecond.round())}/s'
-        : '';
-    final parts = <String>[percent, size, speed]
-      ..removeWhere((String item) => item.isEmpty);
-    return parts.join(' | ');
+    if (state.isUpdating) {
+      final String percent =
+          '${state.downloadProgressPercent.toStringAsFixed(0)}%';
+      final String size =
+          '${_formatBytes(state.downloadedBytes)}/${_formatBytes(state.totalBytes)}';
+      final String speed = state.downloadBytesPerSecond > 0
+          ? '${_formatBytes(state.downloadBytesPerSecond.round())}/s'
+          : '';
+      final List<String> parts = <String>[percent, size, speed]
+        ..removeWhere((String item) => item.isEmpty);
+      return parts.join(' | ');
+    }
+    if (state.checkError != null) {
+      return l10n.updateCheckFailedInline;
+    }
+    if (state.availableUpdate case final AppUpdateInfo update) {
+      return l10n.updateAvailableInline(update.versionName);
+    }
+    if (state.hasChecked &&
+        state.currentVersionName != null &&
+        state.currentVersionCode != null) {
+      return l10n.updateAlreadyLatestInline(
+        state.currentVersionName!,
+        state.currentVersionCode!,
+      );
+    }
+    return l10n.checkForUpdates;
   }
 
   String _formatBytes(int bytes) {
@@ -197,7 +257,7 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
@@ -216,23 +276,25 @@ class _SettingRow extends StatelessWidget {
     required this.label,
     required this.description,
     required this.trailing,
+    this.progress,
   });
 
   final String label;
   final String description;
   final Widget trailing;
+  final Widget? progress;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   label,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -248,6 +310,7 @@ class _SettingRow extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (progress case final Widget progressWidget) progressWidget,
               ],
             ),
           ),

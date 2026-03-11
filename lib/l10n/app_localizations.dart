@@ -945,6 +945,30 @@ abstract class AppLocalizations {
   /// **'Update check failed: {error}'**
   String updateCheckFailed(String error);
 
+  /// Inline status shown while the settings page checks for updates
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get updateCheckingInline;
+
+  /// Inline status shown when a new update is available in settings
+  ///
+  /// In en, this message translates to:
+  /// **'New version v{versionName} is available'**
+  String updateAvailableInline(String versionName);
+
+  /// Inline status shown when the current app version is already up to date
+  ///
+  /// In en, this message translates to:
+  /// **'Current version {versionName} ({versionCode}) is up to date'**
+  String updateAlreadyLatestInline(String versionName, int versionCode);
+
+  /// Inline status shown when the update check fails on the settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Update check failed. Tap to retry.'**
+  String get updateCheckFailedInline;
+
   /// Snackbar text for non-Android platforms
   ///
   /// In en, this message translates to:
@@ -993,6 +1017,24 @@ abstract class AppLocalizations {
   /// **'ETA: {eta}'**
   String updateEtaLine(String eta);
 
+  /// Dialog title shown before closing the app to install an update
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to install'**
+  String get updateReadyToInstallTitle;
+
+  /// Dialog body shown before closing the app to install an update
+  ///
+  /// In en, this message translates to:
+  /// **'The app will close to apply the update and restart after installation finishes.'**
+  String get updateReadyToInstallMessage;
+
+  /// Confirmation action that closes the app and starts installation
+  ///
+  /// In en, this message translates to:
+  /// **'Close and install'**
+  String get updateRestartToInstallAction;
+
   /// Snackbar text after download completes
   ///
   /// In en, this message translates to:
@@ -1016,6 +1058,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update failed: {error}'**
   String updateFailed(String error);
+
+  /// Title shown in the Windows updater window
+  ///
+  /// In en, this message translates to:
+  /// **'MeloTrip Updater'**
+  String get updateInstallerWindowTitle;
+
+  /// Version line shown in the Windows updater window
+  ///
+  /// In en, this message translates to:
+  /// **'Version {versionName} ({versionCode})'**
+  String updateInstallerVersionLine(String versionName, int versionCode);
+
+  /// Status text shown while the Windows updater window is starting
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing update...'**
+  String get updateInstallerPreparing;
+
+  /// Status text shown while waiting for the app to exit before update
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for MeloTrip to close...'**
+  String get updateInstallerWaitingForApp;
+
+  /// Status text shown while extracting the Windows update archive
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting update package...'**
+  String get updateInstallerExtractingArchive;
+
+  /// Status text shown while copying updated files into place
+  ///
+  /// In en, this message translates to:
+  /// **'Installing update...'**
+  String get updateInstallerCopyingFiles;
+
+  /// Status text shown while restarting the app after update
+  ///
+  /// In en, this message translates to:
+  /// **'Restarting MeloTrip...'**
+  String get updateInstallerRestartingApp;
+
+  /// Heading shown in the Windows updater when installation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed'**
+  String get updateInstallerFailed;
+
+  /// Error shown when the Windows updater receives invalid launch arguments
+  ///
+  /// In en, this message translates to:
+  /// **'Updater arguments are invalid.'**
+  String get updateInstallerInvalidArguments;
+
+  /// Error shown when the Windows updater fails to initialize COM or required controls
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to initialize Windows components for the updater.'**
+  String get updateInstallerInitFailed;
+
+  /// Error shown when the Windows updater cannot wait for the app process to exit
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to wait for MeloTrip to exit.'**
+  String get updateInstallerWaitFailed;
+
+  /// Error shown when the Windows updater cannot access a temporary directory
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resolve a temporary directory.'**
+  String get updateInstallerTempPathFailed;
+
+  /// Error shown when the Windows updater cannot create its staging directory
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create the staging directory.'**
+  String get updateInstallerTempDirFailed;
+
+  /// Error shown when the Windows updater cannot extract the downloaded archive
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to extract the update package.'**
+  String get updateInstallerExtractFailed;
+
+  /// Error shown when the Windows updater cannot copy updated files into place
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to install the update files.'**
+  String get updateInstallerCopyFailed;
 
   /// Generic error message when an unknown error occurs
   ///

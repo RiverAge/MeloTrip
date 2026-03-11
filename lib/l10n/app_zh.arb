@@ -275,6 +275,30 @@
             }
         }
     },
+    "updateCheckingInline": "\u6b63\u5728\u68c0\u67e5\u66f4\u65b0...",
+    "updateAvailableInline": "\u53d1\u73b0\u65b0\u7248\u672c v{versionName}",
+    "@updateAvailableInline": {
+        "placeholders": {
+            "versionName": {
+                "type": "String",
+                "example": "1.0.9"
+            }
+        }
+    },
+    "updateAlreadyLatestInline": "\u5f53\u524d\u7248\u672c {versionName} ({versionCode}) \u5df2\u662f\u6700\u65b0\u7248\u672c",
+    "@updateAlreadyLatestInline": {
+        "placeholders": {
+            "versionName": {
+                "type": "String",
+                "example": "1.0.8"
+            },
+            "versionCode": {
+                "type": "int",
+                "example": "9"
+            }
+        }
+    },
+    "updateCheckFailedInline": "\u68c0\u67e5\u66f4\u65b0\u5931\u8d25\uff0c\u70b9\u51fb\u91cd\u8bd5\u3002",
     "otaAndroidOnly": "仅支持 Android 平台 OTA 更新",
     "updateDownloadingPackage": "正在下载更新包...",
     "updateStageDownloading": "正在下载更新包",
@@ -305,8 +329,7 @@
                 "example": "1.2 MB/s"
             }
         }
-    },
-    "updateEtaLine": "预计剩余：{eta}",
+    },    "updateEtaLine": "预计剩余：{eta}",
     "@updateEtaLine": {
         "placeholders": {
             "eta": {
@@ -314,10 +337,29 @@
                 "example": "1m 20s"
             }
         }
-    },    "updateOpeningInstaller": "下载完成，正在打开安装器...",
+    },
+    "updateReadyToInstallTitle": "准备安装更新",
+    "updateReadyToInstallMessage": "应用将关闭以应用更新，并在安装完成后重新启动。",
+    "updateRestartToInstallAction": "关闭并安装",
+    "updateOpeningInstaller": "下载完成，正在打开安装器...",
     "updateInstallerFinished": "安装流程已结束。",
     "updateInstallPermissionDenied": "安装权限被拒绝，请允许安装未知应用。",
     "updateFailed": "更新失败：{error}",
+        "updateInstallerWindowTitle": "MeloTrip \u66f4\u65b0\u5668",
+    "updateInstallerVersionLine": "\u7248\u672c {versionName} ({versionCode})",
+    "updateInstallerPreparing": "\u6b63\u5728\u51c6\u5907\u66f4\u65b0...",
+    "updateInstallerWaitingForApp": "\u6b63\u5728\u7b49\u5f85 MeloTrip \u5173\u95ed...",
+    "updateInstallerExtractingArchive": "\u6b63\u5728\u89e3\u538b\u66f4\u65b0\u5305...",
+    "updateInstallerCopyingFiles": "\u6b63\u5728\u5b89\u88c5\u66f4\u65b0...",
+    "updateInstallerRestartingApp": "\u6b63\u5728\u91cd\u65b0\u542f\u52a8 MeloTrip...",
+    "updateInstallerFailed": "\u66f4\u65b0\u5931\u8d25",
+    "updateInstallerInvalidArguments": "\u66f4\u65b0\u5668\u542f\u52a8\u53c2\u6570\u65e0\u6548\u3002",
+    "updateInstallerInitFailed": "\u521d\u59cb\u5316\u66f4\u65b0\u5668\u6240\u9700\u7684 Windows \u7ec4\u4ef6\u5931\u8d25\u3002",
+    "updateInstallerWaitFailed": "\u7b49\u5f85 MeloTrip \u9000\u51fa\u5931\u8d25\u3002",
+    "updateInstallerTempPathFailed": "\u65e0\u6cd5\u83b7\u53d6\u4e34\u65f6\u76ee\u5f55\u3002",
+    "updateInstallerTempDirFailed": "\u65e0\u6cd5\u521b\u5efa\u66f4\u65b0\u6682\u5b58\u76ee\u5f55\u3002",
+    "updateInstallerExtractFailed": "\u89e3\u538b\u66f4\u65b0\u5305\u5931\u8d25\u3002",
+    "updateInstallerCopyFailed": "\u5b89\u88c5\u66f4\u65b0\u6587\u4ef6\u5931\u8d25\u3002",
     "@updateFailed": {
         "placeholders": {
             "error": {

@@ -676,7 +676,38 @@
          }
       }
    },
-   "otaAndroidOnly": "OTA update is only supported on Android",
+   "updateCheckingInline": "Checking for updates...",
+   "@updateCheckingInline": {
+      "description": "Inline status shown while the settings page checks for updates"
+   },
+   "updateAvailableInline": "New version v{versionName} is available",
+   "@updateAvailableInline": {
+      "description": "Inline status shown when a new update is available in settings",
+      "placeholders": {
+         "versionName": {
+            "type": "String",
+            "example": "1.0.9"
+         }
+      }
+   },
+   "updateAlreadyLatestInline": "Current version {versionName} ({versionCode}) is up to date",
+   "@updateAlreadyLatestInline": {
+      "description": "Inline status shown when the current app version is already up to date",
+      "placeholders": {
+         "versionName": {
+            "type": "String",
+            "example": "1.0.8"
+         },
+         "versionCode": {
+            "type": "int",
+            "example": "9"
+         }
+      }
+   },
+   "updateCheckFailedInline": "Update check failed. Tap to retry.",
+   "@updateCheckFailedInline": {
+      "description": "Inline status shown when the update check fails on the settings page"
+   },   "otaAndroidOnly": "OTA update is only supported on Android",
    "@otaAndroidOnly": {
       "description": "Snackbar text for non-Android platforms"
    },
@@ -734,6 +765,18 @@
          }
       }
    },
+   "updateReadyToInstallTitle": "Ready to install",
+   "@updateReadyToInstallTitle": {
+      "description": "Dialog title shown before closing the app to install an update"
+   },
+   "updateReadyToInstallMessage": "The app will close to apply the update and restart after installation finishes.",
+   "@updateReadyToInstallMessage": {
+      "description": "Dialog body shown before closing the app to install an update"
+   },
+   "updateRestartToInstallAction": "Close and install",
+   "@updateRestartToInstallAction": {
+      "description": "Confirmation action that closes the app and starts installation"
+   },
    "updateOpeningInstaller": "Download complete. Opening installer...",
    "@updateOpeningInstaller": {
       "description": "Snackbar text after download completes"
@@ -757,6 +800,76 @@
       }
    },
 
+   "updateInstallerWindowTitle": "MeloTrip Updater",
+   "@updateInstallerWindowTitle": {
+      "description": "Title shown in the Windows updater window"
+   },
+   "updateInstallerVersionLine": "Version {versionName} ({versionCode})",
+   "@updateInstallerVersionLine": {
+      "description": "Version line shown in the Windows updater window",
+      "placeholders": {
+         "versionName": {
+            "type": "String",
+            "example": "1.0.1"
+         },
+         "versionCode": {
+            "type": "int",
+            "example": "2"
+         }
+      }
+   },
+   "updateInstallerPreparing": "Preparing update...",
+   "@updateInstallerPreparing": {
+      "description": "Status text shown while the Windows updater window is starting"
+   },
+   "updateInstallerWaitingForApp": "Waiting for MeloTrip to close...",
+   "@updateInstallerWaitingForApp": {
+      "description": "Status text shown while waiting for the app to exit before update"
+   },
+   "updateInstallerExtractingArchive": "Extracting update package...",
+   "@updateInstallerExtractingArchive": {
+      "description": "Status text shown while extracting the Windows update archive"
+   },
+   "updateInstallerCopyingFiles": "Installing update...",
+   "@updateInstallerCopyingFiles": {
+      "description": "Status text shown while copying updated files into place"
+   },
+   "updateInstallerRestartingApp": "Restarting MeloTrip...",
+   "@updateInstallerRestartingApp": {
+      "description": "Status text shown while restarting the app after update"
+   },
+   "updateInstallerFailed": "Update failed",
+   "@updateInstallerFailed": {
+      "description": "Heading shown in the Windows updater when installation fails"
+   },
+   "updateInstallerInvalidArguments": "Updater arguments are invalid.",
+   "@updateInstallerInvalidArguments": {
+      "description": "Error shown when the Windows updater receives invalid launch arguments"
+   },
+   "updateInstallerInitFailed": "Failed to initialize Windows components for the updater.",
+   "@updateInstallerInitFailed": {
+      "description": "Error shown when the Windows updater fails to initialize COM or required controls"
+   },
+   "updateInstallerWaitFailed": "Failed to wait for MeloTrip to exit.",
+   "@updateInstallerWaitFailed": {
+      "description": "Error shown when the Windows updater cannot wait for the app process to exit"
+   },
+   "updateInstallerTempPathFailed": "Failed to resolve a temporary directory.",
+   "@updateInstallerTempPathFailed": {
+      "description": "Error shown when the Windows updater cannot access a temporary directory"
+   },
+   "updateInstallerTempDirFailed": "Failed to create the staging directory.",
+   "@updateInstallerTempDirFailed": {
+      "description": "Error shown when the Windows updater cannot create its staging directory"
+   },
+   "updateInstallerExtractFailed": "Failed to extract the update package.",
+   "@updateInstallerExtractFailed": {
+      "description": "Error shown when the Windows updater cannot extract the downloaded archive"
+   },
+   "updateInstallerCopyFailed": "Failed to install the update files.",
+   "@updateInstallerCopyFailed": {
+      "description": "Error shown when the Windows updater cannot copy updated files into place"
+   },
    "unknownError": "Unknown Error",
    "@unknownError": {
       "description": "Generic error message when an unknown error occurs"

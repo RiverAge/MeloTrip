@@ -451,6 +451,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get updateCheckingInline => 'Checking for updates...';
+
+  @override
+  String updateAvailableInline(String versionName) {
+    return 'New version v$versionName is available';
+  }
+
+  @override
+  String updateAlreadyLatestInline(String versionName, int versionCode) {
+    return 'Current version $versionName ($versionCode) is up to date';
+  }
+
+  @override
+  String get updateCheckFailedInline => 'Update check failed. Tap to retry.';
+
+  @override
   String get otaAndroidOnly => 'OTA update is only supported on Android';
 
   @override
@@ -481,6 +497,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get updateReadyToInstallTitle => 'Ready to install';
+
+  @override
+  String get updateReadyToInstallMessage =>
+      'The app will close to apply the update and restart after installation finishes.';
+
+  @override
+  String get updateRestartToInstallAction => 'Close and install';
+
+  @override
   String get updateOpeningInstaller =>
       'Download complete. Opening installer...';
 
@@ -495,6 +521,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String updateFailed(String error) {
     return 'Update failed: $error';
   }
+
+  @override
+  String get updateInstallerWindowTitle => 'MeloTrip Updater';
+
+  @override
+  String updateInstallerVersionLine(String versionName, int versionCode) {
+    return 'Version $versionName ($versionCode)';
+  }
+
+  @override
+  String get updateInstallerPreparing => 'Preparing update...';
+
+  @override
+  String get updateInstallerWaitingForApp => 'Waiting for MeloTrip to close...';
+
+  @override
+  String get updateInstallerExtractingArchive => 'Extracting update package...';
+
+  @override
+  String get updateInstallerCopyingFiles => 'Installing update...';
+
+  @override
+  String get updateInstallerRestartingApp => 'Restarting MeloTrip...';
+
+  @override
+  String get updateInstallerFailed => 'Update failed';
+
+  @override
+  String get updateInstallerInvalidArguments =>
+      'Updater arguments are invalid.';
+
+  @override
+  String get updateInstallerInitFailed =>
+      'Failed to initialize Windows components for the updater.';
+
+  @override
+  String get updateInstallerWaitFailed =>
+      'Failed to wait for MeloTrip to exit.';
+
+  @override
+  String get updateInstallerTempPathFailed =>
+      'Failed to resolve a temporary directory.';
+
+  @override
+  String get updateInstallerTempDirFailed =>
+      'Failed to create the staging directory.';
+
+  @override
+  String get updateInstallerExtractFailed =>
+      'Failed to extract the update package.';
+
+  @override
+  String get updateInstallerCopyFailed => 'Failed to install the update files.';
 
   @override
   String get unknownError => 'Unknown Error';
