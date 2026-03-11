@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:melo_trip/app_logic/android_apk_installer.dart';
+import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -68,6 +68,11 @@ class AppUpdateService {
 
   bool get isInstallSupported => _installerGateway.isSupported;
 
+  bool get requiresHostExitForInstall =>
+      _installerGateway.requiresHostExitForInstall;
+
+  String get expectedPackageType => _defaultPackageType();
+
   Future<bool> canRequestInstallPermission() {
     return _installerGateway.canRequestInstallPermission();
   }
@@ -128,9 +133,11 @@ class AppUpdateService {
     final response = await Dio().get<Map<String, dynamic>>(
       checkUrl,
       options: Options(
-        headers: const {
+        headers: <String, Object>{
           'User-Agent': 'MeloTrip-App',
           'Accept': 'application/json',
+          'X-MeloTrip-Platform': _currentPlatformName(),
+          'X-MeloTrip-Package-Type': expectedPackageType,
         },
       ),
     );
@@ -158,27 +165,36 @@ class AppUpdateService {
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
   }) {
-    if (update.downloadUrl.isEmpty) {
-      throw StateError('Download URL is empty.');
-    }
-
-    return _downloadAndVerifyApk(
+    return downloadAndVerifyPackage(
       update: update,
       onProgress: onProgress,
       onStageChanged: onStageChanged,
     );
   }
 
-  Future<File> _downloadAndVerifyApk({
+  Future<File> downloadAndVerifyPackage({
+    required AppUpdateInfo update,
+    void Function(int received, int total, double progress)? onProgress,
+    void Function(UpdateDownloadStage stage)? onStageChanged,
+  }) {
+    if (update.downloadUrl.isEmpty) {
+      throw StateError('Download URL is empty.');
+    }
+
+    return _downloadAndVerifyPackage(
+      update: update,
+      onProgress: onProgress,
+      onStageChanged: onStageChanged,
+    );
+  }
+
+  Future<File> _downloadAndVerifyPackage({
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
   }) async {
     final dir = await getTemporaryDirectory();
-    final filePath = p.join(
-      dir.path,
-      'melotrip-${update.versionName}+${update.versionCode}.apk',
-    );
+    final filePath = p.join(dir.path, _buildDownloadFileName(update));
     final file = File(filePath);
     if (await file.exists()) {
       await file.delete();
@@ -190,10 +206,7 @@ class AppUpdateService {
       filePath,
       options: Options(
         responseType: ResponseType.bytes,
-        headers: const {
-          'User-Agent': 'MeloTrip-App',
-          'Accept': 'application/vnd.android.package-archive,*/*',
-        },
+        headers: const {'User-Agent': 'MeloTrip-App', 'Accept': '*/*'},
       ),
       onReceiveProgress: (received, total) {
         final effectiveTotal = total > 0 ? total : update.fileSize;
@@ -227,6 +240,57 @@ class AppUpdateService {
     }
 
     return file;
+  }
+
+  String _buildDownloadFileName(AppUpdateInfo update) {
+    final uri = Uri.tryParse(update.downloadUrl);
+    final candidate = uri == null ? '' : p.basename(uri.path);
+    if (candidate.isNotEmpty && candidate.contains('.')) {
+      return candidate;
+    }
+
+    return 'melotrip-${update.versionName}+${update.versionCode}'
+        '${_defaultPackageExtension()}';
+  }
+
+  String _defaultPackageExtension() {
+    if (Platform.isWindows) {
+      return '.zip';
+    }
+    if (Platform.isLinux) {
+      return '.tar.gz';
+    }
+    if (Platform.isMacOS) {
+      return '.zip';
+    }
+    return '.apk';
+  }
+
+  String _defaultPackageType() {
+    final extension = _defaultPackageExtension();
+    if (extension.startsWith('.')) {
+      return extension.substring(1);
+    }
+    return extension;
+  }
+
+  String _currentPlatformName() {
+    if (Platform.isWindows) {
+      return 'windows';
+    }
+    if (Platform.isMacOS) {
+      return 'macos';
+    }
+    if (Platform.isLinux) {
+      return 'linux';
+    }
+    if (Platform.isAndroid) {
+      return 'android';
+    }
+    if (Platform.isIOS) {
+      return 'ios';
+    }
+    return 'unknown';
   }
 }
 

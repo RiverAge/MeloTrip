@@ -115,6 +115,22 @@ jobs:
       - name: Build Windows release
         run: flutter build windows --release
 
+      - name: Publish Windows updater
+        shell: pwsh
+        run: |
+          dotnet publish tool/windows_updater/MeloTripUpdater.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -o build/windows/updater
+
+      - name: Copy Windows updater into bundle
+        shell: pwsh
+        run: |
+          Copy-Item "build/windows/updater/MeloTripUpdater.exe" "build/windows/x64/runner/Release/MeloTripUpdater.exe" -Force
+
       - name: Pack Windows bundle
         shell: pwsh
         run: |
