@@ -1,5 +1,5 @@
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/playlist/playlist_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'playlist.g.dart';
@@ -30,16 +30,16 @@ Future<SubsonicResponse?> updatePlaylistRequest({
     queryParameters['public'] = public;
   }
 
-  final api = await ref.read(apiProvider.future);
-  final res = await api.get<Map<String, dynamic>>(
-    '/rest/updatePlaylist',
-    queryParameters: queryParameters,
+  final repository = ref.read(playlistRepositoryProvider);
+  final subsonicRes = await repository.updatePlaylist(
+    playlistId: playlistId,
+    songIndexToRemove: songIndexToRemove,
+    songIdToAdd: songIdToAdd,
+    name: name,
+    comment: comment,
+    public: public,
   );
-  final data = res.data;
-  if (data == null) return null;
-
-  final subsonicRes = SubsonicResponse.fromJson(data);
-  if (subsonicRes.subsonicResponse?.status != 'ok') return null;
+  if (subsonicRes == null) return null;
 
   ref.invalidate(playlistDetailProvider(playlistId));
   ref.invalidate(playlistsProvider);
@@ -50,52 +50,35 @@ Future<SubsonicResponse?> updatePlaylistRequest({
 class Playlists extends _$Playlists {
   @override
   Future<SubsonicResponse?> build() async {
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>('/rest/getPlaylists');
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    final repository = ref.read(playlistRepositoryProvider);
+    return repository.fetchPlaylists();
   }
 
   Future<SubsonicResponse?> createPlaylist(String? name) async {
     if (name == null) return null;
 
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/createPlaylist',
-      queryParameters: {'name': name},
-    );
-    final data = res.data;
+    final repository = ref.read(playlistRepositoryProvider);
+    final data = await repository.createPlaylist(name);
     if (data == null) return null;
     ref.invalidateSelf();
-    return SubsonicResponse.fromJson(data);
+    return data;
   }
 
   Future<SubsonicResponse?> deletePlaytlist(String? playlistId) async {
     if (playlistId == null) return null;
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/deletePlaylist',
-      queryParameters: {'id': playlistId},
-    );
-    final data = res.data;
+    final repository = ref.read(playlistRepositoryProvider);
+    final data = await repository.deletePlaylist(playlistId);
     if (data == null) return null;
     ref.invalidateSelf();
-    return SubsonicResponse.fromJson(data);
+    return data;
   }
 }
 
 @riverpod
 Future<SubsonicResponse?> playlistDetail(Ref ref, String? playlistId) async {
   if (playlistId == null) return null;
-  final api = await ref.read(apiProvider.future);
-  final res = await api.get<Map<String, dynamic>>(
-    '/rest/getPlaylist',
-    queryParameters: {'id': playlistId},
-  );
-  final data = res.data;
-  if (data == null) return null;
-  return SubsonicResponse.fromJson(data);
+  final repository = ref.read(playlistRepositoryProvider);
+  return repository.fetchPlaylistDetail(playlistId);
 }
 
 @riverpod

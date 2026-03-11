@@ -8,11 +8,10 @@ import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/provider/play_queue/play_queue.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/repository/play_queue/play_queue_repository.dart';
 import 'package:melo_trip/server/cache_server.dart';
 
 enum InitialBootstrapResult { loggedIn, loggedOut }
@@ -109,9 +108,10 @@ Future<void> ensurePlayQueueRestored(WidgetRef ref) async {
       final userKey = '${auth?.host}|${auth?.username}|${auth?.token}';
       if (_restoredPlayQueueUserKey == userKey) return;
 
-      final api = await ref.read(apiProvider.future);
       final queue =
-          (await fetchPlayQueueResponse(api))?.subsonicResponse?.playQueue;
+          (await ref.read(
+                playQueueRepositoryProvider,
+              ).fetchPlayQueue())?.subsonicResponse?.playQueue;
 
       final player = await ref.read(appPlayerHandlerProvider.future);
       if (player == null) return;

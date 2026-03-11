@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/song/songs.dart';
+import 'package:melo_trip/repository/song/song_repository.dart';
 
 // 1. 原始输入词 (V2 使用)
 final searchQueryProvider = StateProvider<String>((ref) => '');
@@ -29,9 +29,8 @@ final searchProvider = FutureProvider.family<SubsonicResponse?, String>((
   final cancelToken = CancelToken();
   ref.onDispose(() => cancelToken.cancel());
 
-  final api = await ref.read(apiProvider.future);
-  return fetchSongSearchResponse(
-    api,
+  final repository = ref.read(songRepositoryProvider);
+  return repository.fetchSongSearchResponse(
     query: SongSearchQuery(query: query),
     cancelToken: cancelToken,
   );

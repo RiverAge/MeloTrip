@@ -1,5 +1,5 @@
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/favorite/favorite_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'favorite.g.dart';
@@ -8,11 +8,8 @@ part 'favorite.g.dart';
 class Favorite extends _$Favorite {
   @override
   Future<SubsonicResponse?> build() async {
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>('/rest/getStarred');
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    final repository = ref.read(favoriteRepositoryProvider);
+    return repository.fetchStarred();
   }
 
   // Future<SubsonicResponse?> toggleSong(SongEntity? song) async {

@@ -1,8 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:melo_trip/model/response/album/album.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:melo_trip/repository/album/album_repository.dart';
 
 part 'albums.g.dart';
 
@@ -41,28 +39,6 @@ class AlbumListQuery {
 
   @override
   int get hashCode => Object.hash(type, size, offset);
-}
-
-Future<SubsonicResponse?> _fetchAlbumListResponse(
-  Dio api, {
-  required AlbumListQuery query,
-}) async {
-  final res = await api.get<Map<String, dynamic>>(
-    '/rest/getAlbumList',
-    queryParameters: query.toQueryParameters(),
-  );
-
-  final data = res.data;
-  if (data == null) return null;
-  return SubsonicResponse.fromJson(data);
-}
-
-Future<List<AlbumEntity>> fetchAlbumListItems(
-  Dio api, {
-  required AlbumListQuery query,
-}) async {
-  final response = await _fetchAlbumListResponse(api, query: query);
-  return response?.subsonicResponse?.albumList?.album ?? const <AlbumEntity>[];
 }
 
 class PaginatedAlbumListState {
@@ -151,13 +127,17 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
   }
 
   Future<List<AlbumEntity>> _fetchPage(int offset) async {
-    final api = await ref.read(apiProvider.future);
-    return fetchAlbumListItems(api, query: _query.copyWith(offset: offset));
+    final repository = ref.read(albumRepositoryProvider);
+    return repository.fetchAlbumListItems(
+      query: _query.copyWith(offset: offset),
+    );
   }
 }
 
 @riverpod
 Future<List<AlbumEntity>> albums(Ref ref, AlumsType type) async {
-  final api = await ref.read(apiProvider.future);
-  return fetchAlbumListItems(api, query: AlbumListQuery(type: type.name));
+  final repository = ref.read(albumRepositoryProvider);
+  return repository.fetchAlbumListItems(
+    query: AlbumListQuery(type: type.name),
+  );
 }

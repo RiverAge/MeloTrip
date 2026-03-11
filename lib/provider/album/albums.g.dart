@@ -59,7 +59,7 @@ final class PaginatedAlbumListProvider
 }
 
 String _$paginatedAlbumListHash() =>
-    r'856aecc4b81b89727c24e5968d45a7513311b973';
+    r'0a1fdae59f1f52a220f788abe270cd3e81a349ad';
 
 final class PaginatedAlbumListFamily extends $Family
     with
@@ -165,7 +165,7 @@ final class AlbumsProvider
   }
 }
 
-String _$albumsHash() => r'32ab7ec807b9b034e4f9d1c25e7a1feddc06e9d6';
+String _$albumsHash() => r'0cb26c2892af03c4c81f02b0f56ac7c626600f34';
 
 final class AlbumsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlumsType> {

@@ -1,7 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/song/song_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'songs.g.dart';
@@ -60,36 +58,6 @@ class SongSearchQuery {
   @override
   int get hashCode =>
       Object.hash(query, songCount, songOffset, albumCount, artistCount);
-}
-
-Future<SubsonicResponse?> fetchSongSearchResponse(
-  Dio api, {
-  required SongSearchQuery query,
-  CancelToken? cancelToken,
-}) async {
-  final res = await api.get<Map<String, dynamic>>(
-    '/rest/search3',
-    queryParameters: query.toQueryParameters(),
-    cancelToken: cancelToken,
-  );
-
-  final data = res.data;
-  if (data == null) return null;
-  return SubsonicResponse.fromJson(data);
-}
-
-Future<List<SongEntity>> fetchSongSearchItems(
-  Dio api, {
-  required SongSearchQuery query,
-  CancelToken? cancelToken,
-}) async {
-  final response = await fetchSongSearchResponse(
-    api,
-    query: query,
-    cancelToken: cancelToken,
-  );
-  return response?.subsonicResponse?.searchResult3?.song ??
-      const <SongEntity>[];
 }
 
 class PaginatedSongListState {
@@ -178,9 +146,8 @@ class PaginatedSongList extends _$PaginatedSongList {
   }
 
   Future<List<SongEntity>> _fetchPage(int offset) async {
-    final api = await ref.read(apiProvider.future);
-    return fetchSongSearchItems(
-      api,
+    final repository = ref.read(songRepositoryProvider);
+    return repository.fetchSongSearchItems(
       query: _query.copyWith(songOffset: offset),
     );
   }

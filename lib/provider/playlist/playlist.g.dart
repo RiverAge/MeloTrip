@@ -155,7 +155,7 @@ final class PlaylistUpdateProvider
   PlaylistUpdate create() => PlaylistUpdate();
 }
 
-String _$playlistUpdateHash() => r'127861dba3def6d47160caead98bed96125a4885';
+String _$playlistUpdateHash() => r'fd8297f306d114119833bf14d68af637aa219246';
 
 abstract class _$PlaylistUpdate extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
