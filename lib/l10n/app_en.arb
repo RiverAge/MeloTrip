@@ -807,5 +807,33 @@
             "example": "320"
          }
       }
+   },
+   "playAddToNext": "Next",
+   "@playAddToNext": {
+      "description": "Add to play queue next button"
+   },
+   "playAddToLast": "Last",
+   "@playAddToLast": {
+      "description": "Add to play queue last button"
+   },
+   "track": "Track",
+   "@track": {
+      "description": "Track label for toolbar"
+   },
+   "edit": "Edit",
+   "@edit": {
+      "description": "Edit button label"
+   },
+   "folder": "Folder",
+   "@folder": {
+      "description": "Folder label"
+   },
+   "id": "Id",
+   "@id": {
+      "description": "Id label"
+   },
+   "title": "Title",
+   "@title": {
+      "description": "Title label"
    }
 }

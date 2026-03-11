@@ -1,6 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/widget/provider_value_builder.dart';
+
+/// Simple data class for an index artist/folder entry from getIndexes.
+class _IndexEntry {
+  const _IndexEntry({required this.id, required this.name});
+  final String id;
+  final String name;
+}
+
+/// Provider that fetches folder listing via Subsonic getIndexes API.
+final folderIndexesProvider =
+    FutureProvider<List<_IndexEntry>>((ref) async {
+  final api = await ref.read(apiProvider.future);
+  final res = await api.get<Map<String, dynamic>>('/rest/getIndexes');
+  final data = res.data;
+  if (data == null) return [];
+
+  final indexes =
+      data['subsonic-response']?['indexes']?['index'] as List<dynamic>? ?? [];
+  final entries = <_IndexEntry>[];
+  for (final idx in indexes) {
+    final artists = idx['artist'] as List<dynamic>? ?? [];
+    for (final artist in artists) {
+      final id = artist['id']?.toString() ?? '';
+      final name = artist['name']?.toString() ?? '';
+      if (id.isNotEmpty) {
+        entries.add(_IndexEntry(id: id, name: name));
+      }
+    }
+  }
+  return entries;
+});
 
 class DesktopFoldersPage extends ConsumerWidget {
   const DesktopFoldersPage({super.key});
@@ -12,11 +45,27 @@ class DesktopFoldersPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _PageHeader(title: l10n.songMetaPath, count: 521),
-          _Toolbar(),
-          Expanded(child: _FolderTable()),
+          AsyncValueBuilder(
+            provider: folderIndexesProvider,
+            loading: (_, _) => _PageHeader(
+              title: l10n.folder,
+              count: 0,
+            ),
+            builder: (context, data, _) {
+              return _PageHeader(title: l10n.folder, count: data.length);
+            },
+          ),
+          _Toolbar(l10n: l10n),
+          Expanded(
+            child: AsyncValueBuilder(
+              provider: folderIndexesProvider,
+              builder: (context, data, _) {
+                return _FolderTable(entries: data, l10n: l10n);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -38,7 +87,7 @@ class _PageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.displaySmall?.copyWith(
-              fontWeight: .w900,
+              fontWeight: FontWeight.w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -57,7 +106,10 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            onPressed: () {},
+          ),
         ],
       ),
     );
@@ -65,39 +117,31 @@ class _PageHeader extends StatelessWidget {
 }
 
 class _Toolbar extends StatelessWidget {
+  const _Toolbar({required this.l10n});
+  final AppLocalizations l10n;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final iconColor = theme.colorScheme.onSurfaceVariant;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
-          const Text(
-            'Id',
+          Text(
+            l10n.id,
             style: TextStyle(
               fontSize: 12,
-              fontWeight: .bold,
-              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              color: iconColor,
             ),
           ),
           const SizedBox(width: 24),
-          Icon(
-            Icons.sort_by_alpha_rounded,
-            size: 18,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          Icon(Icons.sort_by_alpha_rounded, size: 18, color: iconColor),
           const SizedBox(width: 16),
-          Icon(
-            Icons.refresh_rounded,
-            size: 18,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          Icon(Icons.refresh_rounded, size: 18, color: iconColor),
           const Spacer(),
-          Icon(
-            Icons.tune_rounded,
-            size: 18,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          Icon(Icons.tune_rounded, size: 18, color: iconColor),
         ],
       ),
     );
@@ -105,62 +149,59 @@ class _Toolbar extends StatelessWidget {
 }
 
 class _FolderTable extends StatelessWidget {
-  final dummyFolders = [
-    'A-Lin',
-    'Adele',
-    'AGA',
-    'Aimer',
-    'Alan Walker',
-    'Alesso',
-    'Alex Goot',
-    'Arcane',
-    'Avicii',
-    'Backstreet Boys',
-  ];
+  const _FolderTable({required this.entries, required this.l10n});
+  final List<_IndexEntry> entries;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: .7);
+    final headerStyle = _headerStyle.copyWith(color: headerColor);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           child: Row(
             children: [
-              const SizedBox(width: 30, child: Text('#', style: _headerStyle)),
-              const Expanded(
+              SizedBox(width: 30, child: Text('#', style: headerStyle)),
+              Expanded(
                 flex: 4,
-                child: Text('TITLE', style: _headerStyle),
+                child: Text(l10n.title, style: headerStyle),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 60,
                 child: Icon(
                   Icons.access_time_rounded,
                   size: 14,
-                  color: Colors.grey,
+                  color: headerColor,
                 ),
               ),
-              const Expanded(
+              Expanded(
                 flex: 3,
-                child: Text('ALBUM', style: _headerStyle),
+                child: Text(l10n.album, style: headerStyle),
               ),
-              const Expanded(
+              Expanded(
                 flex: 2,
-                child: Text('GENRE', style: _headerStyle),
+                child: Text(l10n.songMetaGenre, style: headerStyle),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 60,
-                child: Text('YEAR', style: _headerStyle),
+                child: Text(l10n.songMetaYear, style: headerStyle),
               ),
               const SizedBox(width: 30),
             ],
           ),
         ),
-        const Divider(height: 1),
+        Divider(
+          height: 1,
+          color: theme.colorScheme.outlineVariant.withValues(alpha: .3),
+        ),
         Expanded(
           child: ListView.builder(
-            itemCount: dummyFolders.length,
+            itemCount: entries.length,
             itemBuilder: (context, index) {
-              return _FolderRow(index: index + 1, name: dummyFolders[index]);
+              return _FolderRow(index: index + 1, entry: entries[index]);
             },
           ),
         ),
@@ -170,44 +211,54 @@ class _FolderTable extends StatelessWidget {
 
   static const _headerStyle = TextStyle(
     fontSize: 11,
-    fontWeight: .bold,
-    color: Colors.grey,
+    fontWeight: FontWeight.bold,
     letterSpacing: 1.2,
   );
 }
 
 class _FolderRow extends StatelessWidget {
-  const _FolderRow({required this.index, required this.name});
+  const _FolderRow({required this.index, required this.entry});
   final int index;
-  final String name;
+  final _IndexEntry entry;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        // TODO: Navigate into folder to show sub-entries
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         child: Row(
           children: [
             SizedBox(
               width: 30,
-              child: Text('$index', style: theme.textTheme.bodySmall),
+              child: Text(
+                '$index',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
             Expanded(
               flex: 4,
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.folder_rounded,
-                    color: Colors.amber,
+                    color: theme.colorScheme.secondary.withValues(alpha: .85),
                     size: 20,
                   ),
                   const SizedBox(width: 16),
-                  Text(
-                    name,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: .bold,
+                  Expanded(
+                    child: Text(
+                      entry.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -217,11 +268,7 @@ class _FolderRow extends StatelessWidget {
             const Expanded(flex: 3, child: SizedBox()),
             const Expanded(flex: 2, child: SizedBox()),
             const SizedBox(width: 60),
-            const Icon(
-              Icons.favorite_border_rounded,
-              size: 16,
-              color: Colors.grey,
-            ),
+            const SizedBox(width: 30),
           ],
         ),
       ),

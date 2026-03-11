@@ -1064,6 +1064,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{value} kbps'**
   String audioBitrateKbps(String value);
+
+  /// Add to play queue next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get playAddToNext;
+
+  /// Add to play queue last button
+  ///
+  /// In en, this message translates to:
+  /// **'Last'**
+  String get playAddToLast;
+
+  /// Track label for toolbar
+  ///
+  /// In en, this message translates to:
+  /// **'Track'**
+  String get track;
+
+  /// Edit button label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// Folder label
+  ///
+  /// In en, this message translates to:
+  /// **'Folder'**
+  String get folder;
+
+  /// Id label
+  ///
+  /// In en, this message translates to:
+  /// **'Id'**
+  String get id;
+
+  /// Title label
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
 }
 
 class _AppLocalizationsDelegate

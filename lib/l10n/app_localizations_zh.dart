@@ -522,6 +522,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String audioBitrateKbps(String value) {
     return '$value kbps';
   }
+
+  @override
+  String get playAddToNext => '下一个';
+
+  @override
+  String get playAddToLast => '最后';
+
+  @override
+  String get track => '曲目';
+
+  @override
+  String get edit => '编辑';
+
+  @override
+  String get folder => '文件夹';
+
+  @override
+  String get id => '编号';
+
+  @override
+  String get title => '标题';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -1042,4 +1063,25 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String audioBitrateKbps(String value) {
     return '$value kbps';
   }
+
+  @override
+  String get playAddToNext => '下一个';
+
+  @override
+  String get playAddToLast => '最后';
+
+  @override
+  String get track => '曲目';
+
+  @override
+  String get edit => '编辑';
+
+  @override
+  String get folder => '文件夹';
+
+  @override
+  String get id => '编号';
+
+  @override
+  String get title => '标题';
 }

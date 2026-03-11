@@ -525,4 +525,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String audioBitrateKbps(String value) {
     return '$value kbps';
   }
+
+  @override
+  String get playAddToNext => 'Next';
+
+  @override
+  String get playAddToLast => 'Last';
+
+  @override
+  String get track => 'Track';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get folder => 'Folder';
+
+  @override
+  String get id => 'Id';
+
+  @override
+  String get title => 'Title';
 }

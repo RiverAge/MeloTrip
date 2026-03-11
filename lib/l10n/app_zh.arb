@@ -332,5 +332,13 @@
     "albumHeaderReleaseDate": "发行日期",
     "retry": "重试",
     "retryStartup": "重试启动",
-    "startupInitializing": "正在启动 MeloTrip..."
+    "startupInitializing": "正在启动 MeloTrip...",
+
+    "playAddToNext": "下一个",
+    "playAddToLast": "最后",
+    "track": "曲目",
+    "edit": "编辑",
+    "folder": "文件夹",
+    "id": "编号",
+    "title": "标题"
 }
