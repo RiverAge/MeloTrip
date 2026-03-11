@@ -210,18 +210,11 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
                                   page = const DesktopHomePage();
                               }
                               return PageRouteBuilder(
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
                                         page,
-                                transitionsBuilder:
-                                    (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                      child,
-                                    ) {
-                                      return child;
-                                    },
                                 settings: settings,
                               );
                             },
