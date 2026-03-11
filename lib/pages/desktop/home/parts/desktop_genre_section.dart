@@ -31,7 +31,7 @@ class _DesktopGenreSection extends ConsumerWidget {
         AsyncValueBuilder(
           provider: albumsProvider(AlumsType.recent),
           builder: (context, data, _) {
-            final albums = data.subsonicResponse?.albumList?.album ?? const [];
+            final albums = data;
             final fallback = albums
                 .map((it) => it.genre?.trim())
                 .whereType<String>()

@@ -27,7 +27,7 @@ class _DesktopAlbumSection extends ConsumerWidget {
               ),
               empty: (_, _) => const SizedBox.shrink(),
               builder: (context, data, _) {
-                final albums = data.subsonicResponse?.albumList?.album ?? [];
+                final albums = data;
                 if (albums.isEmpty) return const SizedBox.shrink();
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,

@@ -16,7 +16,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
       provider: albumsProvider(AlumsType.random),
       loading: (_, _) => const SizedBox(height: 280),
       builder: (context, data, _) {
-        final album = data.subsonicResponse?.albumList?.album?.firstOrNull;
+        final album = data.firstOrNull;
         if (album == null) return const SizedBox.shrink();
 
         return MouseRegion(

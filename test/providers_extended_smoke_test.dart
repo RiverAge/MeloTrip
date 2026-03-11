@@ -14,6 +14,7 @@ import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/search/search.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
+import 'package:melo_trip/provider/song/songs.dart';
 
 typedef JsonResolver = Map<String, dynamic>? Function(RequestOptions options);
 
@@ -132,7 +133,38 @@ void main() {
     final detail = await container.read(playlistDetailProvider('p1').future);
     expect(detail?.subsonicResponse?.status, 'ok');
 
-    expect(await container.read(playlistUpdateProvider.notifier).build(), isNull);
+    expect(
+      await container.read(playlistUpdateProvider.notifier).build(),
+      isNull,
+    );
+  });
+
+  test('playlistUpdateProvider supports songIdToAdd branch', () async {
+    final adapter = RecordingRouteAdapter((options) {
+      if (options.path != '/rest/updatePlaylist') return null;
+      expect(options.queryParameters['playlistId'], 'p1');
+      expect(options.queryParameters['songIdToAdd'], 's1');
+      return {
+        'subsonic-response': {'status': 'ok'},
+      };
+    });
+
+    final container = ProviderContainer(
+      overrides: [apiProvider.overrideWith(() => FakeApiWithAdapter(adapter))],
+    );
+    addTearDown(container.dispose);
+    final subscription = container.listen(
+      playlistUpdateProvider,
+      (_, _) {},
+      fireImmediately: true,
+    );
+    addTearDown(subscription.close);
+
+    final result = await container.read(
+      playlistUpdateProvider.notifier,
+    ).modify(playlistId: 'p1', songIdToAdd: 's1');
+
+    expect(result?.subsonicResponse?.status, 'ok');
   });
 
   test('song/album favorite and rating null guards return null', () async {
@@ -232,6 +264,49 @@ void main() {
     expect(await container.read(searchProvider('').future), isNull);
     final result = await container.read(searchProvider('keyword').future);
     expect(result?.subsonicResponse?.status, 'ok');
-    expect(result?.subsonicResponse?.searchResult3?.song?.first.title, 'keyword');
+    expect(
+      result?.subsonicResponse?.searchResult3?.song?.first.title,
+      'keyword',
+    );
+  });
+
+  test('paginatedSongListProvider loads first search3 page', () async {
+    final adapter = RecordingRouteAdapter((options) {
+      if (options.path != '/rest/search3') return null;
+      expect(options.queryParameters['songCount'], 2);
+      expect(options.queryParameters['songOffset'], 0);
+      expect(options.queryParameters['query'], '');
+      return {
+        'subsonic-response': {
+          'status': 'ok',
+          'searchResult3': {
+            'song': [
+              {'id': 's1', 'title': 'Song 1'},
+              {'id': 's2', 'title': 'Song 2'},
+            ],
+          },
+        },
+      };
+    });
+
+    final container = ProviderContainer(
+      overrides: [apiProvider.overrideWith(() => FakeApiWithAdapter(adapter))],
+    );
+    addTearDown(container.dispose);
+
+    final query = SongSearchQuery(
+      query: '',
+      songCount: 2,
+      albumCount: 0,
+      artistCount: 0,
+    );
+    final notifier = container.read(paginatedSongListProvider(query).notifier);
+
+    await notifier.loadInitial();
+
+    final state = container.read(paginatedSongListProvider(query));
+    expect(state.items, hasLength(2));
+    expect(state.items.first.title, 'Song 1');
+    expect(state.hasMore, isTrue);
   });
 }

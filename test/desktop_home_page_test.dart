@@ -16,15 +16,6 @@ import 'package:melo_trip/provider/auth/auth.dart';
 
 import 'test_helpers.dart';
 
-SubsonicResponse _albumListResponse(List<AlbumEntity> albums) {
-  return SubsonicResponse(
-    subsonicResponse: SubsonicResponseClass(
-      status: 'ok',
-      albumList: AlbumListEntity(album: albums),
-    ),
-  );
-}
-
 SubsonicResponse _albumDetailResponse({
   required String albumId,
   required String albumName,
@@ -74,10 +65,10 @@ SongEntity _song({required String id, required String title, int track = 1}) {
 
 Future<void> _pumpDesktopHome(
   WidgetTester tester, {
-  required SubsonicResponse random,
-  required SubsonicResponse recent,
-  required SubsonicResponse newest,
-  required SubsonicResponse frequent,
+  required List<AlbumEntity> random,
+  required List<AlbumEntity> recent,
+  required List<AlbumEntity> newest,
+  required List<AlbumEntity> frequent,
   required SubsonicResponse detail,
 }) async {
   tester.view.devicePixelRatio = 1;
@@ -142,10 +133,10 @@ void main() {
 
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse([randomAlbum]),
-      recent: _albumListResponse(recentAlbums),
-      newest: _albumListResponse(newestAlbums),
-      frequent: _albumListResponse(newestAlbums),
+      random: [randomAlbum],
+      recent: recentAlbums,
+      newest: newestAlbums,
+      frequent: newestAlbums,
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -187,10 +178,10 @@ void main() {
 
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse([randomAlbum]),
-      recent: _albumListResponse(recentAlbums),
-      newest: _albumListResponse([randomAlbum]),
-      frequent: _albumListResponse([randomAlbum]),
+      random: [randomAlbum],
+      recent: recentAlbums,
+      newest: [randomAlbum],
+      frequent: [randomAlbum],
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -210,10 +201,10 @@ void main() {
   ) async {
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse(const []),
-      recent: _albumListResponse(const []),
-      newest: _albumListResponse(const []),
-      frequent: _albumListResponse(const []),
+      random: const <AlbumEntity>[],
+      recent: const <AlbumEntity>[],
+      newest: const <AlbumEntity>[],
+      frequent: const <AlbumEntity>[],
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Empty Detail',
@@ -247,10 +238,10 @@ void main() {
 
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse([randomAlbum]),
-      recent: _albumListResponse(recentAlbums),
-      newest: _albumListResponse([randomAlbum]),
-      frequent: _albumListResponse([randomAlbum]),
+      random: [randomAlbum],
+      recent: recentAlbums,
+      newest: [randomAlbum],
+      frequent: [randomAlbum],
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -290,10 +281,10 @@ void main() {
 
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse([randomAlbum]),
-      recent: _albumListResponse(recentAlbums),
-      newest: _albumListResponse([randomAlbum]),
-      frequent: _albumListResponse([randomAlbum]),
+      random: [randomAlbum],
+      recent: recentAlbums,
+      newest: [randomAlbum],
+      frequent: [randomAlbum],
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -326,10 +317,10 @@ void main() {
 
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse([randomAlbum]),
-      recent: _albumListResponse([randomAlbum]),
-      newest: _albumListResponse([randomAlbum]),
-      frequent: _albumListResponse([randomAlbum]),
+      random: [randomAlbum],
+      recent: [randomAlbum],
+      newest: [randomAlbum],
+      frequent: [randomAlbum],
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -361,10 +352,10 @@ void main() {
 
     await _pumpDesktopHome(
       tester,
-      random: _albumListResponse([randomAlbum]),
-      recent: _albumListResponse([randomAlbum]),
-      newest: _albumListResponse([randomAlbum]),
-      frequent: _albumListResponse([randomAlbum]),
+      random: [randomAlbum],
+      recent: [randomAlbum],
+      newest: [randomAlbum],
+      frequent: [randomAlbum],
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',

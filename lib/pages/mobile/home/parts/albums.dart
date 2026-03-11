@@ -53,7 +53,7 @@ class _Albums extends StatelessWidget {
         AsyncValueBuilder(
           provider: albumsProvider(type),
           builder: (context, data, ref) {
-            var albums = data.subsonicResponse?.albumList?.album ?? [];
+            var albums = data;
             if (albums.isEmpty) return const SizedBox.shrink();
 
             if (limit != null) {

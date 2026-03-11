@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
@@ -36,10 +37,10 @@ void main() {
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-          albumsProvider(.random).overrideWith((_) async => null),
-          albumsProvider(.newest).overrideWith((_) async => null),
-          albumsProvider(.recent).overrideWith((_) async => null),
-          albumsProvider(.frequent).overrideWith((_) async => null),
+          albumsProvider(.random).overrideWith((_) async => const <AlbumEntity>[]),
+          albumsProvider(.newest).overrideWith((_) async => const <AlbumEntity>[]),
+          albumsProvider(.recent).overrideWith((_) async => const <AlbumEntity>[]),
+          albumsProvider(.frequent).overrideWith((_) async => const <AlbumEntity>[]),
           playlistsProvider.overrideWith(
             () => FakePlaylistsData(playlistsResponse),
           ),
@@ -104,9 +105,7 @@ void main() {
     final data = SubsonicResponse(
       subsonicResponse: SubsonicResponseClass(
         playlists: const PlaylistsEntity(
-          playlist: [
-            PlaylistEntity(id: 'playlist-1', name: 'Road Trip'),
-          ],
+          playlist: [PlaylistEntity(id: 'playlist-1', name: 'Road Trip')],
         ),
       ),
     );
@@ -128,9 +127,7 @@ void main() {
     final data = SubsonicResponse(
       subsonicResponse: SubsonicResponseClass(
         playlists: const PlaylistsEntity(
-          playlist: [
-            PlaylistEntity(id: null, name: 'Broken Playlist'),
-          ],
+          playlist: [PlaylistEntity(id: null, name: 'Broken Playlist')],
         ),
       ),
     );

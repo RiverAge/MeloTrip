@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
+import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/pages/shared/initial/tab_page.dart';
@@ -43,8 +44,8 @@ void main() {
       ProviderScope(
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
-          albumsProvider(.newest).overrideWith((_) async => null),
-          albumsProvider(.recent).overrideWith((_) async => null),
+          albumsProvider(.newest).overrideWith((_) async => const <AlbumEntity>[]),
+          albumsProvider(.recent).overrideWith((_) async => const <AlbumEntity>[]),
           initialBootstrapServiceProvider.overrideWithValue(
             InitialBootstrapService(
               loadAuthUser: () async => const AuthUser(

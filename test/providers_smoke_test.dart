@@ -24,7 +24,7 @@ void main() {
     addTearDown(container.dispose);
 
     final result = await container.read(albumsProvider(.newest).future);
-    expect(result, isNull);
+    expect(result, isEmpty);
   });
 
   test('albumsProvider parses album list payload', () async {
@@ -34,9 +34,8 @@ void main() {
     addTearDown(container.dispose);
 
     final result = await container.read(albumsProvider(.newest).future);
-    final albums = result?.subsonicResponse?.albumList?.album;
-    expect(albums, isNotNull);
-    expect(albums!.length, 1);
+    final albums = result;
+    expect(albums.length, 1);
     expect(albums.first.name, 'Test Album');
   });
 

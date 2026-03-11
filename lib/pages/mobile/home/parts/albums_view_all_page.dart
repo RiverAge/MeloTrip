@@ -17,20 +17,16 @@ class _AlbumsViewAllPage extends ConsumerStatefulWidget {
 }
 
 class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
-  static const _pageSize = 30;
+  static const int _pageSize = 30;
   final ScrollController _scrollController = ScrollController();
-  final List<AlbumEntity> _albums = <AlbumEntity>[];
 
-  var _isLoading = false;
-  var _hasMore = true;
-  Object? _error;
-  int _offset = 0;
+  AlbumListQuery get _query =>
+      AlbumListQuery(type: widget.type.name, size: _pageSize);
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    _loadMore();
   }
 
   @override
@@ -41,60 +37,31 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
   }
 
   void _onScroll() {
-    if (!_scrollController.hasClients || _isLoading || !_hasMore) return;
+    final state = ref.read(paginatedAlbumListProvider(_query));
+    if (!_scrollController.hasClients || state.isLoading || !state.hasMore) {
+      return;
+    }
     final position = _scrollController.position;
     if (position.pixels >= position.maxScrollExtent - 240) {
-      _loadMore();
-    }
-  }
-
-  Future<void> _loadMore() async {
-    if (_isLoading || !_hasMore) return;
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final api = await ref.read(apiProvider.future);
-      final res = await api.get<Map<String, dynamic>>(
-        '/rest/getAlbumList',
-        queryParameters: {
-          'type': widget.type.name,
-          'size': _pageSize,
-          'offset': _offset,
-        },
-      );
-
-      final data = res.data;
-      final parsed = data == null ? null : SubsonicResponse.fromJson(data);
-      final pageAlbums = parsed?.subsonicResponse?.albumList?.album ?? [];
-
-      if (!mounted) return;
-      setState(() {
-        _albums.addAll(pageAlbums);
-        _offset += pageAlbums.length;
-        _hasMore = pageAlbums.length >= _pageSize;
-        _isLoading = false;
-      });
-    } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _error = error;
-        _isLoading = false;
-      });
+      ref.read(paginatedAlbumListProvider(_query).notifier).loadMore();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(paginatedAlbumListProvider(_query));
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              child: switch ((_albums.isEmpty, _isLoading, _error)) {
+              child: switch ((
+                state.items.isEmpty,
+                state.isLoading,
+                state.error,
+              )) {
                 (true, true, _) => const Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -102,11 +69,11 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                 (true, false, null) => NoData(),
                 _ => RefreshIndicator(
                   onRefresh: _onRefresh,
-                  child: _buildListByLayout(context),
+                  child: _buildListByLayout(context, state.items),
                 ),
               },
             ),
-            if (_isLoading && _albums.isNotEmpty)
+            if (state.isLoading && state.items.isNotEmpty)
               const LinearProgressIndicator(minHeight: 2),
           ],
         ),
@@ -114,14 +81,8 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
     );
   }
 
-  Future<void> _onRefresh() async {
-    setState(() {
-      _albums.clear();
-      _offset = 0;
-      _hasMore = true;
-      _error = null;
-    });
-    await _loadMore();
+  Future<void> _onRefresh() {
+    return ref.read(paginatedAlbumListProvider(_query).notifier).refresh();
   }
 
   Widget _buildErrorState(BuildContext context, Object error) {
@@ -129,7 +90,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisSize: .min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               AppLocalizations.of(context)!.encounterUnknownError,
@@ -137,7 +98,9 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
             ),
             const SizedBox(height: 8),
             TextButton(
-              onPressed: _loadMore,
+              onPressed: () => ref
+                  .read(paginatedAlbumListProvider(_query).notifier)
+                  .refresh(),
               child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],
@@ -146,31 +109,31 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
     );
   }
 
-  Widget _buildListByLayout(BuildContext context) {
+  Widget _buildListByLayout(BuildContext context, List<AlbumEntity> albums) {
     return switch (widget.layout) {
-      .grid => GridView.builder(
+      AlbumLayout.grid => GridView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        itemCount: _albums.length,
+        itemCount: albums.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
           childAspectRatio: 0.8,
         ),
-        itemBuilder: (_, idx) => _buildCardItem(context, _albums[idx]),
+        itemBuilder: (_, idx) => _buildCardItem(context, albums[idx]),
       ),
-      .tile => ListView.builder(
+      AlbumLayout.tile => ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        itemCount: _albums.length,
-        itemBuilder: (_, idx) => _buildTileItem(context, _albums[idx]),
+        itemCount: albums.length,
+        itemBuilder: (_, idx) => _buildTileItem(context, albums[idx]),
       ),
-      .horizontal => ListView.builder(
+      AlbumLayout.horizontal => ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        itemCount: _albums.length,
-        itemBuilder: (_, idx) => _buildTileItem(context, _albums[idx]),
+        itemCount: albums.length,
+        itemBuilder: (_, idx) => _buildTileItem(context, albums[idx]),
       ),
     };
   }
@@ -182,10 +145,10 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
         MaterialPageRoute(builder: (_) => AlbumDetailPage(albumId: album.id)),
       ),
       borderRadius: BorderRadius.circular(12),
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.all(4),
         child: Column(
-          crossAxisAlignment: .start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
               aspectRatio: 1,
@@ -202,7 +165,11 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: ArtworkImage(fit: .cover, id: album.id, size: 300),
+                  child: ArtworkImage(
+                    fit: BoxFit.cover,
+                    id: album.id,
+                    size: 300,
+                  ),
                 ),
               ),
             ),
@@ -210,10 +177,10 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
             Text(
               album.name ?? '',
               maxLines: 1,
-              overflow: .ellipsis,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: .bold,
+                fontWeight: FontWeight.bold,
                 height: 1.2,
               ),
             ),
@@ -221,7 +188,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
             Text(
               album.artist ?? '',
               maxLines: 1,
-              overflow: .ellipsis,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
                 fontSize: 12,
@@ -250,24 +217,27 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                 id: album.id,
                 width: 60,
                 height: 60,
-                fit: .cover,
+                fit: BoxFit.cover,
                 size: 200,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
-                crossAxisAlignment: .start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     album.name ?? '',
-                    style: const TextStyle(fontSize: 15, fontWeight: .w600),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
                     maxLines: 1,
-                    overflow: .ellipsis,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${album.artist} 路 ${album.year ?? ""}',
+                    '${album.artist} · ${album.year ?? ""}',
                     style: TextStyle(
                       fontSize: 13,
                       color: theme.colorScheme.onSurfaceVariant.withValues(
@@ -275,7 +245,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                       ),
                     ),
                     maxLines: 1,
-                    overflow: .ellipsis,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

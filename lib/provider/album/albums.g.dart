@@ -15,13 +15,13 @@ final albumsProvider = AlbumsFamily._();
 final class AlbumsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>
+          AsyncValue<List<AlbumEntity>>,
+          List<AlbumEntity>,
+          FutureOr<List<AlbumEntity>>
         >
     with
-        $FutureModifier<SubsonicResponse?>,
-        $FutureProvider<SubsonicResponse?> {
+        $FutureModifier<List<AlbumEntity>>,
+        $FutureProvider<List<AlbumEntity>> {
   AlbumsProvider._({
     required AlbumsFamily super.from,
     required AlumsType super.argument,
@@ -45,12 +45,12 @@ final class AlbumsProvider
 
   @$internal
   @override
-  $FutureProviderElement<SubsonicResponse?> $createElement(
+  $FutureProviderElement<List<AlbumEntity>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<SubsonicResponse?> create(Ref ref) {
+  FutureOr<List<AlbumEntity>> create(Ref ref) {
     final argument = this.argument as AlumsType;
     return albums(ref, argument);
   }
@@ -66,10 +66,10 @@ final class AlbumsProvider
   }
 }
 
-String _$albumsHash() => r'be91a2588a193ceb783b3b14746f0161c065c242';
+String _$albumsHash() => r'32ab7ec807b9b034e4f9d1c25e7a1feddc06e9d6';
 
 final class AlbumsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, AlumsType> {
+    with $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlumsType> {
   AlbumsFamily._()
     : super(
         retry: null,

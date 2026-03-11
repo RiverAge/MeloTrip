@@ -407,7 +407,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
                   AlumsType.random,
                 ), // Simplified for "More by Artist" mock
                 builder: (context, data, _) {
-                  final albums = data.subsonicResponse?.albumList?.album ?? [];
+                  final albums = data;
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: albums.length,

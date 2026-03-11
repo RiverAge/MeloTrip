@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/mobile/playlist/add_playlist_page.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
@@ -29,18 +27,14 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
   }
 
   void _onAddToPlaylist(WidgetRef ref) async {
-    final playlistId = _current?.id;
-    final songId = widget.song?.id;
+    final String? playlistId = _current?.id;
+    final String? songId = widget.song?.id;
     if (playlistId == null || songId == null) return;
-    final api = await ref.read(apiProvider.future);
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/updatePlaylist',
-      queryParameters: {'playlistId': playlistId, 'songIdToAdd': songId},
+    final subsonicRes = await ref.read(playlistUpdateProvider.notifier).modify(
+      playlistId: playlistId,
+      songIdToAdd: songId,
     );
-    final data = res.data;
-    if (data == null) return;
-    final subsonicRes = SubsonicResponse.fromJson(data);
-    if (subsonicRes.subsonicResponse?.status != 'ok') return;
+    if (subsonicRes == null) return;
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -100,7 +94,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
                 },
                 secondary: Container(
                   width: 50,
-                  clipBehavior: .antiAlias,
+                  clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),

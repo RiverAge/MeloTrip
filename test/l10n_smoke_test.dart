@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/pages/mobile/home/home_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 
@@ -76,8 +77,8 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          albumsProvider(.newest).overrideWith((_) async => null),
-          albumsProvider(.recent).overrideWith((_) async => null),
+          albumsProvider(.newest).overrideWith((_) async => const <AlbumEntity>[]),
+          albumsProvider(.recent).overrideWith((_) async => const <AlbumEntity>[]),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
