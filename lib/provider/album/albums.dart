@@ -66,7 +66,10 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
       );
     } catch (error) {
       if (!ref.mounted) return;
-      state = PaginatedListSnapshot<AlbumEntity>(hasMore: false, error: error);
+      state = PaginatedListSnapshot<AlbumEntity>(
+        hasMore: false,
+        error: PaginatedListFailure.from(error),
+      );
     }
   }
 
@@ -85,7 +88,10 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
       );
     } catch (error) {
       if (!ref.mounted) return;
-      state = state.copyWith(isLoading: false, error: error);
+      state = state.copyWith(
+        isLoading: false,
+        error: PaginatedListFailure.from(error),
+      );
     }
   }
 

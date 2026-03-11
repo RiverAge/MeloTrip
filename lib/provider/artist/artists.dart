@@ -42,9 +42,12 @@ class PaginatedArtists extends _$PaginatedArtists {
         offset: visibleCount,
         hasMore: visibleCount < artists.length,
       );
-    } catch (_) {
+    } catch (error) {
       if (!ref.mounted) return;
-      state = const PaginatedListSnapshot<ArtistIndexEntry>();
+      state = PaginatedListSnapshot<ArtistIndexEntry>(
+        hasMore: false,
+        error: PaginatedListFailure.from(error),
+      );
     }
   }
 

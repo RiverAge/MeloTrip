@@ -1,3 +1,20 @@
+class PaginatedListFailure {
+  const PaginatedListFailure({
+    required this.message,
+    this.cause,
+  });
+
+  factory PaginatedListFailure.from(Object error) {
+    return PaginatedListFailure(
+      message: error.toString(),
+      cause: error,
+    );
+  }
+
+  final String message;
+  final Object? cause;
+}
+
 class PaginatedListSnapshot<T> {
   const PaginatedListSnapshot({
     this.items = const [],
@@ -11,7 +28,7 @@ class PaginatedListSnapshot<T> {
   final bool isLoading;
   final bool hasMore;
   final int offset;
-  final Object? error;
+  final PaginatedListFailure? error;
 
   PaginatedListSnapshot<T> copyWith({
     List<T>? items,
@@ -25,7 +42,9 @@ class PaginatedListSnapshot<T> {
       isLoading: isLoading ?? this.isLoading,
       hasMore: hasMore ?? this.hasMore,
       offset: offset ?? this.offset,
-      error: identical(error, _sentinel) ? this.error : error,
+      error: identical(error, _sentinel)
+          ? this.error
+          : error as PaginatedListFailure?,
     );
   }
 }

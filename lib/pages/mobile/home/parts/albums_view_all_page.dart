@@ -85,7 +85,10 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
     return ref.read(paginatedAlbumListProvider(_query).notifier).refresh();
   }
 
-  Widget _buildErrorState(BuildContext context, Object error) {
+  Widget _buildErrorState(
+    BuildContext context,
+    PaginatedListFailure error,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16),

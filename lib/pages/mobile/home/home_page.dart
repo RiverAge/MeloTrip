@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/pages/mobile/search_v2/search_page_v2.dart';

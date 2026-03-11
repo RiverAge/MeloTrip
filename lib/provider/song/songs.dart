@@ -87,7 +87,7 @@ class PaginatedSongList extends _$PaginatedSongList {
       if (!ref.mounted) return;
       state = PaginatedListSnapshot<SongEntity>(
         hasMore: false,
-        error: error,
+        error: PaginatedListFailure.from(error),
       );
     }
   }
@@ -107,7 +107,10 @@ class PaginatedSongList extends _$PaginatedSongList {
       );
     } catch (error) {
       if (!ref.mounted) return;
-      state = state.copyWith(isLoading: false, error: error);
+      state = state.copyWith(
+        isLoading: false,
+        error: PaginatedListFailure.from(error),
+      );
     }
   }
 
