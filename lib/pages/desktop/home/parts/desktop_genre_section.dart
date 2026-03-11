@@ -25,11 +25,11 @@ class _DesktopGenreSection extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(title: l10n.songMetaGenre),
         AsyncValueBuilder(
-          provider: albumsProvider(AlumsType.recent),
+          provider: albumListProvider(AlbumListType.recent),
           builder: (context, data, _) {
             final albums = data;
             final fallback = albums
@@ -128,9 +128,9 @@ class _GenreTileState extends State<_GenreTile> {
                     child: Text(
                       widget.genre,
                       maxLines: 1,
-                      overflow: .ellipsis,
+                      overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: .w700,
+                        fontWeight: FontWeight.w700,
                         fontSize: 13,
                       ),
                     ),

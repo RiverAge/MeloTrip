@@ -7,7 +7,7 @@ class _AlbumsViewAllPage extends ConsumerStatefulWidget {
     required this.layout,
   });
 
-  final AlumsType type;
+  final AlbumListType type;
   final String title;
   final AlbumLayout layout;
 
@@ -237,7 +237,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${album.artist} · ${album.year ?? ""}',
+                    '${album.artist} - ${album.year ?? ""}',
                     style: TextStyle(
                       fontSize: 13,
                       color: theme.colorScheme.onSurfaceVariant.withValues(

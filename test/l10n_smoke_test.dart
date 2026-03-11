@@ -77,8 +77,12 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          albumsProvider(.newest).overrideWith((_) async => const <AlbumEntity>[]),
-          albumsProvider(.recent).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListType.newest,
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListType.recent,
+          ).overrideWith((_) async => const <AlbumEntity>[]),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,

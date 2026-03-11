@@ -17,23 +17,27 @@ void main() {
     expect(observer, isA<RouteObserver<ModalRoute<void>>>());
   });
 
-  test('albumsProvider handles null API payload', () async {
+  test('albumListProvider handles null API payload', () async {
     final container = ProviderContainer(
       overrides: [apiProvider.overrideWith(FakeApiNull.new)],
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(albumsProvider(.newest).future);
+    final result = await container.read(
+      albumListProvider(AlbumListType.newest).future,
+    );
     expect(result, isEmpty);
   });
 
-  test('albumsProvider parses album list payload', () async {
+  test('albumListProvider parses album list payload', () async {
     final container = ProviderContainer(
       overrides: [apiProvider.overrideWith(FakeApiAlbumList.new)],
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(albumsProvider(.newest).future);
+    final result = await container.read(
+      albumListProvider(AlbumListType.newest).future,
+    );
     final albums = result;
     expect(albums.length, 1);
     expect(albums.first.name, 'Test Album');

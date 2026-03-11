@@ -403,8 +403,8 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
             SizedBox(
               height: 240,
               child: AsyncValueBuilder(
-                provider: albumsProvider(
-                  AlumsType.random,
+                provider: albumListProvider(
+                  AlbumListType.random,
                 ), // Simplified for "More by Artist" mock
                 builder: (context, data, _) {
                   final albums = data;

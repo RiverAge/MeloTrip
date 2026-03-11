@@ -13,7 +13,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
     return AsyncValueBuilder(
-      provider: albumsProvider(AlumsType.random),
+      provider: albumListProvider(AlbumListType.random),
       loading: (_, _) => const SizedBox(height: 280),
       builder: (context, data, _) {
         final album = data.firstOrNull;
@@ -71,15 +71,15 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                           const SizedBox(width: 40),
                           Expanded(
                             child: Column(
-                              mainAxisAlignment: .center,
-                              crossAxisAlignment: .start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   album.name ?? '-',
                                   maxLines: 2,
-                                  overflow: .ellipsis,
+                                  overflow: TextOverflow.ellipsis,
                                   style: theme.textTheme.displaySmall?.copyWith(
-                                    fontWeight: .w900,
+                                    fontWeight: FontWeight.w900,
                                     color: textColor,
                                     letterSpacing: -1.2,
                                   ),
@@ -90,7 +90,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                                   style: theme.textTheme.headlineSmall
                                       ?.copyWith(
                                         color: textColor.withValues(alpha: .9),
-                                        fontWeight: .w600,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                 ),
                                 const SizedBox(height: 6),

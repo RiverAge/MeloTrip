@@ -44,8 +44,12 @@ void main() {
       ProviderScope(
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
-          albumsProvider(.newest).overrideWith((_) async => const <AlbumEntity>[]),
-          albumsProvider(.recent).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListType.newest,
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListType.recent,
+          ).overrideWith((_) async => const <AlbumEntity>[]),
           initialBootstrapServiceProvider.overrideWithValue(
             InitialBootstrapService(
               loadAuthUser: () async => const AuthUser(

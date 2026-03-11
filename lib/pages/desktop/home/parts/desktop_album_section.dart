@@ -9,19 +9,19 @@ class _DesktopAlbumSection extends ConsumerWidget {
   static const _cardHeight = _cardWidth + _metaBlockHeight;
 
   final String title;
-  final AlumsType type;
+  final AlbumListType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverToBoxAdapter(
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SectionHeader(title: title, onViewAll: () {}),
           SizedBox(
             height: _cardHeight,
             child: AsyncValueBuilder(
-              provider: albumsProvider(type),
+              provider: albumListProvider(type),
               loading: (_, _) => const Center(
                 child: CircularProgressIndicator(strokeWidth: 2),
               ),

@@ -6,12 +6,12 @@ class _Albums extends StatelessWidget {
   const _Albums({
     required this.type,
     required this.title,
-    this.layout = .horizontal,
+    this.layout = AlbumLayout.horizontal,
     this.limit,
     this.onViewAll,
   });
 
-  final AlumsType type;
+  final AlbumListType type;
   final String title;
   final AlbumLayout layout;
   final int? limit;
@@ -20,22 +20,22 @@ class _Albums extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            mainAxisAlignment: .spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: .w900,
+                  fontWeight: FontWeight.w900,
                   letterSpacing: -0.5,
                 ),
               ),
-              if (layout != .horizontal && onViewAll != null)
+              if (layout != AlbumLayout.horizontal && onViewAll != null)
                 TextButton(
                   onPressed: onViewAll,
                   child: Text(
@@ -51,7 +51,7 @@ class _Albums extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         AsyncValueBuilder(
-          provider: albumsProvider(type),
+          provider: albumListProvider(type),
           builder: (context, data, ref) {
             var albums = data;
             if (albums.isEmpty) return const SizedBox.shrink();
@@ -61,9 +61,9 @@ class _Albums extends StatelessWidget {
             }
 
             return switch (layout) {
-              .horizontal => _buildHorizontal(context, albums),
-              .grid => _buildGrid(context, albums),
-              .tile => _buildTiles(context, albums),
+              AlbumLayout.horizontal => _buildHorizontal(context, albums),
+              AlbumLayout.grid => _buildGrid(context, albums),
+              AlbumLayout.tile => _buildTiles(context, albums),
             };
           },
         ),
@@ -76,7 +76,7 @@ class _Albums extends StatelessWidget {
       height: 200,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        scrollDirection: .horizontal,
+        scrollDirection: Axis.horizontal,
         itemCount: albums.length,
         itemBuilder: (_, idx) => _cardItem(context, albums[idx], width: 140),
       ),
@@ -124,7 +124,7 @@ class _Albums extends StatelessWidget {
           width: width,
           padding: const EdgeInsets.all(4),
           child: Column(
-            crossAxisAlignment: .start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AspectRatio(
                 aspectRatio: 1,
@@ -141,7 +141,11 @@ class _Albums extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: ArtworkImage(fit: .cover, id: album.id, size: 300),
+                    child: ArtworkImage(
+                      fit: BoxFit.cover,
+                      id: album.id,
+                      size: 300,
+                    ),
                   ),
                 ),
               ),
@@ -149,10 +153,10 @@ class _Albums extends StatelessWidget {
               Text(
                 album.name ?? '',
                 maxLines: 1,
-                overflow: .ellipsis,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: .bold,
+                  fontWeight: FontWeight.bold,
                   height: 1.2,
                 ),
               ),
@@ -160,10 +164,10 @@ class _Albums extends StatelessWidget {
               Text(
                 album.artist ?? '',
                 maxLines: 1,
-                overflow: .ellipsis,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: .7,
+                    alpha: 0.7,
                   ),
                   fontSize: 12,
                 ),
@@ -192,24 +196,27 @@ class _Albums extends StatelessWidget {
                 id: album.id,
                 width: 60,
                 height: 60,
-                fit: .cover,
+                fit: BoxFit.cover,
                 size: 200,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
-                crossAxisAlignment: .start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     album.name ?? '',
-                    style: const TextStyle(fontSize: 15, fontWeight: .w600),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
                     maxLines: 1,
-                    overflow: .ellipsis,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${album.artist} · ${album.year ?? ""}',
+                    '${album.artist} - ${album.year ?? ""}',
                     style: TextStyle(
                       fontSize: 13,
                       color: theme.colorScheme.onSurfaceVariant.withValues(
@@ -217,7 +224,7 @@ class _Albums extends StatelessWidget {
                       ),
                     ),
                     maxLines: 1,
-                    overflow: .ellipsis,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

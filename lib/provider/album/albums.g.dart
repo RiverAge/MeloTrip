@@ -122,10 +122,10 @@ abstract class _$PaginatedAlbumList
   }
 }
 
-@ProviderFor(albums)
-final albumsProvider = AlbumsFamily._();
+@ProviderFor(albumList)
+final albumListProvider = AlbumListFamily._();
 
-final class AlbumsProvider
+final class AlbumListProvider
     extends
         $FunctionalProvider<
           AsyncValue<List<AlbumEntity>>,
@@ -135,23 +135,23 @@ final class AlbumsProvider
     with
         $FutureModifier<List<AlbumEntity>>,
         $FutureProvider<List<AlbumEntity>> {
-  AlbumsProvider._({
-    required AlbumsFamily super.from,
-    required AlumsType super.argument,
+  AlbumListProvider._({
+    required AlbumListFamily super.from,
+    required AlbumListType super.argument,
   }) : super(
          retry: null,
-         name: r'albumsProvider',
+         name: r'albumListProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$albumsHash();
+  String debugGetCreateSourceHash() => _$albumListHash();
 
   @override
   String toString() {
-    return r'albumsProvider'
+    return r'albumListProvider'
         ''
         '($argument)';
   }
@@ -164,13 +164,13 @@ final class AlbumsProvider
 
   @override
   FutureOr<List<AlbumEntity>> create(Ref ref) {
-    final argument = this.argument as AlumsType;
-    return albums(ref, argument);
+    final argument = this.argument as AlbumListType;
+    return albumList(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is AlbumsProvider && other.argument == argument;
+    return other is AlbumListProvider && other.argument == argument;
   }
 
   @override
@@ -179,22 +179,22 @@ final class AlbumsProvider
   }
 }
 
-String _$albumsHash() => r'0cb26c2892af03c4c81f02b0f56ac7c626600f34';
+String _$albumListHash() => r'cf638040d9fd6a0d3fab8abcbfaa67eebcdf55eb';
 
-final class AlbumsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlumsType> {
-  AlbumsFamily._()
+final class AlbumListFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlbumListType> {
+  AlbumListFamily._()
     : super(
         retry: null,
-        name: r'albumsProvider',
+        name: r'albumListProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  AlbumsProvider call(AlumsType type) =>
-      AlbumsProvider._(argument: type, from: this);
+  AlbumListProvider call(AlbumListType type) =>
+      AlbumListProvider._(argument: type, from: this);
 
   @override
-  String toString() => r'albumsProvider';
+  String toString() => r'albumListProvider';
 }

@@ -5,7 +5,7 @@ import 'package:melo_trip/repository/album/album_repository.dart';
 
 part 'albums.g.dart';
 
-enum AlumsType { random, newest, recent, frequent }
+enum AlbumListType { random, newest, recent, frequent }
 
 class AlbumListQuery {
   const AlbumListQuery({required this.type, this.size, this.offset});
@@ -66,10 +66,7 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
       );
     } catch (error) {
       if (!ref.mounted) return;
-      state = PaginatedListSnapshot<AlbumEntity>(
-        hasMore: false,
-        error: error,
-      );
+      state = PaginatedListSnapshot<AlbumEntity>(hasMore: false, error: error);
     }
   }
 
@@ -105,9 +102,7 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
 }
 
 @riverpod
-Future<List<AlbumEntity>> albums(Ref ref, AlumsType type) async {
+Future<List<AlbumEntity>> albumList(Ref ref, AlbumListType type) async {
   final repository = ref.read(albumRepositoryProvider);
-  return repository.fetchAlbumListItems(
-    query: AlbumListQuery(type: type.name),
-  );
+  return repository.fetchAlbumListItems(query: AlbumListQuery(type: type.name));
 }

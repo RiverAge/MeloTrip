@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage>
   bool get wantKeepAlive => true;
 
   void _onOpenAlbumsViewAll({
-    required AlumsType type,
+    required AlbumListType type,
     required String title,
     required AlbumLayout layout,
   }) {
@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage>
               title: Text(
                 l10n.listenNow,
                 style: GoogleFonts.outfit(
-                  fontWeight: .bold,
+                  fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontSize: 24,
                 ),
@@ -78,28 +78,28 @@ class _HomePageState extends State<HomePage>
             delegate: SliverChildListDelegate([
               const SizedBox(height: 24),
               _Albums(
-                type: .newest,
+                type: AlbumListType.newest,
                 title: l10n.recentAdded,
-                layout: .grid,
+                layout: AlbumLayout.grid,
                 limit: 4,
                 onViewAll: () => _onOpenAlbumsViewAll(
-                  type: .newest,
+                  type: AlbumListType.newest,
                   title: l10n.recentAdded,
-                  layout: .grid,
+                  layout: AlbumLayout.grid,
                 ),
               ),
               const SizedBox(height: 16),
               const _ForYouPlaceholder(),
               const SizedBox(height: 16),
               _Albums(
-                type: .recent,
+                type: AlbumListType.recent,
                 title: l10n.rencentPlayed,
-                layout: .tile,
+                layout: AlbumLayout.tile,
                 limit: 5,
                 onViewAll: () => _onOpenAlbumsViewAll(
-                  type: .recent,
+                  type: AlbumListType.recent,
                   title: l10n.rencentPlayed,
-                  layout: .tile,
+                  layout: AlbumLayout.tile,
                 ),
               ),
               // const SizedBox(height: 16),

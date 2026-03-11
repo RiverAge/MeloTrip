@@ -83,10 +83,18 @@ Future<void> _pumpDesktopHome(
       overrides: [
         appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
         currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-        albumsProvider(.random).overrideWith((_) async => random),
-        albumsProvider(.recent).overrideWith((_) async => recent),
-        albumsProvider(.newest).overrideWith((_) async => newest),
-        albumsProvider(.frequent).overrideWith((_) async => frequent),
+        albumListProvider(
+          AlbumListType.random,
+        ).overrideWith((_) async => random),
+        albumListProvider(
+          AlbumListType.recent,
+        ).overrideWith((_) async => recent),
+        albumListProvider(
+          AlbumListType.newest,
+        ).overrideWith((_) async => newest),
+        albumListProvider(
+          AlbumListType.frequent,
+        ).overrideWith((_) async => frequent),
         albumDetailProvider('album-1').overrideWith((_) async => detail),
       ],
       child: MaterialApp(
