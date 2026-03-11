@@ -127,6 +127,12 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Use file-specific forms only when necessary for focused debugging (for example: isolating a single failing test).
 - After completing code changes, run `flutter analyze` by default. If it cannot be run, explicitly report why.
 
+## Windows C++ UI / DPI Awareness
+
+- When implementing or modifying Windows native UI elements (such as `MeloTripUpdater.exe` using Direct2D or Win32 API), always ensure correct DPI scaling.
+- A common pitfall is the **Double-Scaling DPI Bug**: If your render target (like Direct2D) automatically applies DPI scaling, do NOT manually apply `ScaleDip` or similar multipliers to text sizes and layout rects.
+- **Window Initialization Rule (WM_CREATE)**: The window's physical bounds must be calculated using the real monitor DPI from the start. Use `GetDpiForWindow(window)` inside the `WM_CREATE` handler and immediately resize the window using `SetWindowPos` or equivalent, instead of relying on a `96` DPI fallback. Failure to resize the physical window shell while the inner render target correctly scales up will lead to layout truncation (e.g. text being cut off).
+
 ## Testing Expectations
 
 - After refactoring or modifying code, always do regression validation (at least run `flutter test` when feasible).
@@ -139,3 +145,17 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Pages/widgets must not import `package:melo_trip/repository/...` directly.
 - Prefer reading a provider from `lib/provider/...` instead of depending on a concrete repository class in UI/service code.
 - Repository implementation classes may remain public for Dart/library limitations, but should be consumed through provider boundaries unless there is a strong reason not to.
+
+### Provider and Repository Conventions
+
+- For new stateful providers, prefer `@riverpod` generator-based providers over `StateNotifierProvider`.
+- Use plain provider objects for repository injection; repositories are infrastructure, not UI state.
+- If a REST endpoint is used in multiple places, extract the fetch/parse logic into `lib/repository/...` instead of repeating it in pages or providers.
+- Single-page or single-use endpoints may stay in provider scope until a second real consumer appears.
+
+### Pagination and Error Models
+
+- Shared pagination data structures should live under `lib/model/...`, not inside provider files.
+- Prefer neutral model names such as `PaginatedListSnapshot<T>`; avoid Flutter-confusing names ending with bare `State` for provider value models.
+- Do not expose pagination errors as raw `Object?` on shared models.
+- Use a typed failure model (for example `PaginatedListFailure`) that provides a stable user-facing message plus the original cause.
