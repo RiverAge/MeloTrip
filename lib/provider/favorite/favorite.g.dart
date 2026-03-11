@@ -33,7 +33,7 @@ final class FavoriteProvider
   Favorite create() => Favorite();
 }
 
-String _$favoriteHash() => r'691bda688e85a148ec4f8499c00033474e851f8f';
+String _$favoriteHash() => r'fe5248ebd656f8e2bf4a15584e60a2cc7de48d84';
 
 abstract class _$Favorite extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
