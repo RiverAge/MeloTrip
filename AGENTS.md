@@ -132,3 +132,10 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - After refactoring or modifying code, always do regression validation (at least run `flutter test` when feasible).
 - For changed logic, add or update targeted tests for that area whenever reasonably possible, not only rely on existing tests.
 - If a targeted test cannot be added (environment/framework limits or high setup cost), explicitly document why in the handoff.
+
+## Architecture Boundaries
+
+- Treat `lib/repository/` as data-access implementation detail.
+- Pages/widgets must not import `package:melo_trip/repository/...` directly.
+- Prefer reading a provider from `lib/provider/...` instead of depending on a concrete repository class in UI/service code.
+- Repository implementation classes may remain public for Dart/library limitations, but should be consumed through provider boundaries unless there is a strong reason not to.
