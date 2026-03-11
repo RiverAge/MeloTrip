@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/folder/folders_repository.dart';
 
 class FolderIndexEntry {
   const FolderIndexEntry({required this.id, required this.name});
@@ -11,24 +11,6 @@ class FolderIndexEntry {
 final folderIndexesProvider = FutureProvider<List<FolderIndexEntry>>((
   ref,
 ) async {
-  final api = await ref.read(apiProvider.future);
-  final res = await api.get<Map<String, dynamic>>('/rest/getIndexes');
-  final data = res.data;
-  if (data == null) return const <FolderIndexEntry>[];
-
-  final indexes =
-      data['subsonic-response']?['indexes']?['index'] as List<dynamic>? ??
-      const <dynamic>[];
-  final entries = <FolderIndexEntry>[];
-  for (final idx in indexes) {
-    final artists = idx['artist'] as List<dynamic>? ?? const <dynamic>[];
-    for (final artist in artists) {
-      final id = artist['id']?.toString() ?? '';
-      final name = artist['name']?.toString() ?? '';
-      if (id.isNotEmpty) {
-        entries.add(FolderIndexEntry(id: id, name: name));
-      }
-    }
-  }
-  return entries;
+  final repository = ref.read(foldersRepositoryProvider);
+  return repository.fetchFolderIndexes();
 });

@@ -1,19 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/genre/genres_repository.dart';
 
-Future<SubsonicResponse?> fetchGenresResponse(Ref ref) async {
-  final api = await ref.read(apiProvider.future);
-  final res = await api.get<Map<String, dynamic>>('/rest/getGenres');
-  final data = res.data;
-  if (data == null) return null;
-  return SubsonicResponse.fromJson(data);
+Future<SubsonicResponse?> fetchGenresResponse(Ref ref) {
+  final repository = ref.read(genresRepositoryProvider);
+  return repository.fetchGenresResponse();
 }
 
 Future<List<GenreEntity>> fetchGenresItems(Ref ref) async {
-  final response = await fetchGenresResponse(ref);
-  return response?.subsonicResponse?.genres?.genre ?? const <GenreEntity>[];
+  final repository = ref.read(genresRepositoryProvider);
+  return repository.fetchGenresItems();
 }
 
 final genresProvider = FutureProvider<List<GenreEntity>>((ref) async {
