@@ -7,15 +7,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
-import 'package:melo_trip/model/response/random_song/random_song.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/desktop/home/parts/desktop_album_card.dart';
 import 'package:melo_trip/pages/desktop/library/albums_page.dart';
+import 'package:melo_trip/pages/desktop/library/artists_page.dart';
 import 'package:melo_trip/pages/desktop/library/folders_page.dart';
+import 'package:melo_trip/pages/desktop/library/genres_page.dart';
 import 'package:melo_trip/pages/desktop/library/songs_page.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
-import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
@@ -58,30 +58,10 @@ void main() {
   testWidgets('DesktopSongsPage renders song rows from provider data', (
     tester,
   ) async {
-    final songsResponse = SubsonicResponse(
-      subsonicResponse: SubsonicResponseClass(
-        randomSongs: RandomSongsEntity(
-          song: [
-            const SongEntity(
-              id: 'song-1',
-              title: 'Song A',
-              artist: 'Artist A',
-              album: 'Album A',
-              genre: 'Pop',
-              year: 2024,
-              duration: 125,
-            ),
-          ],
-        ),
-      ),
-    );
-
     await pumpDesktopPage(
       tester,
       child: const DesktopSongsPage(),
-      overrides: [
-        randomSongsProvider.overrideWith((_) async => songsResponse),
-      ],
+      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
     );
 
     expect(find.text('Song A'), findsOneWidget);
@@ -95,32 +75,11 @@ void main() {
   testWidgets('DesktopAlbumsPage supports grid, table and detail views', (
     tester,
   ) async {
-    final albumsResponse = SubsonicResponse(
-      subsonicResponse: SubsonicResponseClass(
-        albumList: AlbumListEntity(
-          album: [
-            const AlbumEntity(
-              id: 'album-1',
-              name: 'Road Trip',
-              artist: 'Various',
-              genre: 'Rock',
-              year: 2023,
-            ),
-          ],
-        ),
-      ),
-    );
     final albumDetailResponse = SubsonicResponse(
       subsonicResponse: SubsonicResponseClass(
         album: const AlbumEntity(
           id: 'album-1',
-          song: [
-            SongEntity(
-              id: 'song-1',
-              title: 'First Track',
-              duration: 61,
-            ),
-          ],
+          song: [SongEntity(id: 'song-1', title: 'First Track', duration: 61)],
         ),
       ),
     );
@@ -129,8 +88,10 @@ void main() {
       tester,
       child: const DesktopAlbumsPage(),
       overrides: [
-        albumsProvider(AlumsType.random).overrideWith((_) async => albumsResponse),
-        albumDetailProvider('album-1').overrideWith((_) async => albumDetailResponse),
+        apiProvider.overrideWith(FakeApiDesktopLibrary.new),
+        albumDetailProvider(
+          'album-1',
+        ).overrideWith((_) async => albumDetailResponse),
       ],
     );
 
@@ -152,21 +113,67 @@ void main() {
     await pumpDesktopPage(
       tester,
       child: const DesktopFoldersPage(),
-      overrides: [
-        apiProvider.overrideWith(FakeApiIndexes.new),
-      ],
+      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
     );
 
     expect(find.text('Adele'), findsOneWidget);
     expect(find.text('Aimer'), findsOneWidget);
   });
+
+  testWidgets('DesktopArtistsPage renders artists parsed from getArtists', (
+    tester,
+  ) async {
+    await pumpDesktopPage(
+      tester,
+      child: const DesktopArtistsPage(),
+      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
+    );
+
+    expect(find.text('Adele'), findsOneWidget);
+    expect(find.text('Aimer'), findsOneWidget);
+    expect(find.textContaining('2'), findsWidgets);
+    expect(find.textContaining('1'), findsWidgets);
+  });
+
+  testWidgets('DesktopGenresPage renders genres parsed from getGenres', (
+    tester,
+  ) async {
+    await pumpDesktopPage(
+      tester,
+      child: const DesktopGenresPage(),
+      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
+    );
+
+    expect(find.text('Pop'), findsOneWidget);
+    expect(find.text('Rock'), findsOneWidget);
+    expect(find.text('12'), findsOneWidget);
+    expect(find.text('4'), findsOneWidget);
+  });
 }
 
-class FakeApiIndexes extends Api {
+class FakeApiDesktopLibrary extends Api {
   @override
   Future<Dio> build() async {
     final dio = Dio();
     dio.httpClientAdapter = PathJsonAdapter({
+      '/rest/search3': {
+        'subsonic-response': {
+          'status': 'ok',
+          'searchResult3': {
+            'song': [
+              {
+                'id': 'song-1',
+                'title': 'Song A',
+                'artist': 'Artist A',
+                'album': 'Album A',
+                'genre': 'Pop',
+                'year': 2024,
+                'duration': 125,
+              },
+            ],
+          },
+        },
+      },
       '/rest/getIndexes': {
         'subsonic-response': {
           'indexes': {
@@ -176,6 +183,46 @@ class FakeApiIndexes extends Api {
                   {'id': 'a-1', 'name': 'Adele'},
                   {'id': 'a-2', 'name': 'Aimer'},
                 ],
+              },
+            ],
+          },
+        },
+      },
+      '/rest/getArtists': {
+        'subsonic-response': {
+          'artists': {
+            'index': [
+              {
+                'artist': [
+                  {'id': 'artist-1', 'name': 'Adele', 'albumCount': 2},
+                  {'id': 'artist-2', 'name': 'Aimer', 'albumCount': 1},
+                ],
+              },
+            ],
+          },
+        },
+      },
+      '/rest/getGenres': {
+        'subsonic-response': {
+          'genres': {
+            'genre': [
+              {'value': 'Pop', 'songCount': 12, 'albumCount': 4},
+              {'value': 'Rock', 'songCount': 8, 'albumCount': 3},
+            ],
+          },
+        },
+      },
+      '/rest/getAlbumList': {
+        'subsonic-response': {
+          'status': 'ok',
+          'albumList': {
+            'album': [
+              {
+                'id': 'album-1',
+                'name': 'Road Trip',
+                'artist': 'Various',
+                'genre': 'Rock',
+                'year': 2023,
               },
             ],
           },

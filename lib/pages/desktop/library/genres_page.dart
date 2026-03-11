@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
+import 'package:melo_trip/provider/genre/genres.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 class DesktopGenresPage extends ConsumerWidget {
@@ -16,16 +15,15 @@ class DesktopGenresPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _PageHeader(title: l10n.songMetaGenre),
-          _Toolbar(),
+          _Toolbar(l10n: l10n),
           Expanded(
             child: AsyncValueBuilder(
               provider: genresProvider,
-              builder: (context, data, ref) {
-                final genres = data.subsonicResponse?.genres?.genre ?? [];
-                return _GenreTable(genres: genres);
+              builder: (context, data, _) {
+                return _GenreTable(genres: data, l10n: l10n);
               },
             ),
           ),
@@ -35,14 +33,9 @@ class DesktopGenresPage extends ConsumerWidget {
   }
 }
 
-final genresProvider = FutureProvider<SubsonicResponse>((ref) async {
-  final api = await ref.read(apiProvider.future);
-  final res = await api.get<Map<String, dynamic>>('/rest/getGenres');
-  return SubsonicResponse.fromJson(res.data!);
-});
-
 class _PageHeader extends StatelessWidget {
   const _PageHeader({required this.title});
+
   final String title;
 
   @override
@@ -58,9 +51,9 @@ class _PageHeader extends StatelessWidget {
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.play_arrow_rounded,
-              color: Colors.white,
+              color: theme.colorScheme.onPrimary,
               size: 28,
             ),
           ),
@@ -68,7 +61,7 @@ class _PageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.displaySmall?.copyWith(
-              fontWeight: .w900,
+              fontWeight: FontWeight.w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -81,19 +74,23 @@ class _PageHeader extends StatelessWidget {
 }
 
 class _Toolbar extends StatelessWidget {
+  const _Toolbar({required this.l10n});
+
+  final AppLocalizations l10n;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
-          _ToolbarButton(label: '名称', icon: Icons.sort_by_alpha_rounded),
+          _ToolbarButton(label: l10n.name, icon: Icons.sort_by_alpha_rounded),
           const SizedBox(width: 16),
-          _ToolbarIcon(icon: Icons.refresh_rounded),
+          const _ToolbarIcon(icon: Icons.refresh_rounded),
           const Spacer(),
-          _ToolbarIcon(icon: Icons.grid_view_rounded),
+          const _ToolbarIcon(icon: Icons.grid_view_rounded),
           const SizedBox(width: 8),
-          _ToolbarIcon(icon: Icons.tune_rounded),
+          const _ToolbarIcon(icon: Icons.tune_rounded),
         ],
       ),
     );
@@ -101,35 +98,39 @@ class _Toolbar extends StatelessWidget {
 }
 
 class _GenreTable extends StatelessWidget {
-  const _GenreTable({required this.genres});
+  const _GenreTable({required this.genres, required this.l10n});
+
   final List<GenreEntity> genres;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(
+      alpha: 0.7,
+    );
+    final headerStyle = _headerStyle.copyWith(color: headerColor);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           child: Row(
             children: [
-              const SizedBox(width: 30, child: Text('#', style: _headerStyle)),
-              const Expanded(
-                flex: 4,
-                child: Text('TITLE', style: _headerStyle),
-              ),
-              const SizedBox(
+              SizedBox(width: 30, child: Text('#', style: headerStyle)),
+              Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
+              SizedBox(
                 width: 100,
                 child: Text(
-                  'TRACKS',
-                  style: _headerStyle,
+                  l10n.albumHeaderSongs,
+                  style: headerStyle,
                   textAlign: TextAlign.right,
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 100,
                 child: Text(
-                  'ALBUMS',
-                  style: _headerStyle,
+                  l10n.albumCount,
+                  style: headerStyle,
                   textAlign: TextAlign.right,
                 ),
               ),
@@ -137,7 +138,10 @@ class _GenreTable extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(height: 1),
+        Divider(
+          height: 1,
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: genres.length,
@@ -153,14 +157,14 @@ class _GenreTable extends StatelessWidget {
 
   static const _headerStyle = TextStyle(
     fontSize: 11,
-    fontWeight: .bold,
-    color: Colors.grey,
+    fontWeight: FontWeight.bold,
     letterSpacing: 1.2,
   );
 }
 
 class _GenreRow extends StatelessWidget {
   const _GenreRow({required this.index, required this.genre});
+
   final int index;
   final GenreEntity genre;
 
@@ -181,7 +185,9 @@ class _GenreRow extends StatelessWidget {
               flex: 4,
               child: Text(
                 genre.value ?? '-',
-                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(
@@ -210,6 +216,7 @@ class _GenreRow extends StatelessWidget {
 
 class _ToolbarButton extends StatelessWidget {
   const _ToolbarButton({required this.label, required this.icon});
+
   final String label;
   final IconData icon;
 
@@ -219,11 +226,11 @@ class _ToolbarButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
-        mainAxisSize: .min,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(label, style: theme.textTheme.labelMedium),
           const SizedBox(width: 8),
@@ -236,6 +243,7 @@ class _ToolbarButton extends StatelessWidget {
 
 class _ToolbarIcon extends StatelessWidget {
   const _ToolbarIcon({required this.icon});
+
   final IconData icon;
 
   @override

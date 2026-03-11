@@ -1,39 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/provider/folder/folders.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
-
-/// Simple data class for an index artist/folder entry from getIndexes.
-class _IndexEntry {
-  const _IndexEntry({required this.id, required this.name});
-  final String id;
-  final String name;
-}
-
-/// Provider that fetches folder listing via Subsonic getIndexes API.
-final folderIndexesProvider =
-    FutureProvider<List<_IndexEntry>>((ref) async {
-  final api = await ref.read(apiProvider.future);
-  final res = await api.get<Map<String, dynamic>>('/rest/getIndexes');
-  final data = res.data;
-  if (data == null) return [];
-
-  final indexes =
-      data['subsonic-response']?['indexes']?['index'] as List<dynamic>? ?? [];
-  final entries = <_IndexEntry>[];
-  for (final idx in indexes) {
-    final artists = idx['artist'] as List<dynamic>? ?? [];
-    for (final artist in artists) {
-      final id = artist['id']?.toString() ?? '';
-      final name = artist['name']?.toString() ?? '';
-      if (id.isNotEmpty) {
-        entries.add(_IndexEntry(id: id, name: name));
-      }
-    }
-  }
-  return entries;
-});
 
 class DesktopFoldersPage extends ConsumerWidget {
   const DesktopFoldersPage({super.key});
@@ -49,10 +18,7 @@ class DesktopFoldersPage extends ConsumerWidget {
         children: [
           AsyncValueBuilder(
             provider: folderIndexesProvider,
-            loading: (_, _) => _PageHeader(
-              title: l10n.folder,
-              count: 0,
-            ),
+            loading: (_, _) => _PageHeader(title: l10n.folder, count: 0),
             builder: (context, data, _) {
               return _PageHeader(title: l10n.folder, count: data.length);
             },
@@ -106,10 +72,7 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -150,13 +113,15 @@ class _Toolbar extends StatelessWidget {
 
 class _FolderTable extends StatelessWidget {
   const _FolderTable({required this.entries, required this.l10n});
-  final List<_IndexEntry> entries;
+  final List<FolderIndexEntry> entries;
   final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: .7);
+    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(
+      alpha: .7,
+    );
     final headerStyle = _headerStyle.copyWith(color: headerColor);
     return Column(
       children: [
@@ -165,10 +130,7 @@ class _FolderTable extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(width: 30, child: Text('#', style: headerStyle)),
-              Expanded(
-                flex: 4,
-                child: Text(l10n.title, style: headerStyle),
-              ),
+              Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
               SizedBox(
                 width: 60,
                 child: Icon(
@@ -177,10 +139,7 @@ class _FolderTable extends StatelessWidget {
                   color: headerColor,
                 ),
               ),
-              Expanded(
-                flex: 3,
-                child: Text(l10n.album, style: headerStyle),
-              ),
+              Expanded(flex: 3, child: Text(l10n.album, style: headerStyle)),
               Expanded(
                 flex: 2,
                 child: Text(l10n.songMetaGenre, style: headerStyle),
@@ -219,7 +178,7 @@ class _FolderTable extends StatelessWidget {
 class _FolderRow extends StatelessWidget {
   const _FolderRow({required this.index, required this.entry});
   final int index;
-  final _IndexEntry entry;
+  final FolderIndexEntry entry;
 
   @override
   Widget build(BuildContext context) {

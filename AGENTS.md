@@ -121,6 +121,9 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - `flutter analyze`
   - `flutter test`
   - `dart analyze`
+- Do NOT prepend temporary environment variables or wrapper flags to routine `flutter` / `dart` commands unless the user explicitly requests it or it is confirmed to be necessary to work around an environment issue.
+  - Avoid examples such as `$env:DART_SUPPRESS_ANALYTICS='true'; flutter analyze` for normal project validation.
+  - Prefer plain commands first, such as `flutter analyze` and `flutter test`.
 - Use file-specific forms only when necessary for focused debugging (for example: isolating a single failing test).
 - After completing code changes, run `flutter analyze` by default. If it cannot be run, explicitly report why.
 
