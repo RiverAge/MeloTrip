@@ -28,7 +28,10 @@ abstract class UpdateInstallerGateway {
 
   Future<void> openInstallPermissionSettings();
 
-  Future<void> installPackage(String filePath);
+  Future<void> installPackage(
+    String filePath, {
+    WindowsUpdaterStrings? updaterStrings,
+  });
 }
 
 class _AndroidUpdateInstallerGateway extends UpdateInstallerGateway {
@@ -51,7 +54,10 @@ class _AndroidUpdateInstallerGateway extends UpdateInstallerGateway {
   }
 
   @override
-  Future<void> installPackage(String filePath) async {
+  Future<void> installPackage(
+    String filePath, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) async {
     await UpdateInstaller.installApk(filePath);
   }
 }
@@ -76,11 +82,18 @@ class _WindowsBundleUpdateInstallerGateway extends UpdateInstallerGateway {
   Future<void> openInstallPermissionSettings() async {}
 
   @override
-  Future<void> installPackage(String filePath) {
+  Future<void> installPackage(
+    String filePath, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) {
+    if (updaterStrings == null) {
+      throw StateError('Windows updater strings are required on Windows.');
+    }
     return _windowsUpdaterLauncher.launch(
       archivePath: filePath,
       currentExePath: Platform.resolvedExecutable,
       currentProcessId: pid,
+      updaterStrings: updaterStrings,
     );
   }
 }
@@ -101,7 +114,10 @@ class _NoopUpdateInstallerGateway extends UpdateInstallerGateway {
   Future<void> openInstallPermissionSettings() async {}
 
   @override
-  Future<void> installPackage(String filePath) {
+  Future<void> installPackage(
+    String filePath, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) {
     throw UnsupportedError('Package installation is unavailable');
   }
 }

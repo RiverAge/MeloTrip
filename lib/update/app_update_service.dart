@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
+import 'package:update_installer/update_installer.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
 
 class AppUpdateInfo {
   const AppUpdateInfo({
@@ -81,8 +83,14 @@ class AppUpdateService {
     return _installerGateway.openInstallPermissionSettings();
   }
 
-  Future<void> installDownloadedPackage(File file) {
-    return _installerGateway.installPackage(file.path);
+  Future<void> installDownloadedPackage(
+    File file, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) {
+    return _installerGateway.installPackage(
+      file.path,
+      updaterStrings: updaterStrings,
+    );
   }
 
   Future<void> openUpdateDownloadPage(AppUpdateInfo update) async {

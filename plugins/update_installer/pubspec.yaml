@@ -1,5 +1,5 @@
 name: update_installer
-description: Local plugin for Android package install flow used by MeloTrip.
+description: Local plugin for Android and Windows update install flow used by MeloTrip.
 version: 0.0.1
 publish_to: none
 
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path: ^1.9.0
 
 flutter:
   plugin:
@@ -18,3 +17,5 @@ flutter:
       android:
         package: com.meme.update_installer
         pluginClass: UpdateInstallerPlugin
+      windows:
+        pluginClass: UpdateInstallerPluginCApi

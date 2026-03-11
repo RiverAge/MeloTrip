@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/app_logic/app_update_service.dart';
+import 'package:melo_trip/update/app_update_service.dart';
 
 void main() {
   test('AppUpdateInfo.fromJson parses mixed numeric types', () {

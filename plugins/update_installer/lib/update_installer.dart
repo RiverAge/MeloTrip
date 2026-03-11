@@ -1,7 +1,62 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:path/path.dart' as p;
+
+class WindowsUpdaterStrings {
+  const WindowsUpdaterStrings({
+    required this.windowTitle,
+    required this.preparing,
+    required this.versionLine,
+    required this.waitingForApp,
+    required this.extractingArchive,
+    required this.copyingFiles,
+    required this.restartingApp,
+    required this.failed,
+    required this.invalidArguments,
+    required this.initFailed,
+    required this.waitFailed,
+    required this.tempPathFailed,
+    required this.tempDirFailed,
+    required this.extractFailed,
+    required this.copyFailed,
+  });
+
+  final String windowTitle;
+  final String preparing;
+  final String versionLine;
+  final String waitingForApp;
+  final String extractingArchive;
+  final String copyingFiles;
+  final String restartingApp;
+  final String failed;
+  final String invalidArguments;
+  final String initFailed;
+  final String waitFailed;
+  final String tempPathFailed;
+  final String tempDirFailed;
+  final String extractFailed;
+  final String copyFailed;
+
+  Map<String, Object> toMap() {
+    return <String, Object>{
+      'windowTitle': windowTitle,
+      'preparing': preparing,
+      'versionLine': versionLine,
+      'waitingForApp': waitingForApp,
+      'extractingArchive': extractingArchive,
+      'copyingFiles': copyingFiles,
+      'restartingApp': restartingApp,
+      'failed': failed,
+      'invalidArguments': invalidArguments,
+      'initFailed': initFailed,
+      'waitFailed': waitFailed,
+      'tempPathFailed': tempPathFailed,
+      'tempDirFailed': tempDirFailed,
+      'extractFailed': extractFailed,
+      'copyFailed': copyFailed,
+    };
+  }
+}
 
 class UpdateInstaller {
   UpdateInstaller._();
@@ -23,56 +78,42 @@ class UpdateInstaller {
   static Future<void> installApk(String filePath) async {
     await _channel.invokeMethod<void>('installApk', {'filePath': filePath});
   }
+
+  static Future<void> launchWindowsBundledUpdater({
+    required String archivePath,
+    required String currentExePath,
+    required int currentProcessId,
+    required WindowsUpdaterStrings updaterStrings,
+  }) async {
+    await _channel.invokeMethod<void>('launchBundledUpdater', <String, Object>{
+      'archivePath': archivePath,
+      'currentExePath': currentExePath,
+      'currentProcessId': currentProcessId,
+      'updaterStrings': updaterStrings.toMap(),
+    });
+  }
 }
 
 class WindowsBundleUpdaterLauncher {
   const WindowsBundleUpdaterLauncher();
 
-  static const String bundledExecutableName = 'MeloTripUpdater.exe';
-
-  static List<String> buildArgs({
-    required String archivePath,
-    required String currentExePath,
-    required int currentProcessId,
-  }) {
-    return <String>[
-      '--archive',
-      archivePath,
-      '--install-dir',
-      p.dirname(currentExePath),
-      '--executable',
-      currentExePath,
-      '--pid',
-      '$currentProcessId',
-    ];
-  }
-
   Future<void> launch({
     required String archivePath,
     required String currentExePath,
     required int currentProcessId,
+    required WindowsUpdaterStrings updaterStrings,
   }) async {
-    final bundledUpdater = File(
-      p.join(p.dirname(currentExePath), bundledExecutableName),
-    );
-    if (!await bundledUpdater.exists()) {
-      throw StateError('Bundled updater is missing: ${bundledUpdater.path}');
+    if (!Platform.isWindows) {
+      throw UnsupportedError(
+        'Windows bundled updater is only available on Windows',
+      );
     }
 
-    final launcherDir = await Directory.systemTemp.createTemp(
-      'melotrip-updater-',
-    );
-    final launcherPath = p.join(launcherDir.path, bundledExecutableName);
-    await bundledUpdater.copy(launcherPath);
-
-    await Process.start(
-      launcherPath,
-      buildArgs(
-        archivePath: archivePath,
-        currentExePath: currentExePath,
-        currentProcessId: currentProcessId,
-      ),
-      mode: ProcessStartMode.detached,
+    await UpdateInstaller.launchWindowsBundledUpdater(
+      archivePath: archivePath,
+      currentExePath: currentExePath,
+      currentProcessId: currentProcessId,
+      updaterStrings: updaterStrings,
     );
   }
 }
