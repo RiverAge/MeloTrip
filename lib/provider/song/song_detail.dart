@@ -1,6 +1,6 @@
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/song/song_detail_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'song_detail.g.dart';
@@ -12,18 +12,8 @@ Future<SubsonicResponse?> songDetail(Ref ref, String? songId) async {
     return null;
   }
 
-  final api = await ref.read(apiProvider.future);
-
-  final res = await api.get<Map<String, dynamic>>(
-    '/rest/getSong',
-    queryParameters: {'id': songId},
-  );
-
-  final data = res.data;
-  if (data != null) {
-    return SubsonicResponse.fromJson(data);
-  }
-  return null;
+  final repository = ref.read(songDetailRepositoryProvider);
+  return repository.fetchSongDetail(id);
 }
 
 @riverpod
@@ -40,18 +30,11 @@ class SongFavorite extends _$SongFavorite {
 
     final res = await ref.read(songDetailProvider(song.id).future);
     final starred = res?.subsonicResponse?.song?.starred;
-
-    final api = await ref.read(apiProvider.future);
-
-    final ret = await api.get<Map<String, dynamic>>(
-      '/rest/${starred != null ? 'un' : ''}star',
-      queryParameters: {'id': song.id},
+    final subsonic = await ref.read(songDetailRepositoryProvider).toggleFavorite(
+      songId: song.id!,
+      isStarred: starred != null,
     );
-
-    final data = ret.data;
-    if (data == null) return null;
-    final subsonic = SubsonicResponse.fromJson(data);
-    if (subsonic.subsonicResponse?.status == 'ok') {
+    if (subsonic?.subsonicResponse?.status == 'ok') {
       ref.invalidate(songDetailProvider(song.id));
     }
     return subsonic;
@@ -70,16 +53,11 @@ class SongRating extends _$SongRating {
       return null;
     }
 
-    final api = await ref.read(apiProvider.future);
-    final ret = await api.get<Map<String, dynamic>>(
-      '/rest/setRating',
-      queryParameters: {'id': songId, 'rating': rating},
+    final subsonic = await ref.read(songDetailRepositoryProvider).setRating(
+      songId: songId,
+      rating: rating,
     );
-
-    final data = ret.data;
-    if (data == null) return null;
-    final subsonic = SubsonicResponse.fromJson(data);
-    if (subsonic.subsonicResponse?.status == 'ok') {
+    if (subsonic?.subsonicResponse?.status == 'ok') {
       ref.invalidate(songDetailProvider(songId));
     }
     return subsonic;
