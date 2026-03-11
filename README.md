@@ -1,89 +1,96 @@
-# melo_trip
+# MeloTrip
 
-Melo Trip.
+<p align="center">
+  <img src="images/icon/icon.png" alt="MeloTrip icon" width="120" />
+</p>
 
-### flutter pub run build_runner watch
+<p align="center">
+  一个基于 Flutter 构建的 Navidrome / Subsonic 音乐客户端，兼顾移动端体验与桌面端沉浸式播放。
+</p>
 
-## TODO
+<p align="center">
+  <img alt="Flutter" src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" />
+  <img alt="Powered by Codex" src="https://img.shields.io/badge/Powered%20by-Codex-111111?logo=openai&logoColor=white" />
+  <img alt="Powered by Gemini" src="https://img.shields.io/badge/Powered%20by-Gemini-4285F4?logo=google-gemini&logoColor=white" />
+</p>
 
-1. [Testing debt] Stabilize `album_detail_page_test.dart` without relying on `AppPlayer` extension internals (prefer injectable player abstraction or integration-level coverage).
-1. ~~登录超时~~
-1. 用户信息等一些基本信息的保持（如何优雅的访问）
-1. ~~高斯模糊~~
-1. ~~通用的深色模式的适配~~
-1. ~~通知栏图标的优化（现在图标过大）~~
-1. ~~App图标~~ 
-1. ~~搜索页面优化成Tab页方式的切换~~
-1. ~~CachedNetworkImage转圈~~
-1. 红心（收藏点下）之后通知栏、页面之间最好同步
-1. ~~程序流量使用过大~~
-1. ~~缓存最大限制配置~~
-1. ~~专辑页面优化~~
-1. ~~搜索页面的文本不居中~~
-1. ~~provider model 命名混乱，很多叫一个名字的，无法区分~~
-1. 今日推荐的实现，是否需要通过一个代理服务器生成今日推荐的数据？ 
-1. subsonic-response 的stauts字段是否需要处理成enums
-1. ~~star/unstar 会同时影响 `favoriteprovider` 和 `songdetailprovider` 该如何优化~~
-1. ~~搜索页面进入后需要自动获取焦点~~
-1. ``AsyncValueBuilder`` ``AsyncStreamBuilder`` 空的情况需要考虑优化
-1. ~~从旋转封面滑动到歌词，有明显的动画效果，期望在这一阶段直接跳过去(暂无法解决)~~
-1. ~~长按歌曲需要有 ``查看歌曲详情`` ``添加到播放列表`` ``收藏`` ``添加到歌单``~~
-1. ~~首页音乐栏的播放列表需要优化包括 标题样式优化  添加 ``随机`` ``列表循环`` ``单曲播放等的功能``~~
-1. ~~选择音质的功能没有实现~~
-1. ~~播放次数功能的实现~~
-1. ~~最近播放歌曲功能的实现~~
-1. ~~艺术家页面功能实现~~
-1. ~~统一 ``elevation``~~
-1. ~~搜索时，选择历史搜索记录没有立刻执行搜索，需要点击搜索按钮才能执行搜索~~
-1. 弹出播放列表上面的标题和下面滚动部分分界不明显
-1. ~~没有记录歌曲播放的次数~~
+<p align="center">
+  <img alt="Windows" src="https://img.shields.io/badge/Desktop-Windows-0078D6?logo=windows&logoColor=white" />
+  <img alt="macOS" src="https://img.shields.io/badge/Desktop-macOS-000000?logo=apple&logoColor=white" />
+  <img alt="Linux" src="https://img.shields.io/badge/Desktop-Linux-FCC624?logo=linux&logoColor=black" />
+</p>
 
-### BUG
-1. ~~正在播放页面旋转的圆形封面图片不圆~~
-1. ~~正在播放页面播放进度偶尔无法获取，导致显示 ``暂无数据``~~
-1. ~~播放页面的单曲循环好像不好使(没有复现)~~
-1. ~~首页播放栏，点开的播放列表，不断的删除直至为空，会报错~~
-1. ~~邓紫棋 所有专辑 年份是 null~~
-1. ~~搜索记录第一条的上边距不对~~
-1. ~~首页新添加的专辑 随机专辑左右边框不对~~
-1. ~~今日推荐的按下之后边距不对~~
-1. ~~张韶涵阿刁 音轨号null~~
-1. ~~手机底部没有保护区域~~
-1. ~~记忆播放列表的顺寻~~
-1. ~~window上字体渲染问题，比如【复】只占了一半的空间【径】渲染成了繁体 为Text添加local之后有改善 ~~
->  ~~[flutter开发windows软件字体显示粗细不一样，而且还有繁体解决办法](https://blog.csdn.net/weixin_44786530/article/details/135317823) ~~
->  ~~并不是繁体后续发现是不同字体渲染出来的样子不一样 ~~
-1. 音乐播放是，其他视频app播放视频或者启动录像并没有停止
-1. 错误日志的跟踪（通信有问题？抓换失败）
-> [log] ERR [log] _TypeError (type 'MappedListIterable<dynamic, dynamic>' is not a subtype of type 'FutureOr<List<NvidiaModel>>')
-### 启动
+## 项目简介
 
-#### freezed riverpod 自动生成代码
-`dart run build_runner watch`
-### 生成翻译
-`flutter gen-l10n`
-### 启动闪屏(初次可能需要删除App才能生效)
-`dart run flutter_native_splash:create`
+MeloTrip 是一个面向个人音乐库的 Flutter 客户端，围绕 Navidrome / Subsonic 生态构建，重点放在播放、搜索、歌单、歌词以及桌面端浏览体验。
 
-## Current Scope
+当前仓库已经包含：
 
-- AI chat feature has been removed from this app.
-- Home recommended placeholder is intentionally kept.
+- 移动端界面与播放控制
+- 桌面端独立导航与布局
+- Windows / macOS / Linux 桌面工程
+- 桌面歌词能力
+- 中英文本地化
 
-## Test Baseline
+## 设计方向
 
-- Run static checks: `flutter analyze`
-- Run widget/provider smoke tests: `flutter test`
+- 移动端：保持播放链路直接，尽量减少操作层级。
+- 桌面端：更强调侧边导航、内容分栏、全局搜索与播放面板联动。
+- 视觉参考：桌面端设计参考了 Feishin。
 
-### Baseline Coverage
+## 技术栈
 
-- Localization delegates can load.
-- Home recommended placeholder remains visible.
-- Route observer provider can be created.
-- Supported locales include `en` and `zh_CN`.
-- Home localization keys exist in both `en` and `zh_CN`.
-- `InitialPage` routes to `LoginPage` when user is logged out.
-- `albumsProvider` handles null payloads.
-- `albumsProvider` parses album list payloads.
-- `scanStatusProvider` handles null payloads.
-- `scanStatusProvider` parses status payloads.
+- Flutter
+- Riverpod
+- Dio
+- Freezed / Json Serializable
+- `media_kit`
+- `audio_service`
+- `sqflite`
+
+## 平台支持
+
+| Platform | Status |
+| --- | --- |
+| Android | Supported |
+| iOS | Supported |
+| Windows | Supported |
+| macOS | Supported |
+| Linux | Supported |
+| Web | Not a current target |
+
+## 本地开发
+
+```bash
+flutter pub get
+flutter gen-l10n
+dart run build_runner build --delete-conflicting-outputs
+flutter run
+```
+
+开发中常用命令：
+
+```bash
+dart run build_runner watch
+flutter gen-l10n
+dart run flutter_native_splash:create
+```
+
+## 质量检查
+
+```bash
+flutter analyze
+flutter test
+```
+
+当前基础测试主要覆盖：
+
+- 本地化资源加载
+- 初始路由跳转
+- 部分 provider 的空数据与解析行为
+- 首页占位内容的存在性
+
+## 说明
+
+- 首页推荐区目前仍保留占位实现。
+- 当前版本号见 `pubspec.yaml`：`1.0.8+9`
