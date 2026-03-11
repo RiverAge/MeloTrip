@@ -68,7 +68,9 @@ void main() {
   test('installDownloadedPackage delegates file path to gateway', () async {
     final gateway = _RecordingGateway();
     final service = AppUpdateService(installerGateway: gateway);
-    final file = File('${Directory.systemTemp.path}/melo-trip-install-test.apk');
+    final file = File(
+      '${Directory.systemTemp.path}/melo-trip-install-test.apk',
+    );
     await file.writeAsBytes(const <int>[1, 2, 3]);
     addTearDown(() async {
       if (await file.exists()) {

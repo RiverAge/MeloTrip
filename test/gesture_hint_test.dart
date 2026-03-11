@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/widget/guesture_hint.dart';
 
 void main() {
-  testWidgets('GestureHint renders expected size and themed color', (tester) async {
+  testWidgets('GestureHint renders expected size and themed color', (
+    tester,
+  ) async {
     const expectedColor = Color(0xFF336699);
     final theme = ThemeData(
       colorScheme: const ColorScheme.light().copyWith(
@@ -27,6 +29,9 @@ void main() {
     expect(container.constraints!.minHeight, 5);
     expect(container.margin, const EdgeInsets.only(top: 8));
     expect(decoration.color, expectedColor.withAlpha(50));
-    expect(decoration.borderRadius, const BorderRadius.all(Radius.circular(20)));
+    expect(
+      decoration.borderRadius,
+      const BorderRadius.all(Radius.circular(20)),
+    );
   });
 }

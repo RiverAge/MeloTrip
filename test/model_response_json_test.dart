@@ -26,12 +26,7 @@ void main() {
         'name': 'Fav',
         'songCount': 1,
         'entry': [
-          {
-            'id': 's1',
-            'title': 'Song One',
-            'artist': 'A',
-            'duration': 120,
-          },
+          {'id': 's1', 'title': 'Song One', 'artist': 'A', 'duration': 120},
         ],
       });
 

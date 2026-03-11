@@ -14,21 +14,30 @@ void main() {
 
     test('returns 0 when position is before first line', () {
       expect(
-        lyricIndexByStartMs(sortedStartMs: const [1000, 2000, 3000], positionMs: 500),
+        lyricIndexByStartMs(
+          sortedStartMs: const [1000, 2000, 3000],
+          positionMs: 500,
+        ),
         0,
       );
     });
 
     test('returns last index when position is after last line', () {
       expect(
-        lyricIndexByStartMs(sortedStartMs: const [1000, 2000, 3000], positionMs: 5000),
+        lyricIndexByStartMs(
+          sortedStartMs: const [1000, 2000, 3000],
+          positionMs: 5000,
+        ),
         2,
       );
     });
 
     test('returns in-range index between two lyric starts', () {
       expect(
-        lyricIndexByStartMs(sortedStartMs: const [1000, 2000, 3000], positionMs: 2500),
+        lyricIndexByStartMs(
+          sortedStartMs: const [1000, 2000, 3000],
+          positionMs: 2500,
+        ),
         1,
       );
     });
@@ -114,7 +123,10 @@ void main() {
       ];
 
       expect(
-        indexOfLyrics(sortedLyrics: lyrics, position: const Duration(milliseconds: 2400)),
+        indexOfLyrics(
+          sortedLyrics: lyrics,
+          position: const Duration(milliseconds: 2400),
+        ),
         1,
       );
     });

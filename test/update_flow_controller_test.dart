@@ -111,7 +111,10 @@ void main() {
     final notSupported = UpdateFlowController(
       _FakeUpdateService(installSupported: false),
     );
-    expect(await notSupported.getInstallCapability(), InstallCapability.notSupported);
+    expect(
+      await notSupported.getInstallCapability(),
+      InstallCapability.notSupported,
+    );
 
     final permissionRequired = UpdateFlowController(
       _FakeUpdateService(installSupported: true, canInstallPermission: false),
@@ -154,7 +157,9 @@ void main() {
   });
 
   test('downloadAndInstall prevents concurrent update', () async {
-    final service = _FakeUpdateService(downloadDelay: const Duration(milliseconds: 120));
+    final service = _FakeUpdateService(
+      downloadDelay: const Duration(milliseconds: 120),
+    );
     final controller = UpdateFlowController(service);
     const update = AppUpdateInfo(
       versionName: '1.0.1',

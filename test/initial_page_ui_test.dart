@@ -37,32 +37,34 @@ void main() {
     );
   }
 
-  testWidgets('InitialPage shows startup icon and status text', (
-    WidgetTester tester,
-  ) async {
-    final pendingAuth = Completer<AuthUser?>();
-    final service = InitialBootstrapService(
-      loadAuthUser: () => pendingAuth.future,
-      loadConfig: () async => null,
-      resolveCachePath: () async => '/tmp/cache',
-      startCacheServer: (_, _) {},
-      restorePlaylistMode: (_) async {},
-    );
+  testWidgets(
+    'InitialPage shows startup icon and status text',
+    (WidgetTester tester) async {
+      final pendingAuth = Completer<AuthUser?>();
+      final service = InitialBootstrapService(
+        loadAuthUser: () => pendingAuth.future,
+        loadConfig: () async => null,
+        resolveCachePath: () async => '/tmp/cache',
+        startCacheServer: (_, _) {},
+        restorePlaylistMode: (_) async {},
+      );
 
-    await tester.pumpWidget(
-      buildApp([initialBootstrapServiceProvider.overrideWithValue(service)]),
-    );
+      await tester.pumpWidget(
+        buildApp([initialBootstrapServiceProvider.overrideWithValue(service)]),
+      );
 
-    expect(find.byIcon(Icons.music_note_rounded), findsOneWidget);
-    expect(find.text('Starting MeloTrip...'), findsOneWidget);
-    expect(find.text('Retry startup'), findsNothing);
-    expect(find.byType(LoginPage), findsNothing);
+      expect(find.byIcon(Icons.music_note_rounded), findsOneWidget);
+      expect(find.text('Starting MeloTrip...'), findsOneWidget);
+      expect(find.text('Retry startup'), findsNothing);
+      expect(find.byType(LoginPage), findsNothing);
 
-    if (!pendingAuth.isCompleted) {
-      pendingAuth.complete(null);
-    }
-    await tester.pumpAndSettle();
-  }, variant: const TargetPlatformVariant({TargetPlatform.linux}));
+      if (!pendingAuth.isCompleted) {
+        pendingAuth.complete(null);
+      }
+      await tester.pumpAndSettle();
+    },
+    variant: const TargetPlatformVariant({TargetPlatform.linux}),
+  );
 
   testWidgets(
     'InitialPage logged-out flow does not eagerly initialize player',

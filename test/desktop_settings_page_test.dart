@@ -11,9 +11,7 @@ import 'test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('DesktopSettingsPage renders header and tabs', (
-    tester,
-  ) async {
+  testWidgets('DesktopSettingsPage renders header and tabs', (tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1600, 1200);
     addTearDown(() {
@@ -72,7 +70,9 @@ void main() {
     expect(find.textContaining('Coming Soon'), findsOneWidget);
   });
 
-  testWidgets('DesktopSettingsPage keeps basic actions visible', (tester) async {
+  testWidgets('DesktopSettingsPage keeps basic actions visible', (
+    tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1600, 1200);
     addTearDown(() {

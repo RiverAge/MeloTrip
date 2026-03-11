@@ -93,37 +93,40 @@ void main() {
       expect(search.toJson()['album'], isA<List<dynamic>>());
     });
 
-    test('SubsonicResponse maps error/playQueue/similar/songsByGenre fields', () {
-      final response = SubsonicResponse.fromJson({
-        'subsonic-response': {
-          'status': 'failed',
-          'error': {'code': 70, 'message': 'boom'},
-          'playQueue': {
-            'current': 's1',
-            'entry': [
-              {'id': 's1', 'title': 'Song'},
-            ],
+    test(
+      'SubsonicResponse maps error/playQueue/similar/songsByGenre fields',
+      () {
+        final response = SubsonicResponse.fromJson({
+          'subsonic-response': {
+            'status': 'failed',
+            'error': {'code': 70, 'message': 'boom'},
+            'playQueue': {
+              'current': 's1',
+              'entry': [
+                {'id': 's1', 'title': 'Song'},
+              ],
+            },
+            'similarSongs2': {
+              'song': [
+                {'id': 's2', 'title': 'Similar'},
+              ],
+            },
+            'songsByGenre': {
+              'song': [
+                {'id': 's3', 'title': 'Genre Song'},
+              ],
+            },
           },
-          'similarSongs2': {
-            'song': [
-              {'id': 's2', 'title': 'Similar'},
-            ],
-          },
-          'songsByGenre': {
-            'song': [
-              {'id': 's3', 'title': 'Genre Song'},
-            ],
-          },
-        },
-      });
+        });
 
-      final root = response.subsonicResponse;
-      expect(root?.status, 'failed');
-      expect(root?.error?.code, 70);
-      expect(root?.playQueue?.current, 's1');
-      expect(root?.similarSongs2?.song?.single.id, 's2');
-      expect(root?.songsByGenre?.song?.single.id, 's3');
-      expect(response.toJson().containsKey('subsonic-response'), isTrue);
-    });
+        final root = response.subsonicResponse;
+        expect(root?.status, 'failed');
+        expect(root?.error?.code, 70);
+        expect(root?.playQueue?.current, 's1');
+        expect(root?.similarSongs2?.song?.single.id, 's2');
+        expect(root?.songsByGenre?.song?.single.id, 's3');
+        expect(response.toJson().containsKey('subsonic-response'), isTrue);
+      },
+    );
   });
 }
