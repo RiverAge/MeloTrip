@@ -160,9 +160,9 @@ void main() {
     );
     addTearDown(subscription.close);
 
-    final result = await container.read(
-      playlistUpdateProvider.notifier,
-    ).modify(playlistId: 'p1', songIdToAdd: 's1');
+    final result = await container
+        .read(playlistUpdateProvider.notifier)
+        .modify(playlistId: 'p1', songIdToAdd: 's1');
 
     expect(result?.subsonicResponse?.status, 'ok');
   });

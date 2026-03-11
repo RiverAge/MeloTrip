@@ -62,10 +62,11 @@ SubsonicResponse mergePreferredStructuredLyrics(SubsonicResponse response) {
     }
   }
 
-  final finalLines = mergedMap.entries
-      .map((entry) => Line(start: entry.key, value: entry.value))
-      .toList()
-    ..sort((left, right) => (left.start ?? 0).compareTo(right.start ?? 0));
+  final finalLines =
+      mergedMap.entries
+          .map((entry) => Line(start: entry.key, value: entry.value))
+          .toList()
+        ..sort((left, right) => (left.start ?? 0).compareTo(right.start ?? 0));
 
   final template = sortedLyrics.first;
   final finalStructuredLyric = template.copyWith(

@@ -40,10 +40,9 @@ void main() {
       },
     });
 
-    final merged = mergePreferredStructuredLyrics(response)
-        .subsonicResponse
-        ?.lyricsList
-        ?.structuredLyrics;
+    final merged = mergePreferredStructuredLyrics(
+      response,
+    ).subsonicResponse?.lyricsList?.structuredLyrics;
 
     expect(merged, isNotNull);
     expect(merged, hasLength(1));

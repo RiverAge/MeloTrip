@@ -30,10 +30,9 @@ class AlbumFavorite extends _$AlbumFavorite {
 
     final res = await ref.read(albumDetailProvider(album.id).future);
     final starred = res?.subsonicResponse?.album?.starred;
-    final subsonic = await ref.read(albumDetailRepositoryProvider).toggleFavorite(
-      albumId: album.id!,
-      isStarred: starred != null,
-    );
+    final subsonic = await ref
+        .read(albumDetailRepositoryProvider)
+        .toggleFavorite(albumId: album.id!, isStarred: starred != null);
     if (subsonic?.subsonicResponse?.status == 'ok') {
       ref.invalidate(albumDetailProvider(album.id));
     }
@@ -53,10 +52,9 @@ class AlbumRating extends _$AlbumRating {
       return null;
     }
 
-    final subsonic = await ref.read(albumDetailRepositoryProvider).setRating(
-      albumId: albumId,
-      rating: rating,
-    );
+    final subsonic = await ref
+        .read(albumDetailRepositoryProvider)
+        .setRating(albumId: albumId, rating: rating);
     if (subsonic?.subsonicResponse?.status == 'ok') {
       ref.invalidate(albumDetailProvider(albumId));
     }

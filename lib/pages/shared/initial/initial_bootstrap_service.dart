@@ -108,8 +108,9 @@ Future<void> ensurePlayQueueRestored(WidgetRef ref) async {
       final userKey = '${auth?.host}|${auth?.username}|${auth?.token}';
       if (_restoredPlayQueueUserKey == userKey) return;
 
-      final queue =
-          (await ref.read(playQueueProvider.future))?.subsonicResponse?.playQueue;
+      final queue = (await ref.read(
+        playQueueProvider.future,
+      ))?.subsonicResponse?.playQueue;
 
       final player = await ref.read(appPlayerHandlerProvider.future);
       if (player == null) return;

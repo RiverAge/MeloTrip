@@ -39,9 +39,9 @@ class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(paginatedArtistsProvider);
-    final visibleArtists = state.items.take(state.offset).toList(
-      growable: false,
-    );
+    final visibleArtists = state.items
+        .take(state.offset)
+        .toList(growable: false);
 
     return Scaffold(
       backgroundColor: Colors.transparent,

@@ -30,10 +30,9 @@ class SongFavorite extends _$SongFavorite {
 
     final res = await ref.read(songDetailProvider(song.id).future);
     final starred = res?.subsonicResponse?.song?.starred;
-    final subsonic = await ref.read(songDetailRepositoryProvider).toggleFavorite(
-      songId: song.id!,
-      isStarred: starred != null,
-    );
+    final subsonic = await ref
+        .read(songDetailRepositoryProvider)
+        .toggleFavorite(songId: song.id!, isStarred: starred != null);
     if (subsonic?.subsonicResponse?.status == 'ok') {
       ref.invalidate(songDetailProvider(song.id));
     }
@@ -53,10 +52,9 @@ class SongRating extends _$SongRating {
       return null;
     }
 
-    final subsonic = await ref.read(songDetailRepositoryProvider).setRating(
-      songId: songId,
-      rating: rating,
-    );
+    final subsonic = await ref
+        .read(songDetailRepositoryProvider)
+        .setRating(songId: songId, rating: rating);
     if (subsonic?.subsonicResponse?.status == 'ok') {
       ref.invalidate(songDetailProvider(songId));
     }
