@@ -66,7 +66,7 @@ final class ArtistDetailProvider
   }
 }
 
-String _$artistDetailHash() => r'a98cc8da74acc12df122624e64de535e796fed1a';
+String _$artistDetailHash() => r'29db6e90afee5fcd885e06c1f50c76b2f21a5e9a';
 
 final class ArtistDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {

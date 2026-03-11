@@ -66,7 +66,7 @@ final class SongDetailProvider
   }
 }
 
-String _$songDetailHash() => r'c1b5862c8fe072b93f0b07f671557b63cdd38c3d';
+String _$songDetailHash() => r'53603006eb5e37899f99463f2bd5a829ec0e27df';
 
 final class SongDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {
@@ -110,7 +110,7 @@ final class SongFavoriteProvider
   SongFavorite create() => SongFavorite();
 }
 
-String _$songFavoriteHash() => r'4f67b8cfaf1c53f6de4e4bf5ab633263cfff1196';
+String _$songFavoriteHash() => r'18770ed6e98e3041394763c7dc57d1486535b25e';
 
 abstract class _$SongFavorite extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
@@ -155,7 +155,7 @@ final class SongRatingProvider
   SongRating create() => SongRating();
 }
 
-String _$songRatingHash() => r'70a8c77d55220ed6ffda289c14ffa460a7c6c4cd';
+String _$songRatingHash() => r'261f78bb09176eb54c5ffa18de8344744f37b776';
 
 abstract class _$SongRating extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();

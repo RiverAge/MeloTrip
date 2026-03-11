@@ -66,7 +66,7 @@ final class AlbumDetailProvider
   }
 }
 
-String _$albumDetailHash() => r'271e6bdebbf7054d4e35a3985048777e570a7933';
+String _$albumDetailHash() => r'1a49a8ebce097d0c43a91f52503515248b53928d';
 
 final class AlbumDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {
@@ -110,7 +110,7 @@ final class AlbumFavoriteProvider
   AlbumFavorite create() => AlbumFavorite();
 }
 
-String _$albumFavoriteHash() => r'1e34f0843dfb477310a62b2693a5b95ff6483b0a';
+String _$albumFavoriteHash() => r'022f115678d08b4ba73e84416ee70481a90c0efb';
 
 abstract class _$AlbumFavorite extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
@@ -155,7 +155,7 @@ final class AlbumRatingProvider
   AlbumRating create() => AlbumRating();
 }
 
-String _$albumRatingHash() => r'b4c0b56a734ac43cd5c5694606093249765737d4';
+String _$albumRatingHash() => r'87ad72cd52da4ad3f28d4ef1b1f83eb729ad44d9';
 
 abstract class _$AlbumRating extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
