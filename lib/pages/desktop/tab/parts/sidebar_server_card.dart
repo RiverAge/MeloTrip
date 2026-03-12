@@ -18,7 +18,9 @@ class _SidebarServerCard extends ConsumerWidget {
         return Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: .6),
+            color: theme.colorScheme.surfaceContainerHigh.withValues(
+              alpha: 0.6,
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -31,29 +33,32 @@ class _SidebarServerCard extends ConsumerWidget {
                     'images/navidrome.png',
                     width: 30,
                     height: 30,
-                    fit: .cover,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       user.host?.replaceFirst(RegExp(r'^https?://'), '') ?? '-',
                       maxLines: 1,
-                      overflow: .ellipsis,
-                      style: const TextStyle(fontWeight: .w700, fontSize: 13),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
                     ),
                     Text(
                       '${user.username ?? '-'} · $statusText',
                       maxLines: 1,
-                      overflow: .ellipsis,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11,
                         color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: .8,
+                          alpha: 0.8,
                         ),
                       ),
                     ),

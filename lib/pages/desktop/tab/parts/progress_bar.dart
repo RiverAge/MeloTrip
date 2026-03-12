@@ -57,7 +57,7 @@ class _DesktopProgressBar extends StatelessWidget {
                   child: Text(
                     durationFormatter(duration?.inSeconds ?? 0),
                     style: const TextStyle(fontSize: 11),
-                    textAlign: .right,
+                    textAlign: TextAlign.right,
                   ),
                 ),
               ],

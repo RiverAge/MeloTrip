@@ -15,15 +15,16 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
     final iconMutedColor = colorScheme.onSurfaceVariant.withValues(alpha: .72);
 
     return Column(
-      mainAxisAlignment: .center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AsyncStreamBuilder(
               provider: player.playlistModeStream,
               builder: (_, playlistMode) {
-                final shuffleDisabled = playlistMode == .single;
+                final bool shuffleDisabled =
+                    playlistMode == PlaylistMode.single;
                 return AsyncStreamBuilder(
                   provider: player.shuffleStream,
                   builder: (_, shuffleEnabled) {
@@ -83,17 +84,17 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
               provider: player.playlistModeStream,
               builder: (_, playlistMode) {
                 final (icon, tooltip, color) = switch (playlistMode) {
-                  .none => (
+                  PlaylistMode.none => (
                     Icons.queue_music_outlined,
                     l10n.playModeNone,
                     iconMutedColor,
                   ),
-                  .loop => (
+                  PlaylistMode.loop => (
                     Icons.repeat_rounded,
                     l10n.playModeLoop,
                     colorScheme.primary,
                   ),
-                  .single => (
+                  PlaylistMode.single => (
                     Icons.repeat_one_rounded,
                     l10n.playModeSingle,
                     colorScheme.primary,
@@ -104,12 +105,12 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
                   iconSize: 20,
                   tooltip: tooltip,
                   onPressed: () {
-                    if (playlistMode == .loop) {
-                      player.setPlaylistMode(.none);
-                    } else if (playlistMode == .none) {
-                      player.setPlaylistMode(.single);
+                    if (playlistMode == PlaylistMode.loop) {
+                      player.setPlaylistMode(PlaylistMode.none);
+                    } else if (playlistMode == PlaylistMode.none) {
+                      player.setPlaylistMode(PlaylistMode.single);
                     } else {
-                      player.setPlaylistMode(.loop);
+                      player.setPlaylistMode(PlaylistMode.loop);
                     }
                   },
                   icon: Icon(icon, color: color),

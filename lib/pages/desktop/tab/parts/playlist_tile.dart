@@ -1,11 +1,7 @@
 part of '../tab_page.dart';
 
 class _PlaylistTile extends StatefulWidget {
-  const _PlaylistTile({
-    required this.item,
-    required this.selected,
-    this.onTap,
-  });
+  const _PlaylistTile({required this.item, required this.selected, this.onTap});
 
   final PlaylistEntity item;
   final bool selected;
@@ -22,9 +18,9 @@ class _PlaylistTileState extends State<_PlaylistTile> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final activeColor = colorScheme.primary.withValues(alpha: .2);
-    final hoverColor = colorScheme.primary.withValues(alpha: .1);
-    final hoverBorder = colorScheme.outlineVariant.withValues(alpha: .45);
+    final activeColor = colorScheme.primary.withValues(alpha: 0.2);
+    final hoverColor = colorScheme.primary.withValues(alpha: 0.1);
+    final hoverBorder = colorScheme.outlineVariant.withValues(alpha: 0.45);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
@@ -88,7 +84,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                             Icons.library_music_rounded,
                             size: 11,
                             color: theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: .86),
+                                .withValues(alpha: 0.86),
                           ),
                           const SizedBox(width: 3),
                           Text(
@@ -105,7 +101,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                             Icons.schedule_rounded,
                             size: 11,
                             color: theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: .86),
+                                .withValues(alpha: 0.86),
                           ),
                           const SizedBox(width: 3),
                           Expanded(

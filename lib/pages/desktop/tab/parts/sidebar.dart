@@ -73,7 +73,7 @@ class _DesktopSidebar extends ConsumerWidget {
       color: theme.colorScheme.surfaceContainer,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SidebarSearchButton(l10n: l10n),
           const SizedBox(height: 12),
@@ -170,7 +170,7 @@ class _SidebarSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -180,9 +180,9 @@ class _SidebarSection extends StatelessWidget {
                 child: Text(
                   title,
                   style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: .w900,
+                    fontWeight: FontWeight.w900,
                     color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: .7,
+                      alpha: 0.7,
                     ),
                   ),
                 ),

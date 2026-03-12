@@ -20,7 +20,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                   Text(
                     l10n.playQueue,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: .w800,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   const Spacer(),
@@ -51,10 +51,10 @@ class _DesktopQueueSheet extends ConsumerWidget {
                           return Material(
                             color: isActive
                                 ? theme.colorScheme.primaryContainer.withValues(
-                                    alpha: .4,
+                                    alpha: 0.4,
                                   )
                                 : theme.colorScheme.surfaceContainerHigh
-                                      .withValues(alpha: .35),
+                                      .withValues(alpha: 0.35),
                             borderRadius: BorderRadius.circular(10),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(10),
@@ -76,7 +76,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                         width: 36,
                                         height: 36,
                                         size: 180,
-                                        fit: .cover,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                     const SizedBox(width: 10),
@@ -89,23 +89,24 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                     ),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: .start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             song.title ?? '-',
                                             maxLines: 1,
-                                            overflow: .ellipsis,
+                                            overflow: TextOverflow.ellipsis,
                                             style: theme.textTheme.bodyMedium
                                                 ?.copyWith(
                                                   fontWeight: isActive
-                                                      ? .w700
-                                                      : .w500,
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w500,
                                                 ),
                                           ),
                                           Text(
                                             '${song.displayArtist ?? '-'} · ${durationFormatter(song.duration)}',
                                             maxLines: 1,
-                                            overflow: .ellipsis,
+                                            overflow: TextOverflow.ellipsis,
                                             style: theme.textTheme.bodySmall
                                                 ?.copyWith(
                                                   color: theme
@@ -124,7 +125,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                       color: isActive
                                           ? theme.colorScheme.primary
                                           : theme.colorScheme.onSurfaceVariant
-                                                .withValues(alpha: .7),
+                                                .withValues(alpha: 0.7),
                                     ),
                                   ],
                                 ),

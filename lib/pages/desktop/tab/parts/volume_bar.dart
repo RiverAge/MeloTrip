@@ -21,7 +21,7 @@ class _DesktopVolumeBar extends ConsumerWidget {
           builder: (_, volumeValue) {
             final volume = volumeValue as double? ?? 0.0;
             return Row(
-              mainAxisSize: .min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
                   volume < 0.1

@@ -25,12 +25,12 @@ class _DesktopPlayerBarActions extends StatelessWidget {
             final rating = effectiveSong?.userRating ?? 0;
             final isStarred = effectiveSong?.starred != null;
             return Column(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: .end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (!compact) ...[
                   Row(
-                    mainAxisAlignment: .end,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Tooltip(
                         message: '$rating/5',
@@ -48,7 +48,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   const SizedBox(height: 8),
                 ],
                 Row(
-                  mainAxisAlignment: .end,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
                       onPressed: current == null
@@ -57,12 +57,12 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                                 .read(songFavoriteProvider.notifier)
                                 .toggleFavorite(current),
                       iconSize: 20,
-                      visualDensity: .compact,
+                      visualDensity: VisualDensity.compact,
                       constraints: const BoxConstraints.tightFor(
                         width: 34,
                         height: 34,
                       ),
-                      padding: .zero,
+                      padding: EdgeInsets.zero,
                       tooltip: isStarred ? l10n.unfavorite : l10n.favorite,
                       icon: Icon(
                         isStarred

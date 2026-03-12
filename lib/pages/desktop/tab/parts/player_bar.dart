@@ -42,7 +42,7 @@ class _DesktopPlayerBar extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Align(
-                      alignment: .centerLeft,
+                      alignment: Alignment.centerLeft,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 320),
                         child: _DesktopPlayerBarLeft(
@@ -61,7 +61,7 @@ class _DesktopPlayerBar extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Align(
-                      alignment: .centerRight,
+                      alignment: Alignment.centerRight,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 320),
                         child: _DesktopPlayerBarActions(

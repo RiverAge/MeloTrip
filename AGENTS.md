@@ -7,7 +7,7 @@
 - Do not manually edit generated files such as `*.g.dart`, `*.freezed.dart`, or `lib/l10n/app_localizations*.dart`.
 - Do not use deprecated `Color.withOpacity()`. Use `withValues(alpha: ...)`.
 - UI semantic colors must come from `Theme.of(context).colorScheme` or theme-derived text colors.
-- Do not use Dart dot shorthand in this project. Use fully qualified members such as `MainAxisSize.min`.
+- Dart dot shorthand is allowed in this project when the surrounding type context is clear.
 - After code changes, run `flutter analyze` by default. Run `flutter test` when feasible.
 - On Windows, Codex must execute native commands directly such as `flutter analyze` or `gh run list`. Do not wrap them in `powershell -Command` or `cmd /c`.
 - Pages and widgets must not import `package:melo_trip/repository/...` directly. Go through providers unless there is a strong reason not to.
@@ -44,8 +44,8 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - In the same parameter list, repeated `_` is valid and preferred.
   - Good: `(_, _) { ... }`
   - Avoid: `(_, __) { ... }`
-- Do not use Dart dot shorthand in this project.
-- Always use explicit qualified members for enums and static values, for example `MainAxisSize.min`, `PlaylistMode.loop`, `Uri.parse(url)`.
+- Dart dot shorthand is allowed when the surrounding type context is unambiguous.
+- Prefer readable, context-appropriate forms for enums and static values, for example `MainAxisSize.min`, `.min`, `PlaylistMode.loop`, or `Uri.parse(url)` as applicable.
 - Keep full explicit forms for common cases like `Icons.*` and `Colors.*`.
 - Validate with `flutter analyze` after bulk replacements.
 
