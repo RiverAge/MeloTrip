@@ -1,6 +1,7 @@
 import 'dart:isolate';
 import 'dart:async';
 
+import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
@@ -11,6 +12,7 @@ import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
+import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/server/cache_server.dart';
 
@@ -23,15 +25,20 @@ class InitialBootstrapService {
     required this.resolveCachePath,
     required this.startCacheServer,
     required this.restorePlaylistMode,
+    Future<void> Function()? restoreDesktopLyricsConfig,
     this.bootstrapTimeout = const Duration(seconds: 8),
-  });
+  }) : restoreDesktopLyricsConfig =
+           restoreDesktopLyricsConfig ?? _defaultRestoreDesktopLyricsConfig;
 
   final Future<AuthUser?> Function() loadAuthUser;
   final Future<Configuration?> Function() loadConfig;
   final Future<String> Function() resolveCachePath;
   final void Function(String dirPath, String host) startCacheServer;
   final Future<void> Function(PlaylistMode mode) restorePlaylistMode;
+  final Future<void> Function() restoreDesktopLyricsConfig;
   final Duration bootstrapTimeout;
+
+  static Future<void> _defaultRestoreDesktopLyricsConfig() async {}
 
   Future<InitialBootstrapResult> bootstrap() async {
     try {
@@ -59,6 +66,7 @@ class InitialBootstrapService {
     if (playlistMode != null) {
       await restorePlaylistMode(playlistMode);
     }
+    await restoreDesktopLyricsConfig();
 
     return .loggedIn;
   }
@@ -85,6 +93,12 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
       if (player != null) {
         await player.setPlaylistMode(mode);
       }
+    },
+    restoreDesktopLyricsConfig: () async {
+      final DesktopLyricsConfig config = await ref.read(
+        desktopLyricsSettingsProvider.future,
+      );
+      await DesktopLyrics().apply(config);
     },
   );
 });
