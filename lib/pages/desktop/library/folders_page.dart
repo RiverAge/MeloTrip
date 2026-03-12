@@ -400,7 +400,6 @@ class _FolderEntryRow extends ConsumerStatefulWidget {
     required this.index,
     required this.entry,
     required this.allEntries,
-    super.key,
   });
 
   final int index;
