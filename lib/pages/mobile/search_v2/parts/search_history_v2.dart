@@ -33,11 +33,9 @@ class _SearchHistory extends ConsumerWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    ref
-                        .read(userConfigProvider.notifier)
-                        .setConfiguration(
-                          recentSearches: const ValueUpdater(''),
-                        );
+                    ref.read(userConfigProvider.notifier).setConfiguration(
+                      recentSearches: const ValueUpdater<String>(''),
+                    );
                   },
                   icon: const Icon(Icons.delete_outline, size: 20),
                 ),

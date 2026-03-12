@@ -51,18 +51,9 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
   }
 
   Future<void> _saveToHistory(String value) async {
-    final v = value.trim();
-    if (v.isEmpty) return;
-    final config = await ref.read(userConfigProvider.future);
-    final recentStr = config?.recentSearches ?? '';
-    final list = recentStr.split(',').where((s) => s.isNotEmpty).toList();
-    list.remove(v);
-    list.insert(0, v);
-    ref
-        .read(userConfigProvider.notifier)
-        .setConfiguration(
-          recentSearches: ValueUpdater(list.take(20).join(',')),
-        );
+    await ref.read(userConfigProvider.notifier).setConfiguration(
+      recentSearchToSave: ValueUpdater<String>(value),
+    );
   }
 
   @override

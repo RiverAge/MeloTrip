@@ -21,11 +21,9 @@ class _SearchHistory extends StatelessWidget {
                   builder: (context, ref, child) {
                     return IconButton(
                       onPressed: () {
-                        ref
-                            .read(userConfigProvider.notifier)
-                            .setConfiguration(
-                              recentSearches: ValueUpdater(null),
-                            );
+                        ref.read(userConfigProvider.notifier).setConfiguration(
+                          recentSearches: const ValueUpdater<String>(''),
+                        );
                       },
                       icon: const Icon(Icons.delete),
                     );

@@ -1,33 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
+import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
+import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/pages/desktop/search/search_page.dart';
-import 'package:melo_trip/provider/album/album_detail.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/search/search.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/widget/no_data.dart';
 
-import 'test_helpers.dart';
+class _FakeUserConfig extends UserConfig {
+  @override
+  Future<Configuration?> build() async => null;
 
-SubsonicResponse _searchResponse(List<AlbumEntity> albums) {
-  return SubsonicResponse(
-    subsonicResponse: SubsonicResponseClass(
-      status: 'ok',
-      searchResult3: SearchResult3Entity(album: albums),
-    ),
-  );
+  @override
+  Future<void> setConfiguration({
+    ValueUpdater<ThemeMode?>? theme,
+    ValueUpdater<String?>? maxRate,
+    ValueUpdater<PlaylistMode?>? playlistMode,
+    ValueUpdater<Locale?>? locale,
+    ValueUpdater<String?>? recentSearches,
+    ValueUpdater<String>? recentSearchToSave,
+    ValueUpdater<String?>? desktopLyricsConfig,
+  }) async {
+    final String? nextRecentSearches = recentSearchToSave == null
+        ? recentSearches?.value
+        : recentSearchToSave.value;
+    state = AsyncData(
+      Configuration(
+        recentSearches: nextRecentSearches,
+        theme: theme?.value,
+        maxRate: maxRate?.value,
+        playlistMode: playlistMode?.value,
+        locale: locale?.value,
+        desktopLyricsConfig: desktopLyricsConfig?.value,
+      ),
+    );
+  }
 }
 
-SubsonicResponse _albumDetailResponse(String id) {
+SubsonicResponse _searchResponse({
+  required List<AlbumEntity> albums,
+  required List<SongEntity> songs,
+  required List<ArtistEntity> artists,
+}) {
   return SubsonicResponse(
     subsonicResponse: SubsonicResponseClass(
       status: 'ok',
-      album: AlbumEntity(id: id, name: 'Album $id', artist: 'Artist $id'),
+      searchResult3: SearchResult3Entity(
+        album: albums,
+        song: songs,
+        artist: artists,
+      ),
     ),
   );
 }
@@ -48,8 +77,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-          searchQueryProvider.overrideWith((_) => ''),
+          userConfigProvider.overrideWith(_FakeUserConfig.new),
           searchResultProvider.overrideWith((_) async => null),
         ],
         child: MaterialApp(
@@ -65,7 +93,7 @@ void main() {
     expect(find.byType(NoData), findsOneWidget);
   });
 
-  testWidgets('DesktopSearchPage renders results and opens album detail', (
+  testWidgets('DesktopSearchPage renders song, album and artist results', (
     tester,
   ) async {
     tester.view.devicePixelRatio = 1;
@@ -78,36 +106,41 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-          searchQueryProvider.overrideWith((_) => 'rock'),
+          userConfigProvider.overrideWith(_FakeUserConfig.new),
           searchResultProvider.overrideWith(
-            (_) async => _searchResponse([
-              const AlbumEntity(
-                id: 'a1',
-                name: 'Search Album 1',
-                artist: 'Search Artist 1',
-              ),
-            ]),
+            (_) async => _searchResponse(
+              albums: const <AlbumEntity>[
+                AlbumEntity(
+                  id: 'a1',
+                  name: 'Search Album 1',
+                  artist: 'Search Artist 1',
+                ),
+              ],
+              songs: const <SongEntity>[
+                SongEntity(
+                  id: 's1',
+                  title: 'Search Song 1',
+                  album: 'Search Album 1',
+                  artist: 'Search Artist 1',
+                ),
+              ],
+              artists: const <ArtistEntity>[
+                ArtistEntity(id: 'ar1', name: 'Search Artist 1', albumCount: 3),
+              ],
+            ),
           ),
-          albumDetailProvider(
-            'a1',
-          ).overrideWith((_) async => _albumDetailResponse('a1')),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const DesktopSearchPage(),
+          home: const DesktopSearchPage(initialQuery: 'rock'),
         ),
       ),
     );
 
     await tester.pumpAndSettle();
+    expect(find.text('Search Song 1'), findsOneWidget);
     expect(find.text('Search Album 1'), findsOneWidget);
-    expect(find.text('Search Artist 1'), findsOneWidget);
-
-    await tester.tap(find.text('Search Album 1'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(DesktopAlbumDetailPage), findsOneWidget);
+    expect(find.text('Search Artist 1'), findsWidgets);
   });
 }

@@ -1,47 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/artist/artist.dart';
+import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
+import 'package:melo_trip/pages/desktop/search/search_page.dart';
+import 'package:melo_trip/pages/desktop/search/search_shared_widgets.dart';
+import 'package:melo_trip/pages/mobile/artist/artist_detail_page.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/search/search.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/widget/no_data.dart';
+import 'package:melo_trip/widget/provider_value_builder.dart';
 
-class SearchCommandPalette extends StatelessWidget {
+class SearchCommandPalette extends ConsumerStatefulWidget {
   const SearchCommandPalette({super.key});
 
   @override
+  ConsumerState<SearchCommandPalette> createState() =>
+      _SearchCommandPaletteState();
+}
+
+class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
+  late final TextEditingController _controller;
+
+  String get _query => _controller.text.trim();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveToHistory(String value) async {
+    await ref.read(userConfigProvider.notifier).setConfiguration(
+      recentSearchToSave: ValueUpdater<String>(value),
+    );
+  }
+
+  Future<void> _openFullSearch() async {
+    if (_query.isEmpty) {
+      return;
+    }
+    await _saveToHistory(_query);
+    if (!mounted) {
+      return;
+    }
+    final NavigatorState navigator = Navigator.of(context, rootNavigator: true);
+    Navigator.of(context).pop();
+    await navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => DesktopSearchPage(initialQuery: _query),
+      ),
+    );
+  }
+
+  Future<void> _playSong(SongEntity song) async {
+    await _saveToHistory(_query);
+    final AppPlayer? player = await ref.read(appPlayerHandlerProvider.future);
+    await player?.playOrToggleFromSongTap(song);
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _openAlbum(AlbumEntity album) async {
+    if (album.id == null || album.id!.isEmpty) {
+      return;
+    }
+    await _saveToHistory(_query);
+    if (!mounted) {
+      return;
+    }
+    final NavigatorState navigator = Navigator.of(context, rootNavigator: true);
+    Navigator.of(context).pop();
+    await navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => DesktopAlbumDetailPage(albumId: album.id),
+      ),
+    );
+  }
+
+  Future<void> _openArtist(ArtistEntity artist) async {
+    if (artist.id == null || artist.id!.isEmpty) {
+      return;
+    }
+    await _saveToHistory(_query);
+    if (!mounted) {
+      return;
+    }
+    final NavigatorState navigator = Navigator.of(context, rootNavigator: true);
+    Navigator.of(context).pop();
+    await navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => ArtistDetailPage(artistId: artist.id),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-    final colorScheme = theme.colorScheme;
+    final ThemeData theme = Theme.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Center(
       child: Material(
         color: colorScheme.surface.withValues(alpha: 0),
         child: Container(
-          width: 600,
-          height: 480,
+          width: 720,
+          height: 560,
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: .5),
+              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
             ),
-            boxShadow: [
+            boxShadow: <BoxShadow>[
               BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: .28),
+                color: colorScheme.shadow.withValues(alpha: 0.28),
                 blurRadius: 40,
                 offset: const Offset(0, 20),
               ),
             ],
           ),
           child: Column(
-            children: [
+            children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Text(
-                      l10n.searchHistory,
+                      l10n.searchHint,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -60,7 +160,10 @@ class SearchCommandPalette extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
+                  controller: _controller,
                   autofocus: true,
+                  onChanged: (_) => setState(() {}),
+                  onSubmitted: (_) => _openFullSearch(),
                   decoration: InputDecoration(
                     hintText: l10n.searchHint,
                     prefixIcon: const Icon(Icons.search_rounded, size: 20),
@@ -75,40 +178,54 @@ class SearchCommandPalette extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: ListView(
-                  children: [
-                    _CommandTile(
-                      title: l10n.searchHint,
-                      subtitle: l10n.searchHistory,
-                    ),
-                    _CommandTile(
-                      title: l10n.createNewPlaylist,
-                      subtitle: l10n.playlist,
-                    ),
-                    _CommandTile(title: l10n.viewAll, subtitle: l10n.playlist),
-                    _CommandTile(title: l10n.serverStatus, subtitle: ''),
-                  ],
-                ),
+                child: _query.isEmpty
+                    ? DesktopSearchHistoryPanel(
+                        onSelectQuery: (String value) {
+                          _controller.text = value;
+                          setState(() {});
+                        },
+                      )
+                    : AsyncValueBuilder(
+                        provider: searchProvider(_query),
+                        loading: (_, _) =>
+                            const Center(child: CircularProgressIndicator()),
+                        empty: (_, _) => const NoData(),
+                        builder: (BuildContext context, data, WidgetRef ref) {
+                          final searchResult = data.subsonicResponse?.searchResult3;
+                          return DesktopSearchResultsView(
+                            songs: searchResult?.song ?? const <SongEntity>[],
+                            albums:
+                                searchResult?.album ?? const <AlbumEntity>[],
+                            artists:
+                                searchResult?.artist ?? const <ArtistEntity>[],
+                            maxItemsPerSection: 3,
+                            compact: true,
+                            onSongTap: _playSong,
+                            onAlbumTap: _openAlbum,
+                            onArtistTap: _openArtist,
+                          );
+                        },
+                      ),
               ),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: colorScheme.outlineVariant.withValues(alpha: .2),
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.2),
                     ),
                   ),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _KeyHint(label: 'ESC'),
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: _query.isEmpty ? null : _openFullSearch,
+                      child: Text(l10n.viewAll),
+                    ),
+                    const Spacer(),
+                    const _KeyHint(label: 'ESC'),
                     const SizedBox(width: 8),
-                    _KeyHint(icon: Icons.arrow_upward_rounded),
-                    const SizedBox(width: 8),
-                    _KeyHint(icon: Icons.arrow_downward_rounded),
-                    const SizedBox(width: 8),
-                    _KeyHint(icon: Icons.keyboard_return_rounded),
+                    const _KeyHint(icon: Icons.keyboard_return_rounded),
                   ],
                 ),
               ),
@@ -116,32 +233,6 @@ class SearchCommandPalette extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CommandTile extends StatelessWidget {
-  const _CommandTile({required this.title, this.subtitle});
-
-  final String title;
-  final String? subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    return ListTile(
-      dense: true,
-      title: Text(title, style: theme.textTheme.bodyMedium),
-      subtitle: subtitle != null && subtitle!.isNotEmpty
-          ? Text(
-              subtitle!,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            )
-          : null,
-      onTap: () {},
     );
   }
 }
@@ -154,14 +245,14 @@ class _KeyHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: .5),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
       ),
       child: label != null
@@ -169,7 +260,7 @@ class _KeyHint extends StatelessWidget {
               label!,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
                 color: colorScheme.onSurfaceVariant,
               ),
             )
