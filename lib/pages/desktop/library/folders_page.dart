@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/provider/folder/folders.dart';
-import 'package:melo_trip/repository/folder/folders_repository.dart';
+import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
-
-final _treeItemKeys = <String, GlobalKey>{};
+import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/helper/index.dart';
 
 class DesktopFoldersPage extends ConsumerWidget {
   const DesktopFoldersPage({super.key});
@@ -48,12 +49,25 @@ class _PageHeader extends ConsumerWidget {
           orElse: () => 0,
         );
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
       child: Row(
         children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.folder_rounded,
+              color: theme.colorScheme.onPrimary,
+              size: 28,
+            ),
+          ),
+          const SizedBox(width: 16),
           Text(
             l10n.folder,
-            style: theme.textTheme.headlineSmall?.copyWith(
+            style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w900,
               color: theme.colorScheme.onSurface,
             ),
@@ -74,13 +88,6 @@ class _PageHeader extends ConsumerWidget {
             ),
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
-            style: IconButton.styleFrom(
-              visualDensity: VisualDensity.compact,
-            ),
-          ),
         ],
       ),
     );
@@ -96,6 +103,7 @@ class _LeftPane extends ConsumerStatefulWidget {
 
 class _LeftPaneState extends ConsumerState<_LeftPane> {
   final ScrollController _scrollController = ScrollController();
+  static const double _rowHeight = 40.0;
 
   @override
   void dispose() {
@@ -103,32 +111,41 @@ class _LeftPaneState extends ConsumerState<_LeftPane> {
     super.dispose();
   }
 
+  void _syncScroll(List<TreeDisplayNode> nodes) {
+    if (!_scrollController.hasClients) return; // 守卫：确保控制器已附着
+    final selected = ref.read(selectedFolderProvider);
+    if (selected == null) return;
+
+    final index = nodes.indexWhere((node) => node.id == selected.id);
+    if (index != -1) {
+      final viewportHeight = _scrollController.position.viewportDimension;
+      final targetOffset = (index * _rowHeight) - (viewportHeight * 0.2);
+      final safeOffset = targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
+      
+      _scrollController.animateTo(
+        safeOffset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    ref.listen(selectedFolderProvider, (prev, next) {
-      if (next != null) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          final key = _treeItemKeys[next.id];
-          if (key?.currentContext != null) {
-            Scrollable.ensureVisible(
-              key!.currentContext!,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              alignment: 0.3,
-            );
-          }
-        });
-      }
+    final flattenedTree = ref.watch(flattenedTreeProvider);
+
+    ref.listen(flattenedTreeProvider, (prev, next) {
+      next.whenData(_syncScroll);
     });
 
-    final indexes = ref.watch(folderIndexesProvider);
-    return indexes.when(
-      data: (data) => ListView.builder(
+    return flattenedTree.when(
+      data: (nodes) => ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.only(top: 8, bottom: 24),
-        itemCount: data.length,
+        itemCount: nodes.length,
+        itemExtent: _rowHeight,
         itemBuilder: (context, index) {
-          return _TreeItem(entry: data[index], depth: 0);
+          return _TreeRow(node: nodes[index]);
         },
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -137,90 +154,69 @@ class _LeftPaneState extends ConsumerState<_LeftPane> {
   }
 }
 
-class _TreeItem extends ConsumerWidget {
-  _TreeItem({required this.entry, required this.depth})
-      : super(key: _treeItemKeys.putIfAbsent(entry.id, () => GlobalKey()));
-
-  final FolderIndexEntry entry;
-  final int depth;
+class _TreeRow extends ConsumerWidget {
+  const _TreeRow({required this.node});
+  final TreeDisplayNode node;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isExpanded = ref.watch(expandedFolderIdsProvider).contains(entry.id);
-    final isSelected = ref.watch(selectedFolderProvider)?.id == entry.id;
+    final isSelected = ref.watch(selectedFolderProvider)?.id == node.id;
+    final entry = node.entry;
 
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            ref.read(selectedFolderProvider.notifier).set(entry);
-            if (entry.isDir) {
-              ref.read(expandedFolderIdsProvider.notifier).toggle(entry.id);
-            }
-            ref.read(folderPathProvider.notifier).set([entry]);
-          },
-          child: Container(
-            color: isSelected ? theme.colorScheme.surfaceContainerHighest : null,
-            padding: EdgeInsets.fromLTRB(16.0 + (depth * 16.0), 8, 16, 8),
-            child: Row(
-              children: [
-                Icon(
-                  entry.isDir ? Icons.folder_rounded : Icons.music_note_rounded,
-                  size: 18,
-                  color: isSelected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.secondary.withValues(alpha: .8),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    entry.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : null,
-                    ),
-                  ),
-                ),
-                if (entry.isDir)
-                  Icon(
-                    isExpanded
-                        ? Icons.keyboard_arrow_down_rounded
-                        : Icons.keyboard_arrow_right_rounded,
-                    size: 16,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-              ],
-            ),
-          ),
-        ),
-        if (isExpanded && entry.isDir)
-          _ChildFolders(parentId: entry.id, depth: depth + 1),
-      ],
-    );
-  }
-}
-
-class _ChildFolders extends ConsumerWidget {
-  const _ChildFolders({required this.parentId, required this.depth});
-  final String parentId;
-  final int depth;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final repository = ref.read(foldersRepositoryProvider);
-    return FutureBuilder<List<FolderIndexEntry>>(
-      future: repository.fetchMusicDirectory(parentId),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return const SizedBox();
-        final children = snapshot.data!.where((e) => e.isDir).toList();
-        return Column(
-          children: children
-              .map((e) => _TreeItem(entry: e, depth: depth))
-              .toList(),
-        );
+    return InkWell(
+      onTap: () {
+        final isCurrentlySelected = ref.read(selectedFolderProvider)?.id == entry.id;
+        
+        if (!isCurrentlySelected) {
+          // 1. 如果未选中，执行全量导航（Navigate），内部会自动 add 到展开列表，并同步面包屑
+          ref.read(selectedFolderProvider.notifier).navigateTo(entry, node.fullPath);
+        } else if (entry.isDir) {
+           // 2. 如果已选中且是目录，执行切换（Toggle）。此时不再会有后台异步 add 干扰。
+           ref.read(expandedFolderIdsProvider.notifier).toggle(entry.id);
+        }
       },
+      child: Container(
+        color: isSelected ? theme.colorScheme.surfaceContainerHighest : null,
+        padding: EdgeInsets.fromLTRB(16.0 + (node.depth * 16.0), 0, 16, 0),
+        height: _LeftPaneState._rowHeight,
+        child: Row(
+          children: [
+            Icon(
+              entry.isDir ? Icons.folder_rounded : Icons.music_note_rounded,
+              size: 18,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.secondary.withValues(alpha: .8),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                entry.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: isSelected ? FontWeight.bold : null,
+                ),
+              ),
+            ),
+            if (node.isLoading)
+              const SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else if (entry.isDir)
+              Icon(
+                node.isExpanded
+                    ? Icons.keyboard_arrow_down_rounded
+                    : Icons.keyboard_arrow_right_rounded,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -266,7 +262,7 @@ class _Breadcrumbs extends ConsumerWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
           Material(
@@ -287,7 +283,8 @@ class _Breadcrumbs extends ConsumerWidget {
                       color: path.isEmpty ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant
                     ),
                     const SizedBox(width: 8),
-                    Text(l10n.listenNow, style: style?.copyWith(
+                    // 将“现在就听”改为“主页”
+                    Text(l10n.home, style: style?.copyWith(
                       fontWeight: path.isEmpty ? FontWeight.bold : FontWeight.normal,
                       color: path.isEmpty ? theme.colorScheme.onSurface : null,
                     )),
@@ -310,11 +307,7 @@ class _Breadcrumbs extends ConsumerWidget {
               child: InkWell(
                 onTap: () {
                   final entry = path[i];
-                  ref.read(selectedFolderProvider.notifier).set(entry);
-                  ref.read(folderPathProvider.notifier).set(path.sublist(0, i + 1));
-                  for (final p in path.sublist(0, i + 1)) {
-                    ref.read(expandedFolderIdsProvider.notifier).add(p.id);
-                  }
+                  ref.read(selectedFolderProvider.notifier).navigateTo(entry, path.sublist(0, i + 1));
                 },
                 borderRadius: BorderRadius.circular(8),
                 child: Padding(
@@ -380,11 +373,19 @@ class _FolderTable extends StatelessWidget {
             ],
           ),
         ),
+        Divider(
+          height: 1,
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: entries.length,
             itemBuilder: (context, index) {
-              return _FolderRow(index: index + 1, entry: entries[index]);
+              return _FolderRow(
+                index: index + 1,
+                entry: entries[index],
+                allEntries: entries,
+              );
             },
           ),
         ),
@@ -394,67 +395,127 @@ class _FolderTable extends StatelessWidget {
 }
 
 class _FolderRow extends ConsumerWidget {
-  const _FolderRow({required this.index, required this.entry});
+  const _FolderRow({
+    required this.index,
+    required this.entry,
+    required this.allEntries,
+  });
   final int index;
   final FolderIndexEntry entry;
+  final List<FolderIndexEntry> allEntries;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (entry.isDir) {
-          ref.read(selectedFolderProvider.notifier).set(entry);
           final currentPath = ref.read(folderPathProvider);
           final newPath = [...currentPath, entry];
-          ref.read(folderPathProvider.notifier).set(newPath);
-          for (final p in newPath) {
-            ref.read(expandedFolderIdsProvider.notifier).add(p.id);
+          // 调用下沉后的导航逻辑，彻底解决生命周期问题
+          ref.read(selectedFolderProvider.notifier).navigateTo(entry, newPath);
+        } else {
+          // 如果是歌曲，触发播放逻辑
+          final songs = allEntries.where((e) => !e.isDir).map((e) => e.toSong()).toList();
+          final player = await ref.read(appPlayerHandlerProvider.future);
+          if (player != null) {
+            await player.setPlaylist(songs: songs, initialId: entry.id);
+            await player.play();
           }
         }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         child: Row(
-          children: [
-            SizedBox(
-              width: 30,
-              child: Text(
-                '$index',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+            children: [
+              SizedBox(
+                width: 30,
+                child: Text(
+                  '$index',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Row(
-                children: [
-                  Icon(
-                    entry.isDir ? Icons.folder_rounded : Icons.music_note_rounded,
-                    color: theme.colorScheme.secondary.withValues(alpha: .85),
-                    size: 20,
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      entry.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+              Expanded(
+                flex: 4,
+                child: Row(
+                  children: [
+                    if (entry.isDir)
+                      Icon(
+                        Icons.folder_rounded,
+                        color: theme.colorScheme.secondary.withValues(alpha: .85),
+                        size: 20,
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: ArtworkImage(
+                            id: entry.coverArt,
+                            width: 36,
+                            height: 36,
+                            size: 100,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        entry.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 60),
-            const Expanded(flex: 3, child: SizedBox()),
-            const Expanded(flex: 2, child: SizedBox()),
-            const SizedBox(width: 60),
-            const SizedBox(width: 30),
-          ],
+              SizedBox(
+                width: 60,
+                child: Text(
+                  durationFormatter(entry.duration),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  entry.album ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  entry.genre ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 60,
+                child: Text(
+                  entry.year?.toString() ?? '',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 30),
+            ],
         ),
       ),
     );

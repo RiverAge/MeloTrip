@@ -16,6 +16,11 @@
      "description": "Tabbar Library text"
   },
 
+  "home": "Home",
+  "@home": {
+    "description": "Home breadcrumb or button text"
+  },
+
   "confirm": "Confirm",
   "@confirm": {
      "description": "Text for confirm button"

@@ -117,6 +117,12 @@ abstract class AppLocalizations {
   /// **'Library'**
   String get library;
 
+  /// Home breadcrumb or button text
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
   /// Text for confirm button
   ///
   /// In en, this message translates to:

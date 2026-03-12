@@ -18,6 +18,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get library => '媒体库';
 
   @override
+  String get home => '首页';
+
+  @override
   String get confirm => '确认';
 
   @override
@@ -671,6 +674,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get library => '媒体库';
+
+  @override
+  String get home => '首页';
 
   @override
   String get confirm => '确认';
