@@ -88,8 +88,9 @@ final class DesktopLyricsOverlayView: NSView {
   }
 
   private func drawBackground(in context: CGContext, rect: CGRect) {
-    let color = DesktopLyricsOverlayConfig.argbColor(config.backgroundArgb)
-    guard color.alphaComponent > 0 else { return }
+    let baseColor = DesktopLyricsOverlayConfig.argbColor(config.backgroundArgb)
+    let color = baseColor.withAlphaComponent(baseColor.alphaComponent * CGFloat(config.opacity))
+    guard color.alphaComponent > 0.001 else { return }
     let inset = CGFloat(config.backgroundPadding)
     let backgroundRect = rect.insetBy(dx: inset, dy: inset)
     let path = NSBezierPath(roundedRect: backgroundRect, xRadius: CGFloat(config.backgroundRadius), yRadius: CGFloat(config.backgroundRadius))

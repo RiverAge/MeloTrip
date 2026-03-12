@@ -49,8 +49,11 @@ gboolean DesktopLyricsOverlay::Draw(cairo_t* cr) {
   if (current_line_.empty()) return FALSE;
 
   const double pad = background_padding_;
-  if (((background_argb_ >> 24) & 0xFFU) > 0U) {
-    SetColor(cr, background_argb_);
+  const uint32_t bg_alpha = (background_argb_ >> 24) & 0xFFU;
+  if (bg_alpha > 0U && opacity_ > 0.001) {
+    Rgba color = ColorFromArgb(background_argb_);
+    color.a *= opacity_;
+    cairo_set_source_rgba(cr, color.r, color.g, color.b, color.a);
     DrawRoundedRect(cr, pad, pad, width - pad * 2.0, height - pad * 2.0,
                     background_radius_);
     cairo_fill(cr);
@@ -174,7 +177,7 @@ void DesktopLyricsOverlay::PositionNearBottomCenter(bool force) {
 void DesktopLyricsOverlay::ApplyWindowBehavior() {
   if (window_ == nullptr) return;
 
-  gtk_widget_set_opacity(window_, opacity_);
+  gtk_widget_set_opacity(window_, 1.0);
   gtk_window_set_keep_above(GTK_WINDOW(window_), TRUE);
   gtk_window_set_accept_focus(GTK_WINDOW(window_), FALSE);
 

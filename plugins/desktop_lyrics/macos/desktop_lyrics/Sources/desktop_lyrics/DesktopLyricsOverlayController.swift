@@ -52,7 +52,7 @@ final class DesktopLyricsOverlayController: NSObject, DesktopLyricsOverlayContro
     if !panel.isVisible {
       panel.orderFrontRegardless()
     }
-    panel.alphaValue = config.opacity
+    panel.alphaValue = 1.0
     positionNearBottomCenter(force: false)
     overlayView.needsDisplay = true
   }
@@ -84,7 +84,7 @@ final class DesktopLyricsOverlayController: NSObject, DesktopLyricsOverlayContro
     self.config = config
     overlayView.config = config
     panel.ignoresMouseEvents = config.clickThrough
-    panel.alphaValue = config.opacity
+    panel.alphaValue = 1.0
     ensureSized()
     if !config.enabled || currentLine.isEmpty {
       hide()

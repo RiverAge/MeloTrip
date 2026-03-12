@@ -148,7 +148,7 @@ void DesktopLyricsOverlay::UpdateConfig(const OverlayConfig& config) {
   enabled_ = config.enabled;
   click_through_ = config.click_through;
   font_size_ = Clamp(config.font_size, 20.0, 72.0);
-  opacity_ = Clamp(config.opacity, 0.25, 1.0);
+  opacity_ = Clamp(config.opacity, 0.0, 1.0);
   text_argb_ = config.text_argb;
   shadow_argb_ = config.shadow_argb;
   stroke_argb_ = config.stroke_argb;

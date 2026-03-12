@@ -64,10 +64,10 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
       static_cast<float>(background_radius_));
 
   Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> background_brush;
-  const bool has_background = ((background_argb_ >> 24) & 0xFF) > 0;
-  if (has_background &&
-      SUCCEEDED(render_target_->CreateSolidColorBrush(
-          ToColorF(background_argb_), &background_brush))) {
+  D2D1_COLOR_F bg_color = ToColorF(background_argb_);
+  bg_color.a *= static_cast<float>(opacity_);
+  if (bg_color.a > 0.001f &&
+      SUCCEEDED(render_target_->CreateSolidColorBrush(bg_color, &background_brush))) {
     render_target_->FillRoundedRectangle(&bg_rect, background_brush.Get());
   }
 
@@ -194,8 +194,7 @@ void DesktopLyricsOverlay::RenderLayeredWindow() {
   POINT dst_pt{window_rect.left, window_rect.top};
   BLENDFUNCTION blend{};
   blend.BlendOp = AC_SRC_OVER;
-  blend.SourceConstantAlpha =
-      static_cast<BYTE>(std::round(ClampValue(opacity_, 0.0, 1.0) * 255.0));
+  blend.SourceConstantAlpha = 255;
   blend.AlphaFormat = AC_SRC_ALPHA;
   UpdateLayeredWindow(hwnd_, screen_dc, &dst_pt, &size, backbuffer_dc_, &src_pt,
                       0, &blend, ULW_ALPHA);
