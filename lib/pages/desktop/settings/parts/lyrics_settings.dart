@@ -1,106 +1,360 @@
+import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
+import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 
-class DesktopLyricsConfigCard extends StatelessWidget {
-  const DesktopLyricsConfigCard({
-    super.key,
-    required this.l10n,
-    required this.enabled,
-    required this.clickThrough,
-    required this.fontSize,
-    required this.opacity,
-    required this.strokeWidth,
-    required this.textColor,
-    required this.shadowColor,
-    required this.strokeColor,
-    required this.onEnabledChanged,
-    required this.onClickThroughChanged,
-    required this.onFontSizeChanged,
-    required this.onFontSizeChangeEnd,
-    required this.onOpacityChanged,
-    required this.onOpacityChangeEnd,
-    required this.onStrokeWidthChanged,
-    required this.onStrokeWidthChangeEnd,
-    required this.textAlign,
-    required this.fontWeight,
-    required this.onTextAlignChanged,
-    required this.onFontWeightChanged,
-    required this.onTextColorChanged,
-    required this.onShadowColorChanged,
-    required this.onStrokeColorChanged,
-    required this.backgroundBaseColor,
-    required this.backgroundOpacity,
-    required this.onBackgroundBaseColorChanged,
-    required this.onBackgroundOpacityChanged,
-    required this.onBackgroundOpacityChangeEnd,
-    required this.gradientEnabled,
-    required this.gradientStartColor,
-    required this.gradientEndColor,
-    required this.onGradientEnabledChanged,
-    required this.onGradientStartColorChanged,
-    required this.onGradientEndColorChanged,
-    required this.overlayWidth,
-    required this.overlayHeight,
-    required this.onOverlayWidthChanged,
-    required this.onOverlayWidthChangeEnd,
-    required this.onOverlayHeightChanged,
-    required this.onOverlayHeightChangeEnd,
-    required this.simulatingLyrics,
-    required this.onSimulatePressed,
-    required this.simulatingTokenLyrics,
-    required this.onSimulateTokenPressed,
-  });
+const DesktopLyricsConfig _fallbackDesktopLyricsConfig = DesktopLyricsConfig(
+  interaction: DesktopLyricsInteractionConfig(
+    enabled: false,
+    clickThrough: false,
+  ),
+  text: DesktopLyricsTextConfig(fontSize: 34),
+  background: DesktopLyricsBackgroundConfig(opacity: 0.93),
+  gradient: DesktopLyricsGradientConfig(),
+  layout: DesktopLyricsLayoutConfig(overlayWidth: 980),
+);
 
-  final AppLocalizations l10n;
-  final bool enabled;
-  final bool clickThrough;
-  final double fontSize;
-  final double opacity;
-  final double strokeWidth;
-  final int textColor;
-  final int shadowColor;
-  final int strokeColor;
-  final ValueChanged<bool> onEnabledChanged;
-  final ValueChanged<bool> onClickThroughChanged;
-  final ValueChanged<double> onFontSizeChanged;
-  final ValueChanged<double> onFontSizeChangeEnd;
-  final ValueChanged<double> onOpacityChanged;
-  final ValueChanged<double> onOpacityChangeEnd;
-  final ValueChanged<double> onStrokeWidthChanged;
-  final ValueChanged<double> onStrokeWidthChangeEnd;
-  final TextAlign textAlign;
-  final FontWeight fontWeight;
-  final ValueChanged<TextAlign> onTextAlignChanged;
-  final ValueChanged<FontWeight> onFontWeightChanged;
-  final ValueChanged<int> onTextColorChanged;
-  final ValueChanged<int> onShadowColorChanged;
-  final ValueChanged<int> onStrokeColorChanged;
-  final int backgroundBaseColor;
-  final double backgroundOpacity;
-  final ValueChanged<int> onBackgroundBaseColorChanged;
-  final ValueChanged<double> onBackgroundOpacityChanged;
-  final ValueChanged<double> onBackgroundOpacityChangeEnd;
-  final bool gradientEnabled;
-  final int gradientStartColor;
-  final int gradientEndColor;
-  final ValueChanged<bool> onGradientEnabledChanged;
-  final ValueChanged<int> onGradientStartColorChanged;
-  final ValueChanged<int> onGradientEndColorChanged;
-  final double overlayWidth;
-  final double overlayHeight;
-  final ValueChanged<double> onOverlayWidthChanged;
-  final ValueChanged<double> onOverlayWidthChangeEnd;
-  final ValueChanged<double> onOverlayHeightChanged;
-  final ValueChanged<double> onOverlayHeightChangeEnd;
-  final bool simulatingLyrics;
-  final Future<void> Function() onSimulatePressed;
-  final bool simulatingTokenLyrics;
-  final Future<void> Function() onSimulateTokenPressed;
+class DesktopLyricsSettingsTab extends ConsumerStatefulWidget {
+  const DesktopLyricsSettingsTab({super.key});
+
+  @override
+  ConsumerState<DesktopLyricsSettingsTab> createState() =>
+      _DesktopLyricsSettingsTabState();
+}
+
+class _DesktopLyricsSettingsTabState
+    extends ConsumerState<DesktopLyricsSettingsTab> {
+  static const List<int> _palette = <int>[
+    0xFFF2F2F8,
+    0xFF121214,
+    0xFFFFFFFF,
+    0xFFFFD36E,
+    0xFFFF4D8D,
+    0xFF8CD867,
+    0xFF4A78F0,
+    0xFF220A35,
+    0x00000000,
+  ];
+
+  final DesktopLyrics _desktopLyrics = DesktopLyrics();
+
+  Future<void> _apply(
+    DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
+  ) async {
+    final DesktopLyricsConfig current =
+        ref.read(desktopLyricsSettingsProvider).asData?.value ??
+        _fallbackDesktopLyricsConfig;
+    final DesktopLyricsConfig next = transform(current);
+    await ref.read(desktopLyricsSettingsProvider.notifier).updateConfig(next);
+    await _desktopLyrics.apply(next);
+  }
+
+  @override
+  void dispose() {
+    _desktopLyrics.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Current DesktopLyricsConfigCard implementation goes here
-    // For now I'll just keep it minimal or move the whole thing.
-    return const Placeholder(); // Will replace with actual implementation
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final DesktopLyricsConfig config =
+        ref.watch(desktopLyricsSettingsProvider).asData?.value ??
+        _fallbackDesktopLyricsConfig;
+
+    final bool enabled = config.interaction.enabled;
+    final bool clickThrough = config.interaction.clickThrough;
+    final double fontSize = config.text.fontSize;
+    final double strokeWidth = config.text.strokeWidth ?? 0.0;
+    final TextAlign textAlign = config.text.textAlign ?? TextAlign.start;
+    final FontWeight fontWeight = config.text.fontWeight ?? FontWeight.w400;
+    final int textColor = config.text.textColor?.toARGB32() ?? 0xFFF2F2F8;
+    final int shadowColor = config.text.shadowColor?.toARGB32() ?? 0xFF121214;
+    final int strokeColor = config.text.strokeColor?.toARGB32() ?? 0x00000000;
+    final double backgroundOpacity = config.background.opacity;
+    final int backgroundColor =
+        config.background.backgroundColor?.toARGB32() ?? 0x7A220A35;
+    final int backgroundBaseColor = 0xFF000000 | (backgroundColor & 0x00FFFFFF);
+    final bool gradientEnabled = config.gradient.textGradientEnabled;
+    final int gradientStartColor =
+        config.gradient.textGradientStartColor?.toARGB32() ?? 0xFFFFD36E;
+    final int gradientEndColor =
+        config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D;
+    final double overlayWidth = config.layout.overlayWidth ?? 980.0;
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      children: <Widget>[
+        SettingSectionHeader(title: l10n.desktopLyrics),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.desktopLyricsEnabled,
+            description: '',
+            trailing: Switch(
+              value: enabled,
+              onChanged: (bool value) => _apply(
+                (DesktopLyricsConfig c) => c.copyWith(
+                  interaction: c.interaction.copyWith(enabled: value),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.desktopLyricsClickThrough,
+            description: '',
+            trailing: Switch(
+              value: clickThrough,
+              onChanged: (bool value) => _apply(
+                (DesktopLyricsConfig c) => c.copyWith(
+                  interaction: c.interaction.copyWith(clickThrough: value),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Divider(height: 40),
+        SettingSectionHeader(title: l10n.desktopLyricsSectionText),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingSliderRow(
+            label: l10n.desktopLyricsFontSize,
+            value: fontSize,
+            min: 20,
+            max: 72,
+            onChanged: (double value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(fontSize: value)),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingSliderRow(
+            label: l10n.desktopLyricsStrokeWidth,
+            value: strokeWidth,
+            min: 0,
+            max: 6,
+            onChanged: (double value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(strokeWidth: value)),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.desktopLyricsTextAlign,
+            description: '',
+            trailing: DropdownButton<TextAlign>(
+              value: textAlign,
+              items: <DropdownMenuItem<TextAlign>>[
+                DropdownMenuItem(
+                  value: TextAlign.start,
+                  child: Text(l10n.textAlignStart),
+                ),
+                DropdownMenuItem(
+                  value: TextAlign.center,
+                  child: Text(l10n.textAlignCenter),
+                ),
+                DropdownMenuItem(
+                  value: TextAlign.end,
+                  child: Text(l10n.textAlignEnd),
+                ),
+              ],
+              onChanged: (TextAlign? value) {
+                if (value == null) {
+                  return;
+                }
+                _apply(
+                  (DesktopLyricsConfig c) =>
+                      c.copyWith(text: c.text.copyWith(textAlign: value)),
+                );
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.desktopLyricsFontWeight,
+            description: '',
+            trailing: DropdownButton<FontWeight>(
+              value: fontWeight,
+              items: <DropdownMenuItem<FontWeight>>[
+                DropdownMenuItem(
+                  value: FontWeight.w300,
+                  child: Text(l10n.fontWeightW300),
+                ),
+                DropdownMenuItem(
+                  value: FontWeight.w400,
+                  child: Text(l10n.fontWeightW400),
+                ),
+                DropdownMenuItem(
+                  value: FontWeight.w500,
+                  child: Text(l10n.fontWeightW500),
+                ),
+                DropdownMenuItem(
+                  value: FontWeight.w600,
+                  child: Text(l10n.fontWeightW600),
+                ),
+                DropdownMenuItem(
+                  value: FontWeight.w700,
+                  child: Text(l10n.fontWeightW700),
+                ),
+              ],
+              onChanged: (FontWeight? value) {
+                if (value == null) {
+                  return;
+                }
+                _apply(
+                  (DesktopLyricsConfig c) =>
+                      c.copyWith(text: c.text.copyWith(fontWeight: value)),
+                );
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingColorRow(
+            label: l10n.desktopLyricsTextColor,
+            value: textColor,
+            palette: _palette,
+            onChanged: (int value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(textColor: Color(value))),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingColorRow(
+            label: l10n.desktopLyricsShadowColor,
+            value: shadowColor,
+            palette: _palette,
+            onChanged: (int value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(shadowColor: Color(value))),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingColorRow(
+            label: l10n.desktopLyricsStrokeColor,
+            value: strokeColor,
+            palette: _palette,
+            onChanged: (int value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(strokeColor: Color(value))),
+            ),
+          ),
+        ),
+        const Divider(height: 40),
+        SettingSectionHeader(title: l10n.desktopLyricsSectionBackground),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingSliderRow(
+            label: l10n.desktopLyricsOpacity,
+            value: backgroundOpacity,
+            min: 0,
+            max: 1,
+            onChanged: (double value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(background: c.background.copyWith(opacity: value)),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingColorRow(
+            label: l10n.desktopLyricsBackgroundColor,
+            value: backgroundBaseColor,
+            palette: _palette,
+            onChanged: (int value) => _apply((DesktopLyricsConfig c) {
+              final int alpha =
+                  ((c.background.backgroundColor?.toARGB32() ?? 0x7A220A35) >>
+                      24) &
+                  0xFF;
+              final int color = (alpha << 24) | (value & 0x00FFFFFF);
+              return c.copyWith(
+                background: c.background.copyWith(
+                  backgroundColor: Color(color),
+                ),
+              );
+            }),
+          ),
+        ),
+        const Divider(height: 40),
+        SettingSectionHeader(title: l10n.desktopLyricsSectionGradient),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.desktopLyricsGradientEnabled,
+            description: l10n.desktopLyricsGradientOverrideHint,
+            trailing: Switch(
+              value: gradientEnabled,
+              onChanged: (bool value) => _apply(
+                (DesktopLyricsConfig c) => c.copyWith(
+                  gradient: c.gradient.copyWith(textGradientEnabled: value),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingColorRow(
+            label: l10n.desktopLyricsGradientStartColor,
+            value: gradientStartColor,
+            palette: _palette,
+            onChanged: (int value) => _apply(
+              (DesktopLyricsConfig c) => c.copyWith(
+                gradient: c.gradient.copyWith(
+                  textGradientStartColor: Color(value),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingColorRow(
+            label: l10n.desktopLyricsGradientEndColor,
+            value: gradientEndColor,
+            palette: _palette,
+            onChanged: (int value) => _apply(
+              (DesktopLyricsConfig c) => c.copyWith(
+                gradient: c.gradient.copyWith(
+                  textGradientEndColor: Color(value),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Divider(height: 40),
+        SettingSectionHeader(title: l10n.desktopLyricsSectionLayout),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingSliderRow(
+            label: l10n.desktopLyricsOverlayWidth,
+            value: overlayWidth,
+            min: 480,
+            max: 1800,
+            onChanged: (double value) => _apply(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(layout: c.layout.copyWith(overlayWidth: value)),
+            ),
+          ),
+        ),
+        const SizedBox(height: 40),
+      ],
+    );
   }
 }

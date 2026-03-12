@@ -625,4 +625,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get title => 'Title';
+
+  @override
+  String get resetToDefaults => 'Reset to defaults';
+
+  @override
+  String get settingsTabGeneral => 'General';
+
+  @override
+  String get settingsTabPlayback => 'Playback';
+
+  @override
+  String get settingsTabLyrics => 'Lyrics';
+
+  @override
+  String get settingsTabHotkeys => 'Hotkeys';
+
+  @override
+  String get settingsTabAdvanced => 'Advanced';
+
+  @override
+  String get textAlignStart => 'Start';
+
+  @override
+  String get textAlignCenter => 'Center';
+
+  @override
+  String get textAlignEnd => 'End';
+
+  @override
+  String get fontWeightW300 => 'w300';
+
+  @override
+  String get fontWeightW400 => 'w400';
+
+  @override
+  String get fontWeightW500 => 'w500';
+
+  @override
+  String get fontWeightW600 => 'w600';
+
+  @override
+  String get fontWeightW700 => 'w700';
 }

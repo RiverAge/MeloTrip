@@ -67,7 +67,7 @@ void main() {
     await tester.tap(find.byType(Tab).at(1));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Coming Soon'), findsOneWidget);
+    expect(find.textContaining('Coming soon'), findsOneWidget);
   });
 
   testWidgets('DesktopSettingsPage keeps basic actions visible', (

@@ -615,6 +615,48 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get title => '标题';
+
+  @override
+  String get resetToDefaults => '恢复默认';
+
+  @override
+  String get settingsTabGeneral => '通用';
+
+  @override
+  String get settingsTabPlayback => '播放';
+
+  @override
+  String get settingsTabLyrics => '歌词';
+
+  @override
+  String get settingsTabHotkeys => '快捷键';
+
+  @override
+  String get settingsTabAdvanced => '高级';
+
+  @override
+  String get textAlignStart => '起始';
+
+  @override
+  String get textAlignCenter => '居中';
+
+  @override
+  String get textAlignEnd => '结束';
+
+  @override
+  String get fontWeightW300 => 'w300';
+
+  @override
+  String get fontWeightW400 => 'w400';
+
+  @override
+  String get fontWeightW500 => 'w500';
+
+  @override
+  String get fontWeightW600 => 'w600';
+
+  @override
+  String get fontWeightW700 => 'w700';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -1228,4 +1270,46 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get title => '标题';
+
+  @override
+  String get resetToDefaults => '恢复默认';
+
+  @override
+  String get settingsTabGeneral => '通用';
+
+  @override
+  String get settingsTabPlayback => '播放';
+
+  @override
+  String get settingsTabLyrics => '歌词';
+
+  @override
+  String get settingsTabHotkeys => '快捷键';
+
+  @override
+  String get settingsTabAdvanced => '高级';
+
+  @override
+  String get textAlignStart => '起始';
+
+  @override
+  String get textAlignCenter => '居中';
+
+  @override
+  String get textAlignEnd => '结束';
+
+  @override
+  String get fontWeightW300 => 'w300';
+
+  @override
+  String get fontWeightW400 => 'w400';
+
+  @override
+  String get fontWeightW500 => 'w500';
+
+  @override
+  String get fontWeightW600 => 'w600';
+
+  @override
+  String get fontWeightW700 => 'w700';
 }

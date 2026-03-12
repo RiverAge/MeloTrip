@@ -5,7 +5,7 @@ import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:update_installer/update_installer.dart';
 
-part 'general_settings_widgets.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 
 class GeneralSettings extends ConsumerStatefulWidget {
   const GeneralSettings({super.key});
@@ -35,45 +35,55 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       children: <Widget>[
-        _SectionHeader(title: l10n.theme),
-        _SettingRow(
-          label: l10n.systemDefault,
-          description: l10n.theme,
-          trailing: Switch(value: true, onChanged: (_) {}),
+        SettingSectionHeader(title: l10n.theme),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.systemDefault,
+            description: l10n.theme,
+            trailing: Switch(value: true, onChanged: (_) {}),
+          ),
         ),
         const Divider(height: 40),
-        _SectionHeader(title: l10n.settings),
-        _SettingRow(
-          label: l10n.language,
-          description: l10n.language,
-          trailing: const Icon(Icons.chevron_right_rounded),
+        SettingSectionHeader(title: l10n.settings),
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.language,
+            description: l10n.language,
+            trailing: const Icon(Icons.chevron_right_rounded),
+          ),
         ),
-        _SettingRow(
-          label: l10n.checkForUpdates,
-          description: _buildUpdateSubtitle(context, updateState),
-          progress: _buildUpdateProgress(context, updateState),
-          trailing: updateState.isChecking
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : FilledButton.tonal(
-                  onPressed: (updateState.isChecking || updateState.isUpdating)
-                      ? null
-                      : isReadyToInstall
-                      ? _restartAndInstallPending
-                      : availableUpdate != null
-                      ? () => _startUpdate(availableUpdate)
-                      : _onCheckUpdate,
-                  child: Text(
-                    isReadyToInstall
-                        ? l10n.updateRestartToInstallAction
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: SettingRow(
+            label: l10n.checkForUpdates,
+            description: _buildUpdateSubtitle(context, updateState),
+            progress: _buildUpdateProgress(context, updateState),
+            trailing: updateState.isChecking
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : FilledButton.tonal(
+                    onPressed:
+                        (updateState.isChecking || updateState.isUpdating)
+                        ? null
+                        : isReadyToInstall
+                        ? _restartAndInstallPending
                         : availableUpdate != null
-                        ? l10n.updateNow
-                        : l10n.checkForUpdates,
+                        ? () => _startUpdate(availableUpdate)
+                        : _onCheckUpdate,
+                    child: Text(
+                      isReadyToInstall
+                          ? l10n.updateRestartToInstallAction
+                          : availableUpdate != null
+                          ? l10n.updateNow
+                          : l10n.checkForUpdates,
+                    ),
                   ),
-                ),
+          ),
         ),
       ],
     );

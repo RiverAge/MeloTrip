@@ -1238,6 +1238,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Title'**
   String get title;
+
+  /// Reset settings button label
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to defaults'**
+  String get resetToDefaults;
+
+  /// Desktop settings general tab label
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get settingsTabGeneral;
+
+  /// Desktop settings playback tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Playback'**
+  String get settingsTabPlayback;
+
+  /// Desktop settings lyrics tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get settingsTabLyrics;
+
+  /// Desktop settings hotkeys tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Hotkeys'**
+  String get settingsTabHotkeys;
+
+  /// Desktop settings advanced tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get settingsTabAdvanced;
+
+  /// Text alignment option start
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get textAlignStart;
+
+  /// Text alignment option center
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get textAlignCenter;
+
+  /// Text alignment option end
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get textAlignEnd;
+
+  /// Font weight option w300
+  ///
+  /// In en, this message translates to:
+  /// **'w300'**
+  String get fontWeightW300;
+
+  /// Font weight option w400
+  ///
+  /// In en, this message translates to:
+  /// **'w400'**
+  String get fontWeightW400;
+
+  /// Font weight option w500
+  ///
+  /// In en, this message translates to:
+  /// **'w500'**
+  String get fontWeightW500;
+
+  /// Font weight option w600
+  ///
+  /// In en, this message translates to:
+  /// **'w600'**
+  String get fontWeightW600;
+
+  /// Font weight option w700
+  ///
+  /// In en, this message translates to:
+  /// **'w700'**
+  String get fontWeightW700;
 }
 
 class _AppLocalizationsDelegate

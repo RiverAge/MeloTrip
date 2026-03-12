@@ -383,4 +383,18 @@
     "folder": "文件夹",
     "id": "编号",
     "title": "标题"
-}
+,
+    "resetToDefaults": "恢复默认",
+    "settingsTabGeneral": "通用",
+    "settingsTabPlayback": "播放",
+    "settingsTabLyrics": "歌词",
+    "settingsTabHotkeys": "快捷键",
+    "settingsTabAdvanced": "高级",
+    "textAlignStart": "起始",
+    "textAlignCenter": "居中",
+    "textAlignEnd": "结束",
+    "fontWeightW300": "w300",
+    "fontWeightW400": "w400",
+    "fontWeightW500": "w500",
+    "fontWeightW600": "w600",
+    "fontWeightW700": "w700"}
