@@ -23,7 +23,7 @@ class _FakeUserConfig extends UserConfig {
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
-    ValueUpdater<String>? recentSearchToSave,
+    ValueUpdater<String>? recentSearch,
     ValueUpdater<String?>? desktopLyricsConfig,
   }) async {
     savedDesktopLyricsConfig = desktopLyricsConfig?.value;

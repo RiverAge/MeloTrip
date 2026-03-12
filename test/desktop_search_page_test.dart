@@ -25,12 +25,12 @@ class _FakeUserConfig extends UserConfig {
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
-    ValueUpdater<String>? recentSearchToSave,
+    ValueUpdater<String>? recentSearch,
     ValueUpdater<String?>? desktopLyricsConfig,
   }) async {
-    final String? nextRecentSearches = recentSearchToSave == null
+    final String? nextRecentSearches = recentSearch == null
         ? recentSearches?.value
-        : recentSearchToSave.value;
+        : recentSearch.value;
     state = AsyncData(
       Configuration(
         recentSearches: nextRecentSearches,

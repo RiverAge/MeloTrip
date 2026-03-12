@@ -52,7 +52,7 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
 
   Future<void> _saveToHistory(String value) async {
     await ref.read(userConfigProvider.notifier).setConfiguration(
-      recentSearchToSave: ValueUpdater<String>(value),
+      recentSearch: ValueUpdater<String>(value),
     );
   }
 

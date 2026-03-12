@@ -42,7 +42,7 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
 
   Future<void> _saveToHistory(String value) async {
     await ref.read(userConfigProvider.notifier).setConfiguration(
-      recentSearchToSave: ValueUpdater<String>(value),
+      recentSearch: ValueUpdater<String>(value),
     );
   }
 

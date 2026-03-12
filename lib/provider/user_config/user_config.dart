@@ -56,7 +56,7 @@ class UserConfig extends _$UserConfig {
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
-    ValueUpdater<String>? recentSearchToSave,
+    ValueUpdater<String>? recentSearch,
     ValueUpdater<String?>? desktopLyricsConfig,
   }) async {
     final db = await ref.read(appDatabaseProvider.future);
@@ -79,12 +79,12 @@ class UserConfig extends _$UserConfig {
     if (recentSearches != null) {
       values['recent_searches'] = recentSearches.value;
     }
-    if (recentSearchToSave != null) {
+    if (recentSearch != null) {
       final Configuration? configuration = state.asData?.value ?? await future;
       final List<String> searches = _parseRecentSearches(
         configuration?.recentSearches,
       );
-      final String query = recentSearchToSave.value.trim();
+      final String query = recentSearch.value.trim();
       if (query.isNotEmpty) {
         searches.remove(query);
         searches.insert(0, query);
