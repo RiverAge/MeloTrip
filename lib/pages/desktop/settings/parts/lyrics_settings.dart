@@ -5,19 +5,10 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 
-const DesktopLyricsConfig _fallbackDesktopLyricsConfig = DesktopLyricsConfig(
-  interaction: DesktopLyricsInteractionConfig(
-    enabled: false,
-    clickThrough: false,
-  ),
-  text: DesktopLyricsTextConfig(fontSize: 34),
-  background: DesktopLyricsBackgroundConfig(opacity: 0.93),
-  gradient: DesktopLyricsGradientConfig(),
-  layout: DesktopLyricsLayoutConfig(overlayWidth: 980),
-);
-
 class DesktopLyricsSettingsTab extends ConsumerStatefulWidget {
-  const DesktopLyricsSettingsTab({super.key});
+  const DesktopLyricsSettingsTab({this.onApplyConfig, super.key});
+
+  final Future<void> Function(DesktopLyricsConfig config)? onApplyConfig;
 
   @override
   ConsumerState<DesktopLyricsSettingsTab> createState() =>
@@ -26,6 +17,18 @@ class DesktopLyricsSettingsTab extends ConsumerStatefulWidget {
 
 class _DesktopLyricsSettingsTabState
     extends ConsumerState<DesktopLyricsSettingsTab> {
+  static const DesktopLyricsConfig _fallbackDesktopLyricsConfig =
+      DesktopLyricsConfig(
+        interaction: DesktopLyricsInteractionConfig(
+          enabled: false,
+          clickThrough: false,
+        ),
+        text: DesktopLyricsTextConfig(fontSize: 34),
+        background: DesktopLyricsBackgroundConfig(opacity: 0.93),
+        gradient: DesktopLyricsGradientConfig(),
+        layout: DesktopLyricsLayoutConfig(overlayWidth: 980),
+      );
+
   static const List<int> _palette = <int>[
     0xFFF2F2F8,
     0xFF121214,
@@ -48,12 +51,18 @@ class _DesktopLyricsSettingsTabState
         _fallbackDesktopLyricsConfig;
     final DesktopLyricsConfig next = transform(current);
     await ref.read(desktopLyricsSettingsProvider.notifier).updateConfig(next);
+    if (widget.onApplyConfig case final onApplyConfig?) {
+      await onApplyConfig(next);
+      return;
+    }
     await _desktopLyrics.apply(next);
   }
 
   @override
   void dispose() {
-    _desktopLyrics.dispose();
+    if (widget.onApplyConfig == null) {
+      _desktopLyrics.dispose();
+    }
     super.dispose();
   }
 

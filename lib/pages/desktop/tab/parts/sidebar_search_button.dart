@@ -14,7 +14,7 @@ class _SidebarSearchButton extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          barrierColor: Colors.black.withValues(alpha: .4),
+          barrierColor: colorScheme.scrim.withValues(alpha: 0.4),
           builder: (_) => const SearchCommandPalette(),
         );
       },
@@ -47,10 +47,10 @@ class _SidebarSearchButton extends StatelessWidget {
               child: Text(
                 l10n.searchHint,
                 maxLines: 1,
-                overflow: .ellipsis,
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: .6,
+                    alpha: 0.6,
                   ),
                 ),
               ),
