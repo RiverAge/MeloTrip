@@ -12,13 +12,13 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final iconMutedColor = colorScheme.onSurfaceVariant.withValues(alpha: .72);
+    final iconMutedColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.72);
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             AsyncStreamBuilder(
               provider: player.playlistModeStream,
@@ -137,7 +137,7 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         SizedBox(
-          width: (MediaQuery.sizeOf(context).width * .4).clamp(300, 600),
+          width: (MediaQuery.sizeOf(context).width * 0.4).clamp(300, 600),
           child: _DesktopProgressBar(player: player),
         ),
       ],

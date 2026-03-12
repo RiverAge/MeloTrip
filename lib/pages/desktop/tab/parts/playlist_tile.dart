@@ -58,23 +58,23 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                     id: widget.item.coverArt ?? widget.item.id,
                     width: 28,
                     height: 28,
-                    fit: BoxFit.cover,
+                    fit: .cover,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       Text(
                         widget.item.name ?? '-',
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: .ellipsis,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: widget.selected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                              ? .bold
+                              : .normal,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -90,7 +90,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                           Text(
                             '${widget.item.songCount ?? 0} ${AppLocalizations.of(context)!.songCountUnit}',
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                             style: TextStyle(
                               fontSize: 10,
                               color: theme.colorScheme.onSurfaceVariant,
@@ -108,7 +108,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                             child: Text(
                               durationFormatter(widget.item.duration),
                               maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              overflow: .ellipsis,
                               style: TextStyle(
                                 fontSize: 10,
                                 color: theme.colorScheme.onSurfaceVariant,

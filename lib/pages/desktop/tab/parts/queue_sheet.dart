@@ -20,7 +20,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                   Text(
                     l10n.playQueue,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
+                      fontWeight: .w800,
                     ),
                   ),
                   const Spacer(),
@@ -76,7 +76,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                         width: 36,
                                         height: 36,
                                         size: 180,
-                                        fit: BoxFit.cover,
+                                        fit: .cover,
                                       ),
                                     ),
                                     const SizedBox(width: 10),
@@ -89,24 +89,23 @@ class _DesktopQueueSheet extends ConsumerWidget {
                                     ),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: .start,
                                         children: [
                                           Text(
                                             song.title ?? '-',
                                             maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                            overflow: .ellipsis,
                                             style: theme.textTheme.bodyMedium
                                                 ?.copyWith(
                                                   fontWeight: isActive
-                                                      ? FontWeight.w700
-                                                      : FontWeight.w500,
+                                                      ? .w700
+                                                      : .w500,
                                                 ),
                                           ),
                                           Text(
                                             '${song.displayArtist ?? '-'} · ${durationFormatter(song.duration)}',
                                             maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                            overflow: .ellipsis,
                                             style: theme.textTheme.bodySmall
                                                 ?.copyWith(
                                                   color: theme

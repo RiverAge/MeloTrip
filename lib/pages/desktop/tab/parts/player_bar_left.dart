@@ -19,16 +19,16 @@ class _DesktopPlayerBarLeft extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .start,
+            mainAxisSize: .min,
             children: [
               _HoverText(
                 text: current!.title ?? '-',
                 onTap: onToggleFullPlayer,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                   height: 1.2,
                 ),
               ),
@@ -48,7 +48,7 @@ class _DesktopPlayerBarLeft extends StatelessWidget {
                   height: 1.2,
                   color: Theme.of(
                     context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -77,7 +77,7 @@ class _PlayerBarArtwork extends StatelessWidget {
             width: 46,
             height: 46,
             size: 200,
-            fit: BoxFit.cover,
+            fit: .cover,
           ),
         ),
       ),
@@ -112,7 +112,7 @@ class _HoverTextState extends State<_HoverText> {
         child: Text(
           widget.text,
           maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          overflow: .ellipsis,
           style: widget.style.copyWith(
             color: _isHovering
                 ? Theme.of(context).colorScheme.primary

@@ -23,9 +23,9 @@ class _NavTileState extends State<_NavTile> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final activeColor = colorScheme.primary.withValues(alpha: .2);
-    final hoverColor = colorScheme.primary.withValues(alpha: .1);
-    final hoverBorder = colorScheme.outlineVariant.withValues(alpha: .45);
+    final activeColor = colorScheme.primary.withValues(alpha: 0.2);
+    final hoverColor = colorScheme.primary.withValues(alpha: 0.1);
+    final hoverBorder = colorScheme.outlineVariant.withValues(alpha: 0.45);
     final enabled = widget.onTap != null;
 
     return Padding(

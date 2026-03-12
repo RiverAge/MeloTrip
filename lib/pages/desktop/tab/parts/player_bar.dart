@@ -17,8 +17,8 @@ class _DesktopPlayerBar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? colorScheme.onSurface.withValues(alpha: .12)
-                : theme.shadowColor.withValues(alpha: .12),
+                ? colorScheme.onSurface.withValues(alpha: 0.12)
+                : theme.shadowColor.withValues(alpha: 0.12),
             blurRadius: isDark ? 14 : 16,
             offset: const Offset(0, -5),
           ),
@@ -42,7 +42,7 @@ class _DesktopPlayerBar extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: .centerLeft,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 320),
                         child: _DesktopPlayerBarLeft(
@@ -61,7 +61,7 @@ class _DesktopPlayerBar extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Align(
-                      alignment: Alignment.centerRight,
+                      alignment: .centerRight,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 320),
                         child: _DesktopPlayerBarActions(

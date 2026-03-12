@@ -141,7 +141,7 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                     Text(
                       l10n.searchHint,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: .w700,
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -260,7 +260,7 @@ class _KeyHint extends StatelessWidget {
               label!,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: .w700,
                 color: colorScheme.onSurfaceVariant,
               ),
             )

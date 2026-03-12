@@ -35,7 +35,7 @@ class _DesktopProgressBar extends StatelessWidget {
                       activeTrackColor: Theme.of(context).colorScheme.primary,
                       inactiveTrackColor: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withValues(alpha: .25),
+                      ).colorScheme.onSurface.withValues(alpha: 0.25),
                       overlayShape: SliderComponentShape.noOverlay,
                       trackHeight: 4.2,
                       thumbShape: const RoundSliderThumbShape(
@@ -57,7 +57,7 @@ class _DesktopProgressBar extends StatelessWidget {
                   child: Text(
                     durationFormatter(duration?.inSeconds ?? 0),
                     style: const TextStyle(fontSize: 11),
-                    textAlign: TextAlign.right,
+                    textAlign: .right,
                   ),
                 ),
               ],

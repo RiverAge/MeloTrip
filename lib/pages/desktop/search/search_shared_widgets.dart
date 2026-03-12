@@ -46,7 +46,7 @@ class DesktopSearchHistoryPanel extends ConsumerWidget {
                 Text(
                   l10n.searchHistory,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: .w700,
                   ),
                 ),
                 const Spacer(),
@@ -192,12 +192,12 @@ class _SearchSection<T> extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(compact ? 10 : 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: <Widget>[
             Text(
               title,
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: .w700,
               ),
             ),
             SizedBox(height: compact ? 8 : 10),
@@ -319,20 +319,20 @@ class _ResultTile extends StatelessWidget {
                   width: artworkSize,
                   height: artworkSize,
                   size: 200,
-                  fit: BoxFit.cover,
+                  fit: .cover,
                 ),
               ),
               SizedBox(width: compact ? 10 : 12),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: <Widget>[
                     Text(
                       title,
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                     if (subtitle.isNotEmpty) ...<Widget>[
@@ -340,7 +340,7 @@ class _ResultTile extends StatelessWidget {
                       Text(
                         subtitle,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: .ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -358,5 +358,8 @@ class _ResultTile extends StatelessWidget {
 }
 
 String _joinNonEmpty(List<String?> values) {
-  return values.whereType<String>().where((String value) => value.isNotEmpty).join(' - ');
+  return values
+      .whereType<String>()
+      .where((String value) => value.isNotEmpty)
+      .join(' - ');
 }

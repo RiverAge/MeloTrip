@@ -33,28 +33,28 @@ class _SidebarServerCard extends ConsumerWidget {
                     'images/navidrome.png',
                     width: 30,
                     height: 30,
-                    fit: BoxFit.cover,
+                    fit: .cover,
                   ),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       user.host?.replaceFirst(RegExp(r'^https?://'), '') ?? '-',
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: .w700,
                         fontSize: 13,
                       ),
                     ),
                     Text(
                       '${user.username ?? '-'} · $statusText',
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                       style: TextStyle(
                         fontSize: 11,
                         color: theme.colorScheme.onSurfaceVariant.withValues(

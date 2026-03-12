@@ -12,7 +12,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final iconMutedColor = colorScheme.onSurfaceVariant.withValues(alpha: .72);
+    final iconMutedColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.72);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -25,12 +25,12 @@ class _DesktopPlayerBarActions extends StatelessWidget {
             final rating = effectiveSong?.userRating ?? 0;
             final isStarred = effectiveSong?.starred != null;
             return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .end,
               children: [
                 if (!compact) ...[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: .end,
                     children: [
                       Tooltip(
                         message: '$rating/5',
@@ -48,7 +48,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   const SizedBox(height: 8),
                 ],
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: .end,
                   children: [
                     IconButton(
                       onPressed: current == null
@@ -57,7 +57,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                                 .read(songFavoriteProvider.notifier)
                                 .toggleFavorite(current),
                       iconSize: 20,
-                      visualDensity: VisualDensity.compact,
+                      visualDensity: .compact,
                       constraints: const BoxConstraints.tightFor(
                         width: 34,
                         height: 34,

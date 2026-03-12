@@ -21,7 +21,7 @@ class _DesktopVolumeBar extends ConsumerWidget {
           builder: (_, volumeValue) {
             final volume = volumeValue as double? ?? 0.0;
             return Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 Icon(
                   volume < 0.1
@@ -37,7 +37,7 @@ class _DesktopVolumeBar extends ConsumerWidget {
                       activeTrackColor: Theme.of(context).colorScheme.primary,
                       inactiveTrackColor: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withValues(alpha: .12),
+                      ).colorScheme.onSurface.withValues(alpha: 0.12),
                       overlayShape: SliderComponentShape.noOverlay,
                       thumbShape: const RoundSliderThumbShape(
                         enabledThumbRadius: 4,
