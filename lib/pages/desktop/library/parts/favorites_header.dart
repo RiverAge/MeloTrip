@@ -18,65 +18,105 @@ class _PageHeader extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-      child: Row(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.play_arrow_rounded,
-              color: theme.colorScheme.onPrimary,
-              size: 28,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    title,
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  PopupMenuButton<String>(
-                    onSelected: onTypeChanged,
-                    itemBuilder: (context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem(value: 'songs', child: Text(l10n.song)),
-                      PopupMenuItem(value: 'albums', child: Text(l10n.album)),
-                      PopupMenuItem(value: 'artists', child: Text(l10n.artist)),
-                    ],
-                    child: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                currentType == 'songs'
-                    ? l10n.song
-                    : currentType == 'albums'
-                    ? l10n.album
-                    : l10n.artist,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  shape: BoxShape.circle,
                 ),
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: theme.colorScheme.onPrimary,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                title,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.search_rounded),
+                onPressed: () {},
               ),
             ],
           ),
-          const Spacer(),
-          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              _TypeChip(
+                label: l10n.song,
+                selected: currentType == 'songs',
+                onTap: () => onTypeChanged('songs'),
+              ),
+              const SizedBox(width: 8),
+              _TypeChip(
+                label: l10n.album,
+                selected: currentType == 'albums',
+                onTap: () => onTypeChanged('albums'),
+              ),
+              const SizedBox(width: 8),
+              _TypeChip(
+                label: l10n.artist,
+                selected: currentType == 'artists',
+                onTap: () => onTypeChanged('artists'),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _TypeChip extends StatelessWidget {
+  const _TypeChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: isDark ? .3 : .5,
+              ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: selected
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onSurfaceVariant,
+            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       ),
     );
   }

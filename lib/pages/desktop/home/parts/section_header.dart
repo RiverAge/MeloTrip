@@ -1,10 +1,15 @@
 part of '../home_page.dart';
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, this.onViewAll});
+  const _SectionHeader({
+    required this.title,
+    this.onScrollBack,
+    this.onScrollForward,
+  });
 
   final String title;
-  final VoidCallback? onViewAll;
+  final VoidCallback? onScrollBack;
+  final VoidCallback? onScrollForward;
 
   @override
   Widget build(BuildContext context) {
@@ -17,37 +22,25 @@ class _SectionHeader extends StatelessWidget {
             child: Text(
               title,
               style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: .w900,
+                fontWeight: FontWeight.w900,
                 fontSize: 22,
                 letterSpacing: -0.8,
               ),
               maxLines: 1,
-              overflow: .ellipsis,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 8),
           const Spacer(),
-          if (onViewAll != null)
-            TextButton(
-              onPressed: onViewAll,
-              child: Text(
-                AppLocalizations.of(context)!.viewAll,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: .8,
-                  ),
-                ),
-              ),
-            ),
           const SizedBox(width: 10),
           _ScrollButton(
             icon: Icons.arrow_back_ios_new_rounded,
-            onPressed: () {},
+            onPressed: onScrollBack,
           ),
           const SizedBox(width: 8),
           _ScrollButton(
             icon: Icons.arrow_forward_ios_rounded,
-            onPressed: () {},
+            onPressed: onScrollForward,
           ),
         ],
       ),
@@ -56,18 +49,19 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _ScrollButton extends StatelessWidget {
-  const _ScrollButton({required this.icon, required this.onPressed});
+  const _ScrollButton({required this.icon, this.onPressed});
 
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final enabled = onPressed != null;
     return Material(
       color: theme.colorScheme.surfaceContainerHighest.withValues(
-        alpha: isDark ? .28 : .72,
+        alpha: enabled ? (isDark ? .28 : .72) : (isDark ? .08 : .24),
       ),
       borderRadius: BorderRadius.circular(4),
       child: MouseRegion(
@@ -80,7 +74,9 @@ class _ScrollButton extends StatelessWidget {
             child: Icon(
               icon,
               size: 12,
-              color: theme.colorScheme.onSurfaceVariant,
+              color: theme.colorScheme.onSurfaceVariant.withValues(
+                alpha: enabled ? 1.0 : .3,
+              ),
             ),
           ),
         ),

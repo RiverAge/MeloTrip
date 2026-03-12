@@ -58,6 +58,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
   GlobalKey<NavigatorState> get contentNavigatorKey => _contentNavigatorKey;
 
   int _desktopIndex = 0;
+  String? _selectedPlaylistId;
   bool _showFullPlayer = false;
 
   @override
@@ -67,14 +68,28 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
   }
 
   void _setDesktopTab(int index) {
-    if (_desktopIndex == index) return;
+    if (_desktopIndex == index && _selectedPlaylistId == null) return;
     final String routeName = _getRouteName(index);
     setState(() {
       _desktopIndex = index;
+      _selectedPlaylistId = null;
     });
     _contentNavigatorKey.currentState?.pushNamedAndRemoveUntil(
       routeName,
       (Route<dynamic> route) => false,
+    );
+  }
+
+  void _setPlaylistTab(String id) {
+    if (_selectedPlaylistId == id) return;
+    setState(() {
+      _desktopIndex = -1; // Deselect library items
+      _selectedPlaylistId = id;
+    });
+    _contentNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+      '/playlist_detail',
+      (Route<dynamic> route) => false,
+      arguments: id,
     );
   }
 
@@ -190,7 +205,9 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
                     children: <Widget>[
                       _DesktopSidebar(
                         currentIndex: currentIndex,
+                        selectedPlaylistId: _selectedPlaylistId,
                         onSelected: _setDesktopTab,
+                        onPlaylistSelected: _setPlaylistTab,
                         l10n: l10n,
                         compact: !isDesktop,
                       ),

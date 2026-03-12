@@ -26,7 +26,7 @@ class SongPageHeader extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.play_arrow_rounded,
+              Icons.music_note_rounded,
               color: theme.colorScheme.onPrimary,
               size: 28,
             ),
@@ -34,7 +34,7 @@ class SongPageHeader extends StatelessWidget {
           const SizedBox(width: 16),
           Text(
             title,
-            style: theme.textTheme.displaySmall?.copyWith(
+            style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w900,
               color: theme.colorScheme.onSurface,
             ),

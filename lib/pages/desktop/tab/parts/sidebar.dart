@@ -3,13 +3,17 @@ part of '../tab_page.dart';
 class _DesktopSidebar extends ConsumerWidget {
   const _DesktopSidebar({
     required this.currentIndex,
+    this.selectedPlaylistId,
     required this.onSelected,
+    required this.onPlaylistSelected,
     required this.l10n,
     required this.compact,
   });
 
   final int currentIndex;
+  final String? selectedPlaylistId;
   final ValueChanged<int> onSelected;
+  final ValueChanged<String> onPlaylistSelected;
   final AppLocalizations l10n;
   final bool compact;
 
@@ -109,7 +113,15 @@ class _DesktopSidebar extends ConsumerWidget {
                         if (list.isEmpty) return const SizedBox.shrink();
                         return Column(
                           children: list
-                              .map((it) => _PlaylistTile(item: it))
+                              .map(
+                                (it) => _PlaylistTile(
+                                  item: it,
+                                  selected: selectedPlaylistId == it.id,
+                                  onTap: it.id == null
+                                      ? null
+                                      : () => onPlaylistSelected(it.id!),
+                                ),
+                              )
                               .toList(),
                         );
                       },
