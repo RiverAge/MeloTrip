@@ -52,7 +52,8 @@ class DesktopTabPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DesktopTabPageState();
 }
 
-class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
+class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
+    with SingleTickerProviderStateMixin {
   static const double _desktopBreakpoint = 1280.0;
 
   final GlobalKey<NavigatorState> _contentNavigatorKey =
@@ -63,10 +64,31 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
   String? _selectedPlaylistId;
   bool _showFullPlayer = false;
 
+  late AnimationController _controller;
+  late Animation<double> _slideAnimation;
+
   @override
   void initState() {
     super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: DesktopMotionTokens.medium,
+    );
+    _slideAnimation = Tween<double>(begin: 0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: DesktopMotionTokens.standardCurve,
+      ),
+    );
+
     unawaited(ensurePlayQueueRestored(ref));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _setDesktopTab(int index) {
@@ -209,65 +231,91 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: Stack(
-                children: <Widget>[
-                  Row(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
                     children: <Widget>[
-                      _DesktopSidebar(
-                        currentIndex: currentIndex,
-                        selectedPlaylistId: _selectedPlaylistId,
-                        onSelected: _setDesktopTab,
-                        onPlaylistSelected: _setPlaylistTab,
-                        l10n: l10n,
-                        compact: !isDesktop,
-                      ),
-                      VerticalDivider(
-                        width: 1,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.outlineVariant.withValues(alpha: 0.35),
-                      ),
-                      Expanded(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                Theme.of(
-                                  context,
-                                ).colorScheme.surfaceContainerHigh,
-                                Theme.of(context).colorScheme.surface,
-                              ],
+                      Row(
+                        children: <Widget>[
+                          _DesktopSidebar(
+                            currentIndex: currentIndex,
+                            selectedPlaylistId: _selectedPlaylistId,
+                            onSelected: _setDesktopTab,
+                            onPlaylistSelected: _setPlaylistTab,
+                            l10n: l10n,
+                            compact: !isDesktop,
+                          ),
+                          VerticalDivider(
+                            width: 1,
+                            color: Theme.of(context).colorScheme.outlineVariant
+                                .withValues(alpha: 0.35),
+                          ),
+                          Expanded(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHigh,
+                                    Theme.of(context).colorScheme.surface,
+                                  ],
+                                ),
+                              ),
+                              child: Navigator(
+                                key: _contentNavigatorKey,
+                                initialRoute: '/',
+                                onGenerateRoute: _buildContentRoute,
+                              ),
                             ),
                           ),
-                          child: Navigator(
-                            key: _contentNavigatorKey,
-                            initialRoute: '/',
-                            onGenerateRoute: _buildContentRoute,
-                          ),
+                        ],
+                      ),
+                      if (_showFullPlayer)
+                        AnimatedBuilder(
+                          animation: _slideAnimation,
+                          builder: (context, child) {
+                            return Positioned(
+                              height: constraints.maxHeight,
+                              left: 0,
+                              right: 0,
+                              top:
+                                  constraints.maxHeight -
+                                  constraints.maxHeight * _slideAnimation.value,
+                              child: DesktopFullPlayerPage(
+                                onDismiss: () async {
+                                  await _controller.reverse();
+                                  setState(() {
+                                    _showFullPlayer = false;
+                                  });
+                                },
+                              ),
+                            );
+                          },
                         ),
-                      ),
                     ],
-                  ),
-                  if (_showFullPlayer)
-                    Positioned.fill(
-                      child: DesktopFullPlayerPage(
-                        onDismiss: () {
-                          setState(() {
-                            _showFullPlayer = false;
-                          });
-                        },
-                      ),
-                    ),
-                ],
+                  );
+                },
               ),
             ),
             _DesktopPlayerBar(
-              onToggleFullPlayer: () {
-                setState(() {
-                  _showFullPlayer = !_showFullPlayer;
-                });
+              onToggleFullPlayer: () async {
+                final current = _showFullPlayer;
+                if (current) {
+                  await _controller.reverse();
+                  setState(() {
+                    _showFullPlayer = false;
+                  });
+                } else {
+                  _controller.forward();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      _showFullPlayer = true;
+                    });
+                  });
+                }
               },
             ),
           ],
