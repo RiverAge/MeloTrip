@@ -15,7 +15,7 @@ class _ArtistCardV2 extends StatelessWidget {
         side: BorderSide(
           color: Theme.of(
             context,
-          ).colorScheme.outlineVariant.withValues(alpha: .5),
+          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
       ),
       child: InkWell(
@@ -67,7 +67,7 @@ class _ArtistCardV2 extends StatelessWidget {
                 Icons.chevron_right,
                 color: Theme.of(
                   context,
-                ).colorScheme.onSurfaceVariant.withValues(alpha: .5),
+                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
             ],
           ),

@@ -15,7 +15,7 @@ class _AlbumCardV2 extends StatelessWidget {
         side: BorderSide(
           color: Theme.of(
             context,
-          ).colorScheme.outlineVariant.withValues(alpha: .5),
+          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
       ),
       child: InkWell(
@@ -59,7 +59,7 @@ class _AlbumCardV2 extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                         fontSize: 12,
                       ),
                       maxLines: 1,
@@ -72,7 +72,7 @@ class _AlbumCardV2 extends StatelessWidget {
                 Icons.chevron_right,
                 color: Theme.of(
                   context,
-                ).colorScheme.onSurfaceVariant.withValues(alpha: .5),
+                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
             ],
           ),

@@ -24,12 +24,12 @@ class _SearchHeaderV2State extends State<_SearchHeaderV2> {
   Widget build(BuildContext context) {
     return Container(
       height: 40,
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: .5),
-        borderRadius: BorderRadius.circular(10),
-      ),
+        decoration: BoxDecoration(
+          color: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
       child: TextField(
         controller: widget.controller,
         focusNode: widget.focusNode,
@@ -48,7 +48,7 @@ class _SearchHeaderV2State extends State<_SearchHeaderV2> {
           hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(
               context,
-            ).colorScheme.onSurfaceVariant.withValues(alpha: .5),
+            ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
           prefixIcon: Icon(
             Icons.search,
