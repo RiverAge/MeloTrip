@@ -6,97 +6,9 @@ import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:update_installer/update_installer.dart';
 
-class _FakeUpdateService extends AppUpdateService {
-  _FakeUpdateService({
-    this.checkResult,
-    this.installSupported = true,
-    this.canInstallPermission = true,
-    this.requiresHostExit = false,
-    this.downloadError,
-    this.downloadDelay = Duration.zero,
-    this.checkError,
-  }) : super(checkUrl: 'https://example.com/check');
-
-  final AppUpdateCheckResult? checkResult;
-  final bool installSupported;
-  final bool canInstallPermission;
-  final bool requiresHostExit;
-  final Object? downloadError;
-  final Duration downloadDelay;
-  final Object? checkError;
-
-  bool openInstallSettingsCalled = false;
-  bool installCalled = false;
-  WindowsUpdaterStrings? receivedUpdaterStrings;
-
-  @override
-  bool get isInstallSupported => installSupported;
-
-  @override
-  bool get requiresHostExitForInstall => requiresHostExit;
-
-  @override
-  Future<bool> canRequestInstallPermission() async => canInstallPermission;
-
-  @override
-  Future<void> openInstallPermissionSettings() async {
-    openInstallSettingsCalled = true;
-  }
-
-  @override
-  Future<AppUpdateCheckResult> checkForUpdate() async {
-    if (checkError != null) {
-      throw checkError!;
-    }
-    if (checkResult == null) {
-      throw StateError('no result');
-    }
-    return checkResult!;
-  }
-
-  @override
-  Future<File> downloadAndVerifyPackage({
-    required AppUpdateInfo update,
-    void Function(int received, int total, double progress)? onProgress,
-    void Function(UpdateDownloadStage stage)? onStageChanged,
-  }) async {
-    if (downloadDelay > Duration.zero) {
-      await Future<void>.delayed(downloadDelay);
-    }
-    if (downloadError != null) {
-      throw downloadError!;
-    }
-    onStageChanged?.call(UpdateDownloadStage.downloading);
-    onProgress?.call(update.fileSize ~/ 2, update.fileSize, 0.5);
-    onStageChanged?.call(UpdateDownloadStage.verifying);
-
-    final Directory dir = await Directory.systemTemp.createTemp(
-      'melo-trip-test',
-    );
-    final File file = File('${dir.path}/app.zip');
-    await file.writeAsBytes(<int>[1, 2, 3, 4]);
-    return file;
-  }
-
-  @override
-  Future<void> installDownloadedPackage(
-    File file, {
-    WindowsUpdaterStrings? updaterStrings,
-  }) async {
-    installCalled = true;
-    receivedUpdaterStrings = updaterStrings;
-  }
-}
+part 'parts/update_flow_controller_test_helpers.dart';
 
 void main() {
-  ProviderContainer createContainer(_FakeUpdateService service) {
-    final ProviderContainer container = ProviderContainer(
-      overrides: [appUpdateServiceProvider.overrideWith((Ref _) => service)],
-    );
-    addTearDown(container.dispose);
-    return container;
-  }
-
   test('UpdateFlowState copyWith and clearEtaSeconds', () {
     const UpdateFlowState base = UpdateFlowState(
       isChecking: true,
@@ -129,7 +41,7 @@ void main() {
       hasUpdate: true,
     );
     final _FakeUpdateService service = _FakeUpdateService(checkResult: result);
-    final ProviderContainer container = createContainer(service);
+    final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
       updateFlowControllerProvider.notifier,
     );
@@ -146,7 +58,7 @@ void main() {
   });
 
   test('checkForUpdate stores inline error state on failure', () async {
-    final ProviderContainer container = createContainer(
+    final ProviderContainer container = _createContainer(
       _FakeUpdateService(checkError: StateError('boom')),
     );
     final UpdateFlowController controller = container.read(
@@ -161,7 +73,7 @@ void main() {
   });
 
   test('requiresHostExitForInstall delegates to service', () {
-    final ProviderContainer container = createContainer(
+    final ProviderContainer container = _createContainer(
       _FakeUpdateService(requiresHostExit: true),
     );
     final UpdateFlowController controller = container.read(
@@ -172,7 +84,7 @@ void main() {
   });
 
   test('getInstallCapability returns all branches', () async {
-    final ProviderContainer notSupportedContainer = createContainer(
+    final ProviderContainer notSupportedContainer = _createContainer(
       _FakeUpdateService(installSupported: false),
     );
     final UpdateFlowController notSupported = notSupportedContainer.read(
@@ -183,7 +95,7 @@ void main() {
       InstallCapability.notSupported,
     );
 
-    final ProviderContainer permissionRequiredContainer = createContainer(
+    final ProviderContainer permissionRequiredContainer = _createContainer(
       _FakeUpdateService(installSupported: true, canInstallPermission: false),
     );
     final UpdateFlowController permissionRequired = permissionRequiredContainer
@@ -193,7 +105,7 @@ void main() {
       InstallCapability.permissionRequired,
     );
 
-    final ProviderContainer supportedContainer = createContainer(
+    final ProviderContainer supportedContainer = _createContainer(
       _FakeUpdateService(installSupported: true, canInstallPermission: true),
     );
     final UpdateFlowController supported = supportedContainer.read(
@@ -204,7 +116,7 @@ void main() {
 
   test('openInstallPermissionSettings delegates to service', () async {
     final _FakeUpdateService service = _FakeUpdateService();
-    final ProviderContainer container = createContainer(service);
+    final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
       updateFlowControllerProvider.notifier,
     );
@@ -214,7 +126,7 @@ void main() {
 
   test('downloadAndInstall succeeds and resets state', () async {
     final _FakeUpdateService service = _FakeUpdateService();
-    final ProviderContainer container = createContainer(service);
+    final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
       updateFlowControllerProvider.notifier,
     );
@@ -238,7 +150,7 @@ void main() {
     final _FakeUpdateService service = _FakeUpdateService(
       requiresHostExit: true,
     );
-    final ProviderContainer container = createContainer(service);
+    final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
       updateFlowControllerProvider.notifier,
     );
@@ -266,7 +178,7 @@ void main() {
     final _FakeUpdateService service = _FakeUpdateService(
       requiresHostExit: true,
     );
-    final ProviderContainer container = createContainer(service);
+    final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
       updateFlowControllerProvider.notifier,
     );
@@ -314,7 +226,7 @@ void main() {
     final _FakeUpdateService service = _FakeUpdateService(
       downloadDelay: const Duration(milliseconds: 120),
     );
-    final ProviderContainer container = createContainer(service);
+    final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
       updateFlowControllerProvider.notifier,
     );
@@ -336,7 +248,7 @@ void main() {
   });
 
   test('downloadAndInstall returns error message on failure', () async {
-    final ProviderContainer container = createContainer(
+    final ProviderContainer container = _createContainer(
       _FakeUpdateService(downloadError: StateError('download failed')),
     );
     final UpdateFlowController controller = container.read(

@@ -4,60 +4,12 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
-import 'package:update_installer/update_installer.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:update_installer/update_installer.dart';
 
-
-class AppUpdateInfo {
-  const AppUpdateInfo({
-    required this.versionName,
-    required this.versionCode,
-    required this.sha256,
-    required this.fileSize,
-    required this.downloadUrl,
-    required this.changelog,
-  });
-
-  factory AppUpdateInfo.fromJson(Map<String, dynamic> json) {
-    return AppUpdateInfo(
-      versionName: (json['versionName'] ?? '').toString(),
-      versionCode: _toInt(json['versionCode']),
-      sha256: (json['sha256'] ?? '').toString(),
-      fileSize: _toInt(json['fileSize']),
-      downloadUrl: (json['downloadUrl'] ?? '').toString(),
-      changelog: (json['changelog'] ?? '').toString(),
-    );
-  }
-
-  final String versionName;
-  final int versionCode;
-  final String sha256;
-  final int fileSize;
-  final String downloadUrl;
-  final String changelog;
-
-  static int _toInt(dynamic value) {
-    if (value is int) return value;
-    if (value is num) return value.toInt();
-    return int.tryParse('$value') ?? 0;
-  }
-}
-
-class AppUpdateCheckResult {
-  const AppUpdateCheckResult({
-    required this.currentVersionName,
-    required this.currentVersionCode,
-    required this.remote,
-    required this.hasUpdate,
-  });
-
-  final String currentVersionName;
-  final int currentVersionCode;
-  final AppUpdateInfo? remote;
-  final bool hasUpdate;
-}
+part 'app_update_models.dart';
 
 class AppUpdateService {
   AppUpdateService({
@@ -301,5 +253,3 @@ class AppUpdateService {
     return 'unknown';
   }
 }
-
-enum UpdateDownloadStage { downloading, verifying }

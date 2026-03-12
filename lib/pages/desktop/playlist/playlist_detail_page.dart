@@ -10,6 +10,7 @@ import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'parts/playlist_detail_sections.dart';
+part 'parts/playlist_track_table.dart';
 
 class DesktopPlaylistDetailPage extends ConsumerWidget {
   const DesktopPlaylistDetailPage({super.key, required this.playlistId});
