@@ -381,11 +381,12 @@ class _FolderTable extends StatelessWidget {
           child: ListView.builder(
             itemCount: entries.length,
             itemBuilder: (context, index) {
-              return _FolderRow(
+              final Widget row = _FolderEntryRow(
                 index: index + 1,
                 entry: entries[index],
                 allEntries: entries,
               );
+              return row;
             },
           ),
         ),
@@ -394,44 +395,50 @@ class _FolderTable extends StatelessWidget {
   }
 }
 
-class _FolderRow extends ConsumerWidget {
-  const _FolderRow({
+class _FolderEntryRow extends ConsumerStatefulWidget {
+  const _FolderEntryRow({
     required this.index,
     required this.entry,
     required this.allEntries,
+    super.key,
   });
+
   final int index;
   final FolderIndexEntry entry;
   final List<FolderIndexEntry> allEntries;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_FolderEntryRow> createState() => _FolderEntryRowState();
+}
+
+class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return InkWell(
-      onTap: () async {
-        if (entry.isDir) {
-          final currentPath = ref.read(folderPathProvider);
-          final newPath = [...currentPath, entry];
-          // 调用下沉后的导航逻辑，彻底解决生命周期问题
-          ref.read(selectedFolderProvider.notifier).navigateTo(entry, newPath);
-        } else {
-          // 如果是歌曲，触发播放逻辑
-          final songs = allEntries.where((e) => !e.isDir).map((e) => e.toSong()).toList();
-          final player = await ref.read(appPlayerHandlerProvider.future);
-          if (player != null) {
-            await player.setPlaylist(songs: songs, initialId: entry.id);
-            await player.play();
+    final entry = widget.entry;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: InkWell(
+        onTap: () async {
+          if (entry.isDir) {
+            final currentPath = ref.read(folderPathProvider);
+            final newPath = [...currentPath, entry];
+            ref.read(selectedFolderProvider.notifier).navigateTo(entry, newPath);
           }
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-        child: Row(
+          // 全行点击不再触发歌曲播放
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+          child: Row(
             children: [
               SizedBox(
                 width: 30,
                 child: Text(
-                  '$index',
+                  '${widget.index}',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -448,32 +455,85 @@ class _FolderRow extends ConsumerWidget {
                         size: 20,
                       )
                     else
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: ArtworkImage(
-                            id: entry.coverArt,
-                            width: 36,
-                            height: 36,
-                            size: 100,
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: ArtworkImage(
+                              id: entry.coverArt,
+                              width: 40,
+                              height: 40,
+                              size: 100,
+                            ),
                           ),
-                        ),
+                          if (_isHovered)
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.scrim.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Center(
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.play_arrow_rounded,
+                                      color: theme.colorScheme.onPrimary,
+                                    ),
+                                    onPressed: () async {
+                                      final songs = widget.allEntries
+                                          .where((e) => !e.isDir)
+                                          .map((e) => e.toSong())
+                                          .toList();
+                                      final player = await ref.read(appPlayerHandlerProvider.future);
+                                      if (player != null) {
+                                        await player.setPlaylist(songs: songs, initialId: entry.id);
+                                        await player.play();
+                                      }
+                                    },
+                                    style: IconButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        entry.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            entry.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (!entry.isDir && entry.artist != null)
+                            Text(
+                              entry.artist!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontSize: 11,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 12), // 间距微调
               SizedBox(
                 width: 60,
                 child: Text(
@@ -516,6 +576,7 @@ class _FolderRow extends ConsumerWidget {
               ),
               const SizedBox(width: 30),
             ],
+          ),
         ),
       ),
     );
