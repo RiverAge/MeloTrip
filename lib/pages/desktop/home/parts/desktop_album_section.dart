@@ -87,7 +87,7 @@ class _DesktopAlbumSectionState extends ConsumerState<_DesktopAlbumSection> {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _SectionHeader(
             title: widget.title,

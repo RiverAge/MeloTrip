@@ -35,7 +35,7 @@ class SongPageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: .w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -77,7 +77,7 @@ class SongPageToolbar extends StatelessWidget {
           Text(
             l10n.name,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: iconColor,
             ),
           ),
@@ -140,23 +140,23 @@ class SongTrackRow extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Text(
                           song.title ?? '-',
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         Text(
                           song.artist ?? '-',
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: .7),
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -177,7 +177,7 @@ class SongTrackRow extends ConsumerWidget {
               child: Text(
                 song.album ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -186,7 +186,7 @@ class SongTrackRow extends ConsumerWidget {
               child: Text(
                 song.genre ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -200,7 +200,7 @@ class SongTrackRow extends ConsumerWidget {
             Icon(
               Icons.favorite_border_rounded,
               size: 16,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .4),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
             ),
           ],
         ),

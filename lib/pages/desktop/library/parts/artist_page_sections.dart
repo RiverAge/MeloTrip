@@ -29,7 +29,7 @@ class ArtistPageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: .w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -71,7 +71,7 @@ class ArtistPageToolbar extends StatelessWidget {
           Text(
             l10n.name,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: iconColor,
             ),
           ),
@@ -137,7 +137,7 @@ class ArtistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Expanded(
           child: artist.coverArt != null
@@ -148,13 +148,13 @@ class ArtistCard extends StatelessWidget {
                     size: 300,
                     width: double.infinity,
                     height: double.infinity,
-                    fit: BoxFit.cover,
+                    fit: .cover,
                   ),
                 )
               : Container(
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHighest.withValues(
-                      alpha: .3,
+                      alpha: 0.3,
                     ),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -163,7 +163,7 @@ class ArtistCard extends StatelessWidget {
                       Icons.person_rounded,
                       size: 48,
                       color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: .2,
+                        alpha: 0.2,
                       ),
                     ),
                   ),
@@ -173,16 +173,16 @@ class ArtistCard extends StatelessWidget {
         Text(
           artist.name,
           maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          overflow: .ellipsis,
           style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
         if (artist.albumCount != null)
           Text(
             '${artist.albumCount}',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .6),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
             ),
           ),
       ],

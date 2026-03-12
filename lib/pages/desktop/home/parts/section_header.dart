@@ -22,12 +22,12 @@ class _SectionHeader extends StatelessWidget {
             child: Text(
               title,
               style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w900,
+                fontWeight: .w900,
                 fontSize: 22,
                 letterSpacing: -0.8,
               ),
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
             ),
           ),
           const SizedBox(width: 8),
@@ -61,7 +61,7 @@ class _ScrollButton extends StatelessWidget {
     final enabled = onPressed != null;
     return Material(
       color: theme.colorScheme.surfaceContainerHighest.withValues(
-        alpha: enabled ? (isDark ? .28 : .72) : (isDark ? .08 : .24),
+        alpha: enabled ? (isDark ? 0.28 : 0.72) : (isDark ? 0.08 : 0.24),
       ),
       borderRadius: BorderRadius.circular(4),
       child: MouseRegion(
@@ -75,7 +75,7 @@ class _ScrollButton extends StatelessWidget {
               icon,
               size: 12,
               color: theme.colorScheme.onSurfaceVariant.withValues(
-                alpha: enabled ? 1.0 : .3,
+                alpha: enabled ? 1.0 : 0.3,
               ),
             ),
           ),

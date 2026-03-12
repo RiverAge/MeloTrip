@@ -36,7 +36,7 @@ class _PageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: .w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -74,7 +74,7 @@ class _ViewSwitcher extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .5),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -151,7 +151,7 @@ class _Toolbar extends StatelessWidget {
           Text(
             l10n.name,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: iconColor,
             ),
           ),

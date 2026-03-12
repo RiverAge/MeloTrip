@@ -19,7 +19,7 @@ class _PageHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
             children: <Widget>[
@@ -39,7 +39,7 @@ class _PageHeader extends StatelessWidget {
               Text(
                 title,
                 style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
+                  fontWeight: .w900,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
@@ -104,7 +104,7 @@ class _TypeChip extends StatelessWidget {
           color: selected
               ? theme.colorScheme.primary
               : theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: isDark ? .3 : .5,
+                alpha: isDark ? 0.3 : 0.5,
               ),
           borderRadius: BorderRadius.circular(20),
         ),
@@ -114,7 +114,7 @@ class _TypeChip extends StatelessWidget {
             color: selected
                 ? theme.colorScheme.onPrimary
                 : theme.colorScheme.onSurfaceVariant,
-            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+            fontWeight: selected ? .bold : .normal,
           ),
         ),
       ),
@@ -155,11 +155,11 @@ class _ToolbarButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: <Widget>[
           Text(label, style: theme.textTheme.labelMedium),
           const SizedBox(width: 8),
