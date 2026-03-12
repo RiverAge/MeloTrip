@@ -33,56 +33,96 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     final AppUpdateInfo? availableUpdate = updateState.availableUpdate;
 
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       children: <Widget>[
-        SettingSectionHeader(title: l10n.theme),
-        Padding(
-          padding: const EdgeInsets.only(left: 32),
-          child: SettingRow(
-            label: l10n.systemDefault,
-            description: l10n.theme,
-            trailing: Switch(value: true, onChanged: (_) {}),
-          ),
-        ),
-        const Divider(height: 40),
-        SettingSectionHeader(title: l10n.settings),
-        Padding(
-          padding: const EdgeInsets.only(left: 32),
-          child: SettingRow(
-            label: l10n.language,
-            description: l10n.language,
-            trailing: const Icon(Icons.chevron_right_rounded),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 32),
-          child: SettingRow(
-            label: l10n.checkForUpdates,
-            description: _buildUpdateSubtitle(context, updateState),
-            progress: _buildUpdateProgress(context, updateState),
-            trailing: updateState.isChecking
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : FilledButton.tonal(
-                    onPressed:
-                        (updateState.isChecking || updateState.isUpdating)
-                        ? null
-                        : isReadyToInstall
-                        ? _restartAndInstallPending
-                        : availableUpdate != null
-                        ? () => _startUpdate(availableUpdate)
-                        : _onCheckUpdate,
-                    child: Text(
-                      isReadyToInstall
-                          ? l10n.updateRestartToInstallAction
-                          : availableUpdate != null
-                          ? l10n.updateNow
-                          : l10n.checkForUpdates,
-                    ),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SettingSectionHeader(title: l10n.theme),
+                SettingSectionCard(
+                  child: SettingSectionBody(
+                    children: <Widget>[
+                      SettingRow(
+                        label: l10n.systemDefault,
+                        description: l10n.theme,
+                        trailing: Switch(value: true, onChanged: (_) {}),
+                      ),
+                    ],
                   ),
+                ),
+                const SizedBox(height: 24),
+                SettingSectionHeader(title: l10n.settings),
+                SettingSectionCard(
+                  child: SettingSectionBody(
+                    children: <Widget>[
+                      SettingRow(
+                        label: l10n.language,
+                        description: l10n.language,
+                        trailing: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest
+                                .withValues(alpha: 0.45),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Icon(
+                              Icons.chevron_right_rounded,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SettingRow(
+                        label: l10n.checkForUpdates,
+                        description: _buildUpdateSubtitle(context, updateState),
+                        progress: _buildUpdateProgress(context, updateState),
+                        trailing: updateState.isChecking
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : FilledButton.tonal(
+                                onPressed:
+                                    (updateState.isChecking ||
+                                        updateState.isUpdating)
+                                    ? null
+                                    : isReadyToInstall
+                                    ? _restartAndInstallPending
+                                    : availableUpdate != null
+                                    ? () => _startUpdate(availableUpdate)
+                                    : _onCheckUpdate,
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 18,
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                                child: Text(
+                                  isReadyToInstall
+                                      ? l10n.updateRestartToInstallAction
+                                      : availableUpdate != null
+                                      ? l10n.updateNow
+                                      : l10n.checkForUpdates,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

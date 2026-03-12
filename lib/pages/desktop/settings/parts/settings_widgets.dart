@@ -9,14 +9,82 @@ class SettingSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 4),
-      child: Text(
-        title,
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: theme.colorScheme.primary,
+      padding: const EdgeInsets.only(top: 12, bottom: 12),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              title,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.3,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              height: 1,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SettingSectionCard extends StatelessWidget {
+  const SettingSectionCard({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.55),
         ),
       ),
+      child: child,
+    );
+  }
+}
+
+class SettingSectionBody extends StatelessWidget {
+  const SettingSectionBody({
+    super.key,
+    required this.children,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+  });
+
+  final List<Widget> children;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final List<Widget> sectionChildren = <Widget>[];
+    for (int index = 0; index < children.length; index++) {
+      final bool isLast = index == children.length - 1;
+      sectionChildren.add(children[index]);
+      if (!isLast) {
+        sectionChildren.add(
+          Divider(
+            height: 1,
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+          ),
+        );
+      }
+    }
+    return Padding(
+      padding: padding,
+      child: Column(children: sectionChildren),
     );
   }
 }
@@ -39,38 +107,46 @@ class SettingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
                   label,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 if (description.isNotEmpty) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 6),
                   Text(
                     description,
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.7,
+                        alpha: 0.88,
                       ),
+                      height: 1.35,
                     ),
                   ),
                 ],
-                if (progress case final Widget progressWidget) progressWidget,
+                if (progress case final Widget progressWidget) ...<Widget>[
+                  const SizedBox(height: 10),
+                  progressWidget,
+                ],
               ],
             ),
           ),
-          const SizedBox(width: 12),
-          trailing,
+          const SizedBox(width: 16),
+          ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 44),
+            child: Align(alignment: Alignment.centerRight, child: trailing),
+          ),
         ],
       ),
     );
@@ -119,26 +195,31 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              widget.label,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            widget.label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
             ),
           ),
-          Expanded(
-            flex: 5,
-            child: Row(
-              children: [
-                Expanded(
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 4,
+                    overlayShape: const RoundSliderOverlayShape(
+                      overlayRadius: 14,
+                    ),
+                  ),
                   child: Slider(
                     value: _displayValue,
                     min: widget.min,
@@ -166,18 +247,32 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
                     },
                   ),
                 ),
-                SizedBox(
-                  width: 50,
+              ),
+              const SizedBox(width: 14),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.55,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   child: Text(
                     _displayValue.toStringAsFixed(2),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.92,
+                      ),
+                      fontWeight: FontWeight.w600,
                     ),
-                    textAlign: TextAlign.end,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -201,49 +296,60 @@ class SettingColorRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
             ),
           ),
-          Expanded(
-            flex: 5,
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: palette.map((color) {
-                final active = color == value;
-                return InkWell(
-                  onTap: () => onChanged(color),
-                  borderRadius: BorderRadius.circular(6),
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: Color(color),
-                      border: Border.all(
-                        color: active
-                            ? theme.colorScheme.onSurface
-                            : theme.colorScheme.outline.withValues(alpha: 0.5),
-                        width: active ? 2.5 : 1,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: palette.map((int color) {
+              final bool active = color == value;
+              return InkWell(
+                onTap: () => onChanged(color),
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Color(color),
+                    border: Border.all(
+                      color: active
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outlineVariant.withValues(
+                              alpha: 0.7,
+                            ),
+                      width: active ? 2.5 : 1.2,
                     ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: theme.shadowColor.withValues(alpha: 0.08),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
+                  child: active
+                      ? Icon(
+                          Icons.check_rounded,
+                          size: 16,
+                          color: theme.colorScheme.onPrimary,
+                        )
+                      : null,
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),
