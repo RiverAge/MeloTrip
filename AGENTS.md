@@ -114,18 +114,42 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - l10n: `flutter gen-l10n`
   - codegen: `dart run build_runner build --delete-conflicting-outputs`
 
-## Command Execution (Sandbox/Escalation)
+## Command Execution
 
-- When running `flutter` / `dart` commands under escalation, prefer generic command forms and avoid appending specific file paths when possible.
+- For routine project validation, prefer whole-project commands first:
+  - `flutter analyze`
+  - `flutter test`
+  - `dart analyze`
+- Do NOT prepend temporary environment variables to routine `flutter` / `dart` commands unless the user explicitly requests it or it is confirmed to be necessary to work around an environment issue.
+  - Avoid examples such as `$env:DART_SUPPRESS_ANALYTICS='true'; flutter analyze` for normal project validation.
+- Use file-specific forms only when necessary for focused debugging (for example: isolating a single failing test).
+- After completing code changes, run `flutter analyze` by default. If it cannot be run, explicitly report why.
+
+### Codex on Windows Command Form (must follow)
+
+- This section applies specifically to Codex running on Windows.
+- When executing normal CLI tools, always put the native command directly in the command field.
+- Do NOT wrap routine commands with an explicit shell executable prefix such as:
+  - `C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command`
+  - `powershell -Command`
+  - `cmd /c`
+- This rule applies to normal execution and escalation requests.
 - Preferred examples:
   - `flutter analyze`
   - `flutter test`
   - `dart analyze`
-- Do NOT prepend temporary environment variables or wrapper flags to routine `flutter` / `dart` commands unless the user explicitly requests it or it is confirmed to be necessary to work around an environment issue.
-  - Avoid examples such as `$env:DART_SUPPRESS_ANALYTICS='true'; flutter analyze` for normal project validation.
-  - Prefer plain commands first, such as `flutter analyze` and `flutter test`.
-- Use file-specific forms only when necessary for focused debugging (for example: isolating a single failing test).
-- After completing code changes, run `flutter analyze` by default. If it cannot be run, explicitly report why.
+  - `gh run list`
+  - `gh run view <id> --log`
+  - `git status --short`
+- Avoid examples:
+  - `C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -Command flutter analyze`
+  - `powershell -Command flutter test`
+  - `cmd /c gh run view 123 --log`
+- Only use an explicit shell wrapper if:
+  - the user explicitly requests that exact wrapper form, or
+  - the native command form has already failed and the wrapper is strictly required by the environment.
+- If escalation is needed, escalate the native command itself rather than rewriting it into a shell-wrapped form.
+- Do not choose a shell-wrapped form merely to match an already approved prefix rule.
 
 ## Windows C++ UI / DPI Awareness
 
