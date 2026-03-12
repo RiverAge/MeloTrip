@@ -21,15 +21,15 @@ class DesktopLyricsSettings extends _$DesktopLyricsSettings {
   );
 
   static const List<FontWeight> _fontWeights = <FontWeight>[
-    FontWeight.w100,
-    FontWeight.w200,
-    FontWeight.w300,
-    FontWeight.w400,
-    FontWeight.w500,
-    FontWeight.w600,
-    FontWeight.w700,
-    FontWeight.w800,
-    FontWeight.w900,
+    .w100,
+    .w200,
+    .w300,
+    .w400,
+    .w500,
+    .w600,
+    .w700,
+    .w800,
+    .w900,
   ];
 
   @override

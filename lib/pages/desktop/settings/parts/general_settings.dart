@@ -39,7 +39,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 900),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: <Widget>[
                 SettingSectionHeader(title: l10n.theme),
                 SettingSectionCard(

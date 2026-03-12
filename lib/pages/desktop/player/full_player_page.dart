@@ -44,7 +44,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
               ),
               const PlaybackBlurOverlay(
                 blurSigma: 30,
-                surfaceAlpha: .34,
+                surfaceAlpha: 0.34,
                 useVignette: true,
               ),
               SafeArea(
@@ -80,7 +80,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                 constraints.maxWidth < 900 ||
                                 constraints.maxHeight < 600;
                             final coverSize =
-                                (constraints.biggest.shortestSide * .52)
+                                (constraints.biggest.shortestSide * 0.52)
                                     .clamp(320.0, 520.0)
                                     .toDouble();
 
@@ -119,14 +119,14 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                       color: colorScheme
                                                           .onSurface
                                                           .withValues(
-                                                            alpha: .12,
+                                                            alpha: 0.12,
                                                           ),
                                                     ),
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: theme.shadowColor
                                                             .withValues(
-                                                              alpha: .35,
+                                                              alpha: 0.35,
                                                             ),
                                                         blurRadius: 24,
                                                         offset: const Offset(
@@ -150,7 +150,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                 const SizedBox(height: 48),
                                                 Text(
                                                   current.title ?? '-',
-                                                  textAlign: TextAlign.center,
+                                                  textAlign: .center,
                                                   style: theme
                                                       .textTheme
                                                       .headlineMedium
@@ -168,7 +168,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                 const SizedBox(height: 12),
                                                 Text(
                                                   '${current.displayArtist ?? '-'} - ${current.album ?? '-'}',
-                                                  textAlign: TextAlign.center,
+                                                  textAlign: .center,
                                                   style: theme
                                                       .textTheme
                                                       .titleMedium
@@ -176,7 +176,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                                         color: colorScheme
                                                             .onSurface
                                                             .withValues(
-                                                              alpha: .74,
+                                                              alpha: 0.74,
                                                             ),
                                                         fontWeight: .w500,
                                                         fontSize: isNarrow

@@ -116,11 +116,11 @@ class AppPlayer extends BaseAudioHandler {
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) {
     return _runSerialized(() async {
       if (repeatMode == .all) {
-        await _player.setPlaylistMode(PlaylistMode.loop);
+        await _player.setPlaylistMode(.loop);
       } else if (repeatMode == .none) {
-        await _player.setPlaylistMode(PlaylistMode.none);
+        await _player.setPlaylistMode(.none);
       } else if (repeatMode == .one) {
-        await _player.setPlaylistMode(PlaylistMode.single);
+        await _player.setPlaylistMode(.single);
       }
     });
   }
