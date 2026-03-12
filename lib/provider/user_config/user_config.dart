@@ -56,6 +56,7 @@ class UserConfig extends _$UserConfig {
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
+    ValueUpdater<String?>? desktopLyricsConfig,
   }) async {
     final db = await ref.read(appDatabaseProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
@@ -76,6 +77,9 @@ class UserConfig extends _$UserConfig {
     }
     if (recentSearches != null) {
       values['recent_searches'] = recentSearches.value;
+    }
+    if (desktopLyricsConfig != null) {
+      values['desktop_lyrics_config'] = desktopLyricsConfig.value;
     }
 
     if (values.isEmpty) return;

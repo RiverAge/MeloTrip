@@ -24,6 +24,7 @@ class AppDatabase extends _$AppDatabase {
              playlist_mode TEXT DEFAULT loop,
              locale TEXT,
              recent_searches TEXT,
+             desktop_lyrics_config TEXT,
              theme TEXT DEFAULT system,
              update_at INTEGER NOT NULL
            )
@@ -43,11 +44,18 @@ class AppDatabase extends _$AppDatabase {
     final path = join(dbPath, 'melo_trip.db');
     final db = await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (Database db, int version) async {
         await db.execute(_createPlayHistorySql);
         await db.execute(_createUserConfigSql);
         await db.execute(_createCurrentUserSql);
+      },
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+            'ALTER TABLE user_config ADD COLUMN desktop_lyrics_config TEXT',
+          );
+        }
       },
     );
 

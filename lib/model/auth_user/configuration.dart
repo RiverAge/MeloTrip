@@ -12,6 +12,7 @@ abstract class Configuration with _$Configuration {
     @JsonKey(name: 'max_rate') String? maxRate,
     @JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,
     @JsonKey(name: 'recent_searches') String? recentSearches,
+    @JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig,
     ThemeMode? theme,
     @LocaleConvert() Locale? locale,
     @JsonKey(name: 'update_at') int? updateAt,

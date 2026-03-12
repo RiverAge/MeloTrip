@@ -33,7 +33,7 @@ final class AppDatabaseProvider
   AppDatabase create() => AppDatabase();
 }
 
-String _$appDatabaseHash() => r'18bbd6be572cc04cacd48db379118c1fd3090c78';
+String _$appDatabaseHash() => r'9c025134a3e23620d2d23fc009080e45d7983529';
 
 abstract class _$AppDatabase extends $AsyncNotifier<Database> {
   FutureOr<Database> build();

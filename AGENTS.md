@@ -152,6 +152,14 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Use plain provider objects for repository injection; repositories are infrastructure, not UI state.
 - If a REST endpoint is used in multiple places, extract the fetch/parse logic into `lib/repository/...` instead of repeating it in pages or providers.
 - Single-page or single-use endpoints may stay in provider scope until a second real consumer appears.
+- For simple read/write state backed by one upstream source, prefer a single `@riverpod class` with `build()` for reads and explicit instance methods for writes.
+- Do not split simple settings flows into multiple controller/reader providers unless the behavior is complex enough to justify the extra indirection.
+
+### User Configuration Persistence
+
+- User preference/settings data should default to the existing app configuration storage path (for example database-backed `user_config`) instead of ad-hoc JSON files.
+- Only introduce a separate settings file when there is a clear product or technical requirement such as import/export, external tooling, or cross-process sharing.
+- When a setting is stored as structured JSON inside the main configuration store, keep the runtime config model and the persistence format mapping localized to the same owner file/class when feasible.
 
 ### Pagination and Error Models
 
