@@ -106,8 +106,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           return DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: .topLeft,
+                end: .bottomRight,
                 colors: [
                   colorScheme.surfaceContainerHigh,
                   colorScheme.surface,
@@ -183,8 +183,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget _buildDesktopHero(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: .center,
+      crossAxisAlignment: .start,
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
@@ -205,7 +205,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           AppLocalizations.of(context)!.login,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
             color: colorScheme.onSurface,
-            fontWeight: FontWeight.w600,
+            fontWeight: .w600,
           ),
         ),
         const SizedBox(height: 12),
@@ -239,7 +239,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget _buildLoginForm(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),

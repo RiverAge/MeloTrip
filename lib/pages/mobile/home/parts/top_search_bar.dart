@@ -17,7 +17,7 @@ class _TopSeachBar extends StatelessWidget {
         height: 48,
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest.withValues(
-            alpha: .5,
+            alpha: 0.5,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -28,14 +28,14 @@ class _TopSeachBar extends StatelessWidget {
               Icon(
                 Icons.search,
                 size: 20,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               ),
               const SizedBox(width: 12),
               Text(
                 AppLocalizations.of(context)!.searchHint,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: .5,
+                    alpha: 0.5,
                   ),
                 ),
               ),

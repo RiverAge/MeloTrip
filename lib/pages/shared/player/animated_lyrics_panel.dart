@@ -12,19 +12,19 @@ class AnimatedLyricsPanel extends ConsumerStatefulWidget {
   const AnimatedLyricsPanel({
     super.key,
     required this.lyricsLines,
-    this.textAlign = TextAlign.center,
-    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.textAlign = .center,
+    this.crossAxisAlignment = .center,
     this.itemPadding = const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
     this.primaryFontSize = 20,
     this.secondaryFontSize = 14,
     this.blurFactor = 2,
-    this.activeScaleDelta = .15,
-    this.firstScrollAlignment = .5,
-    this.activeScrollAlignment = .5,
+    this.activeScaleDelta = 0.15,
+    this.firstScrollAlignment = 0.5,
+    this.activeScrollAlignment = 0.5,
     this.activeAnimationDuration = const Duration(milliseconds: 650),
     this.itemAnimationDuration = const Duration(milliseconds: 500),
-    this.edgeFadeTopStop = .1,
-    this.edgeFadeBottomStop = .85,
+    this.edgeFadeTopStop = 0.1,
+    this.edgeFadeBottomStop = 0.85,
   });
 
   final List<Line> lyricsLines;
@@ -106,8 +106,8 @@ class _AnimatedLyricsPanelState extends ConsumerState<AnimatedLyricsPanel> {
     return LayoutBuilder(
       builder: (context, constraints) => ShaderMask(
         shaderCallback: (bounds) => LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          begin: .topCenter,
+          end: .bottomCenter,
           colors: const [
             Colors.transparent,
             Colors.black,
@@ -205,13 +205,11 @@ class _AnimatedLyricsItem extends StatelessWidget {
                     fontSize: i == 0 ? primaryFontSize : secondaryFontSize,
                     height: 1.5,
                     color: Color.lerp(
-                      colorScheme.onSurfaceVariant.withValues(alpha: .5),
+                      colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       colorScheme.primary,
                       value,
                     ),
-                    fontWeight: value > .5
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                    fontWeight: value > 0.5 ? .bold : .normal,
                   ),
                 );
 

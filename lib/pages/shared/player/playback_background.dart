@@ -8,7 +8,7 @@ class PlaybackArtworkBackground extends StatelessWidget {
     super.key,
     required this.artworkId,
     this.size = 1200,
-    this.fit = BoxFit.cover,
+    this.fit = .cover,
   });
 
   final String? artworkId;
@@ -57,15 +57,15 @@ class PlaybackBlurOverlay extends StatelessWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    begin: .topCenter,
+                    end: .bottomCenter,
                     colors: [
-                      colorScheme.scrim.withValues(alpha: .18),
-                      colorScheme.scrim.withValues(alpha: .08),
-                      colorScheme.scrim.withValues(alpha: .08),
-                      colorScheme.scrim.withValues(alpha: .2),
+                      colorScheme.scrim.withValues(alpha: 0.18),
+                      colorScheme.scrim.withValues(alpha: 0.08),
+                      colorScheme.scrim.withValues(alpha: 0.08),
+                      colorScheme.scrim.withValues(alpha: 0.2),
                     ],
-                    stops: const [0, .18, .78, 1],
+                    stops: const [0, 0.18, 0.78, 1],
                   ),
                 ),
               ),

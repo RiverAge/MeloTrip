@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage>
               title: Text(
                 l10n.listenNow,
                 style: GoogleFonts.outfit(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   color: theme.colorScheme.onSurface,
                   fontSize: 24,
                 ),

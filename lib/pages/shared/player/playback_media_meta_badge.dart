@@ -42,11 +42,11 @@ class PlaybackMediaMetaBadge extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: contentColor.withValues(alpha: .08),
+            color: contentColor.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               _buildBadge(track.codec?.toUpperCase() ?? '-', contentColor),
               if (channelText.isNotEmpty) ...[
@@ -59,8 +59,8 @@ class PlaybackMediaMetaBadge extends StatelessWidget {
                   infoText,
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: contentColor.withValues(alpha: .86),
+                    fontWeight: .w700,
+                    color: contentColor.withValues(alpha: 0.86),
                   ),
                 ),
               ],
@@ -89,14 +89,14 @@ class PlaybackMediaMetaBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: .2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         text,
         style: TextStyle(
           fontSize: 10,
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           color: color,
         ),
       ),

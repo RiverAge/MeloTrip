@@ -93,11 +93,11 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Text(
               AppLocalizations.of(context)!.encounterUnknownError,
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             const SizedBox(height: 8),
             TextButton(
@@ -151,7 +151,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             AspectRatio(
               aspectRatio: 1,
@@ -169,7 +169,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: ArtworkImage(
-                    fit: BoxFit.cover,
+                    fit: .cover,
                     id: album.id,
                     size: 300,
                   ),
@@ -180,10 +180,10 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
             Text(
               album.name ?? '',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 height: 1.2,
               ),
             ),
@@ -191,9 +191,9 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
             Text(
               album.artist ?? '',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: TextStyle(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 fontSize: 12,
               ),
             ),
@@ -220,23 +220,23 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                 id: album.id,
                 width: 60,
                 height: 60,
-                fit: BoxFit.cover,
+                fit: .cover,
                 size: 200,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     album.name ?? '',
                     style: const TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: .w600,
                     ),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -248,7 +248,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
                       ),
                     ),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                   ),
                 ],
               ),
