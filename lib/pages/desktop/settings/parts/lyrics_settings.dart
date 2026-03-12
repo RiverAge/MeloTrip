@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,20 +44,36 @@ class _DesktopLyricsSettingsTabState
   ];
 
   final DesktopLyrics _desktopLyrics = DesktopLyrics();
+  DesktopLyricsConfig _currentConfig = _fallbackDesktopLyricsConfig;
 
-  Future<void> _apply(
-    DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
-  ) async {
-    final DesktopLyricsConfig current =
-        ref.read(desktopLyricsSettingsProvider).asData?.value ??
-        _fallbackDesktopLyricsConfig;
-    final DesktopLyricsConfig next = transform(current);
-    await ref.read(desktopLyricsSettingsProvider.notifier).updateConfig(next);
+  Future<void> _applyNative(DesktopLyricsConfig config) async {
     if (widget.onApplyConfig case final onApplyConfig?) {
-      await onApplyConfig(next);
+      await onApplyConfig(config);
       return;
     }
-    await _desktopLyrics.apply(next);
+    await _desktopLyrics.apply(config);
+  }
+
+  void _preview(
+    DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
+  ) {
+    final DesktopLyricsConfig next = transform(_currentConfig);
+    setState(() {
+      _currentConfig = next;
+    });
+    unawaited(_applyNative(next));
+  }
+
+  Future<void> _commit(
+    DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
+  ) async {
+    final DesktopLyricsConfig next = transform(_currentConfig);
+    _currentConfig = next;
+    await ref.read(desktopLyricsSettingsProvider.notifier).updateConfig(next);
+    await _applyNative(next);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -69,9 +87,13 @@ class _DesktopLyricsSettingsTabState
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final DesktopLyricsConfig config =
-        ref.watch(desktopLyricsSettingsProvider).asData?.value ??
-        _fallbackDesktopLyricsConfig;
+    final AsyncValue<DesktopLyricsConfig> configAsync = ref.watch(
+      desktopLyricsSettingsProvider,
+    );
+    final DesktopLyricsConfig config = switch (configAsync) {
+      AsyncData(:final value) => _currentConfig = value,
+      _ => _currentConfig,
+    };
 
     final bool enabled = config.interaction.enabled;
     final bool clickThrough = config.interaction.clickThrough;
@@ -104,7 +126,7 @@ class _DesktopLyricsSettingsTabState
             description: '',
             trailing: Switch(
               value: enabled,
-              onChanged: (bool value) => _apply(
+              onChanged: (bool value) => _commit(
                 (DesktopLyricsConfig c) => c.copyWith(
                   interaction: c.interaction.copyWith(enabled: value),
                 ),
@@ -119,7 +141,7 @@ class _DesktopLyricsSettingsTabState
             description: '',
             trailing: Switch(
               value: clickThrough,
-              onChanged: (bool value) => _apply(
+              onChanged: (bool value) => _commit(
                 (DesktopLyricsConfig c) => c.copyWith(
                   interaction: c.interaction.copyWith(clickThrough: value),
                 ),
@@ -136,7 +158,11 @@ class _DesktopLyricsSettingsTabState
             value: fontSize,
             min: 20,
             max: 72,
-            onChanged: (double value) => _apply(
+            onPreviewChanged: (double value) => _preview(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(fontSize: value)),
+            ),
+            onSubmitted: (double value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(text: c.text.copyWith(fontSize: value)),
             ),
@@ -149,7 +175,11 @@ class _DesktopLyricsSettingsTabState
             value: strokeWidth,
             min: 0,
             max: 6,
-            onChanged: (double value) => _apply(
+            onPreviewChanged: (double value) => _preview(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(strokeWidth: value)),
+            ),
+            onSubmitted: (double value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(text: c.text.copyWith(strokeWidth: value)),
             ),
@@ -180,7 +210,7 @@ class _DesktopLyricsSettingsTabState
                 if (value == null) {
                   return;
                 }
-                _apply(
+                _commit(
                   (DesktopLyricsConfig c) =>
                       c.copyWith(text: c.text.copyWith(textAlign: value)),
                 );
@@ -221,7 +251,7 @@ class _DesktopLyricsSettingsTabState
                 if (value == null) {
                   return;
                 }
-                _apply(
+                _commit(
                   (DesktopLyricsConfig c) =>
                       c.copyWith(text: c.text.copyWith(fontWeight: value)),
                 );
@@ -235,7 +265,7 @@ class _DesktopLyricsSettingsTabState
             label: l10n.desktopLyricsTextColor,
             value: textColor,
             palette: _palette,
-            onChanged: (int value) => _apply(
+            onChanged: (int value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(text: c.text.copyWith(textColor: Color(value))),
             ),
@@ -247,7 +277,7 @@ class _DesktopLyricsSettingsTabState
             label: l10n.desktopLyricsShadowColor,
             value: shadowColor,
             palette: _palette,
-            onChanged: (int value) => _apply(
+            onChanged: (int value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(text: c.text.copyWith(shadowColor: Color(value))),
             ),
@@ -259,7 +289,7 @@ class _DesktopLyricsSettingsTabState
             label: l10n.desktopLyricsStrokeColor,
             value: strokeColor,
             palette: _palette,
-            onChanged: (int value) => _apply(
+            onChanged: (int value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(text: c.text.copyWith(strokeColor: Color(value))),
             ),
@@ -274,7 +304,11 @@ class _DesktopLyricsSettingsTabState
             value: backgroundOpacity,
             min: 0,
             max: 1,
-            onChanged: (double value) => _apply(
+            onPreviewChanged: (double value) => _preview(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(background: c.background.copyWith(opacity: value)),
+            ),
+            onSubmitted: (double value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(background: c.background.copyWith(opacity: value)),
             ),
@@ -286,7 +320,7 @@ class _DesktopLyricsSettingsTabState
             label: l10n.desktopLyricsBackgroundColor,
             value: backgroundBaseColor,
             palette: _palette,
-            onChanged: (int value) => _apply((DesktopLyricsConfig c) {
+            onChanged: (int value) => _commit((DesktopLyricsConfig c) {
               final int alpha =
                   ((c.background.backgroundColor?.toARGB32() ?? 0x7A220A35) >>
                       24) &
@@ -309,7 +343,7 @@ class _DesktopLyricsSettingsTabState
             description: l10n.desktopLyricsGradientOverrideHint,
             trailing: Switch(
               value: gradientEnabled,
-              onChanged: (bool value) => _apply(
+              onChanged: (bool value) => _commit(
                 (DesktopLyricsConfig c) => c.copyWith(
                   gradient: c.gradient.copyWith(textGradientEnabled: value),
                 ),
@@ -323,7 +357,7 @@ class _DesktopLyricsSettingsTabState
             label: l10n.desktopLyricsGradientStartColor,
             value: gradientStartColor,
             palette: _palette,
-            onChanged: (int value) => _apply(
+            onChanged: (int value) => _commit(
               (DesktopLyricsConfig c) => c.copyWith(
                 gradient: c.gradient.copyWith(
                   textGradientStartColor: Color(value),
@@ -338,7 +372,7 @@ class _DesktopLyricsSettingsTabState
             label: l10n.desktopLyricsGradientEndColor,
             value: gradientEndColor,
             palette: _palette,
-            onChanged: (int value) => _apply(
+            onChanged: (int value) => _commit(
               (DesktopLyricsConfig c) => c.copyWith(
                 gradient: c.gradient.copyWith(
                   textGradientEndColor: Color(value),
@@ -356,7 +390,11 @@ class _DesktopLyricsSettingsTabState
             value: overlayWidth,
             min: 480,
             max: 1800,
-            onChanged: (double value) => _apply(
+            onPreviewChanged: (double value) => _preview(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(layout: c.layout.copyWith(overlayWidth: value)),
+            ),
+            onSubmitted: (double value) => _commit(
               (DesktopLyricsConfig c) =>
                   c.copyWith(layout: c.layout.copyWith(overlayWidth: value)),
             ),

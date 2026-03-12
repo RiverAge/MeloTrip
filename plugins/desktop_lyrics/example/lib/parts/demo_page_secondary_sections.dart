@@ -17,7 +17,7 @@ extension _DesktopLyricsDemoPageSecondarySections
             label: 'Background Base',
             value: backgroundBaseColor,
             palette: _DesktopLyricsDemoPageState._palette,
-            onChanged: (v) => _apply((config) {
+            onChanged: (v) => _commit((config) {
               final a =
                   ((config.background.backgroundColor?.toARGB32() ??
                           0x7A220A35) >>
@@ -36,7 +36,19 @@ extension _DesktopLyricsDemoPageSecondarySections
             value: backgroundOpacity,
             min: 0,
             max: 1,
-            onChanged: (v) => _apply((config) {
+            onPreviewChanged: (v) => _preview((config) {
+              final rgb =
+                  (config.background.backgroundColor?.toARGB32() ??
+                      0x7A220A35) &
+                  0x00FFFFFF;
+              final bg = ((255 * v).round() << 24) | rgb;
+              return config.copyWith(
+                background: config.background.copyWith(
+                  backgroundColor: Color(bg),
+                ),
+              );
+            }),
+            onSubmitted: (v) => _commit((config) {
               final rgb =
                   (config.background.backgroundColor?.toARGB32() ??
                       0x7A220A35) &
@@ -52,7 +64,7 @@ extension _DesktopLyricsDemoPageSecondarySections
           SwitchListTile(
             title: const Text('Text Gradient'),
             value: gradientEnabled,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 gradient: config.gradient.copyWith(textGradientEnabled: v),
               ),
@@ -62,7 +74,7 @@ extension _DesktopLyricsDemoPageSecondarySections
             label: 'Gradient Start',
             value: gradientStartColor,
             palette: _DesktopLyricsDemoPageState._palette,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 gradient: config.gradient.copyWith(
                   textGradientStartColor: Color(v),
@@ -74,7 +86,7 @@ extension _DesktopLyricsDemoPageSecondarySections
             label: 'Gradient End',
             value: gradientEndColor,
             palette: _DesktopLyricsDemoPageState._palette,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 gradient: config.gradient.copyWith(
                   textGradientEndColor: Color(v),
@@ -97,7 +109,12 @@ extension _DesktopLyricsDemoPageSecondarySections
             value: overlayWidth,
             min: 480,
             max: 1800,
-            onChanged: (v) => _apply(
+            onPreviewChanged: (v) => _preview(
+              (config) => config.copyWith(
+                layout: config.layout.copyWith(overlayWidth: v),
+              ),
+            ),
+            onSubmitted: (v) => _commit(
               (config) => config.copyWith(
                 layout: config.layout.copyWith(overlayWidth: v),
               ),

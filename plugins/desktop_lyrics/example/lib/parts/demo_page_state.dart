@@ -7,6 +7,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
 
   bool _playingLineDemo = false;
   bool _playingTokenDemo = false;
+  late DesktopLyricsConfig _currentConfig;
 
   static const List<int> _palette = <int>[
     0xFFF2F2F8,
@@ -23,9 +24,10 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
   @override
   void initState() {
     super.initState();
+    _currentConfig = _lyrics.state.toConfig();
     _lyrics.addListener(_onLyricsStateChanged);
     Future<void>.microtask(() {
-      _apply((config) {
+      _commit((config) {
         return config.copyWith(
           text: config.text.copyWith(fontSize: 34),
           background: config.background.copyWith(opacity: 0.93),
@@ -44,15 +46,34 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
 
   void _onLyricsStateChanged() {
     if (!mounted) return;
-    setState(() {});
+    setState(() {
+      _currentConfig = _lyrics.state.toConfig();
+    });
   }
 
-  Future<void> _apply(
+  Future<void> _applyToNative(DesktopLyricsConfig config) async {
+    await _lyrics.apply(config);
+  }
+
+  void _preview(
+    DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
+  ) {
+    final next = transform(_currentConfig);
+    setState(() {
+      _currentConfig = next;
+    });
+    unawaited(_applyToNative(next));
+  }
+
+  Future<void> _commit(
     DesktopLyricsConfig Function(DesktopLyricsConfig config) transform,
   ) async {
-    final current = _lyrics.state.toConfig();
-    final next = transform(current);
-    await _lyrics.apply(next);
+    final next = transform(_currentConfig);
+    _currentConfig = next;
+    await _applyToNative(next);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _playLineDemo() async {
@@ -119,7 +140,7 @@ class _DesktopLyricsDemoPageState extends State<_DesktopLyricsDemoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = _lyrics.state;
+    final state = _currentConfig;
     final enabled = state.interaction.enabled;
     final clickThrough = state.interaction.clickThrough;
     final gradientEnabled = state.gradient.textGradientEnabled;

@@ -25,20 +25,44 @@ class _DemoSection extends StatelessWidget {
   }
 }
 
-class _DemoSlider extends StatelessWidget {
+class _DemoSlider extends StatefulWidget {
   const _DemoSlider({
     required this.label,
     required this.value,
     required this.min,
     required this.max,
-    required this.onChanged,
+    this.onPreviewChanged,
+    this.onSubmitted,
   });
 
   final String label;
   final double value;
   final double min;
   final double max;
-  final ValueChanged<double> onChanged;
+  final ValueChanged<double>? onPreviewChanged;
+  final ValueChanged<double>? onSubmitted;
+
+  @override
+  State<_DemoSlider> createState() => _DemoSliderState();
+}
+
+class _DemoSliderState extends State<_DemoSlider> {
+  late double _displayValue;
+  bool _isDragging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant _DemoSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_isDragging && oldWidget.value != widget.value) {
+      _displayValue = widget.value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +70,34 @@ class _DemoSlider extends StatelessWidget {
       children: [
         SizedBox(
           width: 170,
-          child: Text('$label (${value.toStringAsFixed(2)})'),
+          child: Text('${widget.label} (${_displayValue.toStringAsFixed(2)})'),
         ),
         Expanded(
-          child: Slider(value: value, min: min, max: max, onChanged: onChanged),
+          child: Slider(
+            value: _displayValue,
+            min: widget.min,
+            max: widget.max,
+            onChangeStart: (_) {
+              setState(() {
+                _isDragging = true;
+              });
+            },
+            onChangeEnd: (_) {
+              final ValueChanged<double>? onSubmitted = widget.onSubmitted;
+              setState(() {
+                _isDragging = false;
+              });
+              if (onSubmitted != null) {
+                onSubmitted(_displayValue);
+              }
+            },
+            onChanged: (double value) {
+              setState(() {
+                _displayValue = value;
+              });
+              widget.onPreviewChanged?.call(value);
+            },
+          ),
         ),
       ],
     );

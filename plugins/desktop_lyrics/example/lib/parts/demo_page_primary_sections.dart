@@ -79,7 +79,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             title: const Text('Enabled'),
             value: enabled,
             onChanged: (v) async {
-              await _apply(
+              await _commit(
                 (config) => config.copyWith(
                   interaction: config.interaction.copyWith(enabled: v),
                 ),
@@ -97,7 +97,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
           SwitchListTile(
             title: const Text('Click Through'),
             value: clickThrough,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 interaction: config.interaction.copyWith(clickThrough: v),
               ),
@@ -127,7 +127,11 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             value: fontSize,
             min: 20,
             max: 72,
-            onChanged: (v) => _apply(
+            onPreviewChanged: (v) => _preview(
+              (config) =>
+                  config.copyWith(text: config.text.copyWith(fontSize: v)),
+            ),
+            onSubmitted: (v) => _commit(
               (config) =>
                   config.copyWith(text: config.text.copyWith(fontSize: v)),
             ),
@@ -137,7 +141,12 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             value: opacity,
             min: 0.25,
             max: 1,
-            onChanged: (v) => _apply(
+            onPreviewChanged: (v) => _preview(
+              (config) => config.copyWith(
+                background: config.background.copyWith(opacity: v),
+              ),
+            ),
+            onSubmitted: (v) => _commit(
               (config) => config.copyWith(
                 background: config.background.copyWith(opacity: v),
               ),
@@ -148,7 +157,11 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             value: strokeWidth,
             min: 0,
             max: 6,
-            onChanged: (v) => _apply(
+            onPreviewChanged: (v) => _preview(
+              (config) =>
+                  config.copyWith(text: config.text.copyWith(strokeWidth: v)),
+            ),
+            onSubmitted: (v) => _commit(
               (config) =>
                   config.copyWith(text: config.text.copyWith(strokeWidth: v)),
             ),
@@ -172,7 +185,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
                 onChanged: (v) {
                   if (v == null) return;
                   unawaited(
-                    _apply(
+                    _commit(
                       (config) => config.copyWith(
                         text: config.text.copyWith(textAlign: v),
                       ),
@@ -197,7 +210,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
                 onChanged: (v) {
                   if (v == null) return;
                   unawaited(
-                    _apply(
+                    _commit(
                       (config) => config.copyWith(
                         text: config.text.copyWith(fontWeight: v),
                       ),
@@ -211,7 +224,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             label: 'Text Color',
             value: textColor,
             palette: _DesktopLyricsDemoPageState._palette,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 text: config.text.copyWith(textColor: Color(v)),
               ),
@@ -221,7 +234,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             label: 'Shadow Color',
             value: shadowColor,
             palette: _DesktopLyricsDemoPageState._palette,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 text: config.text.copyWith(shadowColor: Color(v)),
               ),
@@ -231,7 +244,7 @@ extension _DesktopLyricsDemoPagePrimarySections on _DesktopLyricsDemoPageState {
             label: 'Stroke Color',
             value: strokeColor,
             palette: _DesktopLyricsDemoPageState._palette,
-            onChanged: (v) => _apply(
+            onChanged: (v) => _commit(
               (config) => config.copyWith(
                 text: config.text.copyWith(strokeColor: Color(v)),
               ),

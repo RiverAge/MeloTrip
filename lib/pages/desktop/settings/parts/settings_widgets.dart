@@ -77,21 +77,45 @@ class SettingRow extends StatelessWidget {
   }
 }
 
-class SettingSliderRow extends StatelessWidget {
+class SettingSliderRow extends StatefulWidget {
   const SettingSliderRow({
     super.key,
     required this.label,
     required this.value,
     required this.min,
     required this.max,
-    required this.onChanged,
+    this.onPreviewChanged,
+    this.onSubmitted,
   });
 
   final String label;
   final double value;
   final double min;
   final double max;
-  final ValueChanged<double> onChanged;
+  final ValueChanged<double>? onPreviewChanged;
+  final ValueChanged<double>? onSubmitted;
+
+  @override
+  State<SettingSliderRow> createState() => _SettingSliderRowState();
+}
+
+class _SettingSliderRowState extends State<SettingSliderRow> {
+  late double _displayValue;
+  bool _isDragging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant SettingSliderRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_isDragging && oldWidget.value != widget.value) {
+      _displayValue = widget.value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +128,7 @@ class SettingSliderRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              label,
+              widget.label,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -116,16 +140,36 @@ class SettingSliderRow extends StatelessWidget {
               children: [
                 Expanded(
                   child: Slider(
-                    value: value,
-                    min: min,
-                    max: max,
-                    onChanged: onChanged,
+                    value: _displayValue,
+                    min: widget.min,
+                    max: widget.max,
+                    onChangeStart: (_) {
+                      setState(() {
+                        _isDragging = true;
+                      });
+                    },
+                    onChangeEnd: (_) {
+                      final ValueChanged<double>? onSubmitted =
+                          widget.onSubmitted;
+                      setState(() {
+                        _isDragging = false;
+                      });
+                      if (onSubmitted != null) {
+                        onSubmitted(_displayValue);
+                      }
+                    },
+                    onChanged: (double value) {
+                      setState(() {
+                        _displayValue = value;
+                      });
+                      widget.onPreviewChanged?.call(value);
+                    },
                   ),
                 ),
                 SizedBox(
                   width: 50,
                   child: Text(
-                    value.toStringAsFixed(2),
+                    _displayValue.toStringAsFixed(2),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
