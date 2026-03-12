@@ -22,7 +22,7 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
       body: AsyncValueBuilder(
         provider: playlistDetailProvider(playlistId),
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
@@ -34,7 +34,7 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
           if (playlist == null) return const NoData();
 
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               PlaylistHeader(
                 playlist: playlist,

@@ -46,23 +46,23 @@ class PlaylistTrackRow extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Text(
                           song.title ?? '-',
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         Text(
                           song.artist ?? '-',
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: .7),
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -83,7 +83,7 @@ class PlaylistTrackRow extends StatelessWidget {
               child: Text(
                 song.album ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -92,7 +92,7 @@ class PlaylistTrackRow extends StatelessWidget {
               child: Text(
                 song.genre ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -106,7 +106,7 @@ class PlaylistTrackRow extends StatelessWidget {
             Icon(
               Icons.favorite_border_rounded,
               size: 16,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .4),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
             ),
           ],
         ),

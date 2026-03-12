@@ -72,7 +72,7 @@ class _AlbumTrackListToolbar extends StatelessWidget {
                       alpha: 0.5,
                     ),
                     fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                     letterSpacing: 1,
                   ),
                 ),
@@ -141,12 +141,12 @@ class _AlbumRecommendationsSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
       sliver: SliverToBoxAdapter(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: <Widget>[
             Text(
               l10n.recommendedToday,
               style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w900,
+                fontWeight: .w900,
                 fontSize: 24,
               ),
             ),

@@ -33,11 +33,13 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
     final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(
+        alpha: 0,
+      ),
       body: Align(
-        alignment: Alignment.topCenter,
+        alignment: .topCenter,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: <Widget>[
             _buildHeader(context, l10n),
             _buildTabBar(context, l10n),
@@ -71,7 +73,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
           Text(
             l10n.settings,
             style: theme.textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: .w900,
               fontSize: 32,
             ),
           ),
@@ -91,7 +93,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
             ),
             child: Text(
               l10n.resetToDefaults,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 13, fontWeight: .bold),
             ),
           ),
         ],
@@ -102,7 +104,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
   Widget _buildTabBar(BuildContext context, AppLocalizations l10n) {
     final ThemeData theme = Theme.of(context);
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: .centerLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: TabBar(
@@ -116,7 +118,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
           indicatorSize: TabBarIndicatorSize.label,
           dividerColor: Colors.transparent,
           labelStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
             fontSize: 13,
           ),
           tabs: <Widget>[

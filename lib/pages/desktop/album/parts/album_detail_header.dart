@@ -35,7 +35,7 @@ class _AlbumDetailHeader extends StatelessWidget {
         child: Text(
           album.name ?? '',
           style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: .bold,
           ),
         ),
       ),
@@ -43,7 +43,7 @@ class _AlbumDetailHeader extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            ArtworkImage(id: album.id, fit: BoxFit.cover, size: 800),
+            ArtworkImage(id: album.id, fit: .cover, size: 800),
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
               child: Container(
@@ -53,7 +53,7 @@ class _AlbumDetailHeader extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 80, 40, 40),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: .end,
                 children: <Widget>[
                   Container(
                     width: 200,
@@ -76,16 +76,16 @@ class _AlbumDetailHeader extends StatelessWidget {
                   const SizedBox(width: 40),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: .start,
+                      mainAxisAlignment: .end,
+                      mainAxisSize: .min,
                       children: <Widget>[
                         Text(
                           l10n.album,
                           style: theme.textTheme.labelLarge?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant
                                 .withValues(alpha: 0.85),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -93,9 +93,9 @@ class _AlbumDetailHeader extends StatelessWidget {
                           child: Text(
                             album.name ?? '-',
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                             style: theme.textTheme.displaySmall?.copyWith(
-                              fontWeight: FontWeight.w900,
+                              fontWeight: .w900,
                               letterSpacing: -1.2,
                               fontSize: 36,
                             ),
@@ -111,7 +111,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                         Text(
                           album.artist ?? '-',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: .w600,
                           ),
                         ),
                         const SizedBox(height: 20),

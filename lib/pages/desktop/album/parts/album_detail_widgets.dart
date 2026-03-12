@@ -59,9 +59,9 @@ class _TrackListTile extends StatelessWidget {
               child: Text(
                 song.title ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: TextStyle(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                   fontSize: 14,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -109,7 +109,7 @@ class _MiniAlbumCard extends StatelessWidget {
       child: SizedBox(
         width: 150,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
@@ -118,23 +118,23 @@ class _MiniAlbumCard extends StatelessWidget {
                 size: 300,
                 width: 150,
                 height: 150,
-                fit: BoxFit.cover,
+                fit: .cover,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               album.name ?? '',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 color: theme.colorScheme.onSurface,
               ),
             ),
             Text(
               album.artist ?? '',
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

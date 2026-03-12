@@ -16,7 +16,7 @@ class SettingSectionHeader extends StatelessWidget {
             child: Text(
               title,
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
+                fontWeight: .w800,
                 letterSpacing: 0.3,
                 color: theme.colorScheme.onSurface,
               ),
@@ -109,17 +109,17 @@ class SettingRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: <Widget>[
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: .start,
+              mainAxisAlignment: .start,
               children: <Widget>[
                 Text(
                   label,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: .w700,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -145,7 +145,7 @@ class SettingRow extends StatelessWidget {
           const SizedBox(width: 16),
           ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 44),
-            child: Align(alignment: Alignment.centerRight, child: trailing),
+            child: Align(alignment: .centerRight, child: trailing),
           ),
         ],
       ),
@@ -199,18 +199,18 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: <Widget>[
           Text(
             widget.label,
             style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: .w700,
               color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 12),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: .center,
             children: <Widget>[
               Expanded(
                 child: SliderTheme(
@@ -267,7 +267,7 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
                       color: theme.colorScheme.onSurfaceVariant.withValues(
                         alpha: 0.92,
                       ),
-                      fontWeight: FontWeight.w600,
+                      fontWeight: .w600,
                     ),
                   ),
                 ),
@@ -300,12 +300,12 @@ class SettingColorRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: <Widget>[
           Text(
             label,
             style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: .w700,
               color: theme.colorScheme.onSurface,
             ),
           ),

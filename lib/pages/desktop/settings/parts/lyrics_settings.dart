@@ -91,8 +91,8 @@ class _DesktopLyricsSettingsTabState
     final bool clickThrough = config.interaction.clickThrough;
     final double fontSize = config.text.fontSize;
     final double strokeWidth = config.text.strokeWidth ?? 0.0;
-    final TextAlign textAlign = config.text.textAlign ?? TextAlign.start;
-    final FontWeight fontWeight = config.text.fontWeight ?? FontWeight.w400;
+    final TextAlign textAlign = config.text.textAlign ?? .start;
+    final FontWeight fontWeight = config.text.fontWeight ?? .w400;
     final int textColor = config.text.textColor?.toARGB32() ?? 0xFFF2F2F8;
     final int shadowColor = config.text.shadowColor?.toARGB32() ?? 0xFF121214;
     final int strokeColor = config.text.strokeColor?.toARGB32() ?? 0x00000000;
@@ -186,15 +186,15 @@ class _DesktopLyricsSettingsTabState
               value: textAlign,
               items: <DropdownMenuItem<TextAlign>>[
                 DropdownMenuItem(
-                  value: TextAlign.start,
+                  value: .start,
                   child: Text(l10n.textAlignStart),
                 ),
                 DropdownMenuItem(
-                  value: TextAlign.center,
+                  value: .center,
                   child: Text(l10n.textAlignCenter),
                 ),
                 DropdownMenuItem(
-                  value: TextAlign.end,
+                  value: .end,
                   child: Text(l10n.textAlignEnd),
                 ),
               ],
@@ -219,23 +219,23 @@ class _DesktopLyricsSettingsTabState
               value: fontWeight,
               items: <DropdownMenuItem<FontWeight>>[
                 DropdownMenuItem(
-                  value: FontWeight.w300,
+                  value: .w300,
                   child: Text(l10n.fontWeightW300),
                 ),
                 DropdownMenuItem(
-                  value: FontWeight.w400,
+                  value: .w400,
                   child: Text(l10n.fontWeightW400),
                 ),
                 DropdownMenuItem(
-                  value: FontWeight.w500,
+                  value: .w500,
                   child: Text(l10n.fontWeightW500),
                 ),
                 DropdownMenuItem(
-                  value: FontWeight.w600,
+                  value: .w600,
                   child: Text(l10n.fontWeightW600),
                 ),
                 DropdownMenuItem(
-                  value: FontWeight.w700,
+                  value: .w700,
                   child: Text(l10n.fontWeightW700),
                 ),
               ],

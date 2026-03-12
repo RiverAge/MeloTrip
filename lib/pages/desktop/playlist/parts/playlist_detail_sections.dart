@@ -24,7 +24,7 @@ class PlaylistHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: .end,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
@@ -32,21 +32,21 @@ class PlaylistHeader extends StatelessWidget {
               id: playlist.id,
               width: 160,
               height: 160,
-              fit: BoxFit.cover,
+              fit: .cover,
               size: 400,
             ),
           ),
           const SizedBox(width: 24),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: .start,
+              mainAxisAlignment: .end,
               children: [
                 Text(
                   l10n.playlist,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: .7,
+                      alpha: 0.7,
                     ),
                   ),
                 ),
@@ -54,11 +54,11 @@ class PlaylistHeader extends StatelessWidget {
                 Text(
                   playlist.name ?? '-',
                   style: theme.textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
+                    fontWeight: .w900,
                     letterSpacing: -0.5,
                   ),
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -133,7 +133,7 @@ class PlaylistToolbar extends StatelessWidget {
           Text(
             l10n.track,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
               color: iconColor,
             ),
           ),
@@ -175,7 +175,7 @@ class PlaylistTrackTableHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle headerStyle = kPlaylistHeaderStyle.copyWith(
-      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
     );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
@@ -188,7 +188,7 @@ class PlaylistTrackTableHeader extends StatelessWidget {
             child: Icon(
               Icons.access_time_rounded,
               size: 14,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .5),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
           ),
           Expanded(flex: 3, child: Text(l10n.album, style: headerStyle)),
@@ -209,6 +209,6 @@ class PlaylistTrackTableHeader extends StatelessWidget {
 
 const TextStyle kPlaylistHeaderStyle = TextStyle(
   fontSize: 11,
-  fontWeight: FontWeight.bold,
+  fontWeight: .bold,
   letterSpacing: 1.2,
 );
