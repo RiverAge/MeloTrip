@@ -7,27 +7,30 @@ import 'package:update_installer/update_installer.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  test('downloadAndVerifyPackage handles empty download url for current mode', () async {
-    if (Platform.isWindows) {
-      expect(true, isTrue);
-      return;
-    }
+  test(
+    'downloadAndVerifyPackage handles empty download url for current mode',
+    () async {
+      if (Platform.isWindows) {
+        expect(true, isTrue);
+        return;
+      }
 
-    final service = AppUpdateService(installerGateway: const _FakeGateway());
-    await expectLater(
-      service.downloadAndVerifyPackage(
-        update: const AppUpdateInfo(
-          versionName: '1.0.1',
-          versionCode: 2,
-          sha256: '',
-          fileSize: 0,
-          downloadUrl: '',
-          changelog: '',
+      final service = AppUpdateService(installerGateway: const _FakeGateway());
+      await expectLater(
+        service.downloadAndVerifyPackage(
+          update: const AppUpdateInfo(
+            versionName: '1.0.1',
+            versionCode: 2,
+            sha256: '',
+            fileSize: 0,
+            downloadUrl: '',
+            changelog: '',
+          ),
         ),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
+        throwsA(isA<StateError>()),
+      );
+    },
+  );
 
   test('openUpdateDownloadPage throws when url is empty', () async {
     final service = AppUpdateService(installerGateway: const _FakeGateway());
