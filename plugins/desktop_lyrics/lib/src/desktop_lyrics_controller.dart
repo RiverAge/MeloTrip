@@ -38,7 +38,7 @@ class DesktopLyrics extends ChangeNotifier {
       strokeColor: Color(0x00000000),
       strokeWidth: 0.0,
       fontFamily: 'Segoe UI',
-      textAlign: TextAlign.start,
+      textAlign: TextAlign.center,
       fontWeight: FontWeight.w400,
     ),
     background: DesktopLyricsBackgroundConfig(

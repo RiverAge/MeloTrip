@@ -135,7 +135,8 @@ void HandleUpdateConfig(DesktopLyricsPlugin* plugin,
   config.overlay_width = ReadDoubleFromMap(arguments, "overlayWidth", 980.0);
   config.overlay_height = ReadDoubleFromMap(arguments, "overlayHeight", -1.0);
   config.font_family = ReadStringFromMap(arguments, "fontFamily", "Sans");
-  config.text_align = static_cast<int>(ReadInt64FromMap(arguments, "textAlign", 0));
+  config.text_align = static_cast<int>(
+      ReadInt64FromMap(arguments, "textAlign", 1));
   config.font_weight_value =
       static_cast<int>(ReadInt64FromMap(arguments, "fontWeightValue", 400));
 

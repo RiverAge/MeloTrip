@@ -27,7 +27,7 @@ struct DesktopLyricsOverlayConfig: Equatable {
   var overlayWidth = 980.0
   var overlayHeight = -1.0
   var fontFamily = "Segoe UI"
-  var textAlign = 0
+  var textAlign = 1
   var fontWeightValue = 400
 
   init(arguments: [String: Any]? = nil) {

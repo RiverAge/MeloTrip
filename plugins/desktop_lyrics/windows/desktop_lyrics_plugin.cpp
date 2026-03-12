@@ -189,7 +189,7 @@ void DesktopLyricsPlugin::HandleMethodCall(
         ReadDoubleFromMap(*arguments, "overlayHeight", -1.0);
     config.font_family = Utf8ToWide(ReadStringFromMap(*arguments, "fontFamily"));
     config.text_align = static_cast<int>(
-        ReadInt64FromMap(*arguments, "textAlign", 0));
+        ReadInt64FromMap(*arguments, "textAlign", 1));
     config.font_weight_value = static_cast<int>(
         ReadInt64FromMap(*arguments, "fontWeightValue", 400));
     overlay_->UpdateConfig(config);

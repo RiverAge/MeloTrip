@@ -64,7 +64,8 @@ class _DesktopLyricsService {
       'textGradientAngle': config.gradient.textGradientAngle,
       'overlayWidth': config.layout.overlayWidth ?? 980.0,
       'fontFamily': config.text.fontFamily ?? 'Segoe UI',
-      'textAlign': _toNativeTextAlign(config.text.textAlign ?? TextAlign.start),
+      'textAlign':
+          _toNativeTextAlign(config.text.textAlign ?? TextAlign.center),
       'fontWeightValue': config.text.fontWeight?.value ?? FontWeight.w400.value,
     });
   }
