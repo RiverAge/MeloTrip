@@ -54,16 +54,16 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
     final theme = Theme.of(context);
     final state = ref.watch(paginatedSongListProvider(kDesktopSongsQuery));
     final Color headerColor = theme.colorScheme.onSurfaceVariant.withValues(
-      alpha: .7,
+      alpha: 0.7,
     );
     final TextStyle headerStyle = kSongTableHeaderStyle.copyWith(
       color: headerColor,
     );
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SongPageHeader(title: l10n.song, count: state.items.length),
           SongPageToolbar(l10n: l10n),
@@ -96,7 +96,7 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
           ),
           Divider(
             height: 1,
-            color: theme.colorScheme.outlineVariant.withValues(alpha: .3),
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
           Expanded(
             child: state.items.isEmpty && state.isLoading

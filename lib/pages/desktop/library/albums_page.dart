@@ -64,9 +64,9 @@ class _DesktopAlbumsPageState extends ConsumerState<DesktopAlbumsPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: <Widget>[
           _PageHeader(
             title: l10n.album,

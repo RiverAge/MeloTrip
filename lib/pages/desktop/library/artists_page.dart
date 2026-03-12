@@ -44,9 +44,11 @@ class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
         .toList(growable: false);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(
+        alpha: 0,
+      ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           ArtistPageHeader(title: l10n.artist, count: state.items.length),
           ArtistPageToolbar(l10n: l10n),

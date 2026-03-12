@@ -42,7 +42,7 @@ class _AlbumDetailItem extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 48),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: 240,
@@ -61,9 +61,9 @@ class _AlbumDetailItem extends ConsumerWidget {
                 Text(
                   album.name ?? '-',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   maxLines: 2,
                 ),
                 Text(
@@ -71,7 +71,7 @@ class _AlbumDetailItem extends ConsumerWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
                 Text(
                   '${album.year ?? ""} 鈥?${album.songCount ?? 0}',
@@ -145,7 +145,7 @@ class _DetailTrackRow extends StatelessWidget {
           Icon(
             Icons.favorite_border_rounded,
             size: 14,
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .4),
+            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
           ),
         ],
       ),

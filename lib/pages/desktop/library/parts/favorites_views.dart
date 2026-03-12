@@ -48,7 +48,7 @@ class _AlbumGrid extends StatelessWidget {
             aspectRatio: 1,
             child: Container(
               color: theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: .4,
+                alpha: 0.4,
               ),
             ),
           ),
@@ -56,7 +56,7 @@ class _AlbumGrid extends StatelessWidget {
           Text(
             albums[index].name ?? '-',
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ],
       ),
@@ -88,14 +88,14 @@ class _ArtistGrid extends StatelessWidget {
             backgroundColor: theme.colorScheme.surfaceContainerHighest,
             child: Icon(
               Icons.person_rounded,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .8),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             artists[index].name ?? '-',
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
           ),
         ],
       ),

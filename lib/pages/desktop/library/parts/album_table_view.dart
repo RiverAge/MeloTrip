@@ -18,7 +18,7 @@ class AlbumTableView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final headerColor = theme.colorScheme.onSurfaceVariant.withValues(
-      alpha: .7,
+      alpha: 0.7,
     );
     final headerStyle = _baseStyle.copyWith(color: headerColor);
 
@@ -52,7 +52,7 @@ class AlbumTableView extends StatelessWidget {
         ),
         Divider(
           height: 1,
-          color: theme.colorScheme.outlineVariant.withValues(alpha: .3),
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
         Expanded(
           child: ListView.builder(
@@ -122,23 +122,23 @@ class _AlbumTableRow extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Text(
                           album.name ?? '-',
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                         Text(
                           album.artist ?? '-',
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: .7),
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -159,7 +159,7 @@ class _AlbumTableRow extends StatelessWidget {
               child: Text(
                 album.genre ?? '-',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -173,7 +173,7 @@ class _AlbumTableRow extends StatelessWidget {
             Icon(
               Icons.favorite_border_rounded,
               size: 16,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .4),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
             ),
           ],
         ),

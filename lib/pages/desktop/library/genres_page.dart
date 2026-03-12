@@ -13,9 +13,11 @@ class DesktopGenresPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(
+        alpha: 0,
+      ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           _PageHeader(title: l10n.songMetaGenre),
           _Toolbar(l10n: l10n),
@@ -61,7 +63,7 @@ class _PageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: .w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -123,7 +125,7 @@ class _GenreTable extends StatelessWidget {
                 child: Text(
                   l10n.albumHeaderSongs,
                   style: headerStyle,
-                  textAlign: TextAlign.right,
+                  textAlign: .right,
                 ),
               ),
               SizedBox(
@@ -131,7 +133,7 @@ class _GenreTable extends StatelessWidget {
                 child: Text(
                   l10n.albumCount,
                   style: headerStyle,
-                  textAlign: TextAlign.right,
+                  textAlign: .right,
                 ),
               ),
               const SizedBox(width: 30),
@@ -186,7 +188,7 @@ class _GenreRow extends StatelessWidget {
               child: Text(
                 genre.value ?? '-',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ),
@@ -195,7 +197,7 @@ class _GenreRow extends StatelessWidget {
               child: Text(
                 '${genre.songCount ?? 0}',
                 style: theme.textTheme.bodySmall,
-                textAlign: TextAlign.right,
+                textAlign: .right,
               ),
             ),
             SizedBox(
@@ -203,7 +205,7 @@ class _GenreRow extends StatelessWidget {
               child: Text(
                 '${genre.albumCount ?? 0}',
                 style: theme.textTheme.bodySmall,
-                textAlign: TextAlign.right,
+                textAlign: .right,
               ),
             ),
             const SizedBox(width: 30),
@@ -230,7 +232,7 @@ class _ToolbarButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Text(label, style: theme.textTheme.labelMedium),
           const SizedBox(width: 8),
