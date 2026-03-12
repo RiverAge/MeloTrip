@@ -68,16 +68,25 @@ Future<void> _pumpDesktopHome(
         appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
         currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
         albumListProvider(
-          AlbumListType.random,
+          AlbumListQuery(type: AlbumListType.random.name),
         ).overrideWith((_) async => random),
         albumListProvider(
-          AlbumListType.recent,
+          AlbumListQuery(type: AlbumListType.recent.name),
         ).overrideWith((_) async => recent),
         albumListProvider(
-          AlbumListType.newest,
+          AlbumListQuery(type: AlbumListType.recent.name, size: 50),
+        ).overrideWith((_) async => recent),
+        albumListProvider(
+          AlbumListQuery(type: AlbumListType.newest.name),
         ).overrideWith((_) async => newest),
         albumListProvider(
-          AlbumListType.frequent,
+          AlbumListQuery(type: AlbumListType.newest.name, size: 50),
+        ).overrideWith((_) async => newest),
+        albumListProvider(
+          AlbumListQuery(type: AlbumListType.frequent.name),
+        ).overrideWith((_) async => frequent),
+        albumListProvider(
+          AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
         ).overrideWith((_) async => frequent),
         albumDetailProvider('album-1').overrideWith((_) async => detail),
       ],

@@ -29,7 +29,9 @@ class _DesktopGenreSection extends ConsumerWidget {
       children: [
         _SectionHeader(title: l10n.songMetaGenre),
         AsyncValueBuilder(
-          provider: albumListProvider(AlbumListType.recent),
+          provider: albumListProvider(
+            AlbumListQuery(type: AlbumListType.recent.name),
+          ),
           builder: (context, data, _) {
             final albums = data;
             final fallback = albums

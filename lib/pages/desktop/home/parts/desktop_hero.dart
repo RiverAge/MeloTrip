@@ -13,7 +13,9 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
     return AsyncValueBuilder(
-      provider: albumListProvider(AlbumListType.random),
+      provider: albumListProvider(
+        AlbumListQuery(type: AlbumListType.random.name),
+      ),
       loading: (_, _) => const SizedBox(height: 280),
       builder: (context, data, _) {
         final album = data.firstOrNull;

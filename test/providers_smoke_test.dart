@@ -24,7 +24,7 @@ void main() {
     addTearDown(container.dispose);
 
     final result = await container.read(
-      albumListProvider(AlbumListType.newest).future,
+      albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
     );
     expect(result, isEmpty);
   });
@@ -36,7 +36,7 @@ void main() {
     addTearDown(container.dispose);
 
     final result = await container.read(
-      albumListProvider(AlbumListType.newest).future,
+      albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
     );
     final albums = result;
     expect(albums.length, 1);

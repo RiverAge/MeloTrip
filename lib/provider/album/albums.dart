@@ -108,7 +108,7 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
 }
 
 @riverpod
-Future<List<AlbumEntity>> albumList(Ref ref, AlbumListType type) async {
+Future<List<AlbumEntity>> albumList(Ref ref, AlbumListQuery query) async {
   final repository = ref.read(albumRepositoryProvider);
-  return repository.fetchAlbumListItems(query: AlbumListQuery(type: type.name));
+  return repository.fetchAlbumListItems(query: query);
 }

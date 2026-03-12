@@ -154,7 +154,9 @@ class _AlbumRecommendationsSection extends StatelessWidget {
             SizedBox(
               height: 240,
               child: AsyncValueBuilder(
-                provider: albumListProvider(AlbumListType.random),
+                provider: albumListProvider(
+                  AlbumListQuery(type: AlbumListType.random.name),
+                ),
                 builder: (context, data, _) {
                   final List<AlbumEntity> albums = data;
                   return ListView.builder(

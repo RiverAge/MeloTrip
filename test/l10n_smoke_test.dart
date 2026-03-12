@@ -78,10 +78,10 @@ void main() {
       ProviderScope(
         overrides: [
           albumListProvider(
-            AlbumListType.newest,
+            AlbumListQuery(type: AlbumListType.newest.name),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           albumListProvider(
-            AlbumListType.recent,
+            AlbumListQuery(type: AlbumListType.recent.name),
           ).overrideWith((_) async => const <AlbumEntity>[]),
         ],
         child: MaterialApp(

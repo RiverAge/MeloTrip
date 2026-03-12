@@ -38,16 +38,25 @@ void main() {
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           albumListProvider(
-            AlbumListType.random,
+            AlbumListQuery(type: AlbumListType.random.name),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           albumListProvider(
-            AlbumListType.newest,
+            AlbumListQuery(type: AlbumListType.newest.name),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           albumListProvider(
-            AlbumListType.recent,
+            AlbumListQuery(type: AlbumListType.newest.name, size: 50),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           albumListProvider(
-            AlbumListType.frequent,
+            AlbumListQuery(type: AlbumListType.recent.name),
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListQuery(type: AlbumListType.recent.name, size: 50),
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListQuery(type: AlbumListType.frequent.name),
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           playlistsProvider.overrideWith(
             () => FakePlaylistsData(playlistsResponse),

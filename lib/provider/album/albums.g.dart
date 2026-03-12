@@ -137,7 +137,7 @@ final class AlbumListProvider
         $FutureProvider<List<AlbumEntity>> {
   AlbumListProvider._({
     required AlbumListFamily super.from,
-    required AlbumListType super.argument,
+    required AlbumListQuery super.argument,
   }) : super(
          retry: null,
          name: r'albumListProvider',
@@ -164,7 +164,7 @@ final class AlbumListProvider
 
   @override
   FutureOr<List<AlbumEntity>> create(Ref ref) {
-    final argument = this.argument as AlbumListType;
+    final argument = this.argument as AlbumListQuery;
     return albumList(ref, argument);
   }
 
@@ -179,10 +179,11 @@ final class AlbumListProvider
   }
 }
 
-String _$albumListHash() => r'cf638040d9fd6a0d3fab8abcbfaa67eebcdf55eb';
+String _$albumListHash() => r'631d4f2f5081f73a1b97833f70e506ec8b3d4e40';
 
 final class AlbumListFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlbumListType> {
+    with
+        $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlbumListQuery> {
   AlbumListFamily._()
     : super(
         retry: null,
@@ -192,8 +193,8 @@ final class AlbumListFamily extends $Family
         isAutoDispose: true,
       );
 
-  AlbumListProvider call(AlbumListType type) =>
-      AlbumListProvider._(argument: type, from: this);
+  AlbumListProvider call(AlbumListQuery query) =>
+      AlbumListProvider._(argument: query, from: this);
 
   @override
   String toString() => r'albumListProvider';

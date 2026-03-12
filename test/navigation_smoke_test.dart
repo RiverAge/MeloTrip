@@ -45,10 +45,16 @@ void main() {
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           albumListProvider(
-            AlbumListType.newest,
+            AlbumListQuery(type: AlbumListType.newest.name),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           albumListProvider(
-            AlbumListType.recent,
+            AlbumListQuery(type: AlbumListType.newest.name, size: 50),
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListQuery(type: AlbumListType.recent.name),
+          ).overrideWith((_) async => const <AlbumEntity>[]),
+          albumListProvider(
+            AlbumListQuery(type: AlbumListType.recent.name, size: 50),
           ).overrideWith((_) async => const <AlbumEntity>[]),
           initialBootstrapServiceProvider.overrideWithValue(
             InitialBootstrapService(
