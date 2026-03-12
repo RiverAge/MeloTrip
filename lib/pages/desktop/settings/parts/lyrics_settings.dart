@@ -77,14 +77,6 @@ class _DesktopLyricsSettingsTabState
   }
 
   @override
-  void dispose() {
-    if (widget.onApplyConfig == null) {
-      _desktopLyrics.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final AsyncValue<DesktopLyricsConfig> configAsync = ref.watch(
