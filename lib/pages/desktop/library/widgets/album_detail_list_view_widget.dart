@@ -1,4 +1,10 @@
-part of '../albums_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/provider/album/album_detail.dart';
+import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/widget/provider_value_builder.dart';
 
 class AlbumDetailListView extends StatelessWidget {
   const AlbumDetailListView({
@@ -42,7 +48,7 @@ class _AlbumDetailItem extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 48),
       child: Row(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: 240,
@@ -61,9 +67,9 @@ class _AlbumDetailItem extends ConsumerWidget {
                 Text(
                   album.name ?? '-',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: .bold,
+                    fontWeight: FontWeight.bold,
                   ),
-                  textAlign: .center,
+                  textAlign: TextAlign.center,
                   maxLines: 2,
                 ),
                 Text(
@@ -71,10 +77,10 @@ class _AlbumDetailItem extends ConsumerWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  textAlign: .center,
+                  textAlign: TextAlign.center,
                 ),
                 Text(
-                  '${album.year ?? ""} 鈥?${album.songCount ?? 0}',
+                  '${album.year ?? ""} · ${album.songCount ?? 0}',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.outline,
                   ),
@@ -87,8 +93,7 @@ class _AlbumDetailItem extends ConsumerWidget {
             child: AsyncValueBuilder(
               provider: albumDetailProvider(album.id ?? ''),
               builder: (context, data, ref) {
-                final List<SongEntity> songs =
-                    data.subsonicResponse?.album?.song ?? <SongEntity>[];
+                final List<SongEntity> songs = data.subsonicResponse?.album?.song ?? <SongEntity>[];
                 return Column(
                   children: songs
                       .asMap()

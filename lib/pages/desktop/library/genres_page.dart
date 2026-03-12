@@ -173,8 +173,16 @@ class _GenreRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final genreValue = genre.value?.trim();
     return InkWell(
-      onTap: () {},
+      onTap: genreValue == null || genreValue.isEmpty
+          ? null
+          : () {
+              Navigator.of(context).pushNamed(
+                '/genre_detail',
+                arguments: genre,
+              );
+            },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         child: Row(

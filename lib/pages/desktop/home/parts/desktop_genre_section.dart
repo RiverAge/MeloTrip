@@ -92,55 +92,66 @@ class _GenreTileState extends State<_GenreTile> {
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
-      child: AnimatedContainer(
-        duration: DesktopMotionTokens.medium,
-        curve: DesktopMotionTokens.standardCurve,
-        decoration: BoxDecoration(
-          color: _isHovering
-              ? colorScheme.surfaceContainerHighest.withValues(alpha: .82)
-              : colorScheme.surfaceContainerHigh.withValues(alpha: .72),
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
+      child: GestureDetector(
+        onTap: () {
+          if (widget.genre.trim().isEmpty) {
+            return;
+          }
+          Navigator.of(context).pushNamed(
+            '/genre_detail',
+            arguments: GenreEntity(value: widget.genre),
+          );
+        },
+        child: AnimatedContainer(
+          duration: DesktopMotionTokens.medium,
+          curve: DesktopMotionTokens.standardCurve,
+          decoration: BoxDecoration(
             color: _isHovering
-                ? colorScheme.outline.withValues(alpha: .32)
-                : colorScheme.outlineVariant.withValues(alpha: .2),
+                ? colorScheme.surfaceContainerHighest.withValues(alpha: .82)
+                : colorScheme.surfaceContainerHigh.withValues(alpha: .72),
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: _isHovering
+                  ? colorScheme.outline.withValues(alpha: .32)
+                  : colorScheme.outlineVariant.withValues(alpha: .2),
+            ),
+            boxShadow: _isHovering
+                ? [
+                    BoxShadow(
+                      color: theme.shadowColor.withValues(alpha: .14),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
           ),
-          boxShadow: _isHovering
-              ? [
-                  BoxShadow(
-                    color: theme.shadowColor.withValues(alpha: .14),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final stripWidth = constraints.maxWidth * .1;
+              return Row(
+                children: [
+                  Container(
+                    width: stripWidth,
+                    color: widget.color.withValues(alpha: .9),
                   ),
-                ]
-              : [],
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final stripWidth = constraints.maxWidth * .1;
-            return Row(
-              children: [
-                Container(
-                  width: stripWidth,
-                  color: widget.color.withValues(alpha: .9),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: Text(
-                      widget.genre,
-                      maxLines: 1,
-                      overflow: .ellipsis,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: .w700,
-                        fontSize: 13,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Text(
+                        widget.genre,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

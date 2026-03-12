@@ -127,7 +127,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                           style: Theme.of(context).textTheme.labelLarge
                               ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: .w700,
                               ),
                         )
                       : const Icon(Icons.arrow_forward),

@@ -1,7 +1,10 @@
-part of '../albums_page.dart';
+import 'package:flutter/material.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/desktop/library/albums_page.dart';
 
-class _PageHeader extends StatelessWidget {
-  const _PageHeader({
+class AlbumPageHeader extends StatelessWidget {
+  const AlbumPageHeader({
+    super.key,
     required this.title,
     required this.count,
     required this.viewType,
@@ -36,7 +39,7 @@ class _PageHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: .w900,
+              fontWeight: FontWeight.w900,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -55,18 +58,24 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          _ViewSwitcher(current: viewType, onChanged: onViewTypeChanged),
+          AlbumViewSwitcher(current: viewType, onChanged: onViewTypeChanged),
         ],
       ),
     );
   }
 }
 
-class _ViewSwitcher extends StatelessWidget {
-  const _ViewSwitcher({required this.current, required this.onChanged});
+class AlbumViewSwitcher extends StatelessWidget {
+  const AlbumViewSwitcher({
+    super.key,
+    required this.current,
+    required this.onChanged,
+    this.showDetailOption = true,
+  });
 
   final AlbumViewType current;
   final ValueChanged<AlbumViewType> onChanged;
+  final bool showDetailOption;
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +98,12 @@ class _ViewSwitcher extends StatelessWidget {
             selected: current == AlbumViewType.table,
             onTap: () => onChanged(AlbumViewType.table),
           ),
-          _ViewItem(
-            icon: Icons.view_headline_rounded,
-            selected: current == AlbumViewType.detail,
-            onTap: () => onChanged(AlbumViewType.detail),
-          ),
+          if (showDetailOption)
+            _ViewItem(
+              icon: Icons.view_headline_rounded,
+              selected: current == AlbumViewType.detail,
+              onTap: () => onChanged(AlbumViewType.detail),
+            ),
         ],
       ),
     );
@@ -135,8 +145,8 @@ class _ViewItem extends StatelessWidget {
   }
 }
 
-class _Toolbar extends StatelessWidget {
-  const _Toolbar({required this.l10n});
+class AlbumToolbar extends StatelessWidget {
+  const AlbumToolbar({super.key, required this.l10n});
 
   final AppLocalizations l10n;
 
@@ -151,7 +161,7 @@ class _Toolbar extends StatelessWidget {
           Text(
             l10n.name,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: .bold,
+              fontWeight: FontWeight.bold,
               color: iconColor,
             ),
           ),

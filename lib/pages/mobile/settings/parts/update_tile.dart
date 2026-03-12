@@ -9,7 +9,7 @@ Widget buildUpdateSubtitleWidget(
     Text(
       buildUpdateSubtitle(context, state),
       maxLines: 2,
-      overflow: TextOverflow.ellipsis,
+      overflow: .ellipsis,
       style: theme.textTheme.bodySmall,
     ),
   ];
@@ -33,8 +33,8 @@ Widget buildUpdateSubtitleWidget(
   }
 
   return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: .start,
+    mainAxisSize: .min,
     children: children,
   );
 }

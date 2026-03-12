@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
@@ -15,6 +14,8 @@ import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
 import 'package:melo_trip/pages/desktop/library/folders_page.dart';
 import 'package:melo_trip/pages/desktop/library/genres_page.dart';
 import 'package:melo_trip/pages/desktop/library/songs_page.dart';
+import 'package:melo_trip/pages/desktop/library/genre_detail_page.dart';
+import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
@@ -143,6 +144,14 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage> {
         break;
       case '/folders':
         page = const DesktopFoldersPage();
+        break;
+      case '/genre_detail':
+        final Object? arg = settings.arguments;
+        if (arg is GenreEntity) {
+          page = DesktopGenreDetailPage(genre: arg);
+        } else {
+          page = const DesktopHomePage();
+        }
         break;
       case '/playlist_detail':
         final Object? id = settings.arguments;

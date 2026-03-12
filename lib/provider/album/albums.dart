@@ -8,17 +8,19 @@ part 'albums.g.dart';
 enum AlbumListType { random, newest, recent, frequent }
 
 class AlbumListQuery {
-  const AlbumListQuery({required this.type, this.size, this.offset});
+  const AlbumListQuery({required this.type, this.size, this.offset, this.genre});
 
   final String type;
   final int? size;
   final int? offset;
+  final String? genre;
 
-  AlbumListQuery copyWith({String? type, int? size, int? offset}) {
+  AlbumListQuery copyWith({String? type, int? size, int? offset, String? genre}) {
     return AlbumListQuery(
       type: type ?? this.type,
       size: size ?? this.size,
       offset: offset ?? this.offset,
+      genre: genre ?? this.genre,
     );
   }
 
@@ -27,6 +29,7 @@ class AlbumListQuery {
       'type': type,
       if (size != null) 'size': size,
       if (offset != null) 'offset': offset,
+      if (genre != null) 'genre': genre,
     };
   }
 
@@ -36,10 +39,11 @@ class AlbumListQuery {
       other is AlbumListQuery &&
           type == other.type &&
           size == other.size &&
-          offset == other.offset;
+          offset == other.offset &&
+          genre == other.genre;
 
   @override
-  int get hashCode => Object.hash(type, size, offset);
+  int get hashCode => Object.hash(type, size, offset, genre);
 }
 
 @Riverpod(keepAlive: true)

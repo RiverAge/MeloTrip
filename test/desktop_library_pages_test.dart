@@ -13,8 +13,10 @@ import 'package:melo_trip/pages/desktop/home/parts/desktop_album_card.dart';
 import 'package:melo_trip/pages/desktop/library/albums_page.dart';
 import 'package:melo_trip/pages/desktop/library/artists_page.dart';
 import 'package:melo_trip/pages/desktop/library/folders_page.dart';
+import 'package:melo_trip/pages/desktop/library/genre_detail_page.dart';
 import 'package:melo_trip/pages/desktop/library/genres_page.dart';
 import 'package:melo_trip/pages/desktop/library/songs_page.dart';
+import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
@@ -148,6 +150,22 @@ void main() {
     expect(find.text('Rock'), findsOneWidget);
     expect(find.text('12'), findsOneWidget);
     expect(find.text('4'), findsOneWidget);
+  });
+
+  testWidgets('DesktopGenreDetailPage renders albums from getAlbumList', (
+    tester,
+  ) async {
+    await pumpDesktopPage(
+      tester,
+      child: const DesktopGenreDetailPage(
+        genre: GenreEntity(value: 'Rock', songCount: 8, albumCount: 3),
+      ),
+      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
+    );
+
+    expect(find.text('Rock'), findsOneWidget);
+    expect(find.byType(DesktopAlbumCard), findsOneWidget);
+    expect(find.text('Road Trip'), findsOneWidget);
   });
 }
 

@@ -8,6 +8,7 @@ import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/pages/desktop/home/parts/desktop_album_card.dart';
+import 'package:melo_trip/model/response/genre/genre.dart';
 
 part 'parts/section_header.dart';
 part 'parts/desktop_hero.dart';
