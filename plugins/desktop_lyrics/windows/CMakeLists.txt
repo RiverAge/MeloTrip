@@ -20,6 +20,8 @@ set(PLUGIN_NAME "desktop_lyrics_plugin")
 list(APPEND PLUGIN_SOURCES
   "desktop_lyrics_overlay.cpp"
   "desktop_lyrics_overlay.h"
+  "desktop_lyrics_overlay_render.cpp"
+  "desktop_lyrics_overlay_resources.cpp"
   "desktop_lyrics_plugin.cpp"
   "desktop_lyrics_plugin.h"
 )

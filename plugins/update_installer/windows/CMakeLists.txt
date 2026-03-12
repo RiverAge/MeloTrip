@@ -14,6 +14,8 @@ set(UPDATER_NAME "MeloTripUpdater")
 list(APPEND PLUGIN_SOURCES
   "update_installer_plugin.cpp"
   "update_installer_plugin.h"
+  "update_installer_plugin_internal.cpp"
+  "update_installer_plugin_internal.h"
 )
 
 add_library(${PLUGIN_NAME} SHARED
@@ -34,6 +36,11 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 
 add_executable(${UPDATER_NAME} WIN32
   "updater/updater_main.cpp"
+  "updater/updater_operations.cpp"
+  "updater/updater_shared.h"
+  "updater/updater_ui_render.cpp"
+  "updater/updater_ui_resources.cpp"
+  "updater/updater_window.cpp"
 )
 
 apply_standard_settings(${UPDATER_NAME})
