@@ -108,7 +108,12 @@ class _PlayQueueHeader extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(_isDesktop ? 18 : 16, _isDesktop ? 14 : 12, 12, 10),
+      padding: EdgeInsets.fromLTRB(
+        _isDesktop ? 18 : 16,
+        _isDesktop ? 14 : 12,
+        12,
+        10,
+      ),
       decoration: BoxDecoration(
         color: _isDesktop
             ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.45)
@@ -121,51 +126,30 @@ class _PlayQueueHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: _PlayQueueTitle(variant: variant)),
-          if (_isDesktop)
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surface.withValues(alpha: 0.88),
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.28),
+          Expanded(child: _PlayQueueTitle(variant: variant, player: player)),
+          Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: _isDesktop ? 0.88 : 0.92),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(
+                  alpha: _isDesktop ? 0.28 : 0.22,
                 ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const _PlayQueuePlaylistModeButton(),
-                  const _PlayQueueShuffleModeButton(),
-                  _ClearQueueButton(
-                    player: player,
-                    closeAfterClear: closeAfterClear,
-                    onClose: onClose,
-                  ),
-                ],
-              ),
-            )
-          else
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surface.withValues(alpha: 0.92),
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.22),
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const _PlayQueuePlaylistModeButton(),
-                  const _PlayQueueShuffleModeButton(),
-                  _ClearQueueButton(
-                    player: player,
-                    closeAfterClear: closeAfterClear,
-                    onClose: onClose,
-                  ),
-                ],
               ),
             ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _PlayQueuePlaylistModeButton(),
+                const _PlayQueueShuffleModeButton(),
+                _ClearQueueButton(
+                  player: player,
+                  closeAfterClear: closeAfterClear,
+                  onClose: onClose,
+                ),
+              ],
+            ),
+          ),
           if (_isDesktop)
             IconButton(
               onPressed: onClose,
@@ -232,34 +216,121 @@ class _ClearQueueButton extends StatelessWidget {
 }
 
 class _PlayQueueTitle extends StatelessWidget {
-  const _PlayQueueTitle({required this.variant});
+  const _PlayQueueTitle({required this.variant, required this.player});
 
   final PlayQueuePanelVariant variant;
+  final AppPlayer player;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final titleStyle = switch (variant) {
-      PlayQueuePanelVariant.desktop => theme.textTheme.titleMedium?.copyWith(
-        fontWeight: .w800,
-      ),
-      PlayQueuePanelVariant.mobile => theme.textTheme.titleMedium,
-    };
-    final countStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: colorScheme.onSurfaceVariant,
-    );
 
     return PlayQueueBuilder(
       builder: (context, playQueue, _) {
-        return Text.rich(
-          TextSpan(
-            text: AppLocalizations.of(context)!.playQueue,
-            style: titleStyle,
+        if (variant == PlayQueuePanelVariant.mobile) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextSpan(text: ' (${playQueue.songs.length})', style: countStyle),
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.playlist_play_rounded,
+                  size: 18,
+                  color: colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    text: AppLocalizations.of(context)!.playQueue,
+                    style: theme.textTheme.titleMedium,
+                    children: [
+                      TextSpan(
+                        text: ' (${playQueue.songs.length})',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
-          ),
+          );
+        }
+
+        return Row(
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.playlist_play_rounded,
+                color: colorScheme.primary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          AppLocalizations.of(context)!.playQueue,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: .w800,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface.withValues(alpha: 0.95),
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(
+                            color: colorScheme.outlineVariant.withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          '${playQueue.songs.length}',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: .w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
