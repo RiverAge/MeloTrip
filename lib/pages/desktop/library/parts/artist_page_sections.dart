@@ -136,56 +136,67 @@ class ArtistCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        Expanded(
-          child: artist.coverArt != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: ArtworkImage(
-                    id: artist.coverArt!,
-                    size: 300,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: .cover,
-                  ),
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest.withValues(
-                      alpha: 0.3,
-                    ),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => DesktopArtistDetailPage(artistId: artist.id),
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Expanded(
+            child: artist.coverArt != null
+                ? ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.person_rounded,
-                      size: 48,
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.2,
+                    child: ArtworkImage(
+                      id: artist.coverArt!,
+                      size: 300,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: .cover,
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.person_rounded,
+                        size: 48,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.2,
+                        ),
                       ),
                     ),
                   ),
-                ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          artist.name,
-          maxLines: 1,
-          overflow: .ellipsis,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: .bold,
           ),
-        ),
-        if (artist.albumCount != null)
+          const SizedBox(height: 12),
           Text(
-            '${artist.albumCount}',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+            artist.name,
+            maxLines: 1,
+            overflow: .ellipsis,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: .bold,
             ),
           ),
-      ],
+          if (artist.albumCount != null)
+            Text(
+              '${artist.albumCount}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.6,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

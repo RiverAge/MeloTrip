@@ -81,23 +81,37 @@ class _ArtistGrid extends StatelessWidget {
         childAspectRatio: 0.8,
       ),
       itemCount: artists.length,
-      itemBuilder: (context, index) => Column(
-        children: <Widget>[
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: theme.colorScheme.surfaceContainerHighest,
-            child: Icon(
-              Icons.person_rounded,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+      itemBuilder: (context, index) => InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => DesktopArtistDetailPage(
+                artistId: artists[index].id,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            artists[index].name ?? '-',
-            maxLines: 1,
-            overflow: .ellipsis,
-          ),
-        ],
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          children: <Widget>[
+            CircleAvatar(
+              radius: 40,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              child: Icon(
+                Icons.person_rounded,
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.8,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              artists[index].name ?? '-',
+              maxLines: 1,
+              overflow: .ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

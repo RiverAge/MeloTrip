@@ -6,8 +6,8 @@ import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
+import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/search/search_shared_widgets.dart';
-import 'package:melo_trip/pages/mobile/artist/artist_detail_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/search/search.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
@@ -65,7 +65,7 @@ class _DesktopSearchPageState extends ConsumerState<DesktopSearchPage> {
     }
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => ArtistDetailPage(artistId: artistId),
+        builder: (_) => DesktopArtistDetailPage(artistId: artistId),
       ),
     );
   }

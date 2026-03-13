@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
 import 'package:melo_trip/provider/artist/artists.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 
