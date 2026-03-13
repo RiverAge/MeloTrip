@@ -155,7 +155,7 @@ final class LogoutProvider
         argument: null,
         retry: null,
         name: r'logoutProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -174,4 +174,4 @@ final class LogoutProvider
   }
 }
 
-String _$logoutHash() => r'd5c10020899ad8143d80283ca3b1f5f4d298b7b4';
+String _$logoutHash() => r'ef1a22388b39ca1dcd4665781a4228bf0cedcb31';

@@ -80,7 +80,7 @@ Future<AuthUser?> login(
   throw Exception('Login failed');
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<void> logout(Ref ref) async {
   final persistence = await ref.read(appPersistenceProvider.future);
   await persistence.clearCurrentUser();
