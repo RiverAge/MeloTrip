@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:update_installer/update_installer.dart';
-
-import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 
 class GeneralSettings extends ConsumerStatefulWidget {
   const GeneralSettings({super.key});
@@ -31,97 +30,121 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
         updateState.stage == .readyToInstall &&
         updateState.pendingPackagePath != null;
     final AppUpdateInfo? availableUpdate = updateState.availableUpdate;
+    final ThemeData theme = Theme.of(context);
 
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       children: <Widget>[
-        Center(
+        Align(
+          alignment: .topLeft,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 900),
-            child: Column(
-              crossAxisAlignment: .start,
-              children: <Widget>[
-                SettingSectionHeader(title: l10n.theme),
-                SettingSectionCard(
-                  child: SettingSectionBody(
-                    children: <Widget>[
-                      SettingRow(
-                        label: l10n.systemDefault,
-                        description: l10n.theme,
-                        trailing: Switch(value: true, onChanged: (_) {}),
+            constraints: const BoxConstraints(maxWidth: 920),
+            child: SettingSectionCard(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 18, 18, 8),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: <Widget>[
+                    _GeneralSettingsSectionTitle(
+                      icon: Icons.palette_outlined,
+                      title: l10n.theme,
+                      subtitle: l10n.systemDefault,
+                    ),
+                    SettingSectionBody(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0,
+                        vertical: 10,
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                SettingSectionHeader(title: l10n.settings),
-                SettingSectionCard(
-                  child: SettingSectionBody(
-                    children: <Widget>[
-                      SettingRow(
-                        label: l10n.language,
-                        description: l10n.language,
-                        trailing: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surfaceContainerHighest
-                                .withValues(alpha: 0.45),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Icon(
-                              Icons.chevron_right_rounded,
-                              color: Theme.of(context).colorScheme.primary,
+                      children: <Widget>[
+                        SettingRow(
+                          label: l10n.systemDefault,
+                          description: l10n.theme,
+                          trailing: Switch(value: true, onChanged: (_) {}),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Divider(
+                      height: 1,
+                      color: theme.colorScheme.outlineVariant.withValues(
+                        alpha: 0.35,
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    _GeneralSettingsSectionTitle(
+                      icon: Icons.settings_suggest_rounded,
+                      title: l10n.settings,
+                      subtitle: l10n.checkForUpdates,
+                    ),
+                    SettingSectionBody(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0,
+                        vertical: 10,
+                      ),
+                      children: <Widget>[
+                        SettingRow(
+                          label: l10n.language,
+                          description: l10n.language,
+                          trailing: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHighest
+                                  .withValues(alpha: 0.45),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.chevron_right_rounded,
+                                color: theme.colorScheme.primary,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SettingRow(
-                        label: l10n.checkForUpdates,
-                        description: _buildUpdateSubtitle(context, updateState),
-                        progress: _buildUpdateProgress(context, updateState),
-                        trailing: updateState.isChecking
-                            ? const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : FilledButton.tonal(
-                                onPressed:
-                                    (updateState.isChecking ||
-                                        updateState.isUpdating)
-                                    ? null
-                                    : isReadyToInstall
-                                    ? _restartAndInstallPending
-                                    : availableUpdate != null
-                                    ? () => _startUpdate(availableUpdate)
-                                    : _onCheckUpdate,
-                                style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 18,
-                                    vertical: 14,
+                        SettingRow(
+                          label: l10n.checkForUpdates,
+                          description: _buildUpdateSubtitle(context, updateState),
+                          progress: _buildUpdateProgress(context, updateState),
+                          trailing: updateState.isChecking
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
                                   ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                ),
-                                child: Text(
-                                  isReadyToInstall
-                                      ? l10n.updateRestartToInstallAction
+                                )
+                              : FilledButton.tonal(
+                                  onPressed:
+                                      (updateState.isChecking ||
+                                          updateState.isUpdating)
+                                      ? null
+                                      : isReadyToInstall
+                                      ? _restartAndInstallPending
                                       : availableUpdate != null
-                                      ? l10n.updateNow
-                                      : l10n.checkForUpdates,
+                                      ? () => _startUpdate(availableUpdate)
+                                      : _onCheckUpdate,
+                                  style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 18,
+                                      vertical: 14,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isReadyToInstall
+                                        ? l10n.updateRestartToInstallAction
+                                        : availableUpdate != null
+                                        ? l10n.updateNow
+                                        : l10n.checkForUpdates,
+                                  ),
                                 ),
-                              ),
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -299,5 +322,61 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
       return '${(bytes / kb).toStringAsFixed(0)}K';
     }
     return '${bytes}B';
+  }
+}
+
+class _GeneralSettingsSectionTitle extends StatelessWidget {
+  const _GeneralSettingsSectionTitle({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Row(
+      children: <Widget>[
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Icon(
+              icon,
+              color: theme.colorScheme.primary,
+              size: 20,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .start,
+            children: <Widget>[
+              Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: .w800,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

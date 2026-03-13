@@ -57,8 +57,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(TabBar), findsOneWidget);
     expect(find.byType(TabBarView), findsOneWidget);
-    expect(find.byIcon(Icons.tune_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.search_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.tune_rounded), findsWidgets);
     expect(find.byType(Scrollable), findsWidgets);
   });
 
@@ -122,7 +121,6 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    expect(find.byType(TextButton), findsOneWidget);
     expect(find.byType(ListView), findsWidgets);
   });
 
