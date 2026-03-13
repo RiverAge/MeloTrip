@@ -1,5 +1,5 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
-import 'package:test/test.dart';
 
 void main() {
   test('Configuration.fromJson decodes sqlite-style shuffle values', () {

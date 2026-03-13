@@ -14,7 +14,7 @@ class DesktopLyricsSettings extends _$DesktopLyricsSettings {
       enabled: false,
       clickThrough: false,
     ),
-    text: DesktopLyricsTextConfig(fontSize: 34),
+    text: DesktopLyricsTextConfig(fontSize: 34, textAlign: TextAlign.center),
     background: DesktopLyricsBackgroundConfig(opacity: 0.93),
     gradient: DesktopLyricsGradientConfig(),
     layout: DesktopLyricsLayoutConfig(overlayWidth: 980),
@@ -122,13 +122,13 @@ class DesktopLyricsSettings extends _$DesktopLyricsSettings {
       'gradientEndColor':
           config.gradient.textGradientEndColor?.toARGB32() ?? 0xFFFF4D8D,
       'overlayWidth': config.layout.overlayWidth ?? 980.0,
-      'textAlign': config.text.textAlign?.index ?? TextAlign.start.index,
+      'textAlign': config.text.textAlign?.index ?? TextAlign.center.index,
       'fontWeight': _encodeFontWeight(config.text.fontWeight),
     };
   }
 
   TextAlign _decodeTextAlign(int? index) {
-    final resolvedIndex = index ?? TextAlign.start.index;
+    final resolvedIndex = index ?? TextAlign.center.index;
     return TextAlign.values[resolvedIndex % TextAlign.values.length];
   }
 

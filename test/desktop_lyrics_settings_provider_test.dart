@@ -60,6 +60,20 @@ void main() {
     expect(config.layout.overlayWidth, 760);
   });
 
+  test('desktopLyricsSettingsProvider defaults text align to center', () async {
+    _FakeUserConfig.currentValue = const Configuration(
+      desktopLyricsConfig: '{"fontSize":42}',
+    );
+    final container = ProviderContainer(
+      overrides: [userConfigProvider.overrideWith(_FakeUserConfig.new)],
+    );
+    addTearDown(container.dispose);
+
+    final config = await container.read(desktopLyricsSettingsProvider.future);
+
+    expect(config.text.textAlign, TextAlign.center);
+  });
+
   test('desktopLyricsSettingsProvider writes config back into user config', () async {
     _FakeUserConfig.currentValue = const Configuration(username: 'tester');
     final container = ProviderContainer(
@@ -96,5 +110,38 @@ void main() {
     expect(savedJson['fontWeight'], 6);
     expect(savedJson['gradientEnabled'], isTrue);
     expect(savedJson['overlayWidth'], 720);
+  });
+
+  test('desktopLyricsSettingsProvider persists centered align and transparent background', () async {
+    _FakeUserConfig.currentValue = const Configuration(username: 'tester');
+    final container = ProviderContainer(
+      overrides: [userConfigProvider.overrideWith(_FakeUserConfig.new)],
+    );
+    addTearDown(container.dispose);
+
+    final notifier = container.read(desktopLyricsSettingsProvider.notifier);
+    const next = DesktopLyricsConfig(
+      interaction: DesktopLyricsInteractionConfig(
+        enabled: false,
+        clickThrough: false,
+      ),
+      text: DesktopLyricsTextConfig(
+        fontSize: 34,
+        textAlign: TextAlign.center,
+      ),
+      background: DesktopLyricsBackgroundConfig(
+        opacity: 0.0,
+        backgroundColor: Color(0x00010203),
+      ),
+    );
+
+    await notifier.updateConfig(next);
+
+    expect(_FakeUserConfig.savedDesktopLyricsConfig, isNotNull);
+    final savedJson =
+        jsonDecode(_FakeUserConfig.savedDesktopLyricsConfig!)
+            as Map<String, dynamic>;
+    expect(savedJson['textAlign'], TextAlign.center.index);
+    expect(savedJson['backgroundOpacity'], 0.0);
   });
 }
