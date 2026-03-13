@@ -144,6 +144,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                                           child: ArtworkImage(
                                             id: current.id,
                                             size: 800,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),

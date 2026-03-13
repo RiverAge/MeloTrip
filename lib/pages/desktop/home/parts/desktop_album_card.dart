@@ -7,6 +7,7 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
+import 'package:melo_trip/widget/rating.dart';
 
 class DesktopAlbumCard extends ConsumerStatefulWidget {
   const DesktopAlbumCard({super.key, required this.album});
@@ -20,6 +21,7 @@ class DesktopAlbumCard extends ConsumerStatefulWidget {
 class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     with SingleTickerProviderStateMixin {
   bool _isHovering = false;
+  int? _optimisticRating;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -42,6 +44,14 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant DesktopAlbumCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.album.userRating != widget.album.userRating) {
+      _optimisticRating = null;
+    }
   }
 
   void _onHover(bool hovering) {
@@ -83,7 +93,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     final mainButtonForeground = Colors.black.withValues(alpha: .9);
     final secondaryButtonBackground = Colors.white.withValues(alpha: .24);
     final isStarred = widget.album.starred != null;
-    final rating = widget.album.userRating ?? 0;
+    final rating = _optimisticRating ?? widget.album.userRating ?? 0;
 
     return MouseRegion(
       onEnter: (_) => _onHover(true),
@@ -157,7 +167,29 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                 ),
-                                _RatingStars(rating: rating),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {},
+                                  child: Rating(
+                                    rating: rating,
+                                    color: overlayForeground,
+                                    onRating: (value) async {
+                                      setState(() {
+                                        _optimisticRating = value;
+                                      });
+                                      final res = await ref
+                                          .read(albumRatingProvider.notifier)
+                                          .updateRating(widget.album.id, value);
+                                      if (!mounted) return;
+                                      if (res?.subsonicResponse?.status != 'ok') {
+                                        setState(() {
+                                          _optimisticRating =
+                                              widget.album.userRating;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                             const Spacer(),
@@ -236,28 +268,6 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
           ],
         ),
       ),
-    );
-  }
-}
-
-class _RatingStars extends StatelessWidget {
-  const _RatingStars({required this.rating});
-
-  final int rating;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: .min,
-      children: List.generate(5, (index) {
-        return Icon(
-          index < (rating / 2).ceil()
-              ? Icons.star_rounded
-              : Icons.star_border_rounded,
-          color: Colors.white.withValues(alpha: .9),
-          size: 14,
-        );
-      }),
     );
   }
 }
