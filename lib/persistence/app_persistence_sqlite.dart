@@ -21,13 +21,13 @@ class SqliteAppPersistence implements AppPersistence {
   static const String _createUserConfigSql = '''
            CREATE TABLE user_config (
              username TEXT PRIMARY KEY,
-             max_rate TEXT DEFAULT 32,
-             playlist_mode TEXT DEFAULT loop,
-             shuffle INTEGER DEFAULT 0,
+             max_rate TEXT,
+             playlist_mode TEXT,
+             shuffle INTEGER,
              locale TEXT,
              recent_searches TEXT,
              desktop_lyrics_config TEXT,
-             theme TEXT DEFAULT system,
+             theme TEXT,
              update_at INTEGER NOT NULL
            )
          ''';

@@ -28,6 +28,7 @@ class UserConfig extends _$UserConfig {
 
     final configuration = Configuration(
       username: username,
+      maxRate: '32',
       playlistMode: .none,
       shuffle: false,
       updateAt: DateTime.now().millisecondsSinceEpoch,
