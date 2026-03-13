@@ -23,6 +23,7 @@ class SqliteAppPersistence implements AppPersistence {
              username TEXT PRIMARY KEY,
              max_rate TEXT DEFAULT 32,
              playlist_mode TEXT DEFAULT loop,
+             shuffle INTEGER DEFAULT 0,
              locale TEXT,
              recent_searches TEXT,
              desktop_lyrics_config TEXT,
@@ -57,6 +58,9 @@ class SqliteAppPersistence implements AppPersistence {
         if (oldVersion < 2) {
           await db.execute(
             'ALTER TABLE user_config ADD COLUMN desktop_lyrics_config TEXT',
+          );
+          await db.execute(
+            'ALTER TABLE user_config ADD COLUMN shuffle INTEGER DEFAULT 0',
           );
         }
       },

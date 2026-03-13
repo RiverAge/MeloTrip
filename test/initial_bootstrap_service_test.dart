@@ -21,6 +21,7 @@ void main() {
       restorePlaylistMode: (_) async {
         playlistModeRestored = true;
       },
+      restoreShuffle: (_) async {},
     );
 
     final result = await service.bootstrap();
@@ -53,6 +54,7 @@ void main() {
       restorePlaylistMode: (mode) async {
         restoredMode = mode;
       },
+      restoreShuffle: (_) async {},
     );
 
     final result = await service.bootstrap();
@@ -71,6 +73,7 @@ void main() {
       resolveCachePath: () async => 'unused',
       startCacheServer: (_, _) {},
       restorePlaylistMode: (_) async {},
+      restoreShuffle: (_) async {},
     );
 
     final result = await service.bootstrap();
@@ -91,6 +94,7 @@ void main() {
       resolveCachePath: () async => '/tmp/cache',
       startCacheServer: (_, _) {},
       restorePlaylistMode: (_) async {},
+      restoreShuffle: (_) async {},
       bootstrapTimeout: const Duration(milliseconds: 1),
     );
 
@@ -114,6 +118,7 @@ void main() {
         resolveCachePath: () async => '/tmp/cache',
         startCacheServer: (_, _) {},
         restorePlaylistMode: (_) async {},
+        restoreShuffle: (_) async {},
         restoreDesktopLyricsConfig: () async {
           desktopLyricsRestored = true;
         },
@@ -136,6 +141,7 @@ void main() {
       resolveCachePath: () async => '/tmp/cache',
       startCacheServer: (_, _) {},
       restorePlaylistMode: (_) async {},
+      restoreShuffle: (_) async {},
       restoreDesktopLyricsConfig: () async {
         desktopLyricsRestored = true;
       },

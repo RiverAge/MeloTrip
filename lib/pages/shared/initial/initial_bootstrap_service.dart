@@ -24,6 +24,7 @@ class InitialBootstrapService {
     required this.resolveCachePath,
     required this.startCacheServer,
     required this.restorePlaylistMode,
+    required this.restoreShuffle,
     Future<void> Function()? restoreDesktopLyricsConfig,
     this.bootstrapTimeout = const Duration(seconds: 8),
   }) : restoreDesktopLyricsConfig =
@@ -34,6 +35,7 @@ class InitialBootstrapService {
   final Future<String> Function() resolveCachePath;
   final void Function(String dirPath, String host) startCacheServer;
   final Future<void> Function(PlaylistMode mode) restorePlaylistMode;
+  final Future<void> Function(bool enabled) restoreShuffle;
   final Future<void> Function() restoreDesktopLyricsConfig;
   final Duration bootstrapTimeout;
 
@@ -72,10 +74,10 @@ class InitialBootstrapService {
       startCacheServer(dirPath, host);
     }
     final config = await loadConfig();
-    final playlistMode = config?.playlistMode;
-    if (playlistMode != null) {
-      await restorePlaylistMode(playlistMode);
-    }
+    final playlistMode = config?.playlistMode ?? .none;
+    final shuffle = config?.shuffle ?? false;
+    await restorePlaylistMode(playlistMode);
+    await restoreShuffle(shuffle);
     final canRestoreDesktopLyrics =
         !kIsWeb &&
         (defaultTargetPlatform == .windows ||
@@ -109,6 +111,12 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
       final player = await ensurePlayerFuture();
       if (player != null) {
         await player.setPlaylistMode(mode);
+      }
+    },
+    restoreShuffle: (enabled) async {
+      final player = await ensurePlayerFuture();
+      if (player != null) {
+        await player.setShuffleModeEnabled(enabled);
       }
     },
     restoreDesktopLyricsConfig: () async {

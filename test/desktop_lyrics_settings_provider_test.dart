@@ -21,6 +21,7 @@ class _FakeUserConfig extends UserConfig {
     ValueUpdater<ThemeMode?>? theme,
     ValueUpdater<String?>? maxRate,
     ValueUpdater<PlaylistMode?>? playlistMode,
+    ValueUpdater<bool?>? shuffle,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
     ValueUpdater<String>? recentSearch,

@@ -28,6 +28,8 @@ class UserConfig extends _$UserConfig {
 
     final configuration = Configuration(
       username: username,
+      playlistMode: .none,
+      shuffle: false,
       updateAt: DateTime.now().millisecondsSinceEpoch,
     );
     await persistence.saveUserConfig(configuration);
@@ -38,6 +40,7 @@ class UserConfig extends _$UserConfig {
     ValueUpdater<ThemeMode?>? theme,
     ValueUpdater<String?>? maxRate,
     ValueUpdater<PlaylistMode?>? playlistMode,
+    ValueUpdater<bool?>? shuffle,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
     ValueUpdater<String>? recentSearch,
@@ -69,6 +72,7 @@ class UserConfig extends _$UserConfig {
       username: username,
       maxRate: maxRate?.value ?? current.maxRate,
       playlistMode: playlistMode?.value ?? current.playlistMode,
+      shuffle: shuffle?.value ?? current.shuffle,
       recentSearches: recentSearches?.value ?? current.recentSearches,
       desktopLyricsConfig:
           desktopLyricsConfig?.value ?? current.desktopLyricsConfig,

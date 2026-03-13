@@ -47,6 +47,7 @@ void main() {
         resolveCachePath: () async => '/tmp/cache',
         startCacheServer: (_, _) {},
         restorePlaylistMode: (_) async {},
+        restoreShuffle: (_) async {},
       );
 
       await tester.pumpWidget(
