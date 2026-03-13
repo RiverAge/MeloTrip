@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Configuration {
 
-@JsonKey(name: 'username') String? get username;@JsonKey(name: 'max_rate') String? get maxRate;@JsonKey(name: 'playlist_mode') PlaylistMode? get playlistMode;@JsonKey(name: 'shuffle') bool? get shuffle;@JsonKey(name: 'recent_searches') String? get recentSearches;@JsonKey(name: 'desktop_lyrics_config') String? get desktopLyricsConfig; ThemeMode? get theme;@LocaleConvert() Locale? get locale;@JsonKey(name: 'update_at') int? get updateAt;
+@JsonKey(name: 'username') String? get username;@JsonKey(name: 'max_rate') String? get maxRate;@JsonKey(name: 'playlist_mode') PlaylistMode? get playlistMode;@JsonKey(name: 'shuffle')@SqliteBoolConvert() bool? get shuffle;@JsonKey(name: 'recent_searches') String? get recentSearches;@JsonKey(name: 'desktop_lyrics_config') String? get desktopLyricsConfig; ThemeMode? get theme;@LocaleConvert() Locale? get locale;@JsonKey(name: 'update_at') int? get updateAt;
 /// Create a copy of Configuration
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ConfigurationCopyWith<$Res>  {
   factory $ConfigurationCopyWith(Configuration value, $Res Function(Configuration) _then) = _$ConfigurationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'username') String? username,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'shuffle') bool? shuffle,@JsonKey(name: 'recent_searches') String? recentSearches,@JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig, ThemeMode? theme,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
+@JsonKey(name: 'username') String? username,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'shuffle')@SqliteBoolConvert() bool? shuffle,@JsonKey(name: 'recent_searches') String? recentSearches,@JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig, ThemeMode? theme,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
 });
 
 
@@ -161,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'shuffle')  bool? shuffle, @JsonKey(name: 'recent_searches')  String? recentSearches, @JsonKey(name: 'desktop_lyrics_config')  String? desktopLyricsConfig,  ThemeMode? theme, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'shuffle')@SqliteBoolConvert()  bool? shuffle, @JsonKey(name: 'recent_searches')  String? recentSearches, @JsonKey(name: 'desktop_lyrics_config')  String? desktopLyricsConfig,  ThemeMode? theme, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Configuration() when $default != null:
 return $default(_that.username,_that.maxRate,_that.playlistMode,_that.shuffle,_that.recentSearches,_that.desktopLyricsConfig,_that.theme,_that.locale,_that.updateAt);case _:
@@ -182,7 +182,7 @@ return $default(_that.username,_that.maxRate,_that.playlistMode,_that.shuffle,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'shuffle')  bool? shuffle, @JsonKey(name: 'recent_searches')  String? recentSearches, @JsonKey(name: 'desktop_lyrics_config')  String? desktopLyricsConfig,  ThemeMode? theme, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'shuffle')@SqliteBoolConvert()  bool? shuffle, @JsonKey(name: 'recent_searches')  String? recentSearches, @JsonKey(name: 'desktop_lyrics_config')  String? desktopLyricsConfig,  ThemeMode? theme, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)  $default,) {final _that = this;
 switch (_that) {
 case _Configuration():
 return $default(_that.username,_that.maxRate,_that.playlistMode,_that.shuffle,_that.recentSearches,_that.desktopLyricsConfig,_that.theme,_that.locale,_that.updateAt);case _:
@@ -202,7 +202,7 @@ return $default(_that.username,_that.maxRate,_that.playlistMode,_that.shuffle,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'shuffle')  bool? shuffle, @JsonKey(name: 'recent_searches')  String? recentSearches, @JsonKey(name: 'desktop_lyrics_config')  String? desktopLyricsConfig,  ThemeMode? theme, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'username')  String? username, @JsonKey(name: 'max_rate')  String? maxRate, @JsonKey(name: 'playlist_mode')  PlaylistMode? playlistMode, @JsonKey(name: 'shuffle')@SqliteBoolConvert()  bool? shuffle, @JsonKey(name: 'recent_searches')  String? recentSearches, @JsonKey(name: 'desktop_lyrics_config')  String? desktopLyricsConfig,  ThemeMode? theme, @LocaleConvert()  Locale? locale, @JsonKey(name: 'update_at')  int? updateAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Configuration() when $default != null:
 return $default(_that.username,_that.maxRate,_that.playlistMode,_that.shuffle,_that.recentSearches,_that.desktopLyricsConfig,_that.theme,_that.locale,_that.updateAt);case _:
@@ -217,13 +217,13 @@ return $default(_that.username,_that.maxRate,_that.playlistMode,_that.shuffle,_t
 @JsonSerializable()
 
 class _Configuration implements Configuration {
-  const _Configuration({@JsonKey(name: 'username') this.username, @JsonKey(name: 'max_rate') this.maxRate, @JsonKey(name: 'playlist_mode') this.playlistMode, @JsonKey(name: 'shuffle') this.shuffle, @JsonKey(name: 'recent_searches') this.recentSearches, @JsonKey(name: 'desktop_lyrics_config') this.desktopLyricsConfig, this.theme, @LocaleConvert() this.locale, @JsonKey(name: 'update_at') this.updateAt});
+  const _Configuration({@JsonKey(name: 'username') this.username, @JsonKey(name: 'max_rate') this.maxRate, @JsonKey(name: 'playlist_mode') this.playlistMode, @JsonKey(name: 'shuffle')@SqliteBoolConvert() this.shuffle, @JsonKey(name: 'recent_searches') this.recentSearches, @JsonKey(name: 'desktop_lyrics_config') this.desktopLyricsConfig, this.theme, @LocaleConvert() this.locale, @JsonKey(name: 'update_at') this.updateAt});
   factory _Configuration.fromJson(Map<String, dynamic> json) => _$ConfigurationFromJson(json);
 
 @override@JsonKey(name: 'username') final  String? username;
 @override@JsonKey(name: 'max_rate') final  String? maxRate;
 @override@JsonKey(name: 'playlist_mode') final  PlaylistMode? playlistMode;
-@override@JsonKey(name: 'shuffle') final  bool? shuffle;
+@override@JsonKey(name: 'shuffle')@SqliteBoolConvert() final  bool? shuffle;
 @override@JsonKey(name: 'recent_searches') final  String? recentSearches;
 @override@JsonKey(name: 'desktop_lyrics_config') final  String? desktopLyricsConfig;
 @override final  ThemeMode? theme;
@@ -263,7 +263,7 @@ abstract mixin class _$ConfigurationCopyWith<$Res> implements $ConfigurationCopy
   factory _$ConfigurationCopyWith(_Configuration value, $Res Function(_Configuration) _then) = __$ConfigurationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'username') String? username,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'shuffle') bool? shuffle,@JsonKey(name: 'recent_searches') String? recentSearches,@JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig, ThemeMode? theme,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
+@JsonKey(name: 'username') String? username,@JsonKey(name: 'max_rate') String? maxRate,@JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,@JsonKey(name: 'shuffle')@SqliteBoolConvert() bool? shuffle,@JsonKey(name: 'recent_searches') String? recentSearches,@JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig, ThemeMode? theme,@LocaleConvert() Locale? locale,@JsonKey(name: 'update_at') int? updateAt
 });
 
 

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -45,47 +44,40 @@ Future<AuthUser?> login(
 }) async {
   final api = await ref.read(apiProvider.future);
   final persistence = await ref.read(appPersistenceProvider.future);
+  final salt = _generateSalt();
+  final token = _generateToken(password, salt);
+  final res = await api.get<Map<String, dynamic>>(
+    '$host/rest/ping',
+    queryParameters: {
+      'u': username,
+      't': token, // 假设 token 是这样传递
+      's': salt, // 假设 salt 是这样传递
+      '_': DateTime.now().toIso8601String(),
+      'v': '1.16.1',
+      'c': 'melo_trip',
+      'f': 'json',
+    },
+  );
 
-  try {
-    final salt = _generateSalt();
-    final token = _generateToken(password, salt);
-    final res = await api.get<Map<String, dynamic>>(
-      '$host/rest/ping',
-      queryParameters: {
-        'u': username,
-        't': token, // 假设 token 是这样传递
-        's': salt, // 假设 salt 是这样传递
-        '_': DateTime.now().toIso8601String(),
-        'v': '1.16.1',
-        'c': 'melo_trip',
-        'f': 'json',
-      },
-    );
-
-    final data = res.data;
-    if (data != null) {
-      final subsonicResponse = SubsonicResponse.fromJson(data);
-      if (subsonicResponse.subsonicResponse?.status == 'ok') {
-        final auth = AuthUser.fromJson({
-          'salt': salt,
-          'token': token,
-          'username': username,
-          'host': host,
-        });
-        await persistence.saveCurrentUser(auth);
-        return auth;
-      }
-
-      final errorMsg = subsonicResponse.subsonicResponse?.error?.message;
-      throw Exception(errorMsg ?? 'Login failed');
+  final data = res.data;
+  if (data != null) {
+    final subsonicResponse = SubsonicResponse.fromJson(data);
+    if (subsonicResponse.subsonicResponse?.status == 'ok') {
+      final auth = AuthUser.fromJson({
+        'salt': salt,
+        'token': token,
+        'username': username,
+        'host': host,
+      });
+      await persistence.saveCurrentUser(auth);
+      return auth;
     }
 
-    throw Exception('Login failed');
-  } catch (e, stackTrace) {
-    debugPrint('Login failed: $e');
-    debugPrintStack(stackTrace: stackTrace);
-    rethrow;
+    final errorMsg = subsonicResponse.subsonicResponse?.error?.message;
+    throw Exception(errorMsg ?? 'Login failed');
   }
+
+  throw Exception('Login failed');
 }
 
 @riverpod

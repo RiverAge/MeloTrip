@@ -11,7 +11,7 @@ abstract class Configuration with _$Configuration {
     @JsonKey(name: 'username') String? username,
     @JsonKey(name: 'max_rate') String? maxRate,
     @JsonKey(name: 'playlist_mode') PlaylistMode? playlistMode,
-    @JsonKey(name: 'shuffle') bool? shuffle,
+    @JsonKey(name: 'shuffle') @SqliteBoolConvert() bool? shuffle,
     @JsonKey(name: 'recent_searches') String? recentSearches,
     @JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig,
     ThemeMode? theme,
@@ -21,6 +21,29 @@ abstract class Configuration with _$Configuration {
 
   factory Configuration.fromJson(Map<String, dynamic> json) =>
       _$ConfigurationFromJson(json);
+}
+
+class SqliteBoolConvert implements JsonConverter<bool?, Object?> {
+  const SqliteBoolConvert();
+
+  @override
+  bool? fromJson(Object? json) {
+    return switch (json) {
+      null => null,
+      bool value => value,
+      num value => value != 0,
+      String value => value == '1' || value.toLowerCase() == 'true',
+      _ => null,
+    };
+  }
+
+  @override
+  Object? toJson(bool? value) {
+    if (value == null) {
+      return null;
+    }
+    return value ? 1 : 0;
+  }
 }
 
 class LocaleConvert implements JsonConverter<Locale?, String?> {

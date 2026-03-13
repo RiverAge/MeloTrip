@@ -32,8 +32,12 @@ class Api extends _$Api {
     final auth = await ref.read(currentUserProvider.future);
     final token = auth?.token;
     final host = auth?.host;
+    final hasExplicitAuth =
+        options.queryParameters.containsKey('u') ||
+        options.queryParameters.containsKey('t') ||
+        options.queryParameters.containsKey('s');
 
-    if (token != null && host != null) {
+    if (token != null && host != null && !hasExplicitAuth) {
       options.baseUrl = host;
       options.queryParameters.addAll({
         'u': auth?.username,
