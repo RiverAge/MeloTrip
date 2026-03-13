@@ -120,7 +120,7 @@ extension _PlayerListenerLogic on _MyAppState {
   void _setPlayerErrorListener() async {
     final player = await ref.read(appPlayerHandlerProvider.future);
     _errorSubscription = player?.errorStream.listen(
-      (err) => _onErrorScanfoldMessage(errorMsg: err),
+      (err) => ref.read(appErrorProvider.notifier).emit(err),
     );
   }
 
