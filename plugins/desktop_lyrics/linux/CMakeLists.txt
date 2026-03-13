@@ -8,6 +8,7 @@ set(PLUGIN_NAME "desktop_lyrics_plugin")
 add_library(${PLUGIN_NAME} SHARED
   "desktop_lyrics_plugin.cc"
   "desktop_lyrics_overlay.cc"
+  "desktop_lyrics_overlay_render.cc"
 )
 
 apply_standard_settings(${PLUGIN_NAME})

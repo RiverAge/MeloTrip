@@ -9,11 +9,6 @@ namespace desktop_lyrics {
 
 namespace {
 
-constexpr double kTextHorizontalPadding = 24.0;
-constexpr double kTextVerticalPadding = 10.0;
-constexpr double kShadowOffset = 2.5;
-constexpr double kPi = 3.14159265358979323846;
-
 double Clamp(double value, double min, double max) {
   return std::max(min, std::min(max, value));
 }
