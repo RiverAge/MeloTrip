@@ -7,10 +7,20 @@ import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
 
+typedef ApplyRestoredPlayQueue =
+    Future<void> Function(
+      AppPlayer player,
+      List<SongEntity> songs,
+      String? initialId,
+    );
+
 String? _restoredPlayQueueUserKey;
 Future<void>? _restorePlayQueueInFlight;
 
-Future<void> ensurePlayQueueRestored(WidgetRef ref) async {
+Future<void> ensurePlayQueueRestored(
+  WidgetRef ref, {
+  ApplyRestoredPlayQueue applyRestoredPlayQueue = _defaultApplyRestoredPlayQueue,
+}) async {
   final running = _restorePlayQueueInFlight;
   if (running != null) {
     return running;
@@ -32,9 +42,10 @@ Future<void> ensurePlayQueueRestored(WidgetRef ref) async {
         return;
       }
 
-      await player.setPlaylist(
-        songs: queue?.entry ?? const <SongEntity>[],
-        initialId: queue?.current,
+      await applyRestoredPlayQueue(
+        player,
+        queue?.entry ?? const <SongEntity>[],
+        queue?.current,
       );
       _restoredPlayQueueUserKey = userKey;
     } catch (_) {
@@ -48,6 +59,14 @@ Future<void> ensurePlayQueueRestored(WidgetRef ref) async {
       _restorePlayQueueInFlight = null;
     }
   });
+}
+
+Future<void> _defaultApplyRestoredPlayQueue(
+  AppPlayer player,
+  List<SongEntity> songs,
+  String? initialId,
+) {
+  return player.setPlaylist(songs: songs, initialId: initialId);
 }
 
 void resetPlayQueueRestoreStateForTest() {

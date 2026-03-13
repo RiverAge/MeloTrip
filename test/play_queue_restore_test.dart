@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_logic/restore/play_queue_restore.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
@@ -32,47 +31,9 @@ class _FakeAppPlayerHandler extends AppPlayerHandler {
   Future<AppPlayer?> build() async => _player;
 }
 
-class _RecordingMediaKitPlayer {
-  int openCalls = 0;
-  dynamic lastPlaylist;
-  bool? lastPlay;
-
-  Future<void> open(dynamic playlist, {bool play = true}) async {
-    openCalls++;
-    lastPlaylist = playlist;
-    lastPlay = play;
-  }
-}
-
-class _RecordingAppPlayer implements AppPlayer {
-  _RecordingAppPlayer({this.onSerialized});
-
-  final Future<void> Function()? onSerialized;
-
-  final List<SongEntity> resolvedSongs = <SongEntity>[];
-  final _RecordingMediaKitPlayer mediaPlayer = _RecordingMediaKitPlayer();
-
+class _FakeAppPlayer implements AppPlayer {
   @override
-  dynamic noSuchMethod(Invocation invocation) {
-    final memberName = invocation.memberName.toString();
-    if (memberName == 'Symbol("_runSerialized")') {
-      return Future<void>.sync(() async {
-        await onSerialized?.call();
-        final action = invocation.positionalArguments.first as Function;
-        return await Function.apply(action, const <Object?>[]);
-      });
-    }
-    if (memberName == 'Symbol("_mediaResolver")') {
-      return (SongEntity song) async {
-        resolvedSongs.add(song);
-        return Media(song.id ?? '');
-      };
-    }
-    if (memberName == 'Symbol("_player")') {
-      return mediaPlayer;
-    }
-    return super.noSuchMethod(invocation);
-  }
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class _ExplodingCurrentUser extends CurrentUser {
@@ -104,7 +65,7 @@ SubsonicResponse _queueResponse({
 
 Future<WidgetRef> _pumpRef(
   WidgetTester tester, {
-  List overrides = const [],
+  List<Object> overrides = const <Object>[],
 }) async {
   final completer = Completer<WidgetRef>();
   await tester.pumpWidget(
@@ -132,76 +93,112 @@ void main() {
 
   tearDown(resetPlayQueueRestoreStateForTest);
 
-  testWidgets('restores play queue into player once for the same user', (
-    tester,
-  ) async {
-    final player = _RecordingAppPlayer();
+  testWidgets('restores play queue once for the same user session', (tester) async {
+    var authLoads = 0;
+    var queueLoads = 0;
+    List<SongEntity>? restoredSongs;
+    String? restoredInitialId;
     final songs = <SongEntity>[_song('s1'), _song('s2')];
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(
-          () => _FakeCurrentUser(
+        currentUserProvider.overrideWith(() {
+          authLoads++;
+          return _FakeCurrentUser(
             const AuthUser(
               host: 'https://example.com',
               username: 'tester',
               token: 'token',
             ),
-          ),
-        ),
-        playQueueProvider.overrideWith(
-          (ref) async => _queueResponse(songs: songs, current: 's2'),
-        ),
+          );
+        }),
+        playQueueProvider.overrideWith((ref) async {
+          queueLoads++;
+          return _queueResponse(songs: songs, current: 's2');
+        }),
         appPlayerHandlerProvider.overrideWith(
-          () => _FakeAppPlayerHandler(player),
+          () => _FakeAppPlayerHandler(_FakeAppPlayer()),
         ),
       ],
     );
 
-    await ensurePlayQueueRestored(ref);
-    await ensurePlayQueueRestored(ref);
+    Future<void> applyQueue(
+      AppPlayer player,
+      List<SongEntity> songs,
+      String? initialId,
+    ) async {
+      restoredSongs = songs;
+      restoredInitialId = initialId;
+    }
 
-    expect(player.mediaPlayer.openCalls, 1);
-    expect(player.resolvedSongs.map((song) => song.id), <String?>['s1', 's2']);
-    expect((player.mediaPlayer.lastPlaylist as dynamic).index, 1);
-    expect(player.mediaPlayer.lastPlay, isFalse);
+    await ensurePlayQueueRestored(ref, applyRestoredPlayQueue: applyQueue);
+    await ensurePlayQueueRestored(ref, applyRestoredPlayQueue: applyQueue);
+
+    expect(authLoads, 1);
+    expect(queueLoads, 1);
+    expect(restoredSongs?.map((song) => song.id), <String?>['s1', 's2']);
+    expect(restoredInitialId, 's2');
   });
 
-  testWidgets('concurrent restore calls share the same in-flight work', (
+  testWidgets('concurrent restore calls reuse the same in-flight work', (
     tester,
   ) async {
-    final gate = Completer<void>();
-    final player = _RecordingAppPlayer(onSerialized: () => gate.future);
+    var authLoads = 0;
+    var queueLoads = 0;
+    var applyCalls = 0;
+    final applyGate = Completer<void>();
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(
-          () => _FakeCurrentUser(
+        currentUserProvider.overrideWith(() {
+          authLoads++;
+          return _FakeCurrentUser(
             const AuthUser(
               host: 'https://example.com',
               username: 'tester',
               token: 'token',
             ),
-          ),
-        ),
-        playQueueProvider.overrideWith(
-          (ref) async => _queueResponse(songs: <SongEntity>[_song('s1')]),
-        ),
+          );
+        }),
+        playQueueProvider.overrideWith((ref) async {
+          queueLoads++;
+          return _queueResponse(songs: <SongEntity>[_song('s1')]);
+        }),
         appPlayerHandlerProvider.overrideWith(
-          () => _FakeAppPlayerHandler(player),
+          () => _FakeAppPlayerHandler(_FakeAppPlayer()),
         ),
       ],
     );
 
-    final first = ensurePlayQueueRestored(ref);
-    final second = ensurePlayQueueRestored(ref);
-    await tester.pump();
-    expect(player.mediaPlayer.openCalls, 0);
+    Future<void> applyQueue(
+      AppPlayer player,
+      List<SongEntity> songs,
+      String? initialId,
+    ) async {
+      applyCalls++;
+      await applyGate.future;
+    }
 
-    gate.complete();
+    final first = ensurePlayQueueRestored(
+      ref,
+      applyRestoredPlayQueue: applyQueue,
+    );
+    final second = ensurePlayQueueRestored(
+      ref,
+      applyRestoredPlayQueue: applyQueue,
+    );
+    await tester.pump();
+
+    expect(authLoads, 1);
+    expect(queueLoads, 1);
+    expect(applyCalls, 1);
+
+    applyGate.complete();
     await Future.wait(<Future<void>>[first, second]);
 
-    expect(player.mediaPlayer.openCalls, 1);
+    expect(authLoads, 1);
+    expect(queueLoads, 1);
+    expect(applyCalls, 1);
   });
 
   testWidgets('restore safely returns when player is unavailable', (tester) async {
@@ -246,7 +243,7 @@ void main() {
   });
 
   testWidgets('reset helper clears cached restore state', (tester) async {
-    final player = _RecordingAppPlayer();
+    var applyCalls = 0;
     final ref = await _pumpRef(
       tester,
       overrides: [
@@ -259,19 +256,27 @@ void main() {
             ),
           ),
         ),
-        playQueueProvider.overrideWith(
-          (ref) async => _queueResponse(songs: <SongEntity>[_song('s1')]),
-        ),
+        playQueueProvider.overrideWith((ref) async {
+          return _queueResponse(songs: <SongEntity>[_song('s1')]);
+        }),
         appPlayerHandlerProvider.overrideWith(
-          () => _FakeAppPlayerHandler(player),
+          () => _FakeAppPlayerHandler(_FakeAppPlayer()),
         ),
       ],
     );
 
-    await ensurePlayQueueRestored(ref);
-    resetPlayQueueRestoreStateForTest();
-    await ensurePlayQueueRestored(ref);
+    Future<void> applyQueue(
+      AppPlayer player,
+      List<SongEntity> songs,
+      String? initialId,
+    ) async {
+      applyCalls++;
+    }
 
-    expect(player.mediaPlayer.openCalls, 2);
+    await ensurePlayQueueRestored(ref, applyRestoredPlayQueue: applyQueue);
+    resetPlayQueueRestoreStateForTest();
+    await ensurePlayQueueRestored(ref, applyRestoredPlayQueue: applyQueue);
+
+    expect(applyCalls, 2);
   });
 }
