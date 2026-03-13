@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:update_installer/update_installer.dart';
 
 abstract class UpdateInstallerGateway {
@@ -9,10 +10,10 @@ abstract class UpdateInstallerGateway {
     WindowsBundleUpdaterLauncher windowsUpdaterLauncher =
         const WindowsBundleUpdaterLauncher(),
   }) {
-    if (Platform.isAndroid) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       return const _AndroidUpdateInstallerGateway();
     }
-    if (Platform.isWindows) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
       return _WindowsBundleUpdateInstallerGateway(
         windowsUpdaterLauncher: windowsUpdaterLauncher,
       );

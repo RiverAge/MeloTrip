@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:update_installer/update_installer.dart';
@@ -102,7 +100,7 @@ class UpdateFlowController extends _$UpdateFlowController {
     DateTime? lastTick;
     DateTime? lastUiTick;
     try {
-      final File packageFile = await _service.downloadAndVerifyPackage(
+      final String packagePath = await _service.downloadAndVerifyPackagePath(
         update: update,
         onStageChanged: (UpdateDownloadStage stage) {
           if (!ref.mounted) return;
@@ -166,7 +164,7 @@ class UpdateFlowController extends _$UpdateFlowController {
           stage: UpdateUiStage.readyToInstall,
           downloadBytesPerSecond: 0,
           clearEtaSeconds: true,
-          pendingPackagePath: packageFile.path,
+          pendingPackagePath: packagePath,
           pendingVersionName: update.versionName,
           pendingVersionCode: update.versionCode,
         );
@@ -177,7 +175,7 @@ class UpdateFlowController extends _$UpdateFlowController {
         downloadBytesPerSecond: 0,
         clearEtaSeconds: true,
       );
-      await _service.installDownloadedPackage(packageFile);
+      await _service.installDownloadedPackagePath(packagePath);
       return null;
     } catch (err) {
       return '$err';
@@ -213,8 +211,8 @@ class UpdateFlowController extends _$UpdateFlowController {
       clearEtaSeconds: true,
     );
     try {
-      await _service.installDownloadedPackage(
-        File(packagePath),
+      await _service.installDownloadedPackagePath(
+        packagePath,
         updaterStrings: updaterStrings,
       );
       return null;

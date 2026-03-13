@@ -1,12 +1,5 @@
-part of 'index.dart';
+import 'package:melo_trip/helper/cache_file_path_impl_stub.dart'
+    if (dart.library.io) 'package:melo_trip/helper/cache_file_path_impl_io.dart'
+    as impl;
 
-Future<String> getCacheFilePath() async {
-  final cachDir = await getApplicationCacheDirectory();
-  final packageInfo = await PackageInfo.fromPlatform();
-  final path = p.join(cachDir.path, packageInfo.packageName);
-  final dir = Directory(path);
-  if (!dir.existsSync()) {
-    await dir.create(recursive: true);
-  }
-  return path;
-}
+Future<String> getCacheFilePath() => impl.getCacheFilePath();

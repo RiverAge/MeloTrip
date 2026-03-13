@@ -7,7 +7,12 @@ extension _PlayerListenerLogic on _MyAppState {
     _setPlaylistModeListener();
     _setPlayerErrorListener();
 
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    final isDesktop =
+        !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.windows ||
+            defaultTargetPlatform == TargetPlatform.linux ||
+            defaultTargetPlatform == TargetPlatform.macOS);
+    if (isDesktop) {
       _setDesktopLyricsListener();
     }
   }

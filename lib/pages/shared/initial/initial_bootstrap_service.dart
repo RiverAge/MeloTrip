@@ -1,11 +1,11 @@
-import 'dart:isolate';
 import 'dart:async';
 
 import 'package:desktop_lyrics/desktop_lyrics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
-import 'package:melo_trip/helper/index.dart';
+import 'package:melo_trip/helper/cache_file_path.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -14,7 +14,7 @@ import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
-import 'package:melo_trip/server/cache_server.dart';
+import 'package:melo_trip/server/cache_server_launcher.dart';
 
 enum InitialBootstrapResult { loggedIn, loggedOut }
 
@@ -59,14 +59,30 @@ class InitialBootstrapService {
       return .loggedOut;
     }
 
-    final dirPath = await resolveCachePath();
-    startCacheServer(dirPath, host);
+    final canStartCacheServer =
+        !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.windows ||
+            defaultTargetPlatform == TargetPlatform.linux ||
+            defaultTargetPlatform == TargetPlatform.macOS);
+    if (canStartCacheServer) {
+      final dirPath = await resolveCachePath();
+      startCacheServer(dirPath, host);
+    }
     final config = await loadConfig();
     final playlistMode = config?.playlistMode;
     if (playlistMode != null) {
       await restorePlaylistMode(playlistMode);
     }
-    await restoreDesktopLyricsConfig();
+    final canRestoreDesktopLyrics =
+        !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.windows ||
+            defaultTargetPlatform == TargetPlatform.linux ||
+            defaultTargetPlatform == TargetPlatform.macOS);
+    if (canRestoreDesktopLyrics) {
+      await restoreDesktopLyricsConfig();
+    }
 
     return .loggedIn;
   }
@@ -86,7 +102,7 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
     loadConfig: () => ref.read(userConfigProvider.future),
     resolveCachePath: getCacheFilePath,
     startCacheServer: (dirPath, host) {
-      Isolate.spawn(runHttpServer, {'dirPath': dirPath, 'host': host});
+      startCacheServerIsolate(dirPath: dirPath, host: host);
     },
     restorePlaylistMode: (mode) async {
       final player = await ensurePlayerFuture();

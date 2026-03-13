@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -45,6 +46,16 @@ class AppUpdateService {
     );
   }
 
+  Future<void> installDownloadedPackagePath(
+    String filePath, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) {
+    return _installerGateway.installPackage(
+      filePath,
+      updaterStrings: updaterStrings,
+    );
+  }
+
   Future<void> openUpdateDownloadPage(AppUpdateInfo update) async {
     final rawUrl = update.downloadUrl.trim();
     if (rawUrl.isEmpty) {
@@ -55,7 +66,12 @@ class AppUpdateService {
       throw StateError('Invalid download URL: $rawUrl');
     }
 
-    if (Platform.isWindows) {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'Open download page is unsupported on this platform.',
+      );
+    }
+    if (defaultTargetPlatform == TargetPlatform.windows) {
       final result = await Process.run('cmd', <String>[
         '/c',
         'start',
@@ -67,14 +83,14 @@ class AppUpdateService {
       }
       return;
     }
-    if (Platform.isLinux) {
+    if (defaultTargetPlatform == TargetPlatform.linux) {
       final result = await Process.run('xdg-open', <String>[rawUrl]);
       if (result.exitCode != 0) {
         throw StateError('Failed to open URL on Linux: ${result.stderr}');
       }
       return;
     }
-    if (Platform.isMacOS) {
+    if (defaultTargetPlatform == TargetPlatform.macOS) {
       final result = await Process.run('open', <String>[rawUrl]);
       if (result.exitCode != 0) {
         throw StateError('Failed to open URL on macOS: ${result.stderr}');
@@ -148,6 +164,19 @@ class AppUpdateService {
     );
   }
 
+  Future<String> downloadAndVerifyPackagePath({
+    required AppUpdateInfo update,
+    void Function(int received, int total, double progress)? onProgress,
+    void Function(UpdateDownloadStage stage)? onStageChanged,
+  }) async {
+    final file = await downloadAndVerifyPackage(
+      update: update,
+      onProgress: onProgress,
+      onStageChanged: onStageChanged,
+    );
+    return file.path;
+  }
+
   Future<File> _downloadAndVerifyPackage({
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
@@ -214,13 +243,13 @@ class AppUpdateService {
   }
 
   String _defaultPackageExtension() {
-    if (Platform.isWindows) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
       return '.zip';
     }
-    if (Platform.isLinux) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.linux) {
       return '.tar.gz';
     }
-    if (Platform.isMacOS) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
       return '.zip';
     }
     return '.apk';
@@ -235,19 +264,22 @@ class AppUpdateService {
   }
 
   String _currentPlatformName() {
-    if (Platform.isWindows) {
+    if (kIsWeb) {
+      return 'web';
+    }
+    if (defaultTargetPlatform == TargetPlatform.windows) {
       return 'windows';
     }
-    if (Platform.isMacOS) {
+    if (defaultTargetPlatform == TargetPlatform.macOS) {
       return 'macos';
     }
-    if (Platform.isLinux) {
+    if (defaultTargetPlatform == TargetPlatform.linux) {
       return 'linux';
     }
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       return 'android';
     }
-    if (Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       return 'ios';
     }
     return 'unknown';
