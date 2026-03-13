@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/app_logic/desktop_lyrics_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/desktop_lyrics_runtime.dart';
 import 'package:melo_trip/app_player/player.dart';
-import 'package:melo_trip/app_logic/player_media_resolver_runtime.dart';
-import 'package:melo_trip/app_logic/player_playlist_mode_runtime.dart';
-import 'package:melo_trip/app_logic/player_scrobble_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/player_media_resolver_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/player_playlist_mode_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/player_scrobble_runtime.dart';
 import 'package:melo_trip/provider/app_error/app_error.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 

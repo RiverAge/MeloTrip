@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
@@ -94,5 +96,54 @@ void main() {
 
     final result = await service.bootstrap();
     expect(result, InitialBootstrapResult.loggedOut);
+  });
+
+  testWidgets(
+    'bootstrap restores desktop lyrics config on desktop platforms',
+    (tester) async {
+      var desktopLyricsRestored = false;
+
+      final service = InitialBootstrapService(
+        loadAuthUser: () async => const AuthUser(
+          salt: 'salt',
+          token: 'token',
+          username: 'tester',
+          host: 'https://example.com',
+        ),
+        loadConfig: () async => null,
+        resolveCachePath: () async => '/tmp/cache',
+        startCacheServer: (_, _) {},
+        restorePlaylistMode: (_) async {},
+        restoreDesktopLyricsConfig: () async {
+          desktopLyricsRestored = true;
+        },
+      );
+
+      final result = await service.bootstrap();
+
+      expect(result, InitialBootstrapResult.loggedIn);
+      expect(desktopLyricsRestored, isTrue);
+    },
+    variant: const TargetPlatformVariant(<TargetPlatform>{TargetPlatform.windows}),
+  );
+
+  test('bootstrap does not restore desktop lyrics when auth is missing', () async {
+    var desktopLyricsRestored = false;
+
+    final service = InitialBootstrapService(
+      loadAuthUser: () async => null,
+      loadConfig: () async => null,
+      resolveCachePath: () async => '/tmp/cache',
+      startCacheServer: (_, _) {},
+      restorePlaylistMode: (_) async {},
+      restoreDesktopLyricsConfig: () async {
+        desktopLyricsRestored = true;
+      },
+    );
+
+    final result = await service.bootstrap();
+
+    expect(result, InitialBootstrapResult.loggedOut);
+    expect(desktopLyricsRestored, isFalse);
   });
 }

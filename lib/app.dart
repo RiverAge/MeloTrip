@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/app_logic/app_runtime_coordinator.dart';
+import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
