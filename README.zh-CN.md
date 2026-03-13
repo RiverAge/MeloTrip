@@ -1,13 +1,13 @@
 # MeloTrip
 
-English | [简体中文](README.zh-CN.md)
+[English](README.md) | 简体中文
 
 <p align="center">
   <img src="images/icon/icon.png" alt="MeloTrip icon" width="120" />
 </p>
 
 <p align="center">
-  A Flutter client for Navidrome and Subsonic servers, designed for both mobile listening and desktop library management.
+  一个面向 Navidrome 与 Subsonic 服务端的 Flutter 音乐客户端，兼顾移动端听歌体验与桌面端音乐库管理。
 </p>
 
 <p align="center">
@@ -18,20 +18,20 @@ English | [简体中文](README.zh-CN.md)
   <img alt="License" src="https://img.shields.io/badge/License-MIT-black" />
 </p>
 
-## Overview
+## 项目简介
 
-MeloTrip is a cross-platform music client built with Flutter for self-hosted music ecosystems based on Navidrome and the Subsonic API. The project focuses on a clean playback flow, responsive search, playlist and favorites management, lyrics support, and a desktop experience that feels native rather than stretched from mobile.
+MeloTrip 是一个基于 Flutter 构建的跨平台音乐客户端，面向 Navidrome 与 Subsonic API 生态。项目重点放在顺畅的播放链路、快速搜索、歌单与收藏管理、歌词体验，以及更适合桌面场景的原生化交互，而不是简单放大移动端界面。
 
-## Highlights
+## 主要特性
 
-- Cross-platform support for Android, iOS, Windows, macOS, and Linux
-- Dedicated mobile and desktop layouts
-- Playback powered by `media_kit` and `audio_service`
-- Search, albums, artists, songs, playlists, and favorites
-- Desktop lyrics support
-- Built-in localization with English and Simplified Chinese
+- 支持 Android、iOS、Windows、macOS、Linux
+- 移动端与桌面端分别适配的界面布局
+- 基于 `media_kit` 与 `audio_service` 的播放能力
+- 提供搜索、专辑、歌手、歌曲、歌单与收藏等核心功能
+- 支持桌面歌词显示
+- 内置英文与简体中文本地化
 
-## Platform Status
+## 平台支持
 
 | Platform | Status |
 | --- | --- |
@@ -42,7 +42,7 @@ MeloTrip is a cross-platform music client built with Flutter for self-hosted mus
 | Linux | Supported |
 | Web | Not targeted currently |
 
-## Tech Stack
+## 技术栈
 
 - Flutter
 - Riverpod
@@ -52,15 +52,15 @@ MeloTrip is a cross-platform music client built with Flutter for self-hosted mus
 - `audio_service`
 - `sqflite`
 
-## Getting Started
+## 快速开始
 
-### Requirements
+### 环境要求
 
 - Flutter 3.x
-- Dart SDK compatible with the version declared in `pubspec.yaml`
-- A reachable Navidrome or Subsonic-compatible server
+- 与 `pubspec.yaml` 中声明版本兼容的 Dart SDK
+- 可访问的 Navidrome 或兼容 Subsonic 的服务端
 
-### Setup
+### 初始化
 
 ```bash
 flutter pub get
@@ -69,7 +69,7 @@ dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
-### Common Development Commands
+### 常用开发命令
 
 ```bash
 dart run build_runner watch
@@ -79,6 +79,6 @@ flutter analyze
 flutter test
 ```
 
-## Localization
+## 本地化
 
-User-facing copy is managed through Flutter l10n resources. English and Simplified Chinese are currently included.
+所有面向用户的文案都通过 Flutter l10n 资源管理，当前已提供英文与简体中文。
