@@ -436,6 +436,10 @@
   "@addToPlayQueue": {
      "description": "Add to user play queue"
   },
+  "clearPlayQueue": "Clear Play Queue",
+  "@clearPlayQueue": {
+     "description": "Clear the current play queue"
+  },
   "removeFromPlayQueue": "Remove Queue",
   "@removeFromPlayQueue": {
      "description": "Remove from user play queue"

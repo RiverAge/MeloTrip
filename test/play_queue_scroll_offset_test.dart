@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/pages/mobile/music_bar/parts/music_bar.dart';
+import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 
 void main() {
   test('returns null when index is out of range', () {

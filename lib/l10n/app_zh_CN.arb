@@ -122,6 +122,7 @@
     "playQueue": "播放队列",
     "playNext": "下一首播放",
     "addToPlayQueue": "加到播放队列",
+    "clearPlayQueue": "清空播放队列",
     "removeFromPlayQueue": "移出播放队列",
     "playQueueCleared": "播放队列已清空",
 

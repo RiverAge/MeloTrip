@@ -3,25 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
-import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/model/player/play_queue.dart';
-import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/mobile/playing/playing_page.dart';
+import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/guesture_hint.dart';
-import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/single_line_animated_lyrics.dart';
 
 part 'bottom_sheet_play_queue.dart';
-part 'bottom_sheet_shuffle_mode.dart';
-part 'bottom_sheet_item.dart';
-part 'bottom_sheet_title.dart';
 part 'colored_container.dart';
-part 'bottom_sheet_playlist_mode.dart';
 
 class MusicBar extends StatefulWidget {
   const MusicBar({super.key});

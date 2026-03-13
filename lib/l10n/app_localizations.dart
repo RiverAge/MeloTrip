@@ -693,6 +693,12 @@ abstract class AppLocalizations {
   /// **'Add Queue'**
   String get addToPlayQueue;
 
+  /// Clear the current play queue
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Play Queue'**
+  String get clearPlayQueue;
+
   /// Remove from user play queue
   ///
   /// In en, this message translates to:

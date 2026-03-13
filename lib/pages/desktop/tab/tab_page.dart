@@ -22,6 +22,7 @@ import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
 import 'package:melo_trip/pages/desktop/tab/parts/search_command_palette.dart';
+import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';

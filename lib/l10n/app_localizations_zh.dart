@@ -308,6 +308,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addToPlayQueue => '加到播放队列';
 
   @override
+  String get clearPlayQueue => '清空播放队列';
+
+  @override
   String get removeFromPlayQueue => '移出播放队列';
 
   @override
@@ -964,6 +967,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get addToPlayQueue => '加到播放队列';
+
+  @override
+  String get clearPlayQueue => '清空播放队列';
 
   @override
   String get removeFromPlayQueue => '移出播放队列';

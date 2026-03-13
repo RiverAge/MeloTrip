@@ -121,12 +121,11 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
               iconSize: 20,
               tooltip: l10n.playQueue,
               onPressed: () {
-                showModalBottomSheet(
+                showDialog(
                   context: context,
-                  backgroundColor: Theme.of(
+                  barrierColor: Theme.of(
                     context,
-                  ).colorScheme.surfaceContainerLow,
-                  isScrollControlled: true,
+                  ).colorScheme.scrim.withValues(alpha: 0.4),
                   builder: (_) => const _DesktopQueueSheet(),
                 );
               },
