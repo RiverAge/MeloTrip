@@ -10,10 +10,10 @@ abstract class UpdateInstallerGateway {
     WindowsBundleUpdaterLauncher windowsUpdaterLauncher =
         const WindowsBundleUpdaterLauncher(),
   }) {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    if (!kIsWeb && defaultTargetPlatform == .android) {
       return const _AndroidUpdateInstallerGateway();
     }
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+    if (!kIsWeb && defaultTargetPlatform == .windows) {
       return _WindowsBundleUpdateInstallerGateway(
         windowsUpdaterLauncher: windowsUpdaterLauncher,
       );

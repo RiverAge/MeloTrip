@@ -50,9 +50,9 @@ class AppRuntimeCoordinator {
     DesktopLyricsRuntimeBindings? desktopLyricsBindings;
     final isDesktop =
         !kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.linux ||
-            defaultTargetPlatform == TargetPlatform.macOS);
+        (defaultTargetPlatform == .windows ||
+            defaultTargetPlatform == .linux ||
+            defaultTargetPlatform == .macOS);
     if (isDesktop) {
       desktopLyricsBindings = await ref
           .read(desktopLyricsRuntimeProvider)

@@ -276,7 +276,7 @@ class _Breadcrumbs extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [
                     Icon(Icons.home_rounded, 
                       size: 18, 
@@ -506,7 +506,7 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           Text(
                             entry.name,

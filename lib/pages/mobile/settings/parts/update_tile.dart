@@ -14,7 +14,7 @@ Widget buildUpdateSubtitleWidget(
     ),
   ];
 
-  if (state.isUpdating && state.stage == UpdateUiStage.downloading) {
+  if (state.isUpdating && state.stage == .downloading) {
     final double? progress = state.totalBytes > 0
         ? (state.downloadProgressPercent / 100).clamp(0.0, 1.0)
         : null;
@@ -44,10 +44,10 @@ String buildUpdateSubtitle(BuildContext context, UpdateFlowState state) {
   if (state.isChecking) {
     return l10n.updateCheckingInline;
   }
-  if (state.stage == UpdateUiStage.verifying) {
+  if (state.stage == .verifying) {
     return l10n.updateStageVerifying;
   }
-  if (state.stage == UpdateUiStage.openingInstaller) {
+  if (state.stage == .openingInstaller) {
     return l10n.updateStageOpeningInstaller;
   }
   if (state.isUpdating) {

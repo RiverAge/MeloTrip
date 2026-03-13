@@ -16,8 +16,8 @@ class StartupNavigator {
     };
 
     if (!kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.iOS)) {
+        (defaultTargetPlatform == .android ||
+            defaultTargetPlatform == .iOS)) {
       FlutterNativeSplash.remove();
     }
     navigator.pushAndRemoveUntil(

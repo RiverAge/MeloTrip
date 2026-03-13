@@ -61,11 +61,11 @@ class InitialBootstrapService {
 
     final canStartCacheServer =
         !kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.linux ||
-            defaultTargetPlatform == TargetPlatform.macOS);
+        (defaultTargetPlatform == .android ||
+            defaultTargetPlatform == .iOS ||
+            defaultTargetPlatform == .windows ||
+            defaultTargetPlatform == .linux ||
+            defaultTargetPlatform == .macOS);
     if (canStartCacheServer) {
       final dirPath = await resolveCachePath();
       startCacheServer(dirPath, host);
@@ -77,9 +77,9 @@ class InitialBootstrapService {
     }
     final canRestoreDesktopLyrics =
         !kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.linux ||
-            defaultTargetPlatform == TargetPlatform.macOS);
+        (defaultTargetPlatform == .windows ||
+            defaultTargetPlatform == .linux ||
+            defaultTargetPlatform == .macOS);
     if (canRestoreDesktopLyrics) {
       await restoreDesktopLyricsConfig();
     }

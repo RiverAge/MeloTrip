@@ -90,7 +90,7 @@ class UpdateFlowController extends _$UpdateFlowController {
       totalBytes: update.fileSize,
       downloadBytesPerSecond: 0,
       clearEtaSeconds: true,
-      stage: UpdateUiStage.downloading,
+      stage: .downloading,
       clearPendingPackagePath: true,
       clearPendingVersion: true,
       availableUpdate: update,
@@ -104,12 +104,12 @@ class UpdateFlowController extends _$UpdateFlowController {
         update: update,
         onStageChanged: (UpdateDownloadStage stage) {
           if (!ref.mounted) return;
-          if (stage == UpdateDownloadStage.downloading) {
-            state = state.copyWith(stage: UpdateUiStage.downloading);
+          if (stage == .downloading) {
+            state = state.copyWith(stage: .downloading);
             return;
           }
           state = state.copyWith(
-            stage: UpdateUiStage.verifying,
+            stage: .verifying,
             downloadBytesPerSecond: 0,
             clearEtaSeconds: true,
           );
@@ -161,7 +161,7 @@ class UpdateFlowController extends _$UpdateFlowController {
       if (_service.requiresHostExitForInstall) {
         state = state.copyWith(
           isUpdating: false,
-          stage: UpdateUiStage.readyToInstall,
+          stage: .readyToInstall,
           downloadBytesPerSecond: 0,
           clearEtaSeconds: true,
           pendingPackagePath: packagePath,
@@ -171,7 +171,7 @@ class UpdateFlowController extends _$UpdateFlowController {
         return null;
       }
       state = state.copyWith(
-        stage: UpdateUiStage.openingInstaller,
+        stage: .openingInstaller,
         downloadBytesPerSecond: 0,
         clearEtaSeconds: true,
       );
@@ -183,13 +183,11 @@ class UpdateFlowController extends _$UpdateFlowController {
       if (ref.mounted) {
         state = state.copyWith(
           isUpdating: false,
-          stage: state.stage == UpdateUiStage.readyToInstall
-              ? UpdateUiStage.readyToInstall
-              : UpdateUiStage.idle,
+          stage: state.stage == .readyToInstall ? .readyToInstall : .idle,
           downloadBytesPerSecond: 0,
           clearEtaSeconds: true,
-          clearPendingPackagePath: state.stage != UpdateUiStage.readyToInstall,
-          clearPendingVersion: state.stage != UpdateUiStage.readyToInstall,
+          clearPendingPackagePath: state.stage != .readyToInstall,
+          clearPendingVersion: state.stage != .readyToInstall,
         );
       }
     }
@@ -206,7 +204,7 @@ class UpdateFlowController extends _$UpdateFlowController {
 
     state = state.copyWith(
       isUpdating: true,
-      stage: UpdateUiStage.openingInstaller,
+      stage: .openingInstaller,
       downloadBytesPerSecond: 0,
       clearEtaSeconds: true,
     );
@@ -222,7 +220,7 @@ class UpdateFlowController extends _$UpdateFlowController {
       if (ref.mounted) {
         state = state.copyWith(
           isUpdating: false,
-          stage: UpdateUiStage.idle,
+          stage: .idle,
           clearPendingPackagePath: true,
           clearPendingVersion: true,
         );

@@ -39,8 +39,8 @@ class _InitState extends ConsumerState<InitialPage> {
   Widget build(BuildContext context) {
     final usesNativeSplash =
         !kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.iOS);
+        (defaultTargetPlatform == .android ||
+            defaultTargetPlatform == .iOS);
     if (usesNativeSplash) {
       return const Scaffold(body: SizedBox.expand());
     }

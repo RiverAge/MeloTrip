@@ -10,12 +10,10 @@ void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   final isMobile =
       !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.iOS);
+      (defaultTargetPlatform == .android || defaultTargetPlatform == .iOS);
   final isDesktop =
       !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.linux);
+      (defaultTargetPlatform == .windows || defaultTargetPlatform == .linux);
 
   if (isMobile) {
     FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

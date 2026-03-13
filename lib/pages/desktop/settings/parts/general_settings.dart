@@ -28,7 +28,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final UpdateFlowState updateState = ref.watch(updateFlowControllerProvider);
     final bool isReadyToInstall =
-        updateState.stage == UpdateUiStage.readyToInstall &&
+        updateState.stage == .readyToInstall &&
         updateState.pendingPackagePath != null;
     final AppUpdateInfo? availableUpdate = updateState.availableUpdate;
 
@@ -224,7 +224,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
   }
 
   Widget? _buildUpdateProgress(BuildContext context, UpdateFlowState state) {
-    if (!state.isUpdating || state.stage != UpdateUiStage.downloading) {
+    if (!state.isUpdating || state.stage != .downloading) {
       return null;
     }
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -250,13 +250,13 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     if (state.isChecking) {
       return l10n.updateCheckingInline;
     }
-    if (state.stage == UpdateUiStage.readyToInstall) {
+    if (state.stage == .readyToInstall) {
       return l10n.updateReadyToInstallTitle;
     }
-    if (state.stage == UpdateUiStage.verifying) {
+    if (state.stage == .verifying) {
       return l10n.updateStageVerifying;
     }
-    if (state.stage == UpdateUiStage.openingInstaller) {
+    if (state.stage == .openingInstaller) {
       return l10n.updateStageOpeningInstaller;
     }
     if (state.isUpdating) {

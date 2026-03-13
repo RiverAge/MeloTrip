@@ -23,8 +23,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey();
   final bool _enableBackgroundModeOptimization =
       !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.iOS);
+      (defaultTargetPlatform == .android || defaultTargetPlatform == .iOS);
 
   AppRuntimeCoordinatorBindings? _runtimeBindings;
 

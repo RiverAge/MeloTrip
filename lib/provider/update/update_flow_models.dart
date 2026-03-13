@@ -10,7 +10,7 @@ class UpdateFlowState {
     this.totalBytes = 0,
     this.downloadBytesPerSecond = 0,
     this.etaSeconds,
-    this.stage = UpdateUiStage.idle,
+    this.stage = .idle,
     this.pendingPackagePath,
     this.pendingVersionName,
     this.pendingVersionCode,

@@ -71,7 +71,7 @@ class AppUpdateService {
         'Open download page is unsupported on this platform.',
       );
     }
-    if (defaultTargetPlatform == TargetPlatform.windows) {
+    if (defaultTargetPlatform == .windows) {
       final result = await Process.run('cmd', <String>[
         '/c',
         'start',
@@ -83,14 +83,14 @@ class AppUpdateService {
       }
       return;
     }
-    if (defaultTargetPlatform == TargetPlatform.linux) {
+    if (defaultTargetPlatform == .linux) {
       final result = await Process.run('xdg-open', <String>[rawUrl]);
       if (result.exitCode != 0) {
         throw StateError('Failed to open URL on Linux: ${result.stderr}');
       }
       return;
     }
-    if (defaultTargetPlatform == TargetPlatform.macOS) {
+    if (defaultTargetPlatform == .macOS) {
       final result = await Process.run('open', <String>[rawUrl]);
       if (result.exitCode != 0) {
         throw StateError('Failed to open URL on macOS: ${result.stderr}');
@@ -243,13 +243,13 @@ class AppUpdateService {
   }
 
   String _defaultPackageExtension() {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+    if (!kIsWeb && defaultTargetPlatform == .windows) {
       return '.zip';
     }
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.linux) {
+    if (!kIsWeb && defaultTargetPlatform == .linux) {
       return '.tar.gz';
     }
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+    if (!kIsWeb && defaultTargetPlatform == .macOS) {
       return '.zip';
     }
     return '.apk';
@@ -267,19 +267,19 @@ class AppUpdateService {
     if (kIsWeb) {
       return 'web';
     }
-    if (defaultTargetPlatform == TargetPlatform.windows) {
+    if (defaultTargetPlatform == .windows) {
       return 'windows';
     }
-    if (defaultTargetPlatform == TargetPlatform.macOS) {
+    if (defaultTargetPlatform == .macOS) {
       return 'macos';
     }
-    if (defaultTargetPlatform == TargetPlatform.linux) {
+    if (defaultTargetPlatform == .linux) {
       return 'linux';
     }
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform == .android) {
       return 'android';
     }
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
+    if (defaultTargetPlatform == .iOS) {
       return 'ios';
     }
     return 'unknown';
