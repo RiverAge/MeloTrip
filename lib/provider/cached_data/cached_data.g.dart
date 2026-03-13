@@ -40,4 +40,4 @@ final class CachedFileSizeProvider
   }
 }
 
-String _$cachedFileSizeHash() => r'408c46044aef5889a12c91800dc4cb6b66530019';
+String _$cachedFileSizeHash() => r'fa37f369d7a277a9d0e1ee3d0fd96c1652957b5e';
