@@ -300,10 +300,11 @@ packages:
   desktop_lyrics:
     dependency: "direct main"
     description:
-      path: "plugins/desktop_lyrics"
-      relative: true
-    source: path
-    version: "0.0.5"
+      name: desktop_lyrics
+      sha256: "9a6b71aa9bad33e4fc89aec6c48f702676d24d3b5f0012ee78fd9be371d524cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   dio:
     dependency: "direct main"
     description:
