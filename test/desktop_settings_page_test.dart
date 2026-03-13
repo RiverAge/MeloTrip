@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 

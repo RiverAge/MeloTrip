@@ -7,7 +7,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/mobile/home/home_page.dart';
 import 'package:melo_trip/pages/mobile/settings/settings_page.dart';
 import 'package:melo_trip/pages/mobile/music_bar/parts/music_bar.dart';
-import 'package:melo_trip/provider/route/route_observer.dart';
+import 'package:melo_trip/provider/app/route_observer.dart';
 
 class MobileTabPage extends ConsumerStatefulWidget {
   const MobileTabPage({super.key});

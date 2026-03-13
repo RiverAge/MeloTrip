@@ -7,9 +7,9 @@ import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
-import 'package:melo_trip/provider/app_error/app_error.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
-import 'package:melo_trip/provider/route/route_observer.dart';
+import 'package:melo_trip/provider/app/error.dart';
+import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/app/route_observer.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 
 class MyApp extends ConsumerStatefulWidget {

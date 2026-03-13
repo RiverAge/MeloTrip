@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/mobile/playing/playing_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/no_data.dart';
 
 import 'test_helpers.dart';

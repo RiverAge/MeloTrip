@@ -10,7 +10,7 @@ import 'package:melo_trip/pages/mobile/playlist/add_to_playlist_page.dart';
 import 'package:melo_trip/pages/shared/player/animated_lyrics_panel.dart';
 import 'package:melo_trip/pages/shared/player/playback_background.dart';
 import 'package:melo_trip/pages/shared/player/playback_media_meta_badge.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';

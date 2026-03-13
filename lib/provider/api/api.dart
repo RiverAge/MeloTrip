@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:melo_trip/provider/app_error/app_error.dart';
+import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

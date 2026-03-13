@@ -33,7 +33,7 @@ final class CurrentUserProvider
   CurrentUser create() => CurrentUser();
 }
 
-String _$currentUserHash() => r'8c1bb12127e1cf51a084648957c730d329dd2e0c';
+String _$currentUserHash() => r'2d7c8f794b8c377fc57f39a62b601c6629a8bb57';
 
 abstract class _$CurrentUser extends $AsyncNotifier<AuthUser?> {
   FutureOr<AuthUser?> build();
@@ -113,7 +113,7 @@ final class LoginProvider
   }
 }
 
-String _$loginHash() => r'47832839d17b462266a87e23d520512b94305be8';
+String _$loginHash() => r'97b6d8db24c818d7c6bd06a6eda73eca381c1d58';
 
 final class LoginFamily extends $Family
     with
@@ -174,4 +174,4 @@ final class LogoutProvider
   }
 }
 
-String _$logoutHash() => r'572745a7e4d85a7f18f536b25647056bbdb491d9';
+String _$logoutHash() => r'd5c10020899ad8143d80283ca3b1f5f4d298b7b4';

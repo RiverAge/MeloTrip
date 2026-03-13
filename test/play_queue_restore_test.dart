@@ -9,7 +9,7 @@ import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/response/play_queue/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
 

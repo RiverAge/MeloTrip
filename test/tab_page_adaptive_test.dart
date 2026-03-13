@@ -11,7 +11,7 @@ import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/pages/desktop/tab/tab_page.dart';
 import 'package:melo_trip/pages/shared/initial/tab_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 

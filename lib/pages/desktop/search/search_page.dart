@@ -8,7 +8,7 @@ import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
 import 'package:melo_trip/pages/desktop/search/search_shared_widgets.dart';
 import 'package:melo_trip/pages/mobile/artist/artist_detail_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/search/search.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/widget/no_data.dart';

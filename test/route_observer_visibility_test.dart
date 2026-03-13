@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/provider/route/route_observer.dart';
+import 'package:melo_trip/provider/app/route_observer.dart';
 
 class _RouteAwareHost extends ConsumerStatefulWidget {
   const _RouteAwareHost({super.key});

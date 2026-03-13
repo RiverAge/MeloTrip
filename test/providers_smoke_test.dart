@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/album/albums.dart';
-import 'package:melo_trip/provider/route/route_observer.dart';
+import 'package:melo_trip/provider/app/route_observer.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
 
 import 'test_helpers.dart';

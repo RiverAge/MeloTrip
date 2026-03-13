@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
-import 'package:melo_trip/provider/app_database/app_database.dart';
+import 'package:melo_trip/provider/persistence/persistence.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sqflite/sqflite.dart';
 
 part 'user_config.g.dart';
 
@@ -17,37 +16,22 @@ class ValueUpdater<T> {
 class UserConfig extends _$UserConfig {
   @override
   Future<Configuration?> build() async {
-    final db = await ref.read(appDatabaseProvider.future);
+    final persistence = await ref.read(appPersistenceProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
-    if (authUser?.username == null) return null;
+    final username = authUser?.username;
+    if (username == null || username.isEmpty) return null;
 
-    return db.transaction((tnx) async {
-      final countResult = await tnx.query(
-        'user_config',
-        columns: ['count(*) as count'],
-        where: 'username = ?',
-        whereArgs: [authUser?.username],
-      );
-      final int count = Sqflite.firstIntValue(countResult) ?? 0;
-      if (count == 0) {
-        await tnx.insert('user_config', {
-          'username': authUser?.username,
-          'update_at': DateTime.now().millisecondsSinceEpoch,
-        });
-      }
+    final existing = await persistence.loadUserConfig(username);
+    if (existing != null) {
+      return existing;
+    }
 
-      final rows = await tnx.query(
-        'user_config',
-        where: 'username = ?',
-        whereArgs: [authUser?.username],
-      );
-
-      if (rows.isNotEmpty) {
-        return Configuration.fromJson(rows.first);
-      } else {
-        return null;
-      }
-    });
+    final configuration = Configuration(
+      username: username,
+      updateAt: DateTime.now().millisecondsSinceEpoch,
+    );
+    await persistence.saveUserConfig(configuration);
+    return configuration;
   }
 
   Future<void> setConfiguration({
@@ -59,26 +43,11 @@ class UserConfig extends _$UserConfig {
     ValueUpdater<String>? recentSearch,
     ValueUpdater<String?>? desktopLyricsConfig,
   }) async {
-    final db = await ref.read(appDatabaseProvider.future);
+    final persistence = await ref.read(appPersistenceProvider.future);
     final authUser = await ref.read(currentUserProvider.future);
-    if (authUser?.username == null) return;
+    final username = authUser?.username;
+    if (username == null || username.isEmpty) return;
 
-    Map<String, Object?> values = {};
-    if (maxRate != null) {
-      values['max_rate'] = maxRate.value;
-    }
-    if (locale != null) {
-      values['locale'] = locale.value;
-    }
-    if (playlistMode != null) {
-      values['playlist_mode'] = playlistMode.value?.name;
-    }
-    if (theme != null) {
-      values['theme'] = theme.value?.name;
-    }
-    if (recentSearches != null) {
-      values['recent_searches'] = recentSearches.value;
-    }
     if (recentSearch != null) {
       final Configuration? configuration = state.asData?.value ?? await future;
       final List<String> searches = _parseRecentSearches(
@@ -88,25 +57,27 @@ class UserConfig extends _$UserConfig {
       if (query.isNotEmpty) {
         searches.remove(query);
         searches.insert(0, query);
-        values['recent_searches'] = searches.take(20).join(',');
+        recentSearches = ValueUpdater(searches.take(20).join(','));
       }
     }
-    if (desktopLyricsConfig != null) {
-      values['desktop_lyrics_config'] = desktopLyricsConfig.value;
-    }
 
-    if (values.isEmpty) return;
-    values['update_at'] = DateTime.now().millisecondsSinceEpoch;
+    final Configuration current =
+        state.asData?.value ??
+        await future ??
+        Configuration(username: username);
+    final Configuration updated = current.copyWith(
+      username: username,
+      maxRate: maxRate?.value ?? current.maxRate,
+      playlistMode: playlistMode?.value ?? current.playlistMode,
+      recentSearches: recentSearches?.value ?? current.recentSearches,
+      desktopLyricsConfig:
+          desktopLyricsConfig?.value ?? current.desktopLyricsConfig,
+      theme: theme?.value ?? current.theme,
+      locale: locale?.value ?? current.locale,
+      updateAt: DateTime.now().millisecondsSinceEpoch,
+    );
 
-    await db.transaction((tnx) async {
-      await tnx.update(
-        'user_config',
-        values,
-        where: 'username = ?',
-        whereArgs: [authUser?.username],
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    });
+    await persistence.saveUserConfig(updated);
     ref.invalidateSelf();
   }
 

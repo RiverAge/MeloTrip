@@ -19,7 +19,7 @@ import 'package:melo_trip/pages/desktop/library/songs_page.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 
 import 'test_helpers.dart';

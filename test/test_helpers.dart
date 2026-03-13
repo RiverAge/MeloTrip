@@ -6,7 +6,7 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 

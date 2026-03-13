@@ -6,7 +6,7 @@ import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/app_player/player.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';

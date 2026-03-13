@@ -11,7 +11,7 @@ import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
 import 'package:melo_trip/pages/desktop/home/home_page.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/album/albums.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 
 import 'test_helpers.dart';

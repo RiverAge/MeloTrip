@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/app_error/app_error.dart';
+import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 
 void main() {

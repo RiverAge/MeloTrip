@@ -6,10 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
-import 'package:melo_trip/provider/app_database/app_database.dart';
+import 'package:melo_trip/provider/persistence/persistence.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 part 'auth.g.dart';
 
@@ -17,20 +16,8 @@ part 'auth.g.dart';
 class CurrentUser extends _$CurrentUser {
   @override
   Future<AuthUser?> build() async {
-    final db = await ref.read(appDatabaseProvider.future);
-    return db.transaction<AuthUser?>((tnx) async {
-      final rows = await tnx.query('current_user', orderBy: 'update_at DESC');
-      if (rows.isEmpty) {
-        return null;
-      } else {
-        return AuthUser.fromJson({
-          'salt': rows.first['salt'],
-          'token': rows.first['token'],
-          'username': rows.first['username'],
-          'host': rows.first['host'],
-        });
-      }
-    });
+    final persistence = await ref.read(appPersistenceProvider.future);
+    return persistence.loadCurrentUser();
   }
 }
 
@@ -57,7 +44,7 @@ Future<AuthUser?> login(
   required String password,
 }) async {
   final api = await ref.read(apiProvider.future);
-  final db = await ref.read(appDatabaseProvider.future);
+  final persistence = await ref.read(appPersistenceProvider.future);
 
   try {
     final salt = _generateSalt();
@@ -85,15 +72,7 @@ Future<AuthUser?> login(
           'username': username,
           'host': host,
         });
-        await db.transaction((tnx) async {
-          await tnx.insert('current_user', {
-            'salt': auth.salt,
-            'token': auth.token,
-            'username': auth.username,
-            'host': auth.host,
-            'update_at': DateTime.now().millisecondsSinceEpoch,
-          }, conflictAlgorithm: ConflictAlgorithm.replace);
-        });
+        await persistence.saveCurrentUser(auth);
         return auth;
       }
 
@@ -111,10 +90,8 @@ Future<AuthUser?> login(
 
 @riverpod
 Future<void> logout(Ref ref) async {
-  final db = await ref.read(appDatabaseProvider.future);
-  await db.transaction<void>((tnx) async {
-    await tnx.delete('current_user', where: '1=1');
-  });
+  final persistence = await ref.read(appPersistenceProvider.future);
+  await persistence.clearCurrentUser();
   ref.invalidate(currentUserProvider);
   ref.invalidate(userConfigProvider);
 }

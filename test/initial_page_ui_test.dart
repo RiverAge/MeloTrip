@@ -10,7 +10,7 @@ import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/pages/shared/login/login_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 
 import 'test_helpers.dart';

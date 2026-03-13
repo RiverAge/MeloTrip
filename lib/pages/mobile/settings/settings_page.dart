@@ -10,7 +10,7 @@ import 'package:melo_trip/pages/mobile/settings/app_theme_page.dart';
 import 'package:melo_trip/pages/mobile/settings/language_page.dart';
 import 'package:melo_trip/pages/mobile/settings/music_quality_page.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/cached_data/cached_data.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';

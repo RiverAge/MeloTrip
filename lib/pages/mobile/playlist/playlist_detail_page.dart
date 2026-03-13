@@ -5,7 +5,7 @@ import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/pages/mobile/song_control/song_control.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/pages/mobile/playlist/edit_playlist_page.dart';
-import 'package:melo_trip/provider/app_player/app_player.dart';
+import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/endof_data.dart';
