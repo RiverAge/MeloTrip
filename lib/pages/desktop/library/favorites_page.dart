@@ -6,6 +6,7 @@ import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
+import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'parts/favorites_header.dart';

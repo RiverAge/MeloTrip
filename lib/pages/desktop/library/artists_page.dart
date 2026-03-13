@@ -7,6 +7,8 @@ import 'package:melo_trip/widget/artwork_image.dart';
 
 part 'parts/artist_page_sections.dart';
 
+enum ArtistViewType { grid, table }
+
 class DesktopArtistsPage extends ConsumerStatefulWidget {
   const DesktopArtistsPage({super.key});
 
@@ -15,6 +17,7 @@ class DesktopArtistsPage extends ConsumerStatefulWidget {
 }
 
 class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
+  ArtistViewType _viewType = ArtistViewType.grid;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -51,19 +54,42 @@ class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
       body: Column(
         crossAxisAlignment: .start,
         children: [
-          ArtistPageHeader(title: l10n.artist, count: state.items.length),
+          ArtistPageHeader(
+            title: l10n.artist,
+            count: state.items.length,
+            viewType: _viewType,
+            onViewTypeChanged: (type) => setState(() => _viewType = type),
+          ),
           ArtistPageToolbar(l10n: l10n),
           Expanded(
             child: state.items.isEmpty && state.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : ArtistGrid(
-                    artists: visibleArtists,
-                    hasMore: state.hasMore,
-                    scrollController: _scrollController,
-                  ),
+                : _buildContent(visibleArtists, state.hasMore, l10n),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildContent(
+    List<ArtistIndexEntry> artists,
+    bool hasMore,
+    AppLocalizations l10n,
+  ) {
+    switch (_viewType) {
+      case ArtistViewType.grid:
+        return ArtistGrid(
+          artists: artists,
+          hasMore: hasMore,
+          scrollController: _scrollController,
+        );
+      case ArtistViewType.table:
+        return ArtistTableView(
+          artists: artists,
+          hasMore: hasMore,
+          scrollController: _scrollController,
+          l10n: l10n,
+        );
+    }
   }
 }
