@@ -32,16 +32,13 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   Row(
                     mainAxisAlignment: .end,
                     children: [
-                      Tooltip(
-                        message: '$rating/5',
-                        child: Rating(
-                          rating: rating,
-                          onRating: (value) {
-                            ref
-                                .read(songRatingProvider.notifier)
-                                .updateRating(current?.id, value);
-                          },
-                        ),
+                      Rating(
+                        rating: rating,
+                        onRating: (value) {
+                          ref
+                              .read(songRatingProvider.notifier)
+                              .updateRating(current?.id, value);
+                        },
                       ),
                     ],
                   ),
