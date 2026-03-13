@@ -16,8 +16,8 @@ void main() {
       }
 
       final service = AppUpdateService(installerGateway: const _FakeGateway());
-      await expectLater(
-        service.downloadAndVerifyPackage(
+      try {
+        await service.downloadAndVerifyPackage(
           update: const AppUpdateInfo(
             versionName: '1.0.1',
             versionCode: 2,
@@ -26,15 +26,11 @@ void main() {
             downloadUrl: '',
             changelog: '',
           ),
-        ),
-        throwsA(
-          isA<StateError>().having(
-            (error) => error.message,
-            'message',
-            'Download URL is empty.',
-          ),
-        ),
-      );
+        );
+        fail('Expected StateError for empty download URL.');
+      } on StateError catch (error) {
+        expect(error.message, 'Download URL is empty.');
+      }
     },
   );
 
