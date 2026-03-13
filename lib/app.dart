@@ -3,10 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/app_logic/desktop_lyrics_runtime.dart';
-import 'package:melo_trip/app_logic/player_media_resolver_runtime.dart';
-import 'package:melo_trip/app_logic/player_playlist_mode_runtime.dart';
-import 'package:melo_trip/app_logic/player_scrobble_runtime.dart';
+import 'package:melo_trip/app_logic/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
@@ -14,8 +11,6 @@ import 'package:melo_trip/provider/app_error/app_error.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
-
-part 'app_logic/player_listener.dart';
 
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
@@ -31,23 +26,24 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       (defaultTargetPlatform == TargetPlatform.android ||
           defaultTargetPlatform == TargetPlatform.iOS);
 
-  StreamSubscription? _playlistModeSubscription;
-  StreamSubscription? _errorSubscription;
-  DesktopLyricsRuntimeBindings? _desktopLyricsBindings;
-  PlayerScrobbleRuntimeBindings? _playerScrobbleBindings;
+  AppRuntimeCoordinatorBindings? _runtimeBindings;
 
   @override
   void initState() {
     super.initState();
-    _initPlayerListeners();
+    _startAppRuntime();
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _cancelPlayerSubscriptions();
+    unawaited(_runtimeBindings?.cancel());
     super.dispose();
+  }
+
+  void _startAppRuntime() async {
+    _runtimeBindings = await ref.read(appRuntimeCoordinatorProvider).start(ref);
   }
 
   @override
