@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_logic/runtime/desktop_lyrics_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_media_resolver_runtime.dart';
-import 'package:melo_trip/app_logic/runtime/player_playlist_mode_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/player_preferences_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_scrobble_runtime.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/provider/app/error.dart';
@@ -14,7 +15,7 @@ import 'package:melo_trip/provider/app/player.dart';
 
 Future<WidgetRef> _pumpRef(
   WidgetTester tester, {
-  List overrides = const [],
+  List<Override> overrides = const <Override>[],
 }) async {
   final completer = Completer<WidgetRef>();
   await tester.pumpWidget(
@@ -46,13 +47,16 @@ class _FakeMediaResolverRuntime extends PlayerMediaResolverRuntime {
   }
 }
 
-class _FakePlaylistModeRuntime extends PlayerPlaylistModeRuntime {
+class _FakePlayerPreferencesRuntime extends PlayerPreferencesRuntime {
   int attachCalls = 0;
 
   @override
-  Future<StreamSubscription<dynamic>?> attach(WidgetRef ref) async {
+  Future<PlayerPreferencesRuntimeBindings> attach(WidgetRef ref) async {
     attachCalls++;
-    return Stream<void>.empty().listen((_) {});
+    return PlayerPreferencesRuntimeBindings(
+      playlistModeSubscription: Stream<void>.empty().listen((_) {}),
+      shuffleSubscription: Stream<void>.empty().listen((_) {}),
+    );
   }
 }
 
@@ -92,17 +96,8 @@ class _FakeAppPlayerHandler extends AppPlayerHandler {
 }
 
 class _FakeAppPlayer implements AppPlayer {
-  _FakeAppPlayer(this.errorController);
-
-  final StreamController<String> errorController;
-
   @override
-  dynamic noSuchMethod(Invocation invocation) {
-    if (invocation.memberName == #errorStream) {
-      return errorController.stream;
-    }
-    return super.noSuchMethod(invocation);
-  }
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {
@@ -112,7 +107,7 @@ void main() {
     'runtime coordinator starts runtimes and desktop bindings on desktop',
     (tester) async {
       final mediaResolverRuntime = _FakeMediaResolverRuntime();
-      final playlistModeRuntime = _FakePlaylistModeRuntime();
+      final playerPreferencesRuntime = _FakePlayerPreferencesRuntime();
       final scrobbleRuntime = _FakeScrobbleRuntime();
       final desktopLyricsRuntime = _FakeDesktopLyricsRuntime();
       final errorController = StreamController<String>.broadcast();
@@ -124,13 +119,18 @@ void main() {
           playerMediaResolverRuntimeProvider.overrideWithValue(
             mediaResolverRuntime,
           ),
-          playerPlaylistModeRuntimeProvider.overrideWithValue(
-            playlistModeRuntime,
+          playerPreferencesRuntimeProvider.overrideWithValue(
+            playerPreferencesRuntime,
           ),
           playerScrobbleRuntimeProvider.overrideWithValue(scrobbleRuntime),
           desktopLyricsRuntimeProvider.overrideWithValue(desktopLyricsRuntime),
           appPlayerHandlerProvider.overrideWith(
-            () => _FakeAppPlayerHandler(_FakeAppPlayer(errorController)),
+            () => _FakeAppPlayerHandler(_FakeAppPlayer()),
+          ),
+          appRuntimeCoordinatorProvider.overrideWithValue(
+            AppRuntimeCoordinator(
+              resolvePlayerErrorStream: (_) => errorController.stream,
+            ),
           ),
         ],
       );
@@ -139,7 +139,7 @@ void main() {
       addTearDown(bindings.cancel);
 
       expect(mediaResolverRuntime.attachCalls, 1);
-      expect(playlistModeRuntime.attachCalls, 1);
+      expect(playerPreferencesRuntime.attachCalls, 1);
       expect(scrobbleRuntime.attachCalls, 1);
       expect(desktopLyricsRuntime.attachCalls, 1);
     },
@@ -158,13 +158,18 @@ void main() {
         playerMediaResolverRuntimeProvider.overrideWithValue(
           _FakeMediaResolverRuntime(),
         ),
-        playerPlaylistModeRuntimeProvider.overrideWithValue(
-          _FakePlaylistModeRuntime(),
+        playerPreferencesRuntimeProvider.overrideWithValue(
+          _FakePlayerPreferencesRuntime(),
         ),
         playerScrobbleRuntimeProvider.overrideWithValue(_FakeScrobbleRuntime()),
         desktopLyricsRuntimeProvider.overrideWithValue(_FakeDesktopLyricsRuntime()),
         appPlayerHandlerProvider.overrideWith(
-          () => _FakeAppPlayerHandler(_FakeAppPlayer(errorController)),
+          () => _FakeAppPlayerHandler(_FakeAppPlayer()),
+        ),
+        appRuntimeCoordinatorProvider.overrideWithValue(
+          AppRuntimeCoordinator(
+            resolvePlayerErrorStream: (_) => errorController.stream,
+          ),
         ),
       ],
     );

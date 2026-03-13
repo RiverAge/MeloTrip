@@ -11,6 +11,7 @@ import 'package:melo_trip/pages/shared/login/login_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/play_queue/play_queue.dart';
 
 import 'test_helpers.dart';
 
@@ -56,6 +57,16 @@ void main() {
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name, size: 50),
           ).overrideWith((_) async => const <AlbumEntity>[]),
+          currentUserProvider.overrideWith(
+            () => FakeCurrentUserLoggedIn(
+              const AuthUser(
+                salt: 'salt',
+                token: 'token',
+                host: 'https://example.com',
+              ),
+            ),
+          ),
+          playQueueProvider.overrideWith((_) async => null),
           initialBootstrapServiceProvider.overrideWithValue(
             InitialBootstrapService(
               loadAuthUser: () async => const AuthUser(
@@ -67,6 +78,7 @@ void main() {
               resolveCachePath: () async => '/tmp/cache',
               startCacheServer: (_, _) {},
               restorePlaylistMode: (_) async {},
+              restoreShuffle: (_) async {},
             ),
           ),
         ],

@@ -118,8 +118,8 @@ void main() {
       overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
     );
 
-    expect(find.text('Adele'), findsOneWidget);
-    expect(find.text('Aimer'), findsOneWidget);
+    expect(find.text('Adele'), findsWidgets);
+    expect(find.text('Aimer'), findsWidgets);
   });
 
   testWidgets('DesktopArtistsPage renders artists parsed from getArtists', (

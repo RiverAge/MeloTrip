@@ -9,6 +9,8 @@ import 'package:update_installer/update_installer.dart';
 part 'parts/update_flow_controller_test_helpers.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('UpdateFlowState copyWith and clearEtaSeconds', () {
     const UpdateFlowState base = UpdateFlowState(
       isChecking: true,

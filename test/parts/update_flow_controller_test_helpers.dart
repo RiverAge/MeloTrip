@@ -80,6 +80,15 @@ class _FakeUpdateService extends AppUpdateService {
     installCalled = true;
     receivedUpdaterStrings = updaterStrings;
   }
+
+  @override
+  Future<void> installDownloadedPackagePath(
+    String filePath, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) async {
+    installCalled = true;
+    receivedUpdaterStrings = updaterStrings;
+  }
 }
 
 ProviderContainer _createContainer(_FakeUpdateService service) {

@@ -20,6 +20,15 @@ class FakeCurrentUserLoggedOut extends CurrentUser {
   Future<AuthUser?> build() async => null;
 }
 
+class FakeCurrentUserLoggedIn extends CurrentUser {
+  FakeCurrentUserLoggedIn(this.user);
+
+  final AuthUser user;
+
+  @override
+  Future<AuthUser?> build() async => user;
+}
+
 class FakeUserConfigNull extends UserConfig {
   @override
   Future<Configuration?> build() async => null;

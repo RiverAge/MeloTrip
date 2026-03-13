@@ -27,7 +27,13 @@ void main() {
             changelog: '',
           ),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            'Download URL is empty.',
+          ),
+        ),
       );
     },
   );
