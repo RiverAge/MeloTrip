@@ -25,27 +25,11 @@ int _getResponseStartBytes(HttpClientResponse response) {
 }
 
 bool _isSubsonicStream(HttpRequest request) {
-  if (request.uri.path != '/rest/stream' &&
-      request.uri.path != '/rest/getCoverArt') {
-    return false;
-  }
-  const requiredParams = ['u', 't', 's', 'v', 'c', 'id'];
-  return requiredParams.every(
-    (param) => request.uri.queryParameters.containsKey(param),
-  );
+  return isCacheableSubsonicMediaUri(request.uri);
 }
 
 String _buildSubsonicStreamDigest(HttpRequest request) {
-  return request.uri
-      .replace(
-        queryParameters: Map.from(request.uri.queryParameters)
-          ..remove('u')
-          ..remove('t')
-          ..remove('s')
-          ..remove('c')
-          ..remove('_'),
-      )
-      .toString();
+  return buildCacheableSubsonicMediaDigest(request.uri);
 }
 
 Future<bool> _isPortAvailable(int port) async {

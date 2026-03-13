@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:melo_trip/helper/subsonic_protocol.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -39,8 +40,8 @@ class Api extends _$Api {
         't': token,
         's': auth?.salt,
         '_': DateTime.now().toIso8601String(),
-        'v': '1.16.1',
-        'c': 'melo_trip',
+        'v': subsonicApiVersion,
+        'c': subsonicClientName,
         'f': 'json',
       });
     }
@@ -67,14 +68,11 @@ class Api extends _$Api {
     handler.next(response);
   }
 
-  void _onError(
-    DioException exception,
-    ErrorInterceptorHandler handler,
-  ) {
+  void _onError(DioException exception, ErrorInterceptorHandler handler) {
     final String? responseError =
         exception.response?.data is Map<String, dynamic>
-            ? exception.response?.data['error'] as String?
-            : null;
+        ? exception.response?.data['error'] as String?
+        : null;
     final String? responseMessage = exception.message;
     final int? statusCode = exception.response?.statusCode;
 

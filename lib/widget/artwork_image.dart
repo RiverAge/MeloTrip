@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/const/index.dart';
+import 'package:melo_trip/helper/subsonic_uri_builder.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 
 class ArtworkImage extends ConsumerWidget {
@@ -36,13 +35,11 @@ class ArtworkImage extends ConsumerWidget {
 
     return switch (auth) {
       AsyncData(:final value) => Image.network(
-        _buildArtworkUrl(
+        SubsonicUriBuilder.buildCoverArtUri(
+          auth: value,
           artworkId: artworkId,
-          host: value?.host,
-          username: value?.username,
-          token: value?.token,
-          salt: value?.salt,
-        ),
+          size: size,
+        ).toString(),
         width: width,
         height: height,
         fit: fit,
@@ -88,34 +85,5 @@ class ArtworkImage extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _buildArtworkUrl({
-    required String artworkId,
-    required String? host,
-    required String? username,
-    required String? token,
-    required String? salt,
-  }) {
-    final baseHost = kIsWeb ? host : proxyCacheHost;
-    final normalizedBase =
-        (baseHost == null || baseHost.isEmpty)
-            ? proxyCacheHost
-            : baseHost.endsWith('/')
-            ? baseHost.substring(0, baseHost.length - 1)
-            : baseHost;
-    final query = <String, String>{
-      'id': artworkId,
-      'f': 'json',
-      'v': '1.8.0',
-      'c': 'MeloTrip',
-      'size': '${size ?? 500}',
-      if (username != null && username.isNotEmpty) 'u': username,
-      if (token != null && token.isNotEmpty) 't': token,
-      if (salt != null && salt.isNotEmpty) 's': salt,
-    };
-    return Uri.parse('$normalizedBase/rest/getCoverArt').replace(
-      queryParameters: query,
-    ).toString();
   }
 }
