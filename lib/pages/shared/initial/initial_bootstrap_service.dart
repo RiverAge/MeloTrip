@@ -16,6 +16,7 @@ import 'package:melo_trip/server/cache_server_launcher.dart';
 
 enum InitialBootstrapResult { loggedIn, loggedOut }
 
+/// Handles one-time startup restoration before the main UI starts navigating.
 class InitialBootstrapService {
   InitialBootstrapService({
     required this.loadAuthUser,
@@ -57,6 +58,8 @@ class InitialBootstrapService {
       return .loggedOut;
     }
 
+    // Bootstrap only restores persisted startup state. Runtime subscriptions
+    // and delayed queue restoration are started elsewhere.
     final canStartCacheServer =
         !kIsWeb &&
         (defaultTargetPlatform == .android ||

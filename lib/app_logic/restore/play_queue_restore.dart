@@ -17,6 +17,10 @@ typedef ApplyRestoredPlayQueue =
 String? _restoredPlayQueueUserKey;
 Future<void>? _restorePlayQueueInFlight;
 
+/// Restores the persisted queue lazily when a tab shell becomes active.
+///
+/// This is intentionally separate from bootstrap because queue restoration
+/// depends on tab-scoped player usage rather than initial navigation.
 Future<void> ensurePlayQueueRestored(
   WidgetRef ref, {
   ApplyRestoredPlayQueue applyRestoredPlayQueue = _defaultApplyRestoredPlayQueue,

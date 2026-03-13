@@ -31,8 +31,11 @@ class AppRuntimeCoordinatorBindings {
   }
 }
 
+/// Starts long-lived runtime side effects after app startup has completed.
 class AppRuntimeCoordinator {
   Future<AppRuntimeCoordinatorBindings> start(WidgetRef ref) async {
+    // These bindings are runtime concerns, not bootstrap concerns. They stay
+    // alive with the app shell and are cancelled when the app widget disposes.
     await ref.read(playerMediaResolverRuntimeProvider).attach(ref);
 
     final playlistModeSubscription = await ref
