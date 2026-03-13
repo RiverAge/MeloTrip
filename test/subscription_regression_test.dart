@@ -19,17 +19,21 @@ void main() {
     final bottomSheet = _readFile(
       'lib/pages/mobile/music_bar/parts/bottom_sheet_play_queue.dart',
     );
+    final playQueuePanel = _readFile(
+      'lib/pages/shared/player/play_queue_panel.dart',
+    );
 
     expect(_countPattern(musicBar, 'appPlayerHandlerProvider'), 1);
     expect(_countPattern(musicBar, 'provider:\\s*player\\.playingStream'), 1);
-    expect(_countPattern(bottomSheet, 'appPlayerHandlerProvider'), 1);
+    expect(_countPattern(bottomSheet, 'appPlayerHandlerProvider'), 0);
     expect(
       _countPattern(
         bottomSheet,
         'provider:\\s*widget\\.player\\.playingStream',
       ),
-      1,
+      0,
     );
+    expect(_countPattern(playQueuePanel, 'provider:\\s*widget\\.player\\.playingStream'), 1);
   });
 
   test('list item pages avoid nested player provider reads', () {
