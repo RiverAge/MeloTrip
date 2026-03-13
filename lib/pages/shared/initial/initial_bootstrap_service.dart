@@ -10,6 +10,7 @@ import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/desktop/desktop_lyrics_client.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/server/cache_server_launcher.dart';
@@ -123,7 +124,7 @@ final initialBootstrapServiceProvider = Provider<InitialBootstrapService>((
       final DesktopLyricsConfig config = await ref.read(
         desktopLyricsSettingsProvider.future,
       );
-      await DesktopLyrics().apply(config);
+      await ref.read(desktopLyricsClientProvider).apply(config);
     },
   );
 });

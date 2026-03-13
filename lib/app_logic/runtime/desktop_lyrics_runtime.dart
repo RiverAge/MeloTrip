@@ -6,6 +6,7 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index_of_lyrics.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/desktop/desktop_lyrics_client.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 
 class DesktopLyricsRuntimeBindings {
@@ -30,7 +31,7 @@ class DesktopLyricsRuntime {
       return null;
     }
 
-    final desktopLyrics = DesktopLyrics();
+    final desktopLyrics = ref.read(desktopLyricsClientProvider);
     List<Line>? lyricsLines;
     int currentLyricsIndex = -1;
     int lyricsRequestId = 0;

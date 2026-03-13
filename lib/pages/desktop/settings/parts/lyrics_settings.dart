@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
+import 'package:melo_trip/provider/desktop/desktop_lyrics_client.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 
 class DesktopLyricsSettingsTab extends ConsumerStatefulWidget {
@@ -43,7 +44,6 @@ class _DesktopLyricsSettingsTabState
     0x00000000,
   ];
 
-  final DesktopLyrics _desktopLyrics = DesktopLyrics();
   DesktopLyricsConfig _currentConfig = _fallbackDesktopLyricsConfig;
 
   Future<void> _applyNative(DesktopLyricsConfig config) async {
@@ -51,7 +51,7 @@ class _DesktopLyricsSettingsTabState
       await onApplyConfig(config);
       return;
     }
-    await _desktopLyrics.apply(config);
+    await ref.read(desktopLyricsClientProvider).apply(config);
   }
 
   void _preview(
