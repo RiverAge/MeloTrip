@@ -1,7 +1,7 @@
 part of '../app.dart';
 
 extension _PlayerListenerLogic on _MyAppState {
-  void _initPlayerListeners() async {
+  void _initPlayerListeners() {
     _setPlayerMediaResolver();
     _setScrobbleListener();
     _setPlaylistModeListener();
@@ -14,107 +14,25 @@ extension _PlayerListenerLogic on _MyAppState {
 
   void _cancelPlayerSubscriptions() {
     _playlistModeSubscription?.cancel();
-    _scrobbleSubscription?.cancel();
     _errorSubscription?.cancel();
-    _nowPlayingTimer?.cancel();
-    _positionSubscription?.cancel();
-    _playQueueSubscription?.cancel();
+    unawaited(_playerScrobbleBindings?.cancel());
+    unawaited(_desktopLyricsBindings?.cancel());
   }
 
   void _setPlayerMediaResolver() async {
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    player?.setMediaResolver((song) async {
-      final auth = await ref.read(currentUserProvider.future);
-      final config = await ref.read(userConfigProvider.future);
-
-      final url =
-          '$proxyCacheHost/rest/stream?id=${song.id}&u=${auth?.username}&t=${auth?.token}&s=${auth?.salt}&_=${DateTime.now().toIso8601String()}&f=json&v=1.8.0&c=MeloTrip&maxBitRate=${config?.maxRate}';
-
-      return Media(url, extras: {'song': song});
-    });
+    await ref.read(playerMediaResolverRuntimeProvider).attach(ref);
   }
 
   void _setPlaylistModeListener() async {
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    _playlistModeSubscription = player?.playlistModeStream.listen((mode) {
-      final config = ref.read(userConfigProvider.notifier);
-      config.setConfiguration(playlistMode: ValueUpdater(mode));
-    });
+    _playlistModeSubscription = await ref
+        .read(playerPlaylistModeRuntimeProvider)
+        .attach(ref);
   }
 
   void _setScrobbleListener() async {
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    if (player == null) return;
-
-    _scrobbleSubscription =
-        CombineLatestStream.combine2(
-          player.playQueueStream,
-          player.playingStream,
-          (queue, playing) => (queue, playing),
-        ).listen((data) async {
-          final queue = data.$1;
-          final playing = data.$2;
-
-          if (queue.songs.isEmpty) return;
-          final currentSong = queue.songs[queue.index];
-          final currentId = currentSong.id;
-
-          final api = await ref.read(apiProvider.future);
-          final now = DateTime.now();
-
-          // --- 核心秒表逻辑 ---
-          if (_lastStateChangeTime != null && _wasPlaying) {
-            _activeDuration += now.difference(_lastStateChangeTime!);
-          }
-
-          // 场景 A：切换了歌曲 (ID 变化)
-          if (_lastProcessedId != currentId) {
-            // 1. 尝试结算上一曲 (90% + 30秒 判定)
-            if (_lastProcessedId != null && _lastSongDuration != null) {
-              if (_activeDuration.inSeconds >= 30 &&
-                  _activeDuration.inSeconds >= _lastSongDuration! * 0.9) {
-                api.get(
-                  '/rest/scrobble',
-                  queryParameters: {
-                    'id': _lastProcessedId,
-                    'time': now.millisecondsSinceEpoch,
-                    'submission': true,
-                  },
-                );
-              }
-            }
-
-            // 2. 重置秒表状态
-            _lastProcessedId = currentId;
-            _lastSongDuration = currentSong.duration?.toDouble();
-            _activeDuration = Duration.zero;
-            _nowPlayingTimer?.cancel();
-            _savePlayQueue(player, api);
-          }
-
-          // 更新状态，供下一段计时使用
-          _lastStateChangeTime = now;
-          _wasPlaying = playing;
-
-          // --- Now Playing 防抖逻辑 (维持 10s) ---
-          if (playing) {
-            if (_nowPlayingTimer == null || !_nowPlayingTimer!.isActive) {
-              _nowPlayingTimer = Timer(const Duration(seconds: 10), () {
-                if (player.playing && _lastProcessedId != null) {
-                  api.get(
-                    '/rest/scrobble',
-                    queryParameters: {
-                      'id': _lastProcessedId,
-                      'submission': false,
-                    },
-                  );
-                }
-              });
-            }
-          } else {
-            _nowPlayingTimer?.cancel();
-          }
-        });
+    _playerScrobbleBindings = await ref
+        .read(playerScrobbleRuntimeProvider)
+        .attach(ref);
   }
 
   void _setPlayerErrorListener() async {
@@ -125,80 +43,8 @@ extension _PlayerListenerLogic on _MyAppState {
   }
 
   void _setDesktopLyricsListener() async {
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    if (player == null) return;
-    final desktopLyrics = DesktopLyrics();
-
-    List<Line>? lyricsLines;
-    int currentLyricsIndex = -1;
-    int lyricsRequestId = 0;
-    String? lastSongId;
-
-    _playQueueSubscription = player.playQueueStream.listen((queue) async {
-      final songId =
-          (queue.index >= queue.songs.length || queue.index < 0
-                  ? null
-                  : queue.songs[queue.index])
-              ?.id;
-      if (songId == lastSongId && lastSongId != null) {
-        return;
-      }
-      unawaited(desktopLyrics.render(DesktopLyricsFrame.line(currentLine: '')));
-      lastSongId = songId;
-      if (songId != null) {
-        currentLyricsIndex = -1;
-        lyricsLines = null;
-        final requestId = ++lyricsRequestId;
-        final resp = await ref.read(lyricsProvider(songId).future);
-        lyricsLines = requestId == lyricsRequestId
-            ? resp
-                  ?.subsonicResponse
-                  ?.lyricsList
-                  ?.structuredLyrics
-                  ?.firstOrNull
-                  ?.line
-            : null;
-      } else {
-        lyricsLines = null;
-      }
-      unawaited(
-        desktopLyrics.render(
-          DesktopLyricsFrame.line(
-            currentLine: lyricsLines?.firstOrNull?.value?.firstOrNull ?? '',
-          ),
-        ),
-      );
-    });
-
-    _positionSubscription = player.positionStream.listen((duration) async {
-      final lines = lyricsLines;
-      if (lines == null) {
-        return;
-      }
-      final idx = indexOfLyrics(sortedLyrics: lines, position: duration);
-      if (currentLyricsIndex == idx || idx < 0 || idx >= lines.length) {
-        return;
-      }
-      final line = lines[idx].value?.firstOrNull;
-      currentLyricsIndex = idx;
-      if (line == null) {
-        return;
-      }
-
-      unawaited(
-        desktopLyrics.render(DesktopLyricsFrame.line(currentLine: line)),
-      );
-    });
-  }
-
-  void _savePlayQueue(AppPlayer player, dynamic api) {
-    final playQueue = player.playQueue;
-    if (playQueue.index >= playQueue.songs.length) {
-      api.get('/rest/savePlayQueue');
-      return;
-    }
-    final currentSong = playQueue.songs[playQueue.index];
-    final ids = playQueue.songs.map((e) => 'id=${e.id}').join('&');
-    api.get('/rest/savePlayQueue?$ids&current=${currentSong.id}');
+    _desktopLyricsBindings = await ref
+        .read(desktopLyricsRuntimeProvider)
+        .attach(ref);
   }
 }

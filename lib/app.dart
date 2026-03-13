@@ -1,25 +1,20 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/app_logic/desktop_lyrics_runtime.dart';
+import 'package:melo_trip/app_logic/player_media_resolver_runtime.dart';
+import 'package:melo_trip/app_logic/player_playlist_mode_runtime.dart';
+import 'package:melo_trip/app_logic/player_scrobble_runtime.dart';
 import 'package:melo_trip/app_player/player.dart';
-import 'package:melo_trip/const/index.dart';
-import 'package:melo_trip/helper/index_of_lyrics.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app_error/app_error.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app_player/app_player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/route/route_observer.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
-import 'package:rxdart/rxdart.dart';
 
 part 'app_logic/player_listener.dart';
 
@@ -37,18 +32,10 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       (defaultTargetPlatform == TargetPlatform.android ||
           defaultTargetPlatform == TargetPlatform.iOS);
 
-  String? _lastProcessedId;
-  double? _lastSongDuration;
-  Duration _activeDuration = Duration.zero;
-  DateTime? _lastStateChangeTime;
-  bool _wasPlaying = false;
-  Timer? _nowPlayingTimer;
-
   StreamSubscription? _playlistModeSubscription;
-  StreamSubscription? _scrobbleSubscription;
   StreamSubscription? _errorSubscription;
-  StreamSubscription? _positionSubscription;
-  StreamSubscription? _playQueueSubscription;
+  DesktopLyricsRuntimeBindings? _desktopLyricsBindings;
+  PlayerScrobbleRuntimeBindings? _playerScrobbleBindings;
 
   @override
   void initState() {
