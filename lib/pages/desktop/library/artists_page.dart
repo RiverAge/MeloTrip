@@ -7,6 +7,8 @@ import 'package:melo_trip/provider/artist/artists.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 
 part 'parts/artist_page_sections.dart';
+part 'parts/artist_grid.dart';
+part 'parts/artist_table.dart';
 
 class DesktopArtistsPage extends ConsumerStatefulWidget {
   const DesktopArtistsPage({super.key});
