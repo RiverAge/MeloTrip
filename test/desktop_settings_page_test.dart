@@ -152,7 +152,7 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(Tab).at(2));
+    await tester.tap(find.byType(Tab).at(3));
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Desktop Lyrics'), findsWidgets);
