@@ -11,8 +11,8 @@ class ArtistPageHeader extends StatelessWidget {
 
   final String title;
   final int count;
-  final ArtistViewType viewType;
-  final ValueChanged<ArtistViewType> onViewTypeChanged;
+  final AppViewType viewType;
+  final ValueChanged<AppViewType> onViewTypeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +73,8 @@ class ArtistViewSwitcher extends StatelessWidget {
     super.key,
   });
 
-  final ArtistViewType current;
-  final ValueChanged<ArtistViewType> onChanged;
+  final AppViewType current;
+  final ValueChanged<AppViewType> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -90,13 +90,13 @@ class ArtistViewSwitcher extends StatelessWidget {
         children: [
           _ArtistViewItem(
             icon: Icons.grid_view_rounded,
-            selected: current == ArtistViewType.grid,
-            onTap: () => onChanged(ArtistViewType.grid),
+            selected: current == AppViewType.grid,
+            onTap: () => onChanged(AppViewType.grid),
           ),
           _ArtistViewItem(
             icon: Icons.view_list_rounded,
-            selected: current == ArtistViewType.table,
-            onTap: () => onChanged(ArtistViewType.table),
+            selected: current == AppViewType.table,
+            onTap: () => onChanged(AppViewType.table),
           ),
         ],
       ),
@@ -147,26 +147,7 @@ class ArtistPageToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final Color iconColor = theme.colorScheme.onSurfaceVariant;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        children: [
-          Text(
-            l10n.name,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: .bold,
-              color: iconColor,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Icon(Icons.sort_by_alpha_rounded, size: 18, color: iconColor),
-          const SizedBox(width: 16),
-          Icon(Icons.refresh_rounded, size: 18, color: iconColor),
-        ],
-      ),
-    );
+    return const SizedBox(height: 8);
   }
 }
 

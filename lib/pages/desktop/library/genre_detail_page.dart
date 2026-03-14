@@ -5,6 +5,7 @@ import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/pages/desktop/library/albums_page.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_page_controls.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_views.dart';
 import 'package:melo_trip/provider/album/albums.dart';
@@ -21,7 +22,7 @@ class DesktopGenreDetailPage extends ConsumerStatefulWidget {
 
 class _DesktopGenreDetailPageState
     extends ConsumerState<DesktopGenreDetailPage> {
-  AlbumViewType _viewType = AlbumViewType.grid;
+  AppViewType _viewType = AppViewType.grid;
   final ScrollController _scrollController = ScrollController();
 
   late final AlbumListQuery _query;
@@ -66,7 +67,7 @@ class _DesktopGenreDetailPageState
           _CustomGenreHeader(
             genre: widget.genre,
             viewType: _viewType,
-            onViewTypeChanged: (AlbumViewType type) =>
+            onViewTypeChanged: (AppViewType type) =>
                 setState(() => _viewType = type),
             count: widget.genre.albumCount ?? albumState.items.length,
           ),
@@ -85,20 +86,20 @@ class _DesktopGenreDetailPageState
     AppLocalizations l10n,
   ) {
     switch (_viewType) {
-      case AlbumViewType.grid:
+      case AppViewType.grid:
         return AlbumGridView(
           albums: albumState.items,
           hasMore: albumState.hasMore,
           scrollController: _scrollController,
         );
-      case AlbumViewType.table:
+      case AppViewType.table:
         return AlbumTableView(
           albums: albumState.items,
           hasMore: albumState.hasMore,
           scrollController: _scrollController,
           l10n: l10n,
         );
-      case AlbumViewType.detail:
+      case AppViewType.detail:
         return AlbumGridView(
           albums: albumState.items,
           hasMore: albumState.hasMore,
@@ -117,8 +118,8 @@ class _CustomGenreHeader extends StatelessWidget {
   });
 
   final GenreEntity genre;
-  final AlbumViewType viewType;
-  final ValueChanged<AlbumViewType> onViewTypeChanged;
+  final AppViewType viewType;
+  final ValueChanged<AppViewType> onViewTypeChanged;
   final int count;
 
   @override

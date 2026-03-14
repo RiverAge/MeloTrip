@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/album_page_controls.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/song/songs.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
+
+import 'package:melo_trip/app_player/player.dart';
 
 part 'parts/song_page_sections.dart';
 
@@ -26,6 +29,7 @@ class DesktopSongsPage extends ConsumerStatefulWidget {
 
 class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
   final ScrollController _scrollController = ScrollController();
+  AppViewType _viewType = AppViewType.table;
 
   @override
   void initState() {
@@ -65,8 +69,13 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
       body: Column(
         crossAxisAlignment: .start,
         children: [
-          SongPageHeader(title: l10n.song, count: state.items.length),
-          SongPageToolbar(l10n: l10n),
+          SongPageHeader(
+            title: l10n.song,
+            count: state.items.length,
+            viewType: _viewType,
+            onViewTypeChanged: (type) => setState(() => _viewType = type),
+          ),
+          const SongPageToolbar(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             child: Row(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/pages/desktop/library/albums_page.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 
 class AlbumPageHeader extends StatelessWidget {
   const AlbumPageHeader({
@@ -13,8 +13,8 @@ class AlbumPageHeader extends StatelessWidget {
 
   final String title;
   final int count;
-  final AlbumViewType viewType;
-  final ValueChanged<AlbumViewType> onViewTypeChanged;
+  final AppViewType viewType;
+  final ValueChanged<AppViewType> onViewTypeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +73,8 @@ class AlbumViewSwitcher extends StatelessWidget {
     this.showDetailOption = true,
   });
 
-  final AlbumViewType current;
-  final ValueChanged<AlbumViewType> onChanged;
+  final AppViewType current;
+  final ValueChanged<AppViewType> onChanged;
   final bool showDetailOption;
 
   @override
@@ -90,19 +90,19 @@ class AlbumViewSwitcher extends StatelessWidget {
         children: [
           _ViewItem(
             icon: Icons.grid_view_rounded,
-            selected: current == AlbumViewType.grid,
-            onTap: () => onChanged(AlbumViewType.grid),
+            selected: current == AppViewType.grid,
+            onTap: () => onChanged(AppViewType.grid),
           ),
           _ViewItem(
             icon: Icons.view_list_rounded,
-            selected: current == AlbumViewType.table,
-            onTap: () => onChanged(AlbumViewType.table),
+            selected: current == AppViewType.table,
+            onTap: () => onChanged(AppViewType.table),
           ),
           if (showDetailOption)
             _ViewItem(
               icon: Icons.view_headline_rounded,
-              selected: current == AlbumViewType.detail,
-              onTap: () => onChanged(AlbumViewType.detail),
+              selected: current == AppViewType.detail,
+              onTap: () => onChanged(AppViewType.detail),
             ),
         ],
       ),

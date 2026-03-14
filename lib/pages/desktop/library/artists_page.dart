@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
 import 'package:melo_trip/provider/artist/artists.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 
 part 'parts/artist_page_sections.dart';
-
-enum ArtistViewType { grid, table }
 
 class DesktopArtistsPage extends ConsumerStatefulWidget {
   const DesktopArtistsPage({super.key});
@@ -17,7 +16,7 @@ class DesktopArtistsPage extends ConsumerStatefulWidget {
 }
 
 class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
-  ArtistViewType _viewType = ArtistViewType.grid;
+  AppViewType _viewType = AppViewType.grid;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -77,18 +76,24 @@ class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
     AppLocalizations l10n,
   ) {
     switch (_viewType) {
-      case ArtistViewType.grid:
+      case AppViewType.grid:
         return ArtistGrid(
           artists: artists,
           hasMore: hasMore,
           scrollController: _scrollController,
         );
-      case ArtistViewType.table:
+      case AppViewType.table:
         return ArtistTableView(
           artists: artists,
           hasMore: hasMore,
           scrollController: _scrollController,
           l10n: l10n,
+        );
+      default:
+        return ArtistGrid(
+          artists: artists,
+          hasMore: hasMore,
+          scrollController: _scrollController,
         );
     }
   }

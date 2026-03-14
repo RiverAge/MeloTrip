@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_views.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_page_controls.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_detail_list_view_widget.dart';
 import 'package:melo_trip/provider/album/albums.dart';
-
-enum AlbumViewType { grid, table, detail }
 
 const kAlbumPageSize = 50;
 const AlbumListQuery kDesktopAlbumsQuery = AlbumListQuery(
@@ -24,7 +23,7 @@ class DesktopAlbumsPage extends ConsumerStatefulWidget {
 }
 
 class _DesktopAlbumsPageState extends ConsumerState<DesktopAlbumsPage> {
-  AlbumViewType _viewType = AlbumViewType.grid;
+  AppViewType _viewType = AppViewType.grid;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -84,20 +83,20 @@ class _DesktopAlbumsPageState extends ConsumerState<DesktopAlbumsPage> {
     AppLocalizations l10n,
   ) {
     switch (_viewType) {
-      case AlbumViewType.grid:
+      case AppViewType.grid:
         return AlbumGridView(
           albums: albumState.items,
           hasMore: albumState.hasMore,
           scrollController: _scrollController,
         );
-      case AlbumViewType.table:
+      case AppViewType.table:
         return AlbumTableView(
           albums: albumState.items,
           hasMore: albumState.hasMore,
           scrollController: _scrollController,
           l10n: l10n,
         );
-      case AlbumViewType.detail:
+      case AppViewType.detail:
         return AlbumDetailListView(
           albums: albumState.items,
           hasMore: albumState.hasMore,
