@@ -1,26 +1,59 @@
 part of '../favorites_page.dart';
 
-class _TrackList extends StatelessWidget {
+class _TrackList extends ConsumerWidget {
   const _TrackList({required this.songs});
 
   final List<SongEntity> songs;
 
   @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return ListView.builder(
-      itemCount: songs.length,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemBuilder: (context, index) => ListTile(
-        leading: Text('${index + 1}'),
-        title: Text(songs[index].title ?? '-'),
-        subtitle: Text(songs[index].artist ?? '-'),
-        trailing: Icon(
-          Icons.favorite_rounded,
-          color: theme.colorScheme.primary,
-          size: 16,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(
+      alpha: 0.7,
+    );
+    final headerStyle = const TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.bold,
+      letterSpacing: 1.2,
+    ).copyWith(color: headerColor);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          child: Row(
+            children: [
+              SizedBox(width: 30, child: Text('#', style: headerStyle)),
+              Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
+              SizedBox(
+                width: 60,
+                child: Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: headerColor,
+                ),
+              ),
+              Expanded(flex: 3, child: Text(l10n.album, style: headerStyle)),
+              const SizedBox(width: 30),
+            ],
+          ),
         ),
-      ),
+        Divider(
+          height: 1,
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: songs.length,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemBuilder: (context, index) {
+              final song = songs[index];
+              return SongTrackRow(index: index + 1, song: song);
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -32,7 +65,6 @@ class _AlbumGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     return GridView.builder(
       padding: const EdgeInsets.all(24),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -42,24 +74,26 @@ class _AlbumGrid extends StatelessWidget {
         childAspectRatio: 0.75,
       ),
       itemCount: albums.length,
-      itemBuilder: (context, index) => Column(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.4,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            albums[index].name ?? '-',
-            maxLines: 1,
-            overflow: .ellipsis,
-          ),
-        ],
-      ),
+      itemBuilder: (context, index) {
+        return DesktopAlbumCard(album: albums[index]);
+      },
+    );
+  }
+}
+
+class _AlbumTableView extends StatelessWidget {
+  const _AlbumTableView({required this.albums, required this.l10n});
+
+  final List<AlbumEntity> albums;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlbumTableView(
+      albums: albums,
+      hasMore: false,
+      scrollController: ScrollController(),
+      l10n: l10n,
     );
   }
 }
@@ -80,7 +114,37 @@ class _ArtistGrid extends StatelessWidget {
         childAspectRatio: 0.8,
       ),
       itemCount: artists.length,
-      itemBuilder: (context, index) => _FavoriteArtistCard(artist: artists[index]),
+      itemBuilder: (context, index) {
+        final artist = artists[index];
+        // Convert ArtistEntity to ArtistIndexEntry for consistency if needed, 
+        // or use a specific favorite artist card.
+        return _FavoriteArtistCard(artist: artist);
+      },
+    );
+  }
+}
+
+class _ArtistTableView extends StatelessWidget {
+  const _ArtistTableView({required this.artists, required this.l10n});
+
+  final List<ArtistEntity> artists;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    // Convert to ArtistIndexEntry to reuse ArtistTableView
+    final entries = artists.map((e) => ArtistIndexEntry(
+      id: e.id ?? '',
+      name: e.name ?? '',
+      albumCount: e.albumCount,
+      coverArt: e.coverArt,
+    )).toList();
+
+    return ArtistTableView(
+      artists: entries,
+      hasMore: false,
+      scrollController: ScrollController(),
+      l10n: l10n,
     );
   }
 }
@@ -169,7 +233,7 @@ class _FavoriteArtistCardState extends State<_FavoriteArtistCard> {
                             )
                           : ClipOval(
                               child: ArtworkImage(
-                                id: widget.artist.coverArt,
+                                id: widget.artist.coverArt!,
                                 size: 240,
                                 width: 84,
                                 height: 84,
