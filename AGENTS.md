@@ -75,7 +75,7 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 
 - Avoid oversized source files. Split by feature, section, widget, or service.
 - Preferred threshold: keep Dart files under 300 lines.
-- Hard limit: files above 500 lines must be refactored before merge unless explicitly approved.
+- Hard limit: files above 350 lines must be refactored before merge unless explicitly approved.
 - For large UI pages, extract reusable sections into `parts/` with clear ownership.
 
 ## Release Rules
