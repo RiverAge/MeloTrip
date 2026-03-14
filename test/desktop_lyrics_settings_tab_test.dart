@@ -71,8 +71,11 @@ void main() {
     expect(find.text('Font size'), findsOneWidget);
     expect(find.text('Stroke width'), findsOneWidget);
     expect(find.byType(Switch), findsWidgets);
-    expect(find.byType(Radio<TextAlign>), findsNWidgets(3));
-    expect(find.byType(Radio<FontWeight>), findsNWidgets(5));
+    expect(find.text('Start'), findsOneWidget);
+    expect(find.text('Center'), findsOneWidget);
+    expect(find.text('End'), findsOneWidget);
+    expect(find.text('w300'), findsOneWidget);
+    expect(find.text('w700'), findsOneWidget);
   });
 
   testWidgets('DesktopLyricsSettingsTab updates provider when toggling enabled', (

@@ -235,9 +235,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Image.asset('images/navidrome.png'),
         ),
         SizedBox(height: compact ? 24 : 32),
-        Row(
-          mainAxisAlignment: compact ? MainAxisAlignment.center : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        Wrap(
+          alignment: compact ? WrapAlignment.center : WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
+          runSpacing: 8,
           children: [
             ShaderMask(
               shaderCallback: (bounds) => LinearGradient(
@@ -257,15 +259,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                width: 1.5,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(1),
-                ),
+            Container(
+              width: 1.5,
+              height: 24,
+              decoration: BoxDecoration(
+                color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(1),
               ),
             ),
             Text(
