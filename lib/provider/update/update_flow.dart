@@ -80,7 +80,10 @@ class UpdateFlowController extends _$UpdateFlowController {
     }
   }
 
-  Future<String?> downloadAndInstall(AppUpdateInfo update) async {
+  Future<String?> downloadAndInstall(
+    AppUpdateInfo update, {
+    WindowsUpdaterStrings? updaterStrings,
+  }) async {
     if (state.isUpdating) return 'Update is already in progress.';
 
     state = state.copyWith(
@@ -160,13 +163,16 @@ class UpdateFlowController extends _$UpdateFlowController {
       );
       if (_service.requiresHostExitForInstall) {
         state = state.copyWith(
-          isUpdating: false,
-          stage: .readyToInstall,
+          stage: .openingInstaller,
           downloadBytesPerSecond: 0,
           clearEtaSeconds: true,
           pendingPackagePath: packagePath,
           pendingVersionName: update.versionName,
           pendingVersionCode: update.versionCode,
+        );
+        await _service.installDownloadedPackagePath(
+          packagePath,
+          updaterStrings: updaterStrings,
         );
         return null;
       }
@@ -178,6 +184,11 @@ class UpdateFlowController extends _$UpdateFlowController {
       await _service.installDownloadedPackagePath(packagePath);
       return null;
     } catch (err) {
+      if (ref.mounted &&
+          _service.requiresHostExitForInstall &&
+          state.pendingPackagePath != null) {
+        state = state.copyWith(stage: .readyToInstall);
+      }
       return '$err';
     } finally {
       if (ref.mounted) {

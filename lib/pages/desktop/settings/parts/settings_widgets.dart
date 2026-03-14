@@ -10,7 +10,7 @@ class SettingSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 24, 8, 12),
+      padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
       child: Row(
         children: <Widget>[
           if (icon != null) ...[
@@ -23,24 +23,9 @@ class SettingSectionHeader extends StatelessWidget {
           ],
           Text(
             title,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: .w900,
-              letterSpacing: 0.2,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Container(
-              height: 1,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: <Color>[
-                    theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                    theme.colorScheme.outlineVariant.withValues(alpha: 0),
-                  ],
-                ),
-              ),
+            style: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.normal,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -142,19 +127,15 @@ class SettingRow extends StatelessWidget {
               children: <Widget>[
                 Text(
                   label,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: .w700,
-                    color: theme.colorScheme.onSurface,
-                    letterSpacing: 0.1,
-                  ),
+                  style: theme.textTheme.titleSmall,
                 ),
                 if (description.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
                     description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.75,
+                        alpha: 0.7,
                       ),
                       height: 1.3,
                     ),
@@ -231,21 +212,22 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: .start,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        crossAxisAlignment: .center,
         children: <Widget>[
-          Text(
-            widget.label,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: .w700,
-              color: theme.colorScheme.onSurface,
+          Expanded(
+            flex: 3,
+            child: Text(
+              widget.label,
+              style: theme.textTheme.titleSmall,
             ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: .center,
-            children: <Widget>[
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 7,
+            child: Row(
+              children: <Widget>[
               Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
@@ -306,7 +288,8 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
                   ),
                 ),
               ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -332,58 +315,65 @@ class SettingColorRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: .start,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        crossAxisAlignment: .center,
         children: <Widget>[
-          Text(
-            label,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: .w700,
-              color: theme.colorScheme.onSurface,
+          Expanded(
+            flex: 3,
+            child: Text(
+              label,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: .w600,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: palette.map((int color) {
-              final bool active = color == value;
-              return InkWell(
-                onTap: () => onChanged(color),
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Color(color),
-                    border: Border.all(
-                      color: active
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.outlineVariant.withValues(
-                              alpha: 0.7,
-                            ),
-                      width: active ? 2.5 : 1.2,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: theme.shadowColor.withValues(alpha: 0.08),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 7,
+            child: Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 8,
+              runSpacing: 8,
+              children: palette.map((int color) {
+                final bool active = color == value;
+                return InkWell(
+                  onTap: () => onChanged(color),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: Color(color),
+                      border: Border.all(
+                        color: active
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.outlineVariant.withValues(
+                                alpha: 0.7,
+                              ),
+                        width: active ? 2.5 : 1.2,
                       ),
-                    ],
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: theme.shadowColor.withValues(alpha: 0.08),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: active
+                        ? Icon(
+                            Icons.check_rounded,
+                            size: 16,
+                            color: theme.colorScheme.onPrimary,
+                          )
+                        : null,
                   ),
-                  child: active
-                      ? Icon(
-                          Icons.check_rounded,
-                          size: 16,
-                          color: theme.colorScheme.onPrimary,
-                        )
-                      : null,
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
         ],
       ),
@@ -416,79 +406,69 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: .start,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        crossAxisAlignment: .center,
         children: <Widget>[
-          Text(
-            label,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: .w700,
-              color: theme.colorScheme.onSurface,
+          Expanded(
+            flex: 3,
+            child: Text(
+              label,
+              style: theme.textTheme.titleSmall,
             ),
           ),
-          const SizedBox(height: 12),
-          RadioGroup<T>(
-            groupValue: value,
-            onChanged: (T? next) {
-              if (next == null) {
-                return;
-              }
-              onChanged(next);
-            },
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: options.map((SettingSingleChoiceOption<T> option) {
-                final bool selected = option.value == value;
-                final Color borderColor = selected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.outlineVariant.withValues(alpha: 0.72);
-                final Color backgroundColor = selected
-                    ? theme.colorScheme.primaryContainer.withValues(alpha: 0.92)
-                    : theme.colorScheme.surfaceContainerLow.withValues(
-                        alpha: 0.9,
-                      );
-                final Color textColor = selected
-                    ? theme.colorScheme.onPrimaryContainer
-                    : theme.colorScheme.onSurface;
-                return InkWell(
-                  onTap: () => onChanged(option.value),
-                  borderRadius: BorderRadius.circular(999),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 140),
-                    curve: Curves.easeOutCubic,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: backgroundColor,
-                      borderRadius: BorderRadius.circular(999),
-                      border: Border.all(color: borderColor, width: 1.2),
-                    ),
-                    child: Row(
-                      mainAxisSize: .min,
-                      children: <Widget>[
-                        Radio<T>(
-                          value: option.value,
-                          visualDensity: .compact,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 7,
+            child: RadioGroup<T>(
+              groupValue: value,
+              onChanged: (T? next) {
+                if (next == null) return;
+                onChanged(next);
+              },
+              child: Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 6,
+                runSpacing: 6,
+                children: options.map((SettingSingleChoiceOption<T> option) {
+                  final bool selected = option.value == value;
+                  final Color borderColor = selected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.outlineVariant.withValues(alpha: 0.72);
+                  final Color backgroundColor = selected
+                      ? theme.colorScheme.primaryContainer.withValues(alpha: 0.92)
+                      : theme.colorScheme.surfaceContainerLow.withValues(
+                          alpha: 0.9,
+                        );
+                  final Color textColor = selected
+                      ? theme.colorScheme.onPrimaryContainer
+                      : theme.colorScheme.onSurface;
+                  return InkWell(
+                    onTap: () => onChanged(option.value),
+                    borderRadius: BorderRadius.circular(10),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 140),
+                      curve: Curves.easeOutCubic,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: borderColor, width: 1.2),
+                      ),
+                      child: Text(
+                        option.label,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: textColor,
+                          fontWeight: .w600,
                         ),
-                        Text(
-                          option.label,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: textColor,
-                            fontWeight: .w600,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                      ],
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],
