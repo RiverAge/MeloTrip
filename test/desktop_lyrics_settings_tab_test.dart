@@ -71,8 +71,8 @@ void main() {
     expect(find.text('Font size'), findsOneWidget);
     expect(find.text('Stroke width'), findsOneWidget);
     expect(find.byType(Switch), findsWidgets);
-    expect(find.byType(DropdownButton<TextAlign>), findsOneWidget);
-    expect(find.byType(DropdownButton<FontWeight>), findsOneWidget);
+    expect(find.byType(Radio<TextAlign>), findsNWidgets(3));
+    expect(find.byType(Radio<FontWeight>), findsNWidgets(5));
   });
 
   testWidgets('DesktopLyricsSettingsTab updates provider when toggling enabled', (
@@ -116,9 +116,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButton<TextAlign>).first);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Center').last);
+    await tester.tap(find.text('Center'));
     await tester.pumpAndSettle();
 
     expect(_FakeDesktopLyricsSettings.lastUpdatedConfig, isNotNull);

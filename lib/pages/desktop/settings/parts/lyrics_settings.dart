@@ -179,75 +179,59 @@ class _DesktopLyricsSettingsTabState
         ),
         Padding(
           padding: const EdgeInsets.only(left: 32),
-          child: SettingRow(
+          child: SettingSingleChoiceRow<TextAlign>(
             label: l10n.desktopLyricsTextAlign,
-            description: '',
-            trailing: DropdownButton<TextAlign>(
-              value: textAlign,
-              items: <DropdownMenuItem<TextAlign>>[
-                DropdownMenuItem(
-                  value: .start,
-                  child: Text(l10n.textAlignStart),
-                ),
-                DropdownMenuItem(
-                  value: .center,
-                  child: Text(l10n.textAlignCenter),
-                ),
-                DropdownMenuItem(
-                  value: .end,
-                  child: Text(l10n.textAlignEnd),
-                ),
-              ],
-              onChanged: (TextAlign? value) {
-                if (value == null) {
-                  return;
-                }
-                _commit(
-                  (DesktopLyricsConfig c) =>
-                      c.copyWith(text: c.text.copyWith(textAlign: value)),
-                );
-              },
+            value: textAlign,
+            options: <SettingSingleChoiceOption<TextAlign>>[
+              SettingSingleChoiceOption<TextAlign>(
+                value: .start,
+                label: l10n.textAlignStart,
+              ),
+              SettingSingleChoiceOption<TextAlign>(
+                value: .center,
+                label: l10n.textAlignCenter,
+              ),
+              SettingSingleChoiceOption<TextAlign>(
+                value: .end,
+                label: l10n.textAlignEnd,
+              ),
+            ],
+            onChanged: (TextAlign value) => _commit(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(textAlign: value)),
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 32),
-          child: SettingRow(
+          child: SettingSingleChoiceRow<FontWeight>(
             label: l10n.desktopLyricsFontWeight,
-            description: '',
-            trailing: DropdownButton<FontWeight>(
-              value: fontWeight,
-              items: <DropdownMenuItem<FontWeight>>[
-                DropdownMenuItem(
-                  value: .w300,
-                  child: Text(l10n.fontWeightW300),
-                ),
-                DropdownMenuItem(
-                  value: .w400,
-                  child: Text(l10n.fontWeightW400),
-                ),
-                DropdownMenuItem(
-                  value: .w500,
-                  child: Text(l10n.fontWeightW500),
-                ),
-                DropdownMenuItem(
-                  value: .w600,
-                  child: Text(l10n.fontWeightW600),
-                ),
-                DropdownMenuItem(
-                  value: .w700,
-                  child: Text(l10n.fontWeightW700),
-                ),
-              ],
-              onChanged: (FontWeight? value) {
-                if (value == null) {
-                  return;
-                }
-                _commit(
-                  (DesktopLyricsConfig c) =>
-                      c.copyWith(text: c.text.copyWith(fontWeight: value)),
-                );
-              },
+            value: fontWeight,
+            options: <SettingSingleChoiceOption<FontWeight>>[
+              SettingSingleChoiceOption<FontWeight>(
+                value: .w300,
+                label: l10n.fontWeightW300,
+              ),
+              SettingSingleChoiceOption<FontWeight>(
+                value: .w400,
+                label: l10n.fontWeightW400,
+              ),
+              SettingSingleChoiceOption<FontWeight>(
+                value: .w500,
+                label: l10n.fontWeightW500,
+              ),
+              SettingSingleChoiceOption<FontWeight>(
+                value: .w600,
+                label: l10n.fontWeightW600,
+              ),
+              SettingSingleChoiceOption<FontWeight>(
+                value: .w700,
+                label: l10n.fontWeightW700,
+              ),
+            ],
+            onChanged: (FontWeight value) => _commit(
+              (DesktopLyricsConfig c) =>
+                  c.copyWith(text: c.text.copyWith(fontWeight: value)),
             ),
           ),
         ),
