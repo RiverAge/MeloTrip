@@ -114,7 +114,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                       ? null
                       : updateState.availableUpdate != null
                       ? () => _startNativeUpdate(updateState.availableUpdate!)
-                      : _onCheckUpdate,
+                      : null,
                   trailing: updateState.isChecking
                       ? const SizedBox(
                           width: 18,
@@ -130,7 +130,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                                 fontWeight: .w700,
                               ),
                         )
-                      : const Icon(Icons.arrow_forward),
+                      : null,
                 ),
               ],
             ),
@@ -158,15 +158,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
     );
     try {
       await controller.checkForUpdate(silent: true);
-    } catch (_) {}
-  }
-
-  Future<void> _onCheckUpdate() async {
-    final UpdateFlowController controller = ref.read(
-      updateFlowControllerProvider.notifier,
-    );
-    try {
-      await controller.checkForUpdate();
     } catch (_) {}
   }
 
