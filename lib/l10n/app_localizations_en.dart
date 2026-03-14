@@ -72,6 +72,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pause => 'Pause';
 
   @override
+  String get playback => 'Playback';
+
+  @override
+  String get shuffle => 'Shuffle';
+
+  @override
   String get previousSong => 'Previous';
 
   @override
@@ -141,6 +147,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calculating => 'Calculating...';
+
+  @override
+  String get clearCache => 'Clear Cache';
+
+  @override
+  String get clearCacheSuccess => 'Cache cleared';
 
   @override
   String get recentAdded => 'Recenty Added';
@@ -637,6 +649,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTabGeneral => 'General';
+
+  @override
+  String get settingsTabAppearance => 'Appearance';
 
   @override
   String get settingsTabPlayback => 'Playback';

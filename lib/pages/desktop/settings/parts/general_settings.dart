@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
+import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:update_installer/update_installer.dart';
@@ -26,6 +27,8 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final UpdateFlowState updateState = ref.watch(updateFlowControllerProvider);
+    final userConfig = ref.watch(userConfigProvider).value;
+
     final bool isReadyToInstall =
         updateState.stage == .readyToInstall &&
         updateState.pendingPackagePath != null;
@@ -38,117 +41,130 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
         Align(
           alignment: .topLeft,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 920),
-            child: SettingSectionCard(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(18, 18, 18, 8),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: <Widget>[
-                    _GeneralSettingsSectionTitle(
-                      icon: Icons.palette_outlined,
-                      title: l10n.theme,
-                      subtitle: l10n.systemDefault,
-                    ),
-                    SettingSectionBody(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 0,
-                        vertical: 10,
-                      ),
-                      children: <Widget>[
-                        SettingRow(
-                          label: l10n.systemDefault,
-                          description: l10n.theme,
-                          trailing: Switch(value: true, onChanged: (_) {}),
+            constraints: const BoxConstraints(maxWidth: 840),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: <Widget>[
+                SettingSectionHeader(
+                  title: l10n.settings,
+                  icon: Icons.settings_suggest_rounded,
+                ),
+                SettingSectionCard(
+                  child: SettingSectionBody(
+                    children: <Widget>[
+                      SettingRow(
+                        label: l10n.language,
+                        description: _getLanguageName(l10n, userConfig?.locale),
+                        onTap: () => _showLanguageDialog(context),
+                        trailing: Icon(
+                          Icons.translate_rounded,
+                          size: 20,
+                          color: theme.colorScheme.primary,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Divider(
-                      height: 1,
-                      color: theme.colorScheme.outlineVariant.withValues(
-                        alpha: 0.35,
                       ),
-                    ),
-                    const SizedBox(height: 18),
-                    _GeneralSettingsSectionTitle(
-                      icon: Icons.settings_suggest_rounded,
-                      title: l10n.settings,
-                      subtitle: l10n.checkForUpdates,
-                    ),
-                    SettingSectionBody(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 0,
-                        vertical: 10,
-                      ),
-                      children: <Widget>[
-                        SettingRow(
-                          label: l10n.language,
-                          description: l10n.language,
-                          trailing: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest
-                                  .withValues(alpha: 0.45),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Icon(
-                                Icons.chevron_right_rounded,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SettingRow(
-                          label: l10n.checkForUpdates,
-                          description: _buildUpdateSubtitle(context, updateState),
-                          progress: _buildUpdateProgress(context, updateState),
-                          trailing: updateState.isChecking
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                      SettingRow(
+                        label: l10n.checkForUpdates,
+                        description: _buildUpdateSubtitle(context, updateState),
+                        progress: _buildUpdateProgress(context, updateState),
+                        trailing: updateState.isChecking
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : FilledButton.tonal(
+                                onPressed:
+                                    (updateState.isChecking ||
+                                        updateState.isUpdating)
+                                    ? null
+                                    : isReadyToInstall
+                                    ? _restartAndInstallPending
+                                    : availableUpdate != null
+                                    ? () => _startUpdate(availableUpdate)
+                                    : _onCheckUpdate,
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
                                   ),
-                                )
-                              : FilledButton.tonal(
-                                  onPressed:
-                                      (updateState.isChecking ||
-                                          updateState.isUpdating)
-                                      ? null
-                                      : isReadyToInstall
-                                      ? _restartAndInstallPending
-                                      : availableUpdate != null
-                                      ? () => _startUpdate(availableUpdate)
-                                      : _onCheckUpdate,
-                                  style: FilledButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 18,
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    isReadyToInstall
-                                        ? l10n.updateRestartToInstallAction
-                                        : availableUpdate != null
-                                        ? l10n.updateNow
-                                        : l10n.checkForUpdates,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                        ),
-                      ],
-                    ),
-                  ],
+                                child: Text(
+                                  isReadyToInstall
+                                      ? l10n.updateRestartToInstallAction
+                                      : availableUpdate != null
+                                      ? l10n.updateNow
+                                      : l10n.checkForUpdates,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 48),
+              ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  String _getLanguageName(AppLocalizations l10n, Locale? locale) {
+    if (locale == null) return l10n.systemDefault;
+    if (locale.languageCode == 'zh') return l10n.simpleChinese;
+    if (locale.languageCode == 'en') return l10n.english;
+    return locale.toString();
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.language),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: Column(
+          mainAxisSize: .min,
+          children: <Widget>[
+            _LanguageOption(
+              label: l10n.systemDefault,
+              selected: ref.watch(userConfigProvider).value?.locale == null,
+              onTap: () {
+                ref
+                    .read(userConfigProvider.notifier)
+                    .setConfiguration(locale: const ValueUpdater<Locale?>(null));
+                Navigator.pop(context);
+              },
+            ),
+            _LanguageOption(
+              label: l10n.simpleChinese,
+              selected: ref.watch(userConfigProvider).value?.locale?.languageCode == 'zh',
+              onTap: () {
+                ref
+                    .read(userConfigProvider.notifier)
+                    .setConfiguration(locale: const ValueUpdater<Locale?>(Locale('zh', 'CN')));
+                Navigator.pop(context);
+              },
+            ),
+            _LanguageOption(
+              label: l10n.english,
+              selected: ref.watch(userConfigProvider).value?.locale?.languageCode == 'en',
+              onTap: () {
+                ref
+                    .read(userConfigProvider.notifier)
+                    .setConfiguration(locale: const ValueUpdater<Locale?>(Locale('en', 'US')));
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -325,58 +341,63 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
   }
 }
 
-class _GeneralSettingsSectionTitle extends StatelessWidget {
-  const _GeneralSettingsSectionTitle({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.label,
+    required this.selected,
+    required this.onTap,
   });
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Row(
-      children: <Widget>[
-        DecoratedBox(
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: DecoratedBox(
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(14),
+            color: selected
+                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.7)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: selected
+                  ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                  : theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Icon(
-              icon,
-              color: theme.colorScheme.primary,
-              size: 20,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    label,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: selected ? .w700 : .w500,
+                      color: selected
+                          ? theme.colorScheme.onPrimaryContainer
+                          : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                if (selected)
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
+              ],
             ),
           ),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: .start,
-            children: <Widget>[
-              Text(
-                title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: .w800,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
