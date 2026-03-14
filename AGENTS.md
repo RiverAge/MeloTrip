@@ -38,6 +38,12 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
   - Brand assets or brand colors explicitly required by product design. Document the exception inline.
   - Non-UI, debug-only, or demo-only code that is not visible to end users.
 
+### Theming and Minimalism (Theme-First)
+
+- **Prioritize Global Theme**: Always use predefined `textTheme` styles. Avoid `copyWith` with hardcoded `fontWeight` or `fontSize`. If a label looks "wrong," try another standard style (e.g., `labelLarge` vs `titleSmall`) before creating a custom one.
+- **Hierarchy via Contrast**: Use font weight, scale, and color opacity (e.g., `onSurfaceVariant` with alpha) to distinguish primary/secondary info. Remove explicit dividers, lines, and complex backgrounds.
+- **Desktop Focus**: Maintain tight and purposeful spacing (e.g., using `EdgeInsets.fromLTRB` for fine-tuning). Avoid excessive "web-like" whitespace.
+
 ### Dart Conventions
 
 - When intentionally ignoring parameters, use `_` wildcard names.
