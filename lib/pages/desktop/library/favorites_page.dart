@@ -7,6 +7,11 @@ import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_page_controls.dart';
+import 'package:melo_trip/pages/desktop/library/widgets/album_views.dart';
+import 'package:melo_trip/pages/desktop/library/artists_page.dart';
+import 'package:melo_trip/provider/artist/artists.dart';
+import 'package:melo_trip/pages/desktop/home/parts/desktop_album_card.dart';
+import 'package:melo_trip/pages/desktop/library/songs_page.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -48,26 +53,31 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
               provider: favoriteProvider,
               builder: (context, data, ref) {
                 final starred = data.subsonicResponse?.starred;
-                switch (_currentType) {
-                  case 'albums':
-                    return _AlbumGrid(
-                      albums: starred?.album ?? const <AlbumEntity>[],
-                    );
-                  case 'artists':
-                    return _ArtistGrid(
-                      artists: starred?.artist ?? const <ArtistEntity>[],
-                    );
-                  case 'songs':
-                  default:
-                    return _TrackList(
-                      songs: starred?.song ?? const <SongEntity>[],
-                    );
-                }
+                return _buildContent(starred, l10n);
               },
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildContent(dynamic starred, AppLocalizations l10n) {
+    switch (_currentType) {
+      case 'albums':
+        final albums = starred?.album ?? const <AlbumEntity>[];
+        return _viewType == AppViewType.grid
+            ? _AlbumGrid(albums: albums)
+            : _AlbumTableView(albums: albums, l10n: l10n);
+      case 'artists':
+        final artists = starred?.artist ?? const <ArtistEntity>[];
+        return _viewType == AppViewType.grid
+            ? _ArtistGrid(artists: artists)
+            : _ArtistTableView(artists: artists, l10n: l10n);
+      case 'songs':
+      default:
+        final songs = starred?.song ?? const <SongEntity>[];
+        return _TrackList(songs: songs);
+    }
   }
 }
