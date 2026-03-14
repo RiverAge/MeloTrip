@@ -356,3 +356,109 @@ class SettingColorRow extends StatelessWidget {
     );
   }
 }
+
+class SettingSingleChoiceOption<T> {
+  const SettingSingleChoiceOption({required this.value, required this.label});
+
+  final T value;
+  final String label;
+}
+
+class SettingSingleChoiceRow<T> extends StatelessWidget {
+  const SettingSingleChoiceRow({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.options,
+    required this.onChanged,
+  });
+
+  final String label;
+  final T value;
+  final List<SettingSingleChoiceOption<T>> options;
+  final ValueChanged<T> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: <Widget>[
+          Text(
+            label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: .w700,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 12),
+          RadioGroup<T>(
+            groupValue: value,
+            onChanged: (T? next) {
+              if (next == null) {
+                return;
+              }
+              onChanged(next);
+            },
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: options.map((SettingSingleChoiceOption<T> option) {
+                final bool selected = option.value == value;
+                final Color borderColor = selected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.outlineVariant.withValues(alpha: 0.72);
+                final Color backgroundColor = selected
+                    ? theme.colorScheme.primaryContainer.withValues(alpha: 0.92)
+                    : theme.colorScheme.surfaceContainerLow.withValues(
+                        alpha: 0.9,
+                      );
+                final Color textColor = selected
+                    ? theme.colorScheme.onPrimaryContainer
+                    : theme.colorScheme.onSurface;
+                return InkWell(
+                  onTap: () => onChanged(option.value),
+                  borderRadius: BorderRadius.circular(999),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 140),
+                    curve: Curves.easeOutCubic,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: borderColor, width: 1.2),
+                    ),
+                    child: Row(
+                      mainAxisSize: .min,
+                      children: <Widget>[
+                        Radio<T>(
+                          value: option.value,
+                          visualDensity: .compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        Text(
+                          option.label,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: textColor,
+                            fontWeight: .w600,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
