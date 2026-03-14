@@ -74,7 +74,8 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                                   strokeWidth: 2.5,
                                 ),
                               )
-                            : FilledButton.tonal(
+                            : (isReadyToInstall || availableUpdate != null)
+                            ? FilledButton.tonal(
                                 onPressed:
                                     (updateState.isChecking ||
                                         updateState.isUpdating)
@@ -83,7 +84,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                                     ? _restartAndInstallPending
                                     : availableUpdate != null
                                     ? () => _startUpdate(availableUpdate)
-                                    : _onCheckUpdate,
+                                    : null,
                                 style: FilledButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -98,9 +99,10 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                                       ? l10n.updateRestartToInstallAction
                                       : availableUpdate != null
                                       ? l10n.updateNow
-                                      : l10n.checkForUpdates,
+                                      : '',
                                 ),
-                              ),
+                              )
+                            : null,
                       ),
                     ],
                   ),
@@ -188,15 +190,6 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     );
     try {
       await controller.checkForUpdate(silent: true);
-    } catch (_) {}
-  }
-
-  Future<void> _onCheckUpdate() async {
-    final UpdateFlowController controller = ref.read(
-      updateFlowControllerProvider.notifier,
-    );
-    try {
-      await controller.checkForUpdate();
     } catch (_) {}
   }
 
