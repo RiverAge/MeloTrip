@@ -98,6 +98,14 @@
   "@pause": {
     "description": "Button text for pause action"
   },
+  "playback": "Playback",
+  "@playback": {
+    "description": "Playback label"
+  },
+  "shuffle": "Shuffle",
+  "@shuffle": {
+    "description": "Shuffle label"
+  },
   "previousSong": "Previous",
   "@previousSong": {
     "description": "Tooltip for previous song button"
@@ -205,6 +213,14 @@
   "calculating": "Calculating...",
   "@calculating": {
      "description": "Text to show while CacheSize calculation is in progress"
+  },
+  "clearCache": "Clear Cache",
+  "@clearCache": {
+    "description": "Clear cache button label"
+  },
+  "clearCacheSuccess": "Cache cleared",
+  "@clearCacheSuccess": {
+    "description": "Clear cache success message"
   },
 
    "recentAdded": "Recenty Added",
@@ -954,64 +970,68 @@
    "@id": {
       "description": "Id label"
    },
-   "title": "Title",
-   "@title": {
+    "title": "Title",
+    "@title": {
       "description": "Title label"
+    },
+    "resetToDefaults": "Reset to defaults",
+    "@resetToDefaults": {
+      "description": "Reset settings button label"
+    },
+    "settingsTabGeneral": "General",
+    "@settingsTabGeneral": {
+      "description": "Desktop settings general tab label"
+    },
+    "settingsTabAppearance": "Appearance",
+    "@settingsTabAppearance": {
+      "description": "Desktop settings appearance tab label"
+    },
+    "settingsTabPlayback": "Playback",
+    "@settingsTabPlayback": {
+      "description": "Desktop settings playback tab label"
+    },
+    "settingsTabLyrics": "Lyrics",
+    "@settingsTabLyrics": {
+      "description": "Desktop settings lyrics tab label"
+    },
+    "settingsTabHotkeys": "Hotkeys",
+    "@settingsTabHotkeys": {
+      "description": "Desktop settings hotkeys tab label"
+    },
+    "settingsTabAdvanced": "Advanced",
+    "@settingsTabAdvanced": {
+      "description": "Desktop settings advanced tab label"
+    },
+    "textAlignStart": "Start",
+    "@textAlignStart": {
+      "description": "Text alignment option start"
+    },
+    "textAlignCenter": "Center",
+    "@textAlignCenter": {
+      "description": "Text alignment option center"
+    },
+   "textAlignEnd": "End",
+   "@textAlignEnd": {
+     "description": "Text alignment option end"
+   },
+   "fontWeightW300": "w300",
+   "@fontWeightW300": {
+     "description": "Font weight option w300"
+   },
+   "fontWeightW400": "w400",
+   "@fontWeightW400": {
+     "description": "Font weight option w400"
+   },
+   "fontWeightW500": "w500",
+   "@fontWeightW500": {
+     "description": "Font weight option w500"
+   },
+   "fontWeightW600": "w600",
+   "@fontWeightW600": {
+     "description": "Font weight option w600"
+   },
+   "fontWeightW700": "w700",
+   "@fontWeightW700": {
+     "description": "Font weight option w700"
    }
-,
-  "resetToDefaults": "Reset to defaults",
-  "@resetToDefaults": {
-    "description": "Reset settings button label"
-  },
-  "settingsTabGeneral": "General",
-  "@settingsTabGeneral": {
-    "description": "Desktop settings general tab label"
-  },
-  "settingsTabPlayback": "Playback",
-  "@settingsTabPlayback": {
-    "description": "Desktop settings playback tab label"
-  },
-  "settingsTabLyrics": "Lyrics",
-  "@settingsTabLyrics": {
-    "description": "Desktop settings lyrics tab label"
-  },
-  "settingsTabHotkeys": "Hotkeys",
-  "@settingsTabHotkeys": {
-    "description": "Desktop settings hotkeys tab label"
-  },
-  "settingsTabAdvanced": "Advanced",
-  "@settingsTabAdvanced": {
-    "description": "Desktop settings advanced tab label"
-  },
-  "textAlignStart": "Start",
-  "@textAlignStart": {
-    "description": "Text alignment option start"
-  },
-  "textAlignCenter": "Center",
-  "@textAlignCenter": {
-    "description": "Text alignment option center"
-  },
-  "textAlignEnd": "End",
-  "@textAlignEnd": {
-    "description": "Text alignment option end"
-  },
-  "fontWeightW300": "w300",
-  "@fontWeightW300": {
-    "description": "Font weight option w300"
-  },
-  "fontWeightW400": "w400",
-  "@fontWeightW400": {
-    "description": "Font weight option w400"
-  },
-  "fontWeightW500": "w500",
-  "@fontWeightW500": {
-    "description": "Font weight option w500"
-  },
-  "fontWeightW600": "w600",
-  "@fontWeightW600": {
-    "description": "Font weight option w600"
-  },
-  "fontWeightW700": "w700",
-  "@fontWeightW700": {
-    "description": "Font weight option w700"
-  }}
+}

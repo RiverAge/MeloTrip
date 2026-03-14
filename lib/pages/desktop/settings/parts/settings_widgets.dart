@@ -1,32 +1,46 @@
 import 'package:flutter/material.dart';
 
 class SettingSectionHeader extends StatelessWidget {
-  const SettingSectionHeader({super.key, required this.title});
+  const SettingSectionHeader({super.key, required this.title, this.icon});
 
   final String title;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 12, bottom: 12),
+      padding: const EdgeInsets.fromLTRB(8, 24, 8, 12),
       child: Row(
         children: <Widget>[
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: .w800,
-                letterSpacing: 0.3,
-                color: theme.colorScheme.onSurface,
-              ),
+          if (icon != null) ...[
+            Icon(
+              icon,
+              size: 20,
+              color: theme.colorScheme.primary.withValues(alpha: 0.9),
+            ),
+            const SizedBox(width: 10),
+          ],
+          Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: .w900,
+              letterSpacing: 0.2,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Container(
               height: 1,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                    theme.colorScheme.outlineVariant.withValues(alpha: 0),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -43,12 +57,12 @@ class SettingSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(20),
+        color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.48),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.55),
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
         ),
       ),
       child: child,
@@ -60,7 +74,7 @@ class SettingSectionBody extends StatelessWidget {
   const SettingSectionBody({
     super.key,
     required this.children,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    this.padding = const EdgeInsets.symmetric(vertical: 4),
   });
 
   final List<Widget> children;
@@ -75,16 +89,22 @@ class SettingSectionBody extends StatelessWidget {
       sectionChildren.add(children[index]);
       if (!isLast) {
         sectionChildren.add(
-          Divider(
-            height: 1,
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(
+              height: 1,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.25),
+            ),
           ),
         );
       }
     }
     return Padding(
       padding: padding,
-      child: Column(children: sectionChildren),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: sectionChildren,
+      ),
     );
   }
 }
@@ -93,45 +113,50 @@ class SettingRow extends StatelessWidget {
   const SettingRow({
     super.key,
     required this.label,
-    required this.description,
-    required this.trailing,
+    this.description = '',
+    this.trailing,
     this.progress,
+    this.onTap,
   });
 
   final String label;
   final String description;
-  final Widget trailing;
+  final Widget? trailing;
   final Widget? progress;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+    final bool isClickable = onTap != null;
+
+    final Widget content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: .center,
         children: <Widget>[
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
-              mainAxisAlignment: .start,
+              mainAxisSize: .min,
               children: <Widget>[
                 Text(
                   label,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: .w700,
                     color: theme.colorScheme.onSurface,
+                    letterSpacing: 0.1,
                   ),
                 ),
                 if (description.isNotEmpty) ...[
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     description,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.88,
+                        alpha: 0.75,
                       ),
-                      height: 1.35,
+                      height: 1.3,
                     ),
                   ),
                 ],
@@ -142,13 +167,22 @@ class SettingRow extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
-          ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 44),
-            child: Align(alignment: .centerRight, child: trailing),
-          ),
+          if (progress != null || trailing != null) const SizedBox(width: 24),
+          if (trailing != null)
+            ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 32),
+              child: Align(alignment: .centerRight, child: trailing!),
+            ),
         ],
       ),
+    );
+
+    if (!isClickable) return content;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: content,
     );
   }
 }
@@ -197,7 +231,7 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: .start,
         children: <Widget>[
@@ -298,7 +332,7 @@ class SettingColorRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: .start,
         children: <Widget>[
@@ -382,7 +416,7 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: .start,
         children: <Widget>[

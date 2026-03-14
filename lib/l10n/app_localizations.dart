@@ -225,6 +225,18 @@ abstract class AppLocalizations {
   /// **'Pause'**
   String get pause;
 
+  /// Playback label
+  ///
+  /// In en, this message translates to:
+  /// **'Playback'**
+  String get playback;
+
+  /// Shuffle label
+  ///
+  /// In en, this message translates to:
+  /// **'Shuffle'**
+  String get shuffle;
+
   /// Tooltip for previous song button
   ///
   /// In en, this message translates to:
@@ -362,6 +374,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calculating...'**
   String get calculating;
+
+  /// Clear cache button label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cache'**
+  String get clearCache;
+
+  /// Clear cache success message
+  ///
+  /// In en, this message translates to:
+  /// **'Cache cleared'**
+  String get clearCacheSuccess;
 
   /// recently added songs of server
   ///
@@ -1262,6 +1286,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'General'**
   String get settingsTabGeneral;
+
+  /// Desktop settings appearance tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsTabAppearance;
 
   /// Desktop settings playback tab label
   ///

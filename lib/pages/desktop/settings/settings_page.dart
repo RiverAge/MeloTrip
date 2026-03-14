@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/advanced_settings.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/appearance_settings.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/general_settings.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/lyrics_settings.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/playback_settings.dart';
 
 class DesktopSettingsPage extends ConsumerStatefulWidget {
   const DesktopSettingsPage({super.key});
@@ -12,12 +15,10 @@ class DesktopSettingsPage extends ConsumerStatefulWidget {
       _DesktopSettingsPageState();
 }
 
-class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
+class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
   List<String> _tabTitles(AppLocalizations l10n) => <String>[
     l10n.settingsTabGeneral,
+    l10n.settingsTabAppearance,
     l10n.settingsTabPlayback,
     l10n.settingsTabLyrics,
     l10n.settingsTabHotkeys,
@@ -25,26 +26,16 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 5, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
     final List<String> tabTitles = _tabTitles(l10n);
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: DecoratedBox(
+    return DefaultTabController(
+      length: tabTitles.length,
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.surface,
+        body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -87,13 +78,13 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
                     const SizedBox(height: 18),
                     Expanded(
                       child: TabBarView(
-                        controller: _tabController,
                         children: <Widget>[
                           const GeneralSettings(),
-                          _SettingsPlaceholder(title: tabTitles[1]),
+                          const AppearanceSettings(),
+                          const PlaybackSettings(),
                           const DesktopLyricsSettingsTab(),
-                          _SettingsPlaceholder(title: tabTitles[3]),
                           _SettingsPlaceholder(title: tabTitles[4]),
+                          const AdvancedSettings(),
                         ],
                       ),
                     ),
@@ -104,8 +95,9 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildHeader(
     BuildContext context,
@@ -114,120 +106,83 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage>
   ) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.76),
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.45),
-          ),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: theme.shadowColor.withValues(alpha: 0.06),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+      child: Row(
+        children: <Widget>[
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: theme.colorScheme.primary.withValues(alpha: 0.15),
+              ),
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
-          child: Row(
-            children: <Widget>[
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Icon(
-                    Icons.tune_rounded,
-                    size: 28,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Icon(
+                Icons.tune_rounded,
+                size: 24,
+                color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 18),
-              Expanded(
-                child: Text(
-                  l10n.settings,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: .w900,
-                    letterSpacing: -0.4,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: <Widget>[
+                Text(
+                  l10n.settings,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: .w900,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                Text(
+                  l10n.featureComingSoon, // Or something like "Manage your application preference"
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                    fontWeight: .w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildTabBar(BuildContext context, List<String> tabTitles) {
     final ThemeData theme = Theme.of(context);
-    final WidgetStateProperty<Color?> overlayColor =
-        WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-          if (states.contains(WidgetState.pressed)) {
-            return theme.colorScheme.primary.withValues(alpha: 0.16);
-          }
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) {
-            return theme.colorScheme.primary.withValues(alpha: 0.09);
-          }
-          return Colors.transparent;
-        });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.72),
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.38),
+      child: TabBar(
+        isScrollable: true,
+        tabAlignment: TabAlignment.start,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        labelColor: theme.colorScheme.primary,
+        unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+        dividerColor: Colors.transparent,
+        indicatorSize: TabBarIndicatorSize.label,
+        indicator: UnderlineTabIndicator(
+          borderSide: BorderSide(
+            width: 3,
+            color: theme.colorScheme.primary,
           ),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-            overlayColor: overlayColor,
-            splashBorderRadius: BorderRadius.circular(16),
-            labelColor: theme.colorScheme.onPrimaryContainer,
-            unselectedLabelColor: theme.colorScheme.onSurfaceVariant
-                .withValues(alpha: 0.78),
-            dividerColor: Colors.transparent,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            labelStyle: const TextStyle(
-              fontWeight: .w800,
-              fontSize: 13,
-            ),
-            tabs: tabTitles
-                .map(
-                  (String title) => Tab(
-                    height: 42,
-                    child: SizedBox(
-                      height: 42,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: Text(title),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
+        labelStyle: const TextStyle(
+          fontWeight: .w900,
+          fontSize: 15,
+          letterSpacing: 0.2,
         ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: .w700,
+          fontSize: 15,
+        ),
+        tabs: tabTitles.map((String title) => Tab(text: title)).toList(),
       ),
     );
   }
@@ -244,48 +199,41 @@ class _SettingsPlaceholder extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.72),
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: .min,
-            children: <Widget>[
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Icon(
-                    Icons.construction_rounded,
-                    size: 24,
-                    color: theme.colorScheme.primary,
-                  ),
+      child: Center(
+        child: Column(
+          mainAxisSize: .min,
+          children: <Widget>[
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Icon(
+                  Icons.auto_awesome_rounded,
+                  size: 40,
+                  color: theme.colorScheme.primary.withValues(alpha: 0.4),
                 ),
               ),
-              const SizedBox(height: 18),
-              Text(
-                title,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: .w800,
-                ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: .w900,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.featureComingSoon,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.featureComingSoon,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                fontWeight: .w500,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
