@@ -51,11 +51,12 @@ class _AlbumTrackList extends StatelessWidget {
       if (i == 0 || previousDiscNumber != discNumber) {
         previousDiscNumber = discNumber;
         final int effectiveDiscNumber = discNumber ?? 1;
+        final String? discTitle = discTitleMap[effectiveDiscNumber]?.trim();
         rows.add(
           _DiscHeaderRow(
-            label:
-                discTitleMap[effectiveDiscNumber] ??
-                l10n.albumDiscLabel(effectiveDiscNumber),
+            label: (discTitle == null || discTitle.isEmpty)
+                ? l10n.albumDiscLabel(effectiveDiscNumber)
+                : discTitle,
           ),
         );
       }
@@ -91,13 +92,15 @@ class _DiscHeaderTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 12, 8, 6),
-      child: Text(
-        row.label,
-        style: theme.textTheme.labelLarge?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.9),
-          fontWeight: .w700,
-          letterSpacing: 0.2,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: Align(
+        alignment: .centerLeft,
+        child: Text(
+          row.label,
+          textAlign: .left,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 100 / 255),
+          ),
         ),
       ),
     );
@@ -105,12 +108,18 @@ class _DiscHeaderTile extends StatelessWidget {
 }
 
 class _AlbumRecommendationsSection extends StatelessWidget {
-  const _AlbumRecommendationsSection();
+  const _AlbumRecommendationsSection({required this.album});
+
+  final AlbumEntity album;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final String? genre = album.genre?.trim();
+    final bool hasGenre = genre != null && genre.isNotEmpty;
+    final String title = hasGenre ? genre : l10n.recommendedToday;
+
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
       sliver: SliverToBoxAdapter(
@@ -118,7 +127,7 @@ class _AlbumRecommendationsSection extends StatelessWidget {
           crossAxisAlignment: .start,
           children: <Widget>[
             Text(
-              l10n.recommendedToday,
+              title,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: .w900,
                 fontSize: 24,
@@ -129,10 +138,19 @@ class _AlbumRecommendationsSection extends StatelessWidget {
               height: 240,
               child: AsyncValueBuilder(
                 provider: albumListProvider(
-                  AlbumListQuery(type: AlbumListType.random.name),
+                  AlbumListQuery(
+                    type: hasGenre ? 'byGenre' : AlbumListType.random.name,
+                    genre: hasGenre ? genre : null,
+                    size: 20,
+                  ),
                 ),
                 builder: (context, data, _) {
-                  final List<AlbumEntity> albums = data;
+                  final List<AlbumEntity> albums = data
+                      .where((AlbumEntity item) => item.id != album.id)
+                      .toList();
+                  if (albums.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: albums.length,

@@ -77,6 +77,7 @@ class AlbumDetailPage extends StatelessWidget {
     required String? currentSongId,
     required bool isPlaying,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(album.name ?? ''),
@@ -118,7 +119,7 @@ class AlbumDetailPage extends StatelessWidget {
                   child: Align(
                     alignment: .centerLeft,
                     child: Text(
-                      'DISC ${song?.discNumber}',
+                      l10n.albumDiscLabel(song?.discNumber ?? 1),
                       textAlign: .left,
                       style: TextStyle(
                         color: Theme.of(
