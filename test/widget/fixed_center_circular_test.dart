@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 
 void main() {
-  testWidgets('FixedCenterCircular renders with default size', (tester) async {
+  testWidgets('FixedCenterCircular renders CircularProgressIndicator', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -14,13 +16,29 @@ void main() {
 
     expect(find.byType(FixedCenterCircular), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-    final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
-    expect(sizedBox.width, 20);
-    expect(sizedBox.height, 20);
   });
 
-  testWidgets('FixedCenterCircular renders with custom size', (tester) async {
+  testWidgets('FixedCenterCircular uses default size and strokeWidth', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: FixedCenterCircular(),
+        ),
+      ),
+    );
+
+    final widget = tester.widget<FixedCenterCircular>(
+      find.byType(FixedCenterCircular),
+    );
+    expect(widget.size, equals(20));
+    expect(widget.strokeWidth, equals(2));
+  });
+
+  testWidgets('FixedCenterCircular uses custom size and strokeWidth', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -29,17 +47,16 @@ void main() {
       ),
     );
 
-    final sizedBox = tester.widget<SizedBox>(find.byType(SizedBox));
-    expect(sizedBox.width, 40);
-    expect(sizedBox.height, 40);
-
-    final circularProgress = tester.widget<CircularProgressIndicator>(
-      find.byType(CircularProgressIndicator),
+    final widget = tester.widget<FixedCenterCircular>(
+      find.byType(FixedCenterCircular),
     );
-    expect(circularProgress.strokeWidth, 4);
+    expect(widget.size, equals(40));
+    expect(widget.strokeWidth, equals(4));
   });
 
-  testWidgets('FixedCenterCircular centers content', (tester) async {
+  testWidgets('FixedCenterCircular centers the CircularProgressIndicator', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -49,5 +66,6 @@ void main() {
     );
 
     expect(find.byType(Center), findsOneWidget);
+    expect(find.byType(SizedBox), findsOneWidget);
   });
 }
