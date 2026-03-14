@@ -13,10 +13,10 @@ class AppearanceSettings extends ConsumerWidget {
     final userConfig = ref.watch(userConfigProvider).value;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       children: <Widget>[
         Align(
-          alignment: .topLeft,
+          alignment: Alignment.topLeft,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 840),
             child: Column(

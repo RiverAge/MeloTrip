@@ -36,7 +36,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     final ThemeData theme = Theme.of(context);
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       children: <Widget>[
         Align(
           alignment: .topLeft,
@@ -138,27 +138,37 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
               onTap: () {
                 ref
                     .read(userConfigProvider.notifier)
-                    .setConfiguration(locale: const ValueUpdater<Locale?>(null));
+                    .setConfiguration(
+                      locale: const ValueUpdater<Locale?>(null),
+                    );
                 Navigator.pop(context);
               },
             ),
             _LanguageOption(
               label: l10n.simpleChinese,
-              selected: ref.watch(userConfigProvider).value?.locale?.languageCode == 'zh',
+              selected:
+                  ref.watch(userConfigProvider).value?.locale?.languageCode ==
+                  'zh',
               onTap: () {
                 ref
                     .read(userConfigProvider.notifier)
-                    .setConfiguration(locale: const ValueUpdater<Locale?>(Locale('zh', 'CN')));
+                    .setConfiguration(
+                      locale: const ValueUpdater<Locale?>(Locale('zh', 'CN')),
+                    );
                 Navigator.pop(context);
               },
             ),
             _LanguageOption(
               label: l10n.english,
-              selected: ref.watch(userConfigProvider).value?.locale?.languageCode == 'en',
+              selected:
+                  ref.watch(userConfigProvider).value?.locale?.languageCode ==
+                  'en',
               onTap: () {
                 ref
                     .read(userConfigProvider.notifier)
-                    .setConfiguration(locale: const ValueUpdater<Locale?>(Locale('en', 'US')));
+                    .setConfiguration(
+                      locale: const ValueUpdater<Locale?>(Locale('en', 'US')),
+                    );
                 Navigator.pop(context);
               },
             ),
@@ -200,7 +210,15 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
         .getInstallCapability();
 
     if (capability == InstallCapability.supported) {
-      final String? error = await controller.downloadAndInstall(update);
+      final String? error = await controller.downloadAndInstall(
+        update,
+        updaterStrings: _buildWindowsUpdaterStrings(
+          l10n,
+          ref.read(updateFlowControllerProvider),
+          fallbackVersionName: update.versionName,
+          fallbackVersionCode: update.versionCode,
+        ),
+      );
       if (!mounted) return;
       if (error != null) {
         messenger.showSnackBar(
@@ -238,14 +256,17 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
 
   WindowsUpdaterStrings _buildWindowsUpdaterStrings(
     AppLocalizations l10n,
-    UpdateFlowState state,
-  ) {
+    UpdateFlowState state, {
+    String? fallbackVersionName,
+    int? fallbackVersionCode,
+  }) {
+    final String versionName =
+        state.pendingVersionName ?? fallbackVersionName ?? '-';
+    final int versionCode =
+        state.pendingVersionCode ?? fallbackVersionCode ?? 0;
     return WindowsUpdaterStrings(
       windowTitle: l10n.updateInstallerWindowTitle,
-      versionLine: l10n.updateInstallerVersionLine(
-        state.pendingVersionName ?? '-',
-        state.pendingVersionCode ?? 0,
-      ),
+      versionLine: l10n.updateInstallerVersionLine(versionName, versionCode),
       preparing: l10n.updateInstallerPreparing,
       waitingForApp: l10n.updateInstallerWaitingForApp,
       extractingArchive: l10n.updateInstallerExtractingArchive,

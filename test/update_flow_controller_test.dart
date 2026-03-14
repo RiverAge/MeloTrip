@@ -148,37 +148,60 @@ void main() {
     expect(controller.state.stage, UpdateUiStage.idle);
   });
 
-  test('downloadAndInstall keeps desktop update ready for restart', () async {
-    final _FakeUpdateService service = _FakeUpdateService(
-      requiresHostExit: true,
-    );
-    final ProviderContainer container = _createContainer(service);
-    final UpdateFlowController controller = container.read(
-      updateFlowControllerProvider.notifier,
-    );
-    const AppUpdateInfo update = AppUpdateInfo(
-      versionName: '1.0.1',
-      versionCode: 2,
-      sha256: '',
-      fileSize: 100,
-      downloadUrl: 'https://example.com/a.zip',
-      changelog: '',
-    );
+  test(
+    'downloadAndInstall auto installs desktop package after download',
+    () async {
+      final _FakeUpdateService service = _FakeUpdateService(
+        requiresHostExit: true,
+      );
+      final ProviderContainer container = _createContainer(service);
+      final UpdateFlowController controller = container.read(
+        updateFlowControllerProvider.notifier,
+      );
+      const AppUpdateInfo update = AppUpdateInfo(
+        versionName: '1.0.1',
+        versionCode: 2,
+        sha256: '',
+        fileSize: 100,
+        downloadUrl: 'https://example.com/a.zip',
+        changelog: '',
+      );
 
-    final String? error = await controller.downloadAndInstall(update);
+      const WindowsUpdaterStrings updaterStrings = WindowsUpdaterStrings(
+        windowTitle: 'Updater',
+        versionLine: 'Version 1.0.1 (2)',
+        preparing: 'Preparing',
+        waitingForApp: 'Waiting',
+        extractingArchive: 'Extracting',
+        copyingFiles: 'Installing',
+        restartingApp: 'Restarting',
+        failed: 'Failed',
+        invalidArguments: 'Invalid',
+        initFailed: 'Init failed',
+        waitFailed: 'Wait failed',
+        tempPathFailed: 'Temp path failed',
+        tempDirFailed: 'Temp dir failed',
+        extractFailed: 'Extract failed',
+        copyFailed: 'Copy failed',
+      );
+      final String? error = await controller.downloadAndInstall(
+        update,
+        updaterStrings: updaterStrings,
+      );
 
-    expect(error, isNull);
-    expect(service.installCalled, isFalse);
-    expect(controller.state.isUpdating, isFalse);
-    expect(controller.state.stage, UpdateUiStage.readyToInstall);
-    expect(controller.state.pendingPackagePath, isNotNull);
-    expect(controller.state.pendingVersionName, '1.0.1');
-    expect(controller.state.pendingVersionCode, 2);
-  });
+      expect(error, isNull);
+      expect(service.installCalled, isTrue);
+      expect(controller.state.isUpdating, isFalse);
+      expect(controller.state.stage, UpdateUiStage.idle);
+      expect(controller.state.pendingPackagePath, isNull);
+      expect(service.receivedUpdaterStrings, updaterStrings);
+    },
+  );
 
   test('installPendingPackage delegates updater strings to service', () async {
     final _FakeUpdateService service = _FakeUpdateService(
       requiresHostExit: true,
+      installError: StateError('first launch failed'),
     );
     final ProviderContainer container = _createContainer(service);
     final UpdateFlowController controller = container.read(
@@ -210,7 +233,9 @@ void main() {
       copyFailed: 'Copy failed',
     );
 
-    await controller.downloadAndInstall(update);
+    final String? firstError = await controller.downloadAndInstall(update);
+    expect(firstError, contains('first launch failed'));
+    service.installError = null;
     final String? error = await controller.installPendingPackage(
       updaterStrings: updaterStrings,
     );
@@ -270,4 +295,36 @@ void main() {
     expect(controller.state.isUpdating, isFalse);
     expect(controller.state.stage, UpdateUiStage.idle);
   });
+
+  test(
+    'downloadAndInstall keeps package ready when desktop installer fails',
+    () async {
+      final ProviderContainer container = _createContainer(
+        _FakeUpdateService(
+          requiresHostExit: true,
+          installError: StateError('launch failed'),
+        ),
+      );
+      final UpdateFlowController controller = container.read(
+        updateFlowControllerProvider.notifier,
+      );
+      const AppUpdateInfo update = AppUpdateInfo(
+        versionName: '1.0.1',
+        versionCode: 2,
+        sha256: '',
+        fileSize: 100,
+        downloadUrl: 'https://example.com/a.zip',
+        changelog: '',
+      );
+
+      final String? error = await controller.downloadAndInstall(update);
+
+      expect(error, contains('launch failed'));
+      expect(controller.state.isUpdating, isFalse);
+      expect(controller.state.stage, UpdateUiStage.readyToInstall);
+      expect(controller.state.pendingPackagePath, isNotNull);
+      expect(controller.state.pendingVersionName, '1.0.1');
+      expect(controller.state.pendingVersionCode, 2);
+    },
+  );
 }

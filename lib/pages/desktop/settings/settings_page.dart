@@ -6,6 +6,7 @@ import 'package:melo_trip/pages/desktop/settings/parts/appearance_settings.dart'
 import 'package:melo_trip/pages/desktop/settings/parts/general_settings.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/lyrics_settings.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/playback_settings.dart';
+import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 
 class DesktopSettingsPage extends ConsumerStatefulWidget {
   const DesktopSettingsPage({super.key});
@@ -75,7 +76,6 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
                   children: <Widget>[
                     _buildHeader(context, l10n, tabTitles),
                     _buildTabBar(context, tabTitles),
-                    const SizedBox(height: 18),
                     Expanded(
                       child: TabBarView(
                         children: <Widget>[
@@ -106,7 +106,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
   ) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+      padding: const EdgeInsets.fromLTRB(8, 20, 8, 10),
       child: Row(
         children: <Widget>[
           DecoratedBox(
@@ -132,18 +132,15 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
               crossAxisAlignment: .start,
               children: <Widget>[
                 Text(
-                  l10n.settings,
+                  l10n.settingsTabGeneral,
                   style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: .w900,
-                    letterSpacing: -0.5,
+                    fontWeight: FontWeight.normal,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
                   ),
                 ),
                 Text(
                   l10n.featureComingSoon, // Or something like "Manage your application preference"
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                    fontWeight: .w500,
-                  ),
+                  style: theme.textTheme.titleSmall,
                 ),
               ],
             ),
@@ -157,32 +154,45 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: TabBar(
-        isScrollable: true,
-        tabAlignment: TabAlignment.start,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 12),
-        overlayColor: WidgetStateProperty.all(Colors.transparent),
-        labelColor: theme.colorScheme.primary,
-        unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-        dividerColor: Colors.transparent,
-        indicatorSize: TabBarIndicatorSize.label,
-        indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(
-            width: 3,
-            color: theme.colorScheme.primary,
+      child: Align(
+        alignment: .centerLeft,
+        child: IntrinsicWidth(
+          child: Container(
+            height: 42,
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: theme.shadowColor.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 20),
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+              dividerColor: Colors.transparent,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: theme.shadowColor.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              tabs: tabTitles.map((String title) => Tab(text: title)).toList(),
+            ),
           ),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
         ),
-        labelStyle: const TextStyle(
-          fontWeight: .w900,
-          fontSize: 15,
-          letterSpacing: 0.2,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: .w700,
-          fontSize: 15,
-        ),
-        tabs: tabTitles.map((String title) => Tab(text: title)).toList(),
       ),
     );
   }
@@ -198,39 +208,25 @@ class _SettingsPlaceholder extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: const EdgeInsets.fromLTRB(8, 20, 8, 10),
       child: Center(
         child: Column(
           mainAxisSize: .min,
           children: <Widget>[
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Icon(
-                  Icons.auto_awesome_rounded,
-                  size: 40,
-                  color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                ),
-              ),
+            SettingSectionHeader(
+              title: l10n.settingsTabGeneral,
+              icon: Icons.settings_suggest_rounded,
             ),
             const SizedBox(height: 24),
             Text(
               title,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: .w900,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-              ),
+              style: theme.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
             Text(
               l10n.featureComingSoon,
-              style: theme.textTheme.bodyLarge?.copyWith(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                fontWeight: .w500,
               ),
             ),
           ],

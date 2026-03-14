@@ -6,6 +6,7 @@ class _FakeUpdateService extends AppUpdateService {
     this.installSupported = true,
     this.canInstallPermission = true,
     this.requiresHostExit = false,
+    this.installError,
     this.downloadError,
     this.downloadDelay = Duration.zero,
     this.checkError,
@@ -15,6 +16,7 @@ class _FakeUpdateService extends AppUpdateService {
   final bool installSupported;
   final bool canInstallPermission;
   final bool requiresHostExit;
+  Object? installError;
   final Object? downloadError;
   final Duration downloadDelay;
   final Object? checkError;
@@ -77,6 +79,9 @@ class _FakeUpdateService extends AppUpdateService {
     File file, {
     WindowsUpdaterStrings? updaterStrings,
   }) async {
+    if (installError != null) {
+      throw installError!;
+    }
     installCalled = true;
     receivedUpdaterStrings = updaterStrings;
   }
@@ -86,6 +91,9 @@ class _FakeUpdateService extends AppUpdateService {
     String filePath, {
     WindowsUpdaterStrings? updaterStrings,
   }) async {
+    if (installError != null) {
+      throw installError!;
+    }
     installCalled = true;
     receivedUpdaterStrings = updaterStrings;
   }

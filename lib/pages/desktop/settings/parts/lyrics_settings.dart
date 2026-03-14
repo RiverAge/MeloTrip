@@ -108,7 +108,7 @@ class _DesktopLyricsSettingsTabState
     final double overlayWidth = config.layout.overlayWidth ?? 980.0;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       children: <Widget>[
         Align(
           alignment: .topLeft,
