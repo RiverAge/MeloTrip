@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
@@ -24,7 +26,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
     super.initState();
-
     _hostController.text = 'https://music.587626.xyz';
     _unameController.text = 'admin';
     _pwdController.text = 'admin';
@@ -32,11 +33,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   void dispose() {
-    super.dispose();
-
     _hostController.dispose();
     _unameController.dispose();
     _pwdController.dispose();
+    super.dispose();
   }
 
   void _onLogin() async {
@@ -85,6 +85,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ? AppLocalizations.of(context)!.unknownError
                 : errorMsg,
           ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {
@@ -98,81 +101,35 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final isDesktop = constraints.maxWidth >= _desktopBreakpoint;
-          return DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: .topLeft,
-                end: .bottomRight,
-                colors: [
-                  colorScheme.surfaceContainerHigh,
-                  colorScheme.surface,
-                  colorScheme.surfaceBright,
-                ],
-              ),
-            ),
-            child: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isDesktop ? 48 : 24,
-                    vertical: 24,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: isDesktop ? 1040 : 420,
-                    ),
-                    child: isDesktop
-                        ? _buildDesktopLoginShell(context)
-                        : _buildMobileLoginShell(context),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildDesktopLoginShell(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surface.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.45),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.10),
-            blurRadius: 40,
-            offset: const Offset(0, 24),
-          ),
-        ],
-      ),
-      child: Row(
+      body: Stack(
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(40, 44, 20, 44),
-              child: _buildDesktopHero(context),
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 420,
-            color: colorScheme.outlineVariant.withValues(alpha: 0.35),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(28, 44, 40, 44),
-              child: _buildLoginForm(context),
+          // Background Gradient and Shapes
+          const _LoginBackground(),
+          
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = constraints.maxWidth >= _desktopBreakpoint;
+                return Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 48 : 24,
+                      vertical: 24,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: isDesktop ? 900 : 420,
+                      ),
+                      child: isDesktop
+                          ? _buildDesktopLoginShell(context, isDark)
+                          : _buildMobileLoginShell(context, isDark),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -180,115 +137,363 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Widget _buildDesktopHero(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Column(
-      mainAxisAlignment: .center,
-      crossAxisAlignment: .start,
-      children: [
-        DecoratedBox(
+  Widget _buildDesktopLoginShell(BuildContext context, bool isDark) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+        child: Container(
           decoration: BoxDecoration(
-            color: colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(18),
-            child: SizedBox(
-              width: 96,
-              height: 96,
-              child: Image.asset('images/navidrome.png'),
+            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.08),
+              width: 0.8,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                blurRadius: 40,
+                offset: const Offset(0, 20),
+                spreadRadius: -10,
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          AppLocalizations.of(context)!.login,
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: .w600,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          _hostController.text,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurfaceVariant),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMobileLoginShell(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surface.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.35),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 28, 24, 28),
-        child: _buildLoginForm(context),
-      ),
-    );
-  }
-
-  Widget _buildLoginForm(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Column(
-      mainAxisSize: .min,
-      children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          width: 96,
-          child: Image.asset('images/navidrome.png'),
-        ),
-        TextField(
-          controller: _hostController,
-          decoration: InputDecoration(
-            hintText: l10n.loginInputHostHint,
-            icon: const Icon(Icons.dns_outlined),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: TextField(
-            controller: _unameController,
-            decoration: InputDecoration(
-              hintText: l10n.loginInputUserHint,
-              icon: const Icon(Icons.person_outline),
-            ),
-          ),
-        ),
-        TextField(
-          controller: _pwdController,
-          obscureText: true,
-          textInputAction: TextInputAction.done,
-          onSubmitted: _loading ? null : (_) => _onLogin(),
-          decoration: InputDecoration(
-            hintText: l10n.loginInputPasswordHint,
-            icon: const Icon(Icons.lock_outline),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 32),
           child: Row(
             children: [
               Expanded(
-                child: ElevatedButton(
-                  onPressed: _loading ? null : _onLogin,
-                  child: _loading
-                      ? const FixedCenterCircular(size: 15)
-                      : Text(l10n.login),
+                flex: 11,
+                child: Padding(
+                  padding: const EdgeInsets.all(48),
+                  child: _buildHero(context, isDark),
+                ),
+              ),
+              VerticalDivider(
+                width: 1,
+                thickness: 1,
+                color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
+              ),
+              Expanded(
+                flex: 9,
+                child: Padding(
+                  padding: const EdgeInsets.all(48),
+                  child: _buildLoginForm(context, isDark),
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLoginShell(BuildContext context, bool isDark) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+        child: Container(
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.08),
+              width: 0.8,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                blurRadius: 40,
+                offset: const Offset(0, 20),
+                spreadRadius: -10,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHero(context, isDark, compact: true),
+              const SizedBox(height: 32),
+              _buildLoginForm(context, isDark),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHero(BuildContext context, bool isDark, {bool compact = false}) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: compact ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: compact ? 96 : 128,
+          height: compact ? 96 : 128,
+          child: Image.asset('images/navidrome.png'),
+        ),
+        SizedBox(height: compact ? 24 : 32),
+        Row(
+          mainAxisAlignment: compact ? MainAxisAlignment.center : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ShaderMask(
+              shaderCallback: (bounds) => LinearGradient(
+                colors: [
+                  colorScheme.primary,
+                  colorScheme.primary.withValues(alpha: 0.8),
+                ],
+              ).createShader(bounds),
+              child: Text(
+                'MeloTrip',
+                style: GoogleFonts.outfit(
+                  textStyle: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.2,
+                      ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                width: 1.5,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            ),
+            Text(
+              AppLocalizations.of(context)!.login,
+              style: GoogleFonts.outfit(
+                textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.4),
+                      fontWeight: FontWeight.w300,
+                    ),
+              ),
+            ),
+          ],
+        ),
       ],
+    );
+  }
+
+  Widget _buildLoginForm(BuildContext context, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildTextField(
+          controller: _hostController,
+          hint: l10n.loginInputHostHint,
+          icon: Icons.dns_rounded,
+          isDark: isDark,
+        ),
+        const SizedBox(height: 16),
+        _buildTextField(
+          controller: _unameController,
+          hint: l10n.loginInputUserHint,
+          icon: Icons.person_rounded,
+          isDark: isDark,
+        ),
+        const SizedBox(height: 16),
+        _buildTextField(
+          controller: _pwdController,
+          hint: l10n.loginInputPasswordHint,
+          icon: Icons.lock_rounded,
+          isDark: isDark,
+          obscureText: true,
+          action: TextInputAction.done,
+          onSubmitted: _loading ? null : (_) => _onLogin(),
+        ),
+        const SizedBox(height: 32),
+        _buildLoginButton(context, l10n),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    required bool isDark,
+    bool obscureText = false,
+    TextInputAction action = TextInputAction.next,
+    void Function(String)? onSubmitted,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      textInputAction: action,
+      onSubmitted: onSubmitted,
+      style: GoogleFonts.inter(
+        color: isDark ? Colors.white : Colors.black87,
+        fontSize: 15,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(
+          color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.4),
+        ),
+        prefixIcon: Icon(
+          icon,
+          size: 20,
+          color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.5),
+        ),
+        filled: true,
+        fillColor: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.05),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      height: 52,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            colorScheme.primary.withValues(alpha: 0.95),
+            colorScheme.primary,
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _loading ? null : _onLogin,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: colorScheme.onPrimary,
+          shadowColor: Colors.transparent,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: _loading
+            ? FixedCenterCircular(size: 20, color: colorScheme.onPrimary)
+            : Text(
+                l10n.login,
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.0,
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class _LoginBackground extends StatelessWidget {
+  const _LoginBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  colorScheme.surface,
+                  Color.lerp(colorScheme.surface, colorScheme.primary, 0.05)!,
+                  colorScheme.surfaceContainerHigh,
+                ]
+              : [
+                  colorScheme.surfaceContainerLow,
+                  Color.lerp(colorScheme.surfaceContainerLow, colorScheme.primary, 0.05)!,
+                ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _GlowShape(
+              size: 400,
+              color: colorScheme.primary.withValues(alpha: 0.12),
+            ),
+          ),
+          Positioned(
+            bottom: -50,
+            left: -50,
+            child: _GlowShape(
+              size: 300,
+              color: colorScheme.primary.withValues(alpha: 0.08),
+            ),
+          ),
+          Positioned(
+            top: 200,
+            left: 100,
+            child: _GlowShape(
+              size: 150,
+              color: colorScheme.secondary.withValues(alpha: 0.05),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GlowShape extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const _GlowShape({required this.size, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color,
+            blurRadius: 100,
+            spreadRadius: 50,
+          ),
+        ],
+      ),
     );
   }
 }
