@@ -927,6 +927,12 @@ abstract class AppLocalizations {
   /// **'Release Date'**
   String get albumHeaderReleaseDate;
 
+  /// Album disc section label
+  ///
+  /// In en, this message translates to:
+  /// **'Disc {discNumber}'**
+  String albumDiscLabel(int discNumber);
+
   /// Generic retry action text
   ///
   /// In en, this message translates to:

@@ -12,6 +12,7 @@ import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:melo_trip/widget/rating.dart';
 
 part 'parts/album_detail_header.dart';
 part 'parts/album_detail_track_sections.dart';
@@ -86,10 +87,14 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
           songs: widget.songs,
           showTitle: _showTitle,
           onPlayAlbum: (WidgetRef ref) => _playAlbum(ref, widget.songs),
+          onAddToQueue: (WidgetRef ref) => _addAlbumToQueue(ref, widget.songs),
           formatTotalDuration: _formatTotalDuration,
         ),
-        const _AlbumTrackListToolbar(),
-        _AlbumTrackList(songs: widget.songs, onPlaySong: _playSong),
+        _AlbumTrackList(
+          album: widget.album,
+          songs: widget.songs,
+          onPlaySong: _playSong,
+        ),
         const _AlbumRecommendationsSection(),
         const SliverToBoxAdapter(child: SizedBox(height: 120)),
       ],
@@ -111,6 +116,19 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
     }
     await player.setPlaylist(songs: songs, initialId: songs.firstOrNull?.id);
     await player.play();
+  }
+
+  Future<void> _addAlbumToQueue(WidgetRef ref, List<SongEntity> songs) async {
+    if (songs.isEmpty) {
+      return;
+    }
+    final AppPlayer? player = await ref.read(appPlayerHandlerProvider.future);
+    if (player == null) {
+      return;
+    }
+    for (final SongEntity song in songs) {
+      await player.insertToEnd(song);
+    }
   }
 
   String _formatTotalDuration(List<SongEntity> songs) {

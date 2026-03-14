@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:media_kit/media_kit.dart' show AudioDevice;
 import 'package:melo_trip/app_logic/restore/play_queue_restore.dart';
 import 'package:melo_trip/app_player/player.dart';

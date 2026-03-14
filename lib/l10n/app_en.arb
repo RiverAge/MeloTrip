@@ -622,6 +622,16 @@
    "@albumHeaderReleaseDate": {
       "description": "Album header metric label for release date"
    },
+   "albumDiscLabel": "Disc {discNumber}",
+   "@albumDiscLabel": {
+      "description": "Album disc section label",
+      "placeholders": {
+         "discNumber": {
+            "type": "int",
+            "example": "1"
+         }
+      }
+   },
    "retry": "Retry",
    "@retry": {
       "description": "Generic retry action text"
