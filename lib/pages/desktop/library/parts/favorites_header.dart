@@ -5,11 +5,15 @@ class _PageHeader extends StatelessWidget {
     required this.title,
     required this.currentType,
     required this.onTypeChanged,
+    required this.viewType,
+    required this.onViewTypeChanged,
   });
 
   final String title;
   final String currentType;
   final ValueChanged<String> onTypeChanged;
+  final AppViewType viewType;
+  final ValueChanged<AppViewType> onViewTypeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +48,10 @@ class _PageHeader extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.search_rounded),
-                onPressed: () {},
+              AlbumViewSwitcher(
+                current: viewType,
+                onChanged: onViewTypeChanged,
+                showDetailOption: false,
               ),
             ],
           ),
@@ -127,57 +132,6 @@ class _Toolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        children: <Widget>[
-          _ToolbarButton(label: l10n.name, icon: Icons.sort_by_alpha_rounded),
-          const SizedBox(width: 16),
-          const _ToolbarIcon(icon: Icons.refresh_rounded),
-          const Spacer(),
-          const _ToolbarIcon(icon: Icons.grid_view_rounded),
-        ],
-      ),
-    );
-  }
-}
-
-class _ToolbarButton extends StatelessWidget {
-  const _ToolbarButton({required this.label, required this.icon});
-
-  final String label;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        mainAxisSize: .min,
-        children: <Widget>[
-          Text(label, style: theme.textTheme.labelMedium),
-          const SizedBox(width: 8),
-          Icon(icon, size: 16),
-        ],
-      ),
-    );
-  }
-}
-
-class _ToolbarIcon extends StatelessWidget {
-  const _ToolbarIcon({required this.icon});
-
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant);
+    return const SizedBox(height: 8);
   }
 }

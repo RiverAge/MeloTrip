@@ -20,7 +20,7 @@ class DesktopGenresPage extends ConsumerWidget {
         crossAxisAlignment: .start,
         children: [
           _PageHeader(title: l10n.songMetaGenre),
-          _Toolbar(l10n: l10n),
+          const _Toolbar(),
           Expanded(
             child: AsyncValueBuilder(
               provider: genresProvider,
@@ -68,7 +68,6 @@ class _PageHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          IconButton(icon: const Icon(Icons.search_rounded), onPressed: () {}),
         ],
       ),
     );
@@ -76,26 +75,11 @@ class _PageHeader extends StatelessWidget {
 }
 
 class _Toolbar extends StatelessWidget {
-  const _Toolbar({required this.l10n});
-
-  final AppLocalizations l10n;
+  const _Toolbar();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        children: [
-          _ToolbarButton(label: l10n.name, icon: Icons.sort_by_alpha_rounded),
-          const SizedBox(width: 16),
-          const _ToolbarIcon(icon: Icons.refresh_rounded),
-          const Spacer(),
-          const _ToolbarIcon(icon: Icons.grid_view_rounded),
-          const SizedBox(width: 8),
-          const _ToolbarIcon(icon: Icons.tune_rounded),
-        ],
-      ),
-    );
+    return const SizedBox(height: 8);
   }
 }
 
@@ -221,44 +205,5 @@ class _GenreRow extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _ToolbarButton extends StatelessWidget {
-  const _ToolbarButton({required this.label, required this.icon});
-
-  final String label;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        mainAxisSize: .min,
-        children: [
-          Text(label, style: theme.textTheme.labelMedium),
-          const SizedBox(width: 8),
-          Icon(icon, size: 16),
-        ],
-      ),
-    );
-  }
-}
-
-class _ToolbarIcon extends StatelessWidget {
-  const _ToolbarIcon({required this.icon});
-
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant);
   }
 }
