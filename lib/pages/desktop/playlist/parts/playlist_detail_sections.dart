@@ -11,7 +11,7 @@ class PlaylistHeader extends StatelessWidget {
     super.key,
   });
 
-  final dynamic playlist;
+  final PlaylistEntity playlist;
   final List<SongEntity> songs;
   final AppLocalizations l10n;
   final VoidCallback onPlayAll;

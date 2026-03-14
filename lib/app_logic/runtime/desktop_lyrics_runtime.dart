@@ -4,6 +4,7 @@ import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index_of_lyrics.dart';
+import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/desktop/desktop_lyrics_client.dart';
@@ -15,8 +16,8 @@ class DesktopLyricsRuntimeBindings {
     required this.positionSubscription,
   });
 
-  final StreamSubscription<dynamic> playQueueSubscription;
-  final StreamSubscription<dynamic> positionSubscription;
+  final StreamSubscription<PlayQueue> playQueueSubscription;
+  final StreamSubscription<Duration> positionSubscription;
 
   Future<void> cancel() async {
     await playQueueSubscription.cancel();

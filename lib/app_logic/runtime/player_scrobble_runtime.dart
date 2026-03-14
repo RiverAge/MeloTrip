@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,7 +14,7 @@ class PlayerScrobbleRuntimeBindings {
     required this.cancelTimer,
   });
 
-  final StreamSubscription<dynamic> subscription;
+  final StreamSubscription<(PlayQueue, bool)> subscription;
   final void Function() cancelTimer;
 
   Future<void> cancel() async {
@@ -112,7 +114,7 @@ class PlayerScrobbleRuntime {
     );
   }
 
-  void _savePlayQueue(AppPlayer player, dynamic api) {
+  void _savePlayQueue(AppPlayer player, Dio api) {
     final playQueue = player.playQueue;
     if (playQueue.index >= playQueue.songs.length) {
       unawaited(api.get('/rest/savePlayQueue'));

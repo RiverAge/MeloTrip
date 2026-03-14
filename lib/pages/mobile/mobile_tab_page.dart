@@ -19,8 +19,8 @@ class MobileTabPage extends ConsumerStatefulWidget {
 class _MobileTabPageState extends ConsumerState<MobileTabPage> with RouteAware {
   int _currentIndex = 0;
   bool _visible = true;
-  RouteObserver<PageRoute<dynamic>>? _routeObserver;
-  PageRoute<dynamic>? _subscribedRoute;
+  RouteObserver<PageRoute<Object?>>? _routeObserver;
+  PageRoute<Object?>? _subscribedRoute;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _MobileTabPageState extends ConsumerState<MobileTabPage> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
-    final pageRoute = route is PageRoute<dynamic> ? route : null;
+    final pageRoute = route is PageRoute<Object?> ? route : null;
     if (pageRoute == null) return;
 
     final observer = ref.read(routeObserverProvider);

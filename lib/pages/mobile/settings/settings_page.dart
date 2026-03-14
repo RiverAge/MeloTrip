@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/mobile/favorite/favorite_page.dart';
 import 'package:melo_trip/pages/mobile/playlist/playlist_page.dart';
@@ -201,7 +202,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
           ),
           AsyncValueBuilder(
             provider: appPlayerHandlerProvider,
-            builder: (BuildContext context, dynamic player, _) {
+            builder: (BuildContext context, AppPlayer player, _) {
               return Consumer(
                 builder: (BuildContext context, WidgetRef ref, _) {
                   return TextButton(
@@ -217,7 +218,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
-                        (Route<dynamic> route) => false,
+                        (Route<Object?> route) => false,
                       );
                     },
                   );

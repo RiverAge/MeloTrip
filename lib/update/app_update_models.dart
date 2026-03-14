@@ -28,7 +28,7 @@ class AppUpdateInfo {
   final String downloadUrl;
   final String changelog;
 
-  static int _toInt(dynamic value) {
+  static int _toInt(Object? value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
     return int.tryParse('$value') ?? 0;

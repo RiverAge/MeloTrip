@@ -21,7 +21,7 @@ class AppRuntimeCoordinatorBindings {
   });
 
   final PlayerPreferencesRuntimeBindings? playerPreferencesBindings;
-  final StreamSubscription<dynamic>? errorSubscription;
+  final StreamSubscription<String>? errorSubscription;
   final DesktopLyricsRuntimeBindings? desktopLyricsBindings;
   final PlayerScrobbleRuntimeBindings? playerScrobbleBindings;
 
