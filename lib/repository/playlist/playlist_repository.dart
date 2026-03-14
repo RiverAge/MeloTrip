@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -5,7 +6,7 @@ import 'package:melo_trip/provider/api/api.dart';
 class PlaylistRepository {
   PlaylistRepository(this._readApi);
 
-  final Future<dynamic> Function() _readApi;
+  final Future<Dio> Function() _readApi;
 
   Future<SubsonicResponse?> fetchPlaylists() async {
     final api = await _readApi();

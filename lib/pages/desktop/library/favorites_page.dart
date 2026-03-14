@@ -4,6 +4,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/model/response/starred/starred.dart';
 import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/album_page_controls.dart';
@@ -62,7 +63,7 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
     );
   }
 
-  Widget _buildContent(dynamic starred, AppLocalizations l10n) {
+  Widget _buildContent(StarredEntity? starred, AppLocalizations l10n) {
     switch (_currentType) {
       case 'albums':
         final albums = starred?.album ?? const <AlbumEntity>[];

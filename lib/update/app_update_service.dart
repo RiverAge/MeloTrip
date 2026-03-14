@@ -109,7 +109,7 @@ class AppUpdateService {
     final response = await Dio().get<Map<String, dynamic>>(
       checkUrl,
       options: Options(
-        headers: <String, Object>{
+        headers: <String, String>{
           'User-Agent': 'MeloTrip-App',
           'Accept': 'application/json',
           'X-MeloTrip-Platform': _currentPlatformName(),

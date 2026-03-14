@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_logic/restore/play_queue_restore.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
@@ -101,7 +103,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
     });
     _contentNavigatorKey.currentState?.pushNamedAndRemoveUntil(
       routeName,
-      (Route<dynamic> route) => false,
+      (Route<Object?> route) => false,
     );
   }
 
@@ -113,7 +115,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
     });
     _contentNavigatorKey.currentState?.pushNamedAndRemoveUntil(
       '/playlist_detail',
-      (Route<dynamic> route) => false,
+      (Route<Object?> route) => false,
       arguments: id,
     );
   }
@@ -169,7 +171,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
         page = const DesktopFoldersPage();
         break;
       case '/genre_detail':
-        final Object? arg = settings.arguments;
+        final arg = settings.arguments;
         if (arg is GenreEntity) {
           page = DesktopGenreDetailPage(genre: arg);
         } else {
@@ -177,7 +179,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
         }
         break;
       case '/playlist_detail':
-        final Object? id = settings.arguments;
+        final id = settings.arguments;
         if (id is String && id.isNotEmpty) {
           page = DesktopPlaylistDetailPage(playlistId: id);
         } else {

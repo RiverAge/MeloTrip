@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
@@ -11,8 +12,8 @@ class PlayerPreferencesRuntimeBindings {
     this.shuffleSubscription,
   });
 
-  final StreamSubscription<dynamic>? playlistModeSubscription;
-  final StreamSubscription<dynamic>? shuffleSubscription;
+  final StreamSubscription<PlaylistMode>? playlistModeSubscription;
+  final StreamSubscription<bool>? shuffleSubscription;
 
   Future<void> cancel() async {
     await playlistModeSubscription?.cancel();

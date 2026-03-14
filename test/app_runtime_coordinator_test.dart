@@ -10,8 +10,10 @@ import 'package:melo_trip/app_logic/runtime/player_media_resolver_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_preferences_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_scrobble_runtime.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:media_kit/media_kit.dart';
 
 Future<WidgetRef> _pumpRef(
   WidgetTester tester, {
@@ -54,8 +56,8 @@ class _FakePlayerPreferencesRuntime extends PlayerPreferencesRuntime {
   Future<PlayerPreferencesRuntimeBindings> attach(WidgetRef ref) async {
     attachCalls++;
     return PlayerPreferencesRuntimeBindings(
-      playlistModeSubscription: Stream<void>.empty().listen((_) {}),
-      shuffleSubscription: Stream<void>.empty().listen((_) {}),
+      playlistModeSubscription: Stream<PlaylistMode>.empty().listen((_) {}),
+      shuffleSubscription: Stream<bool>.empty().listen((_) {}),
     );
   }
 }
@@ -67,7 +69,7 @@ class _FakeScrobbleRuntime extends PlayerScrobbleRuntime {
   Future<PlayerScrobbleRuntimeBindings?> attach(WidgetRef ref) async {
     attachCalls++;
     return PlayerScrobbleRuntimeBindings(
-      subscription: Stream<void>.empty().listen((_) {}),
+      subscription: Stream<(PlayQueue, bool)>.empty().listen((_) {}),
       cancelTimer: () {},
     );
   }
@@ -80,8 +82,8 @@ class _FakeDesktopLyricsRuntime extends DesktopLyricsRuntime {
   Future<DesktopLyricsRuntimeBindings?> attach(WidgetRef ref) async {
     attachCalls++;
     return DesktopLyricsRuntimeBindings(
-      playQueueSubscription: Stream<void>.empty().listen((_) {}),
-      positionSubscription: Stream<void>.empty().listen((_) {}),
+      playQueueSubscription: Stream<PlayQueue>.empty().listen((_) {}),
+      positionSubscription: Stream<Duration>.empty().listen((_) {}),
     );
   }
 }
