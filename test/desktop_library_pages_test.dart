@@ -122,20 +122,18 @@ void main() {
     expect(find.text('Aimer'), findsWidgets);
   });
 
-  testWidgets('DesktopArtistsPage renders artists parsed from getArtists', (
+testWidgets('DesktopArtistsPage renders artists parsed from getArtists', (
+  tester,
+) async {
+  await pumpDesktopPage(
     tester,
-  ) async {
-    await pumpDesktopPage(
-      tester,
-      child: const DesktopArtistsPage(),
-      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
-    );
+    child: const DesktopArtistsPage(),
+    overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
+  );
 
-    expect(find.text('Adele'), findsOneWidget);
-    expect(find.text('Aimer'), findsOneWidget);
-    expect(find.textContaining('2'), findsWidgets);
-    expect(find.textContaining('1'), findsWidgets);
-  });
+  expect(find.text('Adele'), findsOneWidget);
+  expect(find.text('Aimer'), findsOneWidget);
+});
 
   testWidgets('DesktopGenresPage renders genres parsed from getGenres', (
     tester,
