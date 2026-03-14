@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
+<<<<<<< HEAD
 import 'package:melo_trip/provider/user_config/user_config.dart';
+=======
+import 'package:melo_trip/pages/shared/initial/initial_page.dart';
+import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/auth/auth.dart';
+>>>>>>> 590e10d (Add desktop logout entry)
 import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:update_installer/update_installer.dart';
@@ -94,6 +100,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+<<<<<<< HEAD
                                 child: Text(
                                   isReadyToInstall
                                       ? l10n.updateRestartToInstallAction
@@ -106,6 +113,44 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                       ),
                     ],
                   ),
+=======
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 18),
+                    _GeneralSettingsSectionTitle(
+                      icon: Icons.logout_rounded,
+                      title: l10n.logout,
+                      subtitle: l10n.logoutDialogConfirm,
+                    ),
+                    SettingSectionBody(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0,
+                        vertical: 10,
+                      ),
+                      children: <Widget>[
+                        SettingRow(
+                          label: l10n.logout,
+                          description: l10n.logoutDialogConfirm,
+                          trailing: FilledButton.icon(
+                            onPressed: _onLogoutPressed,
+                            icon: const Icon(Icons.logout_rounded),
+                            label: Text(l10n.logout),
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 12,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+>>>>>>> 590e10d (Add desktop logout entry)
                 ),
                 const SizedBox(height: 48),
               ],
@@ -352,6 +397,54 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
       return '${(bytes / kb).toStringAsFixed(0)}K';
     }
     return '${bytes}B';
+  }
+
+  Future<void> _onLogoutPressed() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    await showDialog<void>(
+      context: context,
+      useRootNavigator: true,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.logout),
+          content: Text(l10n.logoutDialogConfirm),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext, rootNavigator: true).pop();
+              },
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () async {
+                final NavigatorState navigator =
+                    Navigator.of(dialogContext, rootNavigator: true);
+                navigator.pop();
+                final player = await ref.read(appPlayerHandlerProvider.future);
+                await player?.pause();
+                await ref.read(logoutProvider.future);
+                if (!mounted) return;
+                await navigator.pushAndRemoveUntil(
+                  PageRouteBuilder<void>(
+                    pageBuilder:
+                        (
+                          BuildContext context,
+                          Animation<double> primaryAnimation,
+                          Animation<double> secondaryAnimation,
+                        ) =>
+                        const InitialPage(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: Text(l10n.confirm),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
