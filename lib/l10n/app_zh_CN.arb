@@ -377,6 +377,15 @@
     "albumHeaderSongs": "歌曲",
     "albumHeaderDuration": "时长",
     "albumHeaderReleaseDate": "发行日期",
+    "albumDiscLabel": "第{discNumber}盘",
+    "@albumDiscLabel": {
+        "placeholders": {
+            "discNumber": {
+                "type": "int",
+                "example": "1"
+            }
+        }
+    },
     "retry": "重试",
     "retryStartup": "重试启动",
     "startupInitializing": "正在启动 MeloTrip...",

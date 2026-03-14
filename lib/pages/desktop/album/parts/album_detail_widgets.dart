@@ -1,22 +1,34 @@
 part of '../album_detail_page.dart';
 
 class _HeaderOutlineButton extends StatelessWidget {
-  const _HeaderOutlineButton({required this.icon, required this.label});
+  const _HeaderOutlineButton({
+    required this.icon,
+    required this.label,
+    this.onPressed,
+    this.textColor,
+    this.borderColor,
+  });
 
   final IconData icon;
   final String label;
+  final VoidCallback? onPressed;
+  final Color? textColor;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return OutlinedButton.icon(
-      onPressed: () {},
+      onPressed: onPressed,
       icon: Icon(icon, size: 20),
       label: Text(label),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.2)),
-        foregroundColor: theme.textTheme.bodyLarge?.color,
+        side: BorderSide(
+          color:
+              borderColor ?? theme.colorScheme.outline.withValues(alpha: 0.3),
+        ),
+        foregroundColor: textColor ?? theme.textTheme.bodyLarge?.color,
       ),
     );
   }

@@ -432,6 +432,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get albumHeaderReleaseDate => 'Release Date';
 
   @override
+  String albumDiscLabel(int discNumber) {
+    return 'Disc $discNumber';
+  }
+
+  @override
   String get retry => 'Retry';
 
   @override

@@ -6,6 +6,7 @@ class _AlbumDetailHeader extends StatelessWidget {
     required this.songs,
     required this.showTitle,
     required this.onPlayAlbum,
+    required this.onAddToQueue,
     required this.formatTotalDuration,
   });
 
@@ -13,17 +14,24 @@ class _AlbumDetailHeader extends StatelessWidget {
   final List<SongEntity> songs;
   final bool showTitle;
   final Future<void> Function(WidgetRef ref) onPlayAlbum;
+  final Future<void> Function(WidgetRef ref) onAddToQueue;
   final String Function(List<SongEntity> songs) formatTotalDuration;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final ColorScheme colorScheme = theme.colorScheme;
+    final bool isDark = theme.brightness == Brightness.dark;
+    final Color headerTextColor = isDark
+        ? colorScheme.onSurface
+        : colorScheme.onPrimary;
+    final Color headerSubTextColor = headerTextColor.withValues(alpha: 0.84);
 
     return SliverAppBar(
       pinned: true,
-      expandedHeight: 340,
-      backgroundColor: theme.colorScheme.surface,
+      expandedHeight: 380,
+      backgroundColor: colorScheme.surface,
       elevation: showTitle ? 2 : 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
@@ -35,6 +43,7 @@ class _AlbumDetailHeader extends StatelessWidget {
         child: Text(
           album.name ?? '',
           style: theme.textTheme.titleMedium?.copyWith(
+            color: colorScheme.onSurface,
             fontWeight: .bold,
           ),
         ),
@@ -47,7 +56,22 @@ class _AlbumDetailHeader extends StatelessWidget {
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
               child: Container(
-                color: theme.colorScheme.scrim.withValues(alpha: 0.24),
+                color: colorScheme.scrim.withValues(
+                  alpha: isDark ? 0.32 : 0.44,
+                ),
+              ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: .topCenter,
+                  end: .bottomCenter,
+                  colors: <Color>[
+                    colorScheme.scrim.withValues(alpha: isDark ? 0.1 : 0.18),
+                    colorScheme.scrim.withValues(alpha: isDark ? 0.18 : 0.32),
+                    colorScheme.scrim.withValues(alpha: isDark ? 0.28 : 0.46),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -83,21 +107,23 @@ class _AlbumDetailHeader extends StatelessWidget {
                         Text(
                           l10n.album,
                           style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant
-                                .withValues(alpha: 0.85),
+                            color: headerSubTextColor,
                             fontWeight: .bold,
                           ),
                         ),
                         const SizedBox(height: 6),
-                        Flexible(
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 110),
                           child: Text(
                             album.name ?? '-',
                             maxLines: 2,
                             overflow: .ellipsis,
                             style: theme.textTheme.displaySmall?.copyWith(
+                              color: headerTextColor,
                               fontWeight: .w900,
-                              letterSpacing: -1.2,
-                              fontSize: 36,
+                              letterSpacing: -1.0,
+                              fontSize: 34,
+                              height: 1.08,
                             ),
                           ),
                         ),
@@ -105,12 +131,14 @@ class _AlbumDetailHeader extends StatelessWidget {
                         _AlbumMetaRow(
                           album: album,
                           songs: songs,
+                          contentColor: headerSubTextColor,
                           formatTotalDuration: formatTotalDuration,
                         ),
                         const SizedBox(height: 6),
                         Text(
                           album.artist ?? '-',
                           style: theme.textTheme.titleMedium?.copyWith(
+                            color: headerTextColor,
                             fontWeight: .w600,
                           ),
                         ),
@@ -133,29 +161,117 @@ class _AlbumDetailHeader extends StatelessWidget {
                                       horizontal: 24,
                                       vertical: 12,
                                     ),
-                                    backgroundColor: theme.colorScheme.primary,
-                                    foregroundColor:
-                                        theme.colorScheme.onPrimary,
+                                    backgroundColor: colorScheme.primary,
+                                    foregroundColor: colorScheme.onPrimary,
                                   ),
                                 );
                               },
                             ),
                             const SizedBox(width: 12),
-                            _HeaderOutlineButton(
-                              icon: Icons.shuffle_rounded,
-                              label: l10n.shuffleOn,
+                            AsyncValueBuilder(
+                              provider: appPlayerHandlerProvider,
+                              loading: (_, _) => _HeaderOutlineButton(
+                                icon: Icons.shuffle_rounded,
+                                label: l10n.shuffleOn,
+                                textColor: headerTextColor,
+                                borderColor: headerTextColor.withValues(
+                                  alpha: 0.35,
+                                ),
+                              ),
+                              builder: (context, player, _) {
+                                return AsyncStreamBuilder(
+                                  provider: player.shuffleStream,
+                                  builder: (context, shuffleEnabled) {
+                                    return _HeaderOutlineButton(
+                                      icon: shuffleEnabled
+                                          ? Icons.shuffle_on_rounded
+                                          : Icons.shuffle_rounded,
+                                      label: shuffleEnabled
+                                          ? l10n.shuffleOn
+                                          : l10n.shuffleOff,
+                                      textColor: headerTextColor,
+                                      borderColor: headerTextColor.withValues(
+                                        alpha: 0.35,
+                                      ),
+                                      onPressed: () =>
+                                          player.setShuffleModeEnabled(
+                                            !shuffleEnabled,
+                                          ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                             const SizedBox(width: 12),
-                            _HeaderOutlineButton(
-                              icon: Icons.playlist_play_rounded,
-                              label: l10n.playQueue,
+                            Consumer(
+                              builder: (context, ref, _) {
+                                return _HeaderOutlineButton(
+                                  icon: Icons.playlist_play_rounded,
+                                  label: l10n.addToPlayQueue,
+                                  textColor: headerTextColor,
+                                  borderColor: headerTextColor.withValues(
+                                    alpha: 0.35,
+                                  ),
+                                  onPressed: songs.isEmpty
+                                      ? null
+                                      : () async {
+                                          await onAddToQueue(ref);
+                                          if (!context.mounted) {
+                                            return;
+                                          }
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                l10n.addToPlayQueue,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                );
+                              },
                             ),
                             const Spacer(),
-                            const Icon(Icons.star_border_rounded, size: 22),
+                            Consumer(
+                              builder: (context, ref, _) {
+                                return Rating(
+                                  rating: album.userRating ?? 0,
+                                  color: headerSubTextColor,
+                                  onRating: (value) {
+                                    ref
+                                        .read(albumRatingProvider.notifier)
+                                        .updateRating(album.id, value);
+                                  },
+                                );
+                              },
+                            ),
                             const SizedBox(width: 16),
-                            const Icon(Icons.favorite_border_rounded, size: 20),
-                            const SizedBox(width: 16),
-                            const Icon(Icons.more_horiz_rounded, size: 22),
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final bool isFavorite = album.starred != null;
+                                return IconButton(
+                                  tooltip: isFavorite
+                                      ? l10n.unfavorite
+                                      : l10n.favorite,
+                                  onPressed: () async {
+                                    await ref
+                                        .read(albumFavoriteProvider.notifier)
+                                        .toggleFavorite(album);
+                                  },
+                                  icon: Icon(
+                                    isFavorite
+                                        ? Icons.favorite_rounded
+                                        : Icons.favorite_border_rounded,
+                                    size: 20,
+                                    color: isFavorite
+                                        ? colorScheme.error
+                                        : headerSubTextColor,
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8),
                           ],
                         ),
                       ],
@@ -175,11 +291,13 @@ class _AlbumMetaRow extends StatelessWidget {
   const _AlbumMetaRow({
     required this.album,
     required this.songs,
+    required this.contentColor,
     required this.formatTotalDuration,
   });
 
   final AlbumEntity album;
   final List<SongEntity> songs;
+  final Color contentColor;
   final String Function(List<SongEntity> songs) formatTotalDuration;
 
   @override
@@ -195,21 +313,15 @@ class _AlbumMetaRow extends StatelessWidget {
       year,
       count,
       duration,
-    ].where((String item) => item.isNotEmpty).join(' 璺?');
+    ].where((String item) => item.isNotEmpty).join(' · ');
 
     return Row(
       children: <Widget>[
-        Icon(
-          Icons.music_note_rounded,
-          size: 14,
-          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-        ),
+        Icon(Icons.music_note_rounded, size: 14, color: contentColor),
         const SizedBox(width: 4),
         Text(
           summary,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(color: contentColor),
         ),
       ],
     );

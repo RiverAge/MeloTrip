@@ -431,6 +431,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get albumHeaderReleaseDate => '发行日期';
 
   @override
+  String albumDiscLabel(int discNumber) {
+    return '第$discNumber盘';
+  }
+
+  @override
   String get retry => '重试';
 
   @override
@@ -1102,6 +1107,11 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get albumHeaderReleaseDate => '发行日期';
+
+  @override
+  String albumDiscLabel(int discNumber) {
+    return '第$discNumber盘';
+  }
 
   @override
   String get retry => '重试';
