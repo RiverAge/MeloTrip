@@ -22,7 +22,7 @@ class _SidebarSearchButton extends StatelessWidget {
         height: 38,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.78),
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.28),
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
             color: colorScheme.outlineVariant.withValues(alpha: 0.45),
@@ -58,7 +58,9 @@ class _SidebarSearchButton extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.1),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.1,
+                ),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: const Icon(Icons.menu_rounded, size: 14),

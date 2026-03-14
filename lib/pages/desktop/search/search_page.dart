@@ -43,9 +43,9 @@ class _DesktopSearchPageState extends ConsumerState<DesktopSearchPage> {
   }
 
   Future<void> _saveToHistory(String value) async {
-    await ref.read(userConfigProvider.notifier).setConfiguration(
-      recentSearch: ValueUpdater<String>(value),
-    );
+    await ref
+        .read(userConfigProvider.notifier)
+        .setConfiguration(recentSearch: ValueUpdater<String>(value));
   }
 
   Future<void> _openAlbum(String? albumId) async {
@@ -127,7 +127,8 @@ class _DesktopSearchPageState extends ConsumerState<DesktopSearchPage> {
                           const Center(child: CircularProgressIndicator()),
                       empty: (_, _) => const NoData(),
                       builder: (BuildContext context, data, WidgetRef ref) {
-                        final searchResult = data.subsonicResponse?.searchResult3;
+                        final searchResult =
+                            data.subsonicResponse?.searchResult3;
                         return DesktopSearchResultsView(
                           songs: searchResult?.song ?? const <SongEntity>[],
                           albums: searchResult?.album ?? const <AlbumEntity>[],
