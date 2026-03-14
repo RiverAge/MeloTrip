@@ -95,7 +95,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
           songs: widget.songs,
           onPlaySong: _playSong,
         ),
-        const _AlbumRecommendationsSection(),
+        _AlbumRecommendationsSection(album: widget.album),
         const SliverToBoxAdapter(child: SizedBox(height: 120)),
       ],
     );
