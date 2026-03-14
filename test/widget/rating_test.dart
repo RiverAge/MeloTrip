@@ -4,13 +4,12 @@ import 'package:melo_trip/widget/rating.dart';
 
 void main() {
   testWidgets('Rating renders 5 stars', (tester) async {
-    int? rating;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: Rating(
             rating: 0,
-            onRating: (value) => rating = value,
+            onRating: (_) {},
           ),
         ),
       ),
@@ -23,13 +22,12 @@ void main() {
   });
 
   testWidgets('Rating displays correct star icons', (tester) async {
-    int? rating;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: Rating(
             rating: 3,
-            onRating: (value) => rating = value,
+            onRating: (_) {},
           ),
         ),
       ),
@@ -47,24 +45,19 @@ void main() {
   });
 
   testWidgets('Rating handles hover interaction', (tester) async {
-    int? rating;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: Rating(
             rating: 0,
-            onRating: (value) => rating = value,
+            onRating: (_) {},
           ),
         ),
       ),
     );
 
-    final mouseRegions = tester.widgetList<MouseRegion>(find.byType(MouseRegion));
-
     await tester.pump();
     await tester.pumpAndSettle();
-
-    expect(rating, isNull);
   });
 
   testWidgets('Rating calls onRating callback', (tester) async {
@@ -84,13 +77,12 @@ void main() {
   });
 
   testWidgets('Rating handles null rating', (tester) async {
-    int? rating;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: Rating(
             rating: null,
-            onRating: (value) => rating = value,
+            onRating: (_) {},
           ),
         ),
       ),

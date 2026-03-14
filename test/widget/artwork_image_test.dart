@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
-import 'package:melo_trip/provider/user_session/user_session.dart';
 
 void main() {
   testWidgets('ArtworkImage shows placeholder when id is null', (tester) async {
