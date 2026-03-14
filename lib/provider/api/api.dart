@@ -29,6 +29,11 @@ class Api extends _$Api {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    options.queryParameters.putIfAbsent('_', () => DateTime.now().toIso8601String());
+    options.queryParameters.putIfAbsent('v', () => subsonicApiVersion);
+    options.queryParameters.putIfAbsent('c', () => subsonicClientName);
+    options.queryParameters.putIfAbsent('f', () => 'json');
+
     final auth = await ref.read(currentUserProvider.future);
     final token = auth?.token;
     final host = auth?.host;
@@ -43,10 +48,6 @@ class Api extends _$Api {
         'u': auth?.username,
         't': token,
         's': auth?.salt,
-        '_': DateTime.now().toIso8601String(),
-        'v': subsonicApiVersion,
-        'c': subsonicClientName,
-        'f': 'json',
       });
     }
 
