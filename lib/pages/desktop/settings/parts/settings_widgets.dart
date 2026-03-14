@@ -436,13 +436,17 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
                       ? theme.colorScheme.primary
                       : theme.colorScheme.outlineVariant.withValues(alpha: 0.72);
                   final Color backgroundColor = selected
-                      ? theme.colorScheme.primaryContainer.withValues(alpha: 0.92)
+                      ? theme.colorScheme.primaryContainer.withValues(alpha: 0.7)
                       : theme.colorScheme.surfaceContainerLow.withValues(
                           alpha: 0.9,
                         );
                   final Color textColor = selected
-                      ? theme.colorScheme.onPrimaryContainer
-                      : theme.colorScheme.onSurface;
+                      ? theme.colorScheme.onPrimaryContainer.withValues(
+                          alpha: 0.82,
+                        )
+                      : theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.82,
+                        );
                   return InkWell(
                     onTap: () => onChanged(option.value),
                     borderRadius: BorderRadius.circular(10),
@@ -460,9 +464,8 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
                       ),
                       child: Text(
                         option.label,
-                        style: theme.textTheme.labelLarge?.copyWith(
+                        style: theme.textTheme.labelMedium?.copyWith(
                           color: textColor,
-                          fontWeight: .w600,
                         ),
                       ),
                     ),
