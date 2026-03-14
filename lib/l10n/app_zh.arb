@@ -170,6 +170,9 @@
     "playModeSingle": "单曲循环",
     "shuffleOn": "随机播放开启",
     "shuffleOff": "随机播放关闭",
+    "audioOutputDevice": "输出设备",
+    "audioOutputDeviceAuto": "系统默认",
+    "audioOutputDeviceCurrent": "当前设备",
 
     "english": "英语",
     "simpleChinese": "简体中文",

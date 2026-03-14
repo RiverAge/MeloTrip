@@ -40,6 +40,15 @@ extension PlayerInit on AppPlayer {
     _player.stream.log.listen((data) {
       log('stream log -> $data');
     });
+    _player.stream.audioDevices.listen((devices) {
+      final summary = devices
+          .map((d) => '${d.name}(${d.description})')
+          .join(', ');
+      log('audio devices -> [$summary]');
+    });
+    _player.stream.audioDevice.listen((device) {
+      log('audio device active -> ${device.name}(${device.description})');
+    });
     _player.stream.error.listen(_errorSubject.add);
 
     final session = await AudioSession.instance;

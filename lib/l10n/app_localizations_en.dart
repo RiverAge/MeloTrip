@@ -394,6 +394,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shuffleOff => 'Shuffle Off';
 
   @override
+  String get audioOutputDevice => 'Output Device';
+
+  @override
+  String get audioOutputDeviceAuto => 'System Default';
+
+  @override
+  String get audioOutputDeviceCurrent => 'Current';
+
+  @override
   String get english => 'English';
 
   @override

@@ -10,6 +10,8 @@ extension PlayerState on AppPlayer {
   PlaylistMode get playlistMode => _player.state.playlistMode;
   double get volume => _player.state.volume;
   AudioParams get audioParams => _player.state.audioParams;
+  AudioDevice get audioDevice => _player.state.audioDevice;
+  List<AudioDevice> get audioDevices => _player.state.audioDevices;
   Track get track => _player.state.track;
   Tracks get tracks => _player.state.tracks;
 

@@ -31,6 +31,8 @@ extension PlayerControls on AppPlayer {
   }
 
   Future<void> setVolume(double volume) async => _player.setVolume(volume);
+  Future<void> setAudioOutputDevice(AudioDevice audioDevice) =>
+      _runSerialized(() => _player.setAudioDevice(audioDevice));
 
   Future<void> addMediaItem(MediaItem? item) async {
     mediaItem.add(item);

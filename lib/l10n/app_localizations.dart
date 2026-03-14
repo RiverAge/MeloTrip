@@ -855,6 +855,24 @@ abstract class AppLocalizations {
   /// **'Shuffle Off'**
   String get shuffleOff;
 
+  /// Label or tooltip for selecting audio output device
+  ///
+  /// In en, this message translates to:
+  /// **'Output Device'**
+  String get audioOutputDevice;
+
+  /// Automatic audio output device selection option
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get audioOutputDeviceAuto;
+
+  /// Current audio output device label
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get audioOutputDeviceCurrent;
+
   /// English language
   ///
   /// In en, this message translates to:

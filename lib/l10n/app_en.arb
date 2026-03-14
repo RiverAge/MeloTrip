@@ -565,6 +565,18 @@
     "@shuffleOff": {
      "description": "Shuffle mode off for normal play"
     },
+    "audioOutputDevice": "Output Device",
+    "@audioOutputDevice": {
+      "description": "Label or tooltip for selecting audio output device"
+    },
+    "audioOutputDeviceAuto": "System Default",
+    "@audioOutputDeviceAuto": {
+      "description": "Automatic audio output device selection option"
+    },
+    "audioOutputDeviceCurrent": "Current",
+    "@audioOutputDeviceCurrent": {
+      "description": "Current audio output device label"
+    },
 
     "english": "English",
      "@english": {
