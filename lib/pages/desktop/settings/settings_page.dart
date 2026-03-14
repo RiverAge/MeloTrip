@@ -132,15 +132,10 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
               crossAxisAlignment: .start,
               children: <Widget>[
                 Text(
-                  l10n.settingsTabGeneral,
+                  l10n.settings,
                   style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.normal,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.82),
                   ),
-                ),
-                Text(
-                  l10n.featureComingSoon, // Or something like "Manage your application preference"
-                  style: theme.textTheme.titleSmall,
                 ),
               ],
             ),
@@ -221,13 +216,6 @@ class _SettingsPlaceholder extends StatelessWidget {
             Text(
               title,
               style: theme.textTheme.titleSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.featureComingSoon,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-              ),
             ),
           ],
         ),
