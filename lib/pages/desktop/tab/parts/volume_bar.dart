@@ -28,6 +28,9 @@ class _DesktopVolumeBar extends ConsumerWidget {
                       ? Icons.volume_off_rounded
                       : Icons.volume_up_rounded,
                   size: compact ? 14 : 16,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.78),
                 ),
                 SizedBox(
                   width: compact ? 86 : 120,

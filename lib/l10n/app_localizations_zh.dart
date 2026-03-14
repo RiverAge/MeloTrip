@@ -393,6 +393,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shuffleOff => '随机播放关闭';
 
   @override
+  String get audioOutputDevice => '输出设备';
+
+  @override
+  String get audioOutputDeviceAuto => '系统默认';
+
+  @override
+  String get audioOutputDeviceCurrent => '当前设备';
+
+  @override
   String get english => '英语';
 
   @override
@@ -1055,6 +1064,15 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get shuffleOff => '随机播放关闭';
+
+  @override
+  String get audioOutputDevice => '输出设备';
+
+  @override
+  String get audioOutputDeviceAuto => '系统默认';
+
+  @override
+  String get audioOutputDeviceCurrent => '当前设备';
 
   @override
   String get english => '英语';

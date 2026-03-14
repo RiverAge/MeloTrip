@@ -66,6 +66,7 @@ class _DesktopPlayerBar extends StatelessWidget {
                         constraints: const BoxConstraints(maxWidth: 320),
                         child: _DesktopPlayerBarActions(
                           current: current,
+                          player: player,
                           colorScheme: colorScheme,
                         ),
                       ),
