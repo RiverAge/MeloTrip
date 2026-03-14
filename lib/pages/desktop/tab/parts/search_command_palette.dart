@@ -41,9 +41,9 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
   }
 
   Future<void> _saveToHistory(String value) async {
-    await ref.read(userConfigProvider.notifier).setConfiguration(
-      recentSearch: ValueUpdater<String>(value),
-    );
+    await ref
+        .read(userConfigProvider.notifier)
+        .setConfiguration(recentSearch: ValueUpdater<String>(value));
   }
 
   Future<void> _openFullSearch() async {
@@ -135,7 +135,10 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: <Widget>[
                     Text(
@@ -168,7 +171,9 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                     hintText: l10n.searchHint,
                     prefixIcon: const Icon(Icons.search_rounded, size: 20),
                     filled: true,
-                    fillColor: colorScheme.surfaceContainerHighest,
+                    fillColor: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.28,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
@@ -191,7 +196,8 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                             const Center(child: CircularProgressIndicator()),
                         empty: (_, _) => const NoData(),
                         builder: (BuildContext context, data, WidgetRef ref) {
-                          final searchResult = data.subsonicResponse?.searchResult3;
+                          final searchResult =
+                              data.subsonicResponse?.searchResult3;
                           return DesktopSearchResultsView(
                             songs: searchResult?.song ?? const <SongEntity>[],
                             albums:
