@@ -24,6 +24,15 @@ import 'package:melo_trip/provider/auth/auth.dart';
 
 import 'test_helpers.dart';
 
+class _FakeAlbumDetail extends AlbumDetail {
+  _FakeAlbumDetail(this._response);
+
+  final SubsonicResponse _response;
+
+  @override
+  Future<SubsonicResponse?> build(String? albumId) async => _response;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -91,9 +100,11 @@ void main() {
       child: const DesktopAlbumsPage(),
       overrides: [
         apiProvider.overrideWith(FakeApiDesktopLibrary.new),
-        albumDetailProvider(
-          'album-1',
-        ).overrideWith((_) async => albumDetailResponse),
+    albumDetailProvider(
+      'album-1',
+    ).overrideWith(
+      () => _FakeAlbumDetail(albumDetailResponse),
+    ),
       ],
     );
 

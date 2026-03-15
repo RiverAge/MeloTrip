@@ -88,7 +88,9 @@ Future<void> _pumpDesktopHome(
         albumListProvider(
           AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
         ).overrideWith((_) async => frequent),
-        albumDetailProvider('album-1').overrideWith((_) async => detail),
+        albumDetailProvider('album-1').overrideWith(
+          () => _FakeAlbumDetail(detail),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

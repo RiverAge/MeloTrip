@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -132,17 +131,19 @@ void main() {
 
     final songFavorite = container.read(songFavoriteProvider.notifier);
     final songRating = container.read(songRatingProvider.notifier);
-    final albumFavorite = container.read(albumFavoriteProvider.notifier);
-    final albumRating = container.read(albumRatingProvider.notifier);
 
     expect(await songFavorite.toggleFavorite(null), isNull);
     expect(await songFavorite.toggleFavorite(const SongEntity()), isNull);
     expect(await songRating.updateRating(null, 5), isNull);
     expect(await songRating.updateRating('s1', null), isNull);
-    expect(await albumFavorite.toggleFavorite(null), isNull);
-    expect(await albumFavorite.toggleFavorite(const AlbumEntity()), isNull);
-    expect(await albumRating.updateRating(null, 4), isNull);
-    expect(await albumRating.updateRating('a1', null), isNull);
+
+    final albumDetailNull = container.read(albumDetailProvider(null).notifier);
+    expect(await albumDetailNull.toggleFavorite(), isNull);
+    expect(await albumDetailNull.setRating(5), isNull);
+
+    final albumDetail = container.read(albumDetailProvider('a1').notifier);
+    expect(await albumDetail.toggleFavorite(), isNull);
+    expect(await albumDetail.setRating(null), isNull);
   });
 
   test('lyrics provider merges best source and skips latn lines', () async {
