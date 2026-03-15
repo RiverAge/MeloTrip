@@ -46,6 +46,15 @@ class _StubAppPlayer implements AppPlayer {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+class _FakeAlbumDetail extends AlbumDetail {
+  _FakeAlbumDetail(this._response);
+
+  final SubsonicResponse _response;
+
+  @override
+  Future<SubsonicResponse?> build(String? albumId) async => _response;
+}
+
 void main() {
   SongEntity song({
     required String id,
@@ -90,39 +99,41 @@ void main() {
         playingStream: Stream.value(true),
       );
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            appPlayerHandlerProvider.overrideWith(
-              () => _FakeAppPlayerHandler(stubPlayer),
-            ),
-            albumDetailProvider(
-              'album-1',
-            ).overrideWith((_) async => fakeAlbumResponse(songs)),
-            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-          ],
-          child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const AlbumDetailPage(albumId: 'album-1'),
-          ),
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        appPlayerHandlerProvider.overrideWith(
+          () => _FakeAppPlayerHandler(stubPlayer),
         ),
-      );
+        albumDetailProvider(
+          'album-1',
+        ).overrideWith(
+          () => _FakeAlbumDetail(fakeAlbumResponse(songs)),
+        ),
+        currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const AlbumDetailPage(albumId: 'album-1'),
+      ),
+    ),
+  );
 
-      await tester.pumpAndSettle();
+  await tester.pumpAndSettle();
 
-      final playingGif = find.byWidgetPredicate((widget) {
-        if (widget is! Image) return false;
-        final image = widget.image;
-        return image is AssetImage && image.assetName == 'images/playing.gif';
-      });
+  final playingGif = find.byWidgetPredicate((widget) {
+    if (widget is! Image) return false;
+    final image = widget.image;
+    return image is AssetImage && image.assetName == 'images/playing.gif';
+  });
 
-      expect(playingGif, findsOneWidget);
-      expect(find.text('Song 1'), findsOneWidget);
-      expect(find.text('Song 2'), findsOneWidget);
-    },
-    // Depends on AppPlayer extension internals; covered by integration flows.
-    skip: true,
+  expect(playingGif, findsOneWidget);
+  expect(find.text('Song 1'), findsOneWidget);
+  expect(find.text('Song 2'), findsOneWidget);
+},
+// Depends on AppPlayer extension internals; covered by integration flows.
+skip: true,
   );
 
   testWidgets(
@@ -145,9 +156,11 @@ void main() {
             appPlayerHandlerProvider.overrideWith(
               () => _FakeAppPlayerHandler(stubPlayer),
             ),
-            albumDetailProvider(
-              'album-1',
-            ).overrideWith((_) async => fakeAlbumResponse(songs)),
+        albumDetailProvider(
+          'album-1',
+        ).overrideWith(
+          () => _FakeAlbumDetail(fakeAlbumResponse(songs)),
+        ),
             currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           ],
           child: MaterialApp(

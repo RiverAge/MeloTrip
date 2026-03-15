@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/repository/album/album_detail_repository.dart';
@@ -77,8 +76,8 @@ void main() {
     });
   });
 
-  group('AlbumFavorite', () {
-    test('toggleFavorite returns null when album is null', () async {
+  group('AlbumDetail toggleFavorite', () {
+    test('returns null when albumId is null', () async {
       final mockRepository = _MockAlbumDetailRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -87,65 +86,14 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumFavoriteProvider.notifier);
-      final result = await notifier.toggleFavorite(null);
+      final notifier = container.read(albumDetailProvider(null).notifier);
+      final result = await notifier.toggleFavorite();
 
       expect(result, isNull);
       expect(mockRepository.toggleCalled, isFalse);
     });
 
-    test('toggleFavorite returns null when album id is null', () async {
-      final mockRepository = _MockAlbumDetailRepository(null);
-      final container = ProviderContainer(
-        overrides: [
-          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final notifier = container.read(albumFavoriteProvider.notifier);
-      final album = const AlbumEntity(id: null);
-      final result = await notifier.toggleFavorite(album);
-
-      expect(result, isNull);
-      expect(mockRepository.toggleCalled, isFalse);
-    });
-  });
-
-  group('AlbumRating', () {
-    test('updateRating returns null when albumId is null', () async {
-      final mockRepository = _MockAlbumDetailRepository(null);
-      final container = ProviderContainer(
-        overrides: [
-          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final notifier = container.read(albumRatingProvider.notifier);
-      final result = await notifier.updateRating(null, 5);
-
-      expect(result, isNull);
-      expect(mockRepository.ratingCalled, isFalse);
-    });
-
-    test('updateRating returns null when rating is null', () async {
-      final mockRepository = _MockAlbumDetailRepository(null);
-      final container = ProviderContainer(
-        overrides: [
-          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final notifier = container.read(albumRatingProvider.notifier);
-      final result = await notifier.updateRating('123', null);
-
-      expect(result, isNull);
-      expect(mockRepository.ratingCalled, isFalse);
-    });
-
-    test('updateRating calls repository and invalidates on success', () async {
+    test('calls repository toggleFavorite', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(status: 'ok'),
       );
@@ -157,10 +105,62 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumRatingProvider.notifier);
-      final result = await notifier.updateRating('123', 5);
+      final notifier = container.read(albumDetailProvider('123').notifier);
+      final result = await notifier.toggleFavorite();
 
-      expect(result, isNotNull);
+      expect(result?.subsonicResponse?.status, equals('ok'));
+      expect(mockRepository.toggleCalled, isTrue);
+    });
+  });
+
+  group('AlbumDetail setRating', () {
+    test('returns null when albumId is null', () async {
+      final mockRepository = _MockAlbumDetailRepository(null);
+      final container = ProviderContainer(
+        overrides: [
+          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(albumDetailProvider(null).notifier);
+      final result = await notifier.setRating(5);
+
+      expect(result, isNull);
+      expect(mockRepository.ratingCalled, isFalse);
+    });
+
+    test('returns null when rating is null', () async {
+      final mockRepository = _MockAlbumDetailRepository(null);
+      final container = ProviderContainer(
+        overrides: [
+          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(albumDetailProvider('123').notifier);
+      final result = await notifier.setRating(null);
+
+      expect(result, isNull);
+      expect(mockRepository.ratingCalled, isFalse);
+    });
+
+    test('calls repository setRating and invalidates on success', () async {
+      final mockResponse = const SubsonicResponse(
+        subsonicResponse: SubsonicResponseClass(status: 'ok'),
+      );
+      final mockRepository = _MockAlbumDetailRepository(mockResponse);
+      final container = ProviderContainer(
+        overrides: [
+          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(albumDetailProvider('123').notifier);
+      final result = await notifier.setRating(5);
+
       expect(result?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.ratingCalled, isTrue);
     });

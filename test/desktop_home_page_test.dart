@@ -18,6 +18,15 @@ import 'test_helpers.dart';
 
 part 'parts/desktop_home_page_test_helpers.dart';
 
+class _FakeAlbumDetail extends AlbumDetail {
+  _FakeAlbumDetail(this._response);
+
+  final SubsonicResponse _response;
+
+  @override
+  Future<SubsonicResponse?> build(String? albumId) async => _response;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
