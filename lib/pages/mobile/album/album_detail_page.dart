@@ -84,7 +84,7 @@ class AlbumDetailPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              ref.read(albumFavoriteProvider.notifier).toggleFavorite(album);
+              ref.read(albumDetailProvider(albumId).notifier).toggleFavorite();
             },
             icon: album.starred != null
                 ? const Icon(Icons.favorite, color: Colors.red)
@@ -100,8 +100,8 @@ class AlbumDetailPage extends StatelessWidget {
               album: album,
               onUpdateRating: (rating) {
                 ref
-                    .read(albumRatingProvider.notifier)
-                    .updateRating(album.id, rating);
+                    .read(albumDetailProvider(album.id).notifier)
+                    .setRating(rating);
               },
             );
           }

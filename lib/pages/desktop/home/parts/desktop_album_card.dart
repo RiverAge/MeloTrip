@@ -178,10 +178,15 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                         _optimisticRating = value;
                                       });
                                       final res = await ref
-                                          .read(albumRatingProvider.notifier)
-                                          .updateRating(widget.album.id, value);
+                                          .read(
+                                            albumDetailProvider(
+                                              widget.album.id,
+                                            ).notifier,
+                                          )
+                                          .setRating(value);
                                       if (!mounted) return;
-                                      if (res?.subsonicResponse?.status != 'ok') {
+                                      if (res?.subsonicResponse?.status !=
+                                          'ok') {
                                         setState(() {
                                           _optimisticRating =
                                               widget.album.userRating;
