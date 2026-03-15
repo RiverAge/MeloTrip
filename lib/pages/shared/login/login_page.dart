@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
@@ -86,7 +85,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 : errorMsg,
           ),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -108,7 +109,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         children: [
           // Background Gradient and Shapes
           const _LoginBackground(),
-          
+
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -144,10 +145,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
         child: Container(
           decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.2),
+            color: (isDark ? Colors.black : Colors.white).withValues(
+              alpha: 0.2,
+            ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.08),
+              color: (isDark ? Colors.white : Colors.black).withValues(
+                alpha: 0.08,
+              ),
               width: 0.8,
             ),
             boxShadow: [
@@ -171,7 +176,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               VerticalDivider(
                 width: 1,
                 thickness: 1,
-                color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
+                color: (isDark ? Colors.white : Colors.black).withValues(
+                  alpha: 0.1,
+                ),
               ),
               Expanded(
                 flex: 9,
@@ -195,10 +202,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         child: Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.25),
+            color: (isDark ? Colors.black : Colors.white).withValues(
+              alpha: 0.25,
+            ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.08),
+              color: (isDark ? Colors.white : Colors.black).withValues(
+                alpha: 0.08,
+              ),
               width: 0.8,
             ),
             boxShadow: [
@@ -227,7 +238,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: compact ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: compact
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: compact ? 96 : 128,
@@ -250,12 +263,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ).createShader(bounds),
               child: Text(
                 'MeloTrip',
-                style: GoogleFonts.outfit(
-                  textStyle: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -1.2,
-                      ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.2,
                 ),
               ),
             ),
@@ -263,17 +274,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               width: 1.5,
               height: 24,
               decoration: BoxDecoration(
-                color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.1),
+                color: (isDark ? Colors.white : Colors.black).withValues(
+                  alpha: 0.1,
+                ),
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
             Text(
               AppLocalizations.of(context)!.login,
-              style: GoogleFonts.outfit(
-                textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.4),
-                      fontWeight: FontWeight.w300,
-                    ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: (isDark ? Colors.white : Colors.black).withValues(
+                  alpha: 0.4,
+                ),
+                fontWeight: FontWeight.w300,
               ),
             ),
           ],
@@ -332,7 +345,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       obscureText: obscureText,
       textInputAction: action,
       onSubmitted: onSubmitted,
-      style: GoogleFonts.inter(
+      style: TextStyle(
         color: isDark ? Colors.white : Colors.black87,
         fontSize: 15,
       ),
@@ -347,8 +360,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.5),
         ),
         filled: true,
-        fillColor: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.05),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        fillColor: (isDark ? Colors.white : Colors.black).withValues(
+          alpha: 0.05,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
@@ -404,7 +422,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ? FixedCenterCircular(size: 20, color: colorScheme.onPrimary)
             : Text(
                 l10n.login,
-                style: GoogleFonts.outfit(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.0,
@@ -436,7 +454,11 @@ class _LoginBackground extends StatelessWidget {
                 ]
               : [
                   colorScheme.surfaceContainerLow,
-                  Color.lerp(colorScheme.surfaceContainerLow, colorScheme.primary, 0.05)!,
+                  Color.lerp(
+                    colorScheme.surfaceContainerLow,
+                    colorScheme.primary,
+                    0.05,
+                  )!,
                 ],
         ),
       ),
@@ -485,13 +507,7 @@ class _GlowShape extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: color,
-            blurRadius: 100,
-            spreadRadius: 50,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: color, blurRadius: 100, spreadRadius: 50)],
       ),
     );
   }
