@@ -1,4 +1,3 @@
-import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/repository/album/album_detail_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -6,58 +5,53 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'album_detail.g.dart';
 
 @riverpod
-Future<SubsonicResponse?> albumDetail(Ref ref, String? albumId) async {
-  final id = albumId;
-  if (id == null) {
-    return null;
-  }
-
-  final repository = ref.read(albumDetailRepositoryProvider);
-  return repository.fetchAlbumDetail(id);
-}
-
-@riverpod
-class AlbumFavorite extends _$AlbumFavorite {
+class AlbumDetail extends _$AlbumDetail {
   @override
-  Future<SubsonicResponse?> build() async {
-    return null;
+  Future<SubsonicResponse?> build(String? albumId) async {
+    if (albumId == null) return null;
+    return ref.read(albumDetailRepositoryProvider).fetchAlbumDetail(albumId);
   }
 
-  Future<SubsonicResponse?> toggleFavorite(AlbumEntity? album) async {
-    if (album == null || album.id == null) {
-      return null;
+  Future<SubsonicResponse?> toggleFavorite() async {
+    final id = albumId;
+    if (id == null) return null;
+
+    final repository = ref.read(albumDetailRepositoryProvider);
+
+    final current = switch (state) {
+      AsyncData(:final value) => value,
+      _ => await ref.read(albumDetailProvider(id).future),
+    };
+
+    final starred = current?.subsonicResponse?.album?.starred;
+
+    final result = await repository.toggleFavorite(
+      albumId: id,
+      isStarred: starred != null,
+    );
+
+    if (!ref.mounted) return result;
+
+    if (result?.subsonicResponse?.status == 'ok') {
+      ref.invalidateSelf();
     }
 
-    final res = await ref.read(albumDetailProvider(album.id).future);
-    final starred = res?.subsonicResponse?.album?.starred;
-    final subsonic = await ref
-        .read(albumDetailRepositoryProvider)
-        .toggleFavorite(albumId: album.id!, isStarred: starred != null);
-    if (subsonic?.subsonicResponse?.status == 'ok') {
-      ref.invalidate(albumDetailProvider(album.id));
-    }
-    return subsonic;
+    return result;
   }
-}
 
-@riverpod
-class AlbumRating extends _$AlbumRating {
-  @override
-  Future<SubsonicResponse?> build() async {
-    return null;
-  }
+  Future<SubsonicResponse?> setRating(int? rating) async {
+    final id = albumId;
+    if (id == null || rating == null) return null;
 
-  Future<SubsonicResponse?> updateRating(String? albumId, int? rating) async {
-    if (albumId == null || rating == null) {
-      return null;
+    final repository = ref.read(albumDetailRepositoryProvider);
+    final result = await repository.setRating(albumId: id, rating: rating);
+
+    if (!ref.mounted) return result;
+
+    if (result?.subsonicResponse?.status == 'ok') {
+      ref.invalidateSelf();
     }
 
-    final subsonic = await ref
-        .read(albumDetailRepositoryProvider)
-        .setRating(albumId: albumId, rating: rating);
-    if (subsonic?.subsonicResponse?.status == 'ok') {
-      ref.invalidate(albumDetailProvider(albumId));
-    }
-    return subsonic;
+    return result;
   }
 }
