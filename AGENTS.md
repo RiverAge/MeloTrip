@@ -11,7 +11,10 @@
 - After code changes, run `flutter analyze` by default. Run `flutter test` when feasible.
 - On Windows, Codex must execute native commands directly such as `flutter analyze` or `gh run list`. Do not wrap them in `powershell -Command` or `cmd /c`.
 - Pages and widgets must not import `package:melo_trip/repository/...` directly. Go through providers unless there is a strong reason not to.
-- Git commit messages must be written in English.
+- Git commit messages must be written in English and follow:
+  - `<type>(<platform>): <summary> [agent:<free-text>]`
+  - `agent` is required but must remain free-text (do not enforce a fixed allowlist).
+  - Example: `fix(desktop): restore logout entry in settings [agent:codex]`
 
 ## Code Style
 
