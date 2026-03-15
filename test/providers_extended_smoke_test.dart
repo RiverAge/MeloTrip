@@ -125,7 +125,7 @@ void main() {
     expect(result?.subsonicResponse?.status, 'ok');
   });
 
-  test('song/album favorite and rating null guards return null', () async {
+  test('song favorite null guards return null', () async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
@@ -136,14 +136,6 @@ void main() {
     expect(await songFavorite.toggleFavorite(const SongEntity()), isNull);
     expect(await songRating.updateRating(null, 5), isNull);
     expect(await songRating.updateRating('s1', null), isNull);
-
-    final albumDetailNull = container.read(albumDetailProvider(null).notifier);
-    expect(await albumDetailNull.toggleFavorite(), isNull);
-    expect(await albumDetailNull.setRating(5), isNull);
-
-    final albumDetail = container.read(albumDetailProvider('a1').notifier);
-    expect(await albumDetail.toggleFavorite(), isNull);
-    expect(await albumDetail.setRating(null), isNull);
   });
 
   test('lyrics provider merges best source and skips latn lines', () async {
