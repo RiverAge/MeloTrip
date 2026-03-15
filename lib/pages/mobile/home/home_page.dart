@@ -10,7 +10,6 @@ import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/endof_data.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 part 'parts/top_search_bar.dart';
 part 'parts/albums.dart';
@@ -60,7 +59,7 @@ class _HomePageState extends State<HomePage>
               titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
               title: Text(
                 l10n.listenNow,
-                style: GoogleFonts.outfit(
+                style: TextStyle(
                   fontWeight: .bold,
                   color: theme.colorScheme.onSurface,
                   fontSize: 24,
