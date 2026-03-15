@@ -20,7 +20,7 @@ class AlbumDetail extends _$AlbumDetail {
 
     final current = switch (state) {
       AsyncData(:final value) => value,
-      _ => await ref.read(albumDetailProvider(id).future),
+      _ => null,
     };
 
     final starred = current?.subsonicResponse?.album?.starred;
