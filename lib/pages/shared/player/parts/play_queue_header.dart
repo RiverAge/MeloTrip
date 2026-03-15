@@ -166,7 +166,7 @@ class _PlayQueueTitle extends StatelessWidget {
                     style: theme.textTheme.titleMedium,
                     children: [
                       TextSpan(
-                        text: ' ()',
+                        text: ' (${playQueue.songs.length})',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -231,7 +231,7 @@ class _PlayQueueTitle extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '',
+                          playQueue.songs.length.toString(),
                           style: theme.textTheme.labelMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontWeight: .w700,

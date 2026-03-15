@@ -106,6 +106,9 @@ class _PlayQueueListItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final currentSong = songs[index];
     final isCurrent = currentPlayingIndex == index;
+    final artist = (currentSong.displayArtist ?? currentSong.artist ?? '').trim();
+    final album = (currentSong.album ?? '').trim();
+    final subtitle = [artist, album].where((it) => it.isNotEmpty).join(' - ');
     final tile = ListTile(
       onTap: () {
         if (isCurrent) {
@@ -124,7 +127,7 @@ class _PlayQueueListItem extends StatelessWidget {
           SizedBox(
             width: 28,
             child: Text(
-              ''.padLeft(2, ' '),
+              (index + 1).toString(),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isCurrent
                     ? colorScheme.primary
@@ -168,7 +171,7 @@ class _PlayQueueListItem extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        ' - ',
+        subtitle.isEmpty ? '-' : subtitle,
         overflow: .ellipsis,
         style: theme.textTheme.bodySmall?.copyWith(
           color: isCurrent
