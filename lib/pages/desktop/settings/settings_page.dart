@@ -37,67 +37,69 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
       child: Scaffold(
         backgroundColor: theme.colorScheme.surface,
         body: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: <Color>[
-              theme.colorScheme.surface,
-              theme.colorScheme.surfaceContainerLowest.withValues(alpha: 0.94),
-            ],
-          ),
-        ),
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -140,
-              right: -90,
-              child: IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: <Color>[
-                        theme.colorScheme.primary.withValues(alpha: 0.12),
-                        theme.colorScheme.primary.withValues(alpha: 0),
-                      ],
-                    ),
-                  ),
-                  child: const SizedBox(width: 360, height: 360),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                theme.colorScheme.surface,
+                theme.colorScheme.surfaceContainerLowest.withValues(
+                  alpha: 0.94,
                 ),
-              ),
+              ],
             ),
-            Align(
-              alignment: .topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1240),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: <Widget>[
-                    _buildHeader(context, l10n, tabTitles),
-                    _buildTabBar(context, tabTitles),
-                    Expanded(
-                      child: TabBarView(
-                        children: <Widget>[
-                          const GeneralSettings(),
-                          const AppearanceSettings(),
-                          const PlaybackSettings(),
-                          const DesktopLyricsSettingsTab(),
-                          _SettingsPlaceholder(title: tabTitles[4]),
-                          const AdvancedSettings(),
+          ),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: -140,
+                right: -90,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: <Color>[
+                          theme.colorScheme.primary.withValues(alpha: 0.12),
+                          theme.colorScheme.primary.withValues(alpha: 0),
                         ],
                       ),
                     ),
-                  ],
+                    child: const SizedBox(width: 360, height: 360),
+                  ),
                 ),
               ),
-            ),
-          ],
+              Align(
+                alignment: .topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1240),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: <Widget>[
+                      _buildHeader(context, l10n, tabTitles),
+                      _buildTabBar(context, tabTitles),
+                      Expanded(
+                        child: TabBarView(
+                          children: <Widget>[
+                            const GeneralSettings(),
+                            const AppearanceSettings(),
+                            const PlaybackSettings(),
+                            const DesktopLyricsSettingsTab(),
+                            _SettingsPlaceholder(title: tabTitles[4]),
+                            const AdvancedSettings(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildHeader(
     BuildContext context,
@@ -146,49 +148,9 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
   }
 
   Widget _buildTabBar(BuildContext context, List<String> tabTitles) {
-    final ThemeData theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Align(
-        alignment: .centerLeft,
-        child: IntrinsicWidth(
-          child: Container(
-            height: 42,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: theme.shadowColor.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 20),
-              overlayColor: WidgetStateProperty.all(Colors.transparent),
-              dividerColor: Colors.transparent,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicator: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: theme.shadowColor.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              tabs: tabTitles.map((String title) => Tab(text: title)).toList(),
-            ),
-          ),
-        ),
-      ),
+    return TabBar(
+      isScrollable: true,
+      tabs: tabTitles.map((String title) => Tab(text: title)).toList(),
     );
   }
 }
@@ -213,10 +175,7 @@ class _SettingsPlaceholder extends StatelessWidget {
               icon: Icons.settings_suggest_rounded,
             ),
             const SizedBox(height: 24),
-            Text(
-              title,
-              style: theme.textTheme.titleSmall,
-            ),
+            Text(title, style: theme.textTheme.titleSmall),
           ],
         ),
       ),
