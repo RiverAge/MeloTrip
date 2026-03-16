@@ -19,21 +19,14 @@ class _SidebarSearchButton extends StatelessWidget {
         );
       },
       child: Container(
-        height: 38,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        // height: 38,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.28),
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
             color: colorScheme.outlineVariant.withValues(alpha: 0.45),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: theme.shadowColor.withValues(alpha: 0.08),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
           children: [

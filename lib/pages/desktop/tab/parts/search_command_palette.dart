@@ -171,9 +171,7 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                     hintText: l10n.searchHint,
                     prefixIcon: const Icon(Icons.search_rounded, size: 20),
                     filled: true,
-                    fillColor: colorScheme.surfaceContainerHighest.withValues(
-                      alpha: 0.28,
-                    ),
+                    fillColor: colorScheme.surfaceContainerHighest,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
