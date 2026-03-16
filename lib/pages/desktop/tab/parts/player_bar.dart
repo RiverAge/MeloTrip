@@ -11,7 +11,7 @@ class _DesktopPlayerBar extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
     return Container(
-      height: 104,
+      // height: 104,
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
         boxShadow: [
@@ -19,16 +19,14 @@ class _DesktopPlayerBar extends StatelessWidget {
             color: isDark
                 ? colorScheme.onSurface.withValues(alpha: 0.12)
                 : theme.shadowColor.withValues(alpha: 0.12),
-            blurRadius: isDark ? 14 : 16,
+            blurRadius: 16,
             offset: const Offset(0, -5),
           ),
         ],
       ),
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+      padding: const EdgeInsets.fromLTRB(12, 20, 12, 20),
       child: AsyncValueBuilder(
         provider: appPlayerHandlerProvider,
-        loading: (_, _) => const SizedBox.shrink(),
-        empty: (_, _) => const SizedBox.shrink(),
         builder: (context, player, _) {
           return PlayQueueBuilder(
             builder: (context, playQueue, _) {
