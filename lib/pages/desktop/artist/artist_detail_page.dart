@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/pages/desktop/home/parts/desktop_album_card.dart';
@@ -44,16 +41,18 @@ class _ArtistDetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
     final albums = artist.album ?? const <AlbumEntity>[];
 
     return CustomScrollView(
       slivers: [
         SliverAppBar(
           pinned: true,
+          floating: false,
+          snap: false,
           expandedHeight: 320,
           backgroundColor: theme.colorScheme.surface,
           flexibleSpace: FlexibleSpaceBar(
+            title: Text(artist.name ?? '-'),
             collapseMode: CollapseMode.pin,
             background: Stack(
               fit: StackFit.expand,
@@ -63,20 +62,20 @@ class _ArtistDetailContent extends StatelessWidget {
                   size: 1600,
                   fit: BoxFit.cover,
                 ),
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                  child: ColoredBox(
-                    color: theme.colorScheme.surface.withValues(alpha: 0.5),
-                  ),
-                ),
+                // BackdropFilter(
+                //   filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                //   child: ColoredBox(
+                //     color: theme.colorScheme.surface.withValues(alpha: 0.5),
+                //   ),
+                // ),
                 DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        theme.colorScheme.surface.withValues(alpha: 0.18),
-                        theme.colorScheme.surface.withValues(alpha: 0.82),
+                        theme.colorScheme.surface.withValues(alpha: 0.12),
+                        theme.colorScheme.surface.withValues(alpha: 0.02),
                         theme.colorScheme.surface,
                       ],
                     ),
@@ -88,49 +87,32 @@ class _ArtistDetailContent extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        _ArtistArtwork(coverArtId: artist.coverArt),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                l10n.artist,
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                  letterSpacing: 1.1,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                artist.name ?? '-',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.headlineLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: theme.colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Wrap(
-                                spacing: 16,
-                                runSpacing: 8,
-                                children: [
-                                  _MetricChip(
-                                    label:
-                                        '${albums.length} ${l10n.album.toLowerCase()}',
-                                  ),
-                                  if (artist.albumCount != null)
-                                    _MetricChip(
-                                      label:
-                                          '${artist.albumCount} ${l10n.albumCount}',
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        // _ArtistArtwork(coverArtId: artist.coverArt),
+                        // const SizedBox(width: 24),
+                        // Expanded(
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     mainAxisAlignment: MainAxisAlignment.end,
+                        //     children: [
+                        //       const SizedBox(height: 16),
+                        //       Wrap(
+                        //         spacing: 16,
+                        //         runSpacing: 8,
+                        //         children: [
+                        //           _MetricChip(
+                        //             label:
+                        //                 '${albums.length} ${l10n.album.toLowerCase()}',
+                        //           ),
+                        //           if (artist.albumCount != null)
+                        //             _MetricChip(
+                        //               label:
+                        //                   '${artist.albumCount} ${l10n.albumCount}',
+                        //             ),
+                        //         ],
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -160,73 +142,6 @@ class _ArtistDetailContent extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class _ArtistArtwork extends StatelessWidget {
-  const _ArtistArtwork({required this.coverArtId});
-
-  final String? coverArtId;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      width: 180,
-      height: 180,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: 0.24),
-            blurRadius: 32,
-            offset: const Offset(0, 16),
-          ),
-        ],
-      ),
-      child: coverArtId == null
-          ? ColoredBox(
-              color: theme.colorScheme.surfaceContainerHighest,
-              child: Icon(
-                Icons.person_rounded,
-                size: 72,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-              ),
-            )
-          : ArtworkImage(
-              id: coverArtId,
-              size: 800,
-              fit: BoxFit.cover,
-            ),
-    );
-  }
-}
-
-class _MetricChip extends StatelessWidget {
-  const _MetricChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.88),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelLarge?.copyWith(
-          color: theme.colorScheme.onSurface,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
     );
   }
 }
