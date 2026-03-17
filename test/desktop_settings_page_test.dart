@@ -122,6 +122,7 @@ void main() {
 
     await tester.pumpAndSettle();
     expect(find.byType(ListView), findsWidgets);
+    expect(find.byIcon(Icons.logout_rounded), findsOneWidget);
   });
 
   testWidgets('DesktopSettingsPage renders desktop lyrics tab content', (

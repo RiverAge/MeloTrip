@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
+import 'package:melo_trip/pages/shared/initial/initial_page.dart';
+import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
@@ -103,6 +106,15 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                                 ),
                               )
                             : null,
+                      ),
+                      SettingRow(
+                        label: l10n.logout,
+                        onTap: _showLogoutConfirmDialog,
+                        trailing: Icon(
+                          Icons.logout_rounded,
+                          size: 20,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     ],
                   ),
@@ -288,6 +300,50 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     if (error != null) {
       messenger.showSnackBar(SnackBar(content: Text(l10n.updateFailed(error))));
     }
+  }
+
+  void _showLogoutConfirmDialog() {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.logout),
+          content: Text(l10n.logoutDialogConfirm),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+                await _logout();
+              },
+              child: Text(l10n.confirm),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _logout() async {
+    final NavigatorState navigator = Navigator.of(context, rootNavigator: true);
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    if (player != null) {
+      await player.pause();
+    }
+    await ref.read(logoutProvider.future);
+    if (!mounted) return;
+    navigator.pushAndRemoveUntil(
+      PageRouteBuilder<void>(
+        pageBuilder: (BuildContext context, _, _) => const InitialPage(),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+      (Route<Object?> route) => false,
+    );
   }
 
   WindowsUpdaterStrings _buildWindowsUpdaterStrings(
