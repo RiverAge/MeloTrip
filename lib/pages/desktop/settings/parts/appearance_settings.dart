@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
+import 'package:melo_trip/pages/shared/settings/theme_seed_options.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
 
 class AppearanceSettings extends ConsumerWidget {
@@ -11,6 +13,9 @@ class AppearanceSettings extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final userConfig = ref.watch(userConfigProvider).value;
+    final AppThemeSeed selectedSeed =
+        userConfig?.themeSeed ?? AppThemeSeed.rose;
+    final List<ThemeSeedOption> themeSeeds = buildThemeSeedOptions(l10n);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
@@ -47,8 +52,36 @@ class AppearanceSettings extends ConsumerWidget {
                           ),
                         ],
                         onChanged: (ThemeMode value) {
-                          ref.read(userConfigProvider.notifier).setConfiguration(
+                          ref
+                              .read(userConfigProvider.notifier)
+                              .setConfiguration(
                                 theme: ValueUpdater<ThemeMode?>(value),
+                              );
+                        },
+                      ),
+                      SettingColorRow(
+                        label: l10n.themeColor,
+                        value: selectedSeed.color.toARGB32(),
+                        palette: themeSeeds
+                            .map(
+                              (ThemeSeedOption option) =>
+                                  option.seed.color.toARGB32(),
+                            )
+                            .toList(growable: false),
+                        onChanged: (int colorValue) {
+                          final AppThemeSeed nextSeed = themeSeeds
+                              .firstWhere(
+                                (ThemeSeedOption option) =>
+                                    option.seed.color.toARGB32() == colorValue,
+                                orElse: () => themeSeeds.first,
+                              )
+                              .seed;
+                          ref
+                              .read(userConfigProvider.notifier)
+                              .setConfiguration(
+                                themeSeed: ValueUpdater<AppThemeSeed?>(
+                                  nextSeed,
+                                ),
                               );
                         },
                       ),

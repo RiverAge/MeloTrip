@@ -459,6 +459,60 @@ abstract class AppLocalizations {
   /// **'Light'**
   String get themeLight;
 
+  /// Theme color selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Theme color'**
+  String get themeColor;
+
+  /// Rose theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get themeColorRose;
+
+  /// Ocean blue theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean'**
+  String get themeColorOcean;
+
+  /// Emerald green theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Emerald'**
+  String get themeColorEmerald;
+
+  /// Amber orange theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Amber'**
+  String get themeColorAmber;
+
+  /// Violet theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get themeColorViolet;
+
+  /// Teal theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get themeColorTeal;
+
+  /// Slate blue-gray theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Slate'**
+  String get themeColorSlate;
+
+  /// Coral red theme color option
+  ///
+  /// In en, this message translates to:
+  /// **'Coral'**
+  String get themeColorCoral;
+
   /// Duration of song meta data
   ///
   /// In en, this message translates to:

@@ -18,6 +18,7 @@ _Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
       recentSearches: json['recent_searches'] as String?,
       desktopLyricsConfig: json['desktop_lyrics_config'] as String?,
       theme: $enumDecodeNullable(_$ThemeModeEnumMap, json['theme']),
+      themeSeed: $enumDecodeNullable(_$AppThemeSeedEnumMap, json['theme_seed']),
       locale: const LocaleConvert().fromJson(json['locale'] as String?),
       updateAt: (json['update_at'] as num?)?.toInt(),
     );
@@ -31,6 +32,7 @@ Map<String, dynamic> _$ConfigurationToJson(_Configuration instance) =>
       'recent_searches': instance.recentSearches,
       'desktop_lyrics_config': instance.desktopLyricsConfig,
       'theme': _$ThemeModeEnumMap[instance.theme],
+      'theme_seed': _$AppThemeSeedEnumMap[instance.themeSeed],
       'locale': const LocaleConvert().toJson(instance.locale),
       'update_at': instance.updateAt,
     };
@@ -45,4 +47,15 @@ const _$ThemeModeEnumMap = {
   ThemeMode.system: 'system',
   ThemeMode.light: 'light',
   ThemeMode.dark: 'dark',
+};
+
+const _$AppThemeSeedEnumMap = {
+  AppThemeSeed.rose: 'rose',
+  AppThemeSeed.ocean: 'ocean',
+  AppThemeSeed.emerald: 'emerald',
+  AppThemeSeed.amber: 'amber',
+  AppThemeSeed.violet: 'violet',
+  AppThemeSeed.teal: 'teal',
+  AppThemeSeed.slate: 'slate',
+  AppThemeSeed.coral: 'coral',
 };

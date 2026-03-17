@@ -276,6 +276,42 @@
    "@themeLight": {
      "description": "Light theme option for app"
    },
+   "themeColor": "Theme color",
+   "@themeColor": {
+     "description": "Theme color selection label"
+   },
+   "themeColorRose": "Rose",
+   "@themeColorRose": {
+     "description": "Rose theme color option"
+   },
+   "themeColorOcean": "Ocean",
+   "@themeColorOcean": {
+     "description": "Ocean blue theme color option"
+   },
+   "themeColorEmerald": "Emerald",
+   "@themeColorEmerald": {
+     "description": "Emerald green theme color option"
+   },
+   "themeColorAmber": "Amber",
+   "@themeColorAmber": {
+     "description": "Amber orange theme color option"
+   },
+   "themeColorViolet": "Violet",
+   "@themeColorViolet": {
+     "description": "Violet theme color option"
+   },
+   "themeColorTeal": "Teal",
+   "@themeColorTeal": {
+     "description": "Teal theme color option"
+   },
+   "themeColorSlate": "Slate",
+   "@themeColorSlate": {
+     "description": "Slate blue-gray theme color option"
+   },
+   "themeColorCoral": "Coral",
+   "@themeColorCoral": {
+     "description": "Coral red theme color option"
+   },
 
    "songMetaDuration": "Duration",
    "@songMetaDuration": {

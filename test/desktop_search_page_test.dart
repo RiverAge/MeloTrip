@@ -9,6 +9,7 @@ import 'package:melo_trip/model/response/search_result/search_result3.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
+import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/pages/desktop/search/search_page.dart';
 import 'package:melo_trip/provider/search/search.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
@@ -21,6 +22,7 @@ class _FakeUserConfig extends UserConfig {
   @override
   Future<void> setConfiguration({
     ValueUpdater<ThemeMode?>? theme,
+    ValueUpdater<AppThemeSeed?>? themeSeed,
     ValueUpdater<String?>? maxRate,
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<bool?>? shuffle,
@@ -36,6 +38,7 @@ class _FakeUserConfig extends UserConfig {
       Configuration(
         recentSearches: nextRecentSearches,
         theme: theme?.value,
+        themeSeed: themeSeed?.value,
         maxRate: maxRate?.value,
         playlistMode: playlistMode?.value,
         shuffle: shuffle?.value,

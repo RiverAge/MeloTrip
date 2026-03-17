@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/app/player.dart';
@@ -91,6 +92,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       routeObserverProvider,
     );
     final config = ref.watch(userConfigProvider).asData?.value;
+    final Color seedColor = (config?.themeSeed ?? AppThemeSeed.rose).color;
 
     return MaterialApp(
       scaffoldMessengerKey: _scaffoldMessengerKey,
@@ -98,14 +100,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       navigatorObservers: [observer],
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFDB1D5D)),
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.light,
+          seedColor: seedColor,
+        ),
       ),
       themeMode: config?.theme,
       locale: config?.locale,
-      darkTheme: ThemeData.dark().copyWith(
+      darkTheme: ThemeData(
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
-          seedColor: const Color(0xFFDB1D5D),
+          seedColor: seedColor,
         ),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

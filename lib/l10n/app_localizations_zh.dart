@@ -191,6 +191,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeLight => '浅色';
 
   @override
+  String get themeColor => '主题颜色';
+
+  @override
+  String get themeColorRose => '玫瑰';
+
+  @override
+  String get themeColorOcean => '海洋蓝';
+
+  @override
+  String get themeColorEmerald => '翡翠绿';
+
+  @override
+  String get themeColorAmber => '琥珀';
+
+  @override
+  String get themeColorViolet => '紫罗兰';
+
+  @override
+  String get themeColorTeal => '青绿色';
+
+  @override
+  String get themeColorSlate => '石板蓝灰';
+
+  @override
+  String get themeColorCoral => '珊瑚红';
+
+  @override
   String get songMetaDuration => '时长';
 
   @override
@@ -867,6 +894,33 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get themeLight => '浅色';
+
+  @override
+  String get themeColor => '主题颜色';
+
+  @override
+  String get themeColorRose => '玫瑰';
+
+  @override
+  String get themeColorOcean => '海洋蓝';
+
+  @override
+  String get themeColorEmerald => '翡翠绿';
+
+  @override
+  String get themeColorAmber => '琥珀';
+
+  @override
+  String get themeColorViolet => '紫罗兰';
+
+  @override
+  String get themeColorTeal => '青绿色';
+
+  @override
+  String get themeColorSlate => '石板蓝灰';
+
+  @override
+  String get themeColorCoral => '珊瑚红';
 
   @override
   String get songMetaDuration => '时长';

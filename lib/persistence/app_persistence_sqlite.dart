@@ -28,6 +28,7 @@ class SqliteAppPersistence implements AppPersistence {
              recent_searches TEXT,
              desktop_lyrics_config TEXT,
              theme TEXT,
+             theme_seed TEXT,
              update_at INTEGER NOT NULL
            )
          ''';
@@ -65,7 +66,16 @@ class SqliteAppPersistence implements AppPersistence {
         }
       },
     );
+    await _ensureUserConfigSchema(database);
     return SqliteAppPersistence._(database);
+  }
+
+  static Future<void> _ensureUserConfigSchema(Database db) async {
+    final columns = await db.rawQuery('PRAGMA table_info(user_config)');
+    final hasThemeSeed = columns.any((row) => row['name'] == 'theme_seed');
+    if (!hasThemeSeed) {
+      await db.execute('ALTER TABLE user_config ADD COLUMN theme_seed TEXT');
+    }
   }
 
   @override

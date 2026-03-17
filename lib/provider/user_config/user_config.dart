@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
+import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/provider/persistence/persistence.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -31,6 +32,7 @@ class UserConfig extends _$UserConfig {
       maxRate: '32',
       playlistMode: .none,
       shuffle: false,
+      themeSeed: AppThemeSeed.rose,
       updateAt: DateTime.now().millisecondsSinceEpoch,
     );
     await persistence.saveUserConfig(configuration);
@@ -39,6 +41,7 @@ class UserConfig extends _$UserConfig {
 
   Future<void> setConfiguration({
     ValueUpdater<ThemeMode?>? theme,
+    ValueUpdater<AppThemeSeed?>? themeSeed,
     ValueUpdater<String?>? maxRate,
     ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<bool?>? shuffle,
@@ -78,6 +81,7 @@ class UserConfig extends _$UserConfig {
       desktopLyricsConfig:
           desktopLyricsConfig?.value ?? current.desktopLyricsConfig,
       theme: theme?.value ?? current.theme,
+      themeSeed: themeSeed?.value ?? current.themeSeed,
       locale: locale?.value ?? current.locale,
       updateAt: DateTime.now().millisecondsSinceEpoch,
     );

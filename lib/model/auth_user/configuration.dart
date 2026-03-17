@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/model/auth_user/theme_seed.dart';
 
 part 'configuration.freezed.dart';
 part 'configuration.g.dart';
@@ -15,6 +16,7 @@ abstract class Configuration with _$Configuration {
     @JsonKey(name: 'recent_searches') String? recentSearches,
     @JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig,
     ThemeMode? theme,
+    @JsonKey(name: 'theme_seed') AppThemeSeed? themeSeed,
     @LocaleConvert() Locale? locale,
     @JsonKey(name: 'update_at') int? updateAt,
   }) = _Configuration;

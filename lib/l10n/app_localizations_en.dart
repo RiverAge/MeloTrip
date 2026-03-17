@@ -191,6 +191,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeLight => 'Light';
 
   @override
+  String get themeColor => 'Theme color';
+
+  @override
+  String get themeColorRose => 'Rose';
+
+  @override
+  String get themeColorOcean => 'Ocean';
+
+  @override
+  String get themeColorEmerald => 'Emerald';
+
+  @override
+  String get themeColorAmber => 'Amber';
+
+  @override
+  String get themeColorViolet => 'Violet';
+
+  @override
+  String get themeColorTeal => 'Teal';
+
+  @override
+  String get themeColorSlate => 'Slate';
+
+  @override
+  String get themeColorCoral => 'Coral';
+
+  @override
   String get songMetaDuration => 'Duration';
 
   @override

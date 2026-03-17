@@ -86,10 +86,7 @@ class SettingSectionBody extends StatelessWidget {
     }
     return Padding(
       padding: padding,
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: sectionChildren,
-      ),
+      child: Column(crossAxisAlignment: .stretch, children: sectionChildren),
     );
   }
 }
@@ -125,10 +122,7 @@ class SettingRow extends StatelessWidget {
               crossAxisAlignment: .start,
               mainAxisSize: .min,
               children: <Widget>[
-                Text(
-                  label,
-                  style: theme.textTheme.titleSmall,
-                ),
+                Text(label, style: theme.textTheme.titleSmall),
                 if (description.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
@@ -218,76 +212,73 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
         children: <Widget>[
           Expanded(
             flex: 3,
-            child: Text(
-              widget.label,
-              style: theme.textTheme.titleSmall,
-            ),
+            child: Text(widget.label, style: theme.textTheme.titleSmall),
           ),
           const SizedBox(width: 24),
           Expanded(
             flex: 7,
             child: Row(
               children: <Widget>[
-              Expanded(
-                child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 4,
-                    overlayShape: const RoundSliderOverlayShape(
-                      overlayRadius: 14,
-                    ),
-                  ),
-                  child: Slider(
-                    value: _displayValue,
-                    min: widget.min,
-                    max: widget.max,
-                    onChangeStart: (_) {
-                      setState(() {
-                        _isDragging = true;
-                      });
-                    },
-                    onChangeEnd: (_) {
-                      final ValueChanged<double>? onSubmitted =
-                          widget.onSubmitted;
-                      setState(() {
-                        _isDragging = false;
-                      });
-                      if (onSubmitted != null) {
-                        onSubmitted(_displayValue);
-                      }
-                    },
-                    onChanged: (double value) {
-                      setState(() {
-                        _displayValue = value;
-                      });
-                      widget.onPreviewChanged?.call(value);
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 14),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.55,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 8,
-                  ),
-                  child: Text(
-                    _displayValue.toStringAsFixed(2),
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.92,
+                Expanded(
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      trackHeight: 4,
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 14,
                       ),
-                      fontWeight: .w600,
+                    ),
+                    child: Slider(
+                      value: _displayValue,
+                      min: widget.min,
+                      max: widget.max,
+                      onChangeStart: (_) {
+                        setState(() {
+                          _isDragging = true;
+                        });
+                      },
+                      onChangeEnd: (_) {
+                        final ValueChanged<double>? onSubmitted =
+                            widget.onSubmitted;
+                        setState(() {
+                          _isDragging = false;
+                        });
+                        if (onSubmitted != null) {
+                          onSubmitted(_displayValue);
+                        }
+                      },
+                      onChanged: (double value) {
+                        setState(() {
+                          _displayValue = value;
+                        });
+                        widget.onPreviewChanged?.call(value);
+                      },
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 14),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.55,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    child: Text(
+                      _displayValue.toStringAsFixed(2),
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.92,
+                        ),
+                        fontWeight: .w600,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -334,32 +325,37 @@ class SettingColorRow extends StatelessWidget {
             flex: 7,
             child: Wrap(
               alignment: WrapAlignment.end,
-              spacing: 8,
-              runSpacing: 8,
+              spacing: 10,
+              runSpacing: 10,
               children: palette.map((int color) {
                 final bool active = color == value;
+                final Color swatchColor = Color(color);
                 return InkWell(
                   onTap: () => onChanged(color),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(6),
                   child: Container(
-                    width: 32,
-                    height: 32,
+                    width: 28,
+                    height: 28,
                     decoration: BoxDecoration(
-                      color: Color(color),
+                      color: active
+                          ? swatchColor
+                          : swatchColor.withValues(alpha: 0.82),
                       border: Border.all(
                         color: active
                             ? theme.colorScheme.primary
                             : theme.colorScheme.outlineVariant.withValues(
-                                alpha: 0.7,
+                                alpha: 0.45,
                               ),
-                        width: active ? 2.5 : 1.2,
+                        width: active ? 2.0 : 1.0,
                       ),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(6),
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                          color: theme.shadowColor.withValues(alpha: 0.08),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
+                          color: theme.shadowColor.withValues(
+                            alpha: active ? 0.08 : 0.04,
+                          ),
+                          blurRadius: active ? 8 : 5,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -412,10 +408,7 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
         children: <Widget>[
           Expanded(
             flex: 3,
-            child: Text(
-              label,
-              style: theme.textTheme.titleSmall,
-            ),
+            child: Text(label, style: theme.textTheme.titleSmall),
           ),
           const SizedBox(width: 24),
           Expanded(
@@ -434,9 +427,13 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
                   final bool selected = option.value == value;
                   final Color borderColor = selected
                       ? theme.colorScheme.primary
-                      : theme.colorScheme.outlineVariant.withValues(alpha: 0.72);
+                      : theme.colorScheme.outlineVariant.withValues(
+                          alpha: 0.72,
+                        );
                   final Color backgroundColor = selected
-                      ? theme.colorScheme.primaryContainer.withValues(alpha: 0.7)
+                      ? theme.colorScheme.primaryContainer.withValues(
+                          alpha: 0.7,
+                        )
                       : theme.colorScheme.surfaceContainerLow.withValues(
                           alpha: 0.9,
                         );
