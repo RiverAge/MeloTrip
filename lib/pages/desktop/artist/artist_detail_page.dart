@@ -131,7 +131,10 @@ class _ArtistDetailContent extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
             sliver: SliverGrid(
               delegate: SliverChildBuilderDelegate((context, index) {
-                return DesktopAlbumCard(album: albums[index]);
+                return DesktopAlbumCard(
+                  album: albums[index],
+                  showReleaseDate: true,
+                );
               }, childCount: albums.length),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 5,

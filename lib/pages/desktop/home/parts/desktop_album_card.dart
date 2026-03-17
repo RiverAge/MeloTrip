@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/album/album.dart';
@@ -6,13 +8,19 @@ import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/favorite/favorite.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/rating.dart';
 
 class DesktopAlbumCard extends ConsumerStatefulWidget {
-  const DesktopAlbumCard({super.key, required this.album});
+  const DesktopAlbumCard({
+    super.key,
+    required this.album,
+    this.showReleaseDate = false,
+  });
 
   final AlbumEntity album;
+  final bool showReleaseDate;
 
   @override
   ConsumerState<DesktopAlbumCard> createState() => _DesktopAlbumCardState();
@@ -22,6 +30,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     with SingleTickerProviderStateMixin {
   bool _isHovering = false;
   int? _optimisticRating;
+  bool? _optimisticStarred;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -52,6 +61,9 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     if (oldWidget.album.userRating != widget.album.userRating) {
       _optimisticRating = null;
     }
+    if (oldWidget.album.starred != widget.album.starred) {
+      _optimisticStarred = null;
+    }
   }
 
   void _onHover(bool hovering) {
@@ -78,6 +90,64 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     }
   }
 
+  Future<void> _toggleFavorite() async {
+    final albumId = widget.album.id;
+    if (albumId == null) return;
+
+    final currentlyStarred = _optimisticStarred ?? widget.album.starred != null;
+    setState(() {
+      _optimisticStarred = !currentlyStarred;
+    });
+
+    final result = await ref
+        .read(albumDetailProvider(albumId).notifier)
+        .toggleFavorite(currentlyStarred: currentlyStarred);
+
+    if (!mounted) return;
+    if (result?.subsonicResponse?.status != 'ok') {
+      setState(() {
+        _optimisticStarred = currentlyStarred;
+      });
+      return;
+    }
+
+    ref.invalidate(favoriteProvider);
+    ref.invalidate(albumDetailProvider(albumId));
+  }
+
+  Future<void> _playAlbumShuffled() async {
+    final albumId = widget.album.id;
+    if (albumId == null) return;
+
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    if (player == null) return;
+
+    final data = await ref.read(albumDetailProvider(albumId).future);
+    final songs = data?.subsonicResponse?.album?.song ?? [];
+    if (songs.isEmpty) return;
+
+    final shuffledSongs = List.of(songs)..shuffle(Random());
+    await player.setPlaylist(
+      songs: shuffledSongs,
+      initialId: shuffledSongs.firstOrNull?.id,
+    );
+    await player.play();
+  }
+
+  Future<void> _addAlbumToQueue() async {
+    final albumId = widget.album.id;
+    if (albumId == null) return;
+
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    if (player == null) return;
+
+    final data = await ref.read(albumDetailProvider(albumId).future);
+    final songs = data?.subsonicResponse?.album?.song ?? [];
+    for (final song in songs) {
+      await player.insertToEnd(song);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -92,8 +162,9 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     );
     final mainButtonForeground = Colors.black.withValues(alpha: .9);
     final secondaryButtonBackground = Colors.white.withValues(alpha: .24);
-    final isStarred = widget.album.starred != null;
+    final isStarred = _optimisticStarred ?? widget.album.starred != null;
     final rating = _optimisticRating ?? widget.album.userRating ?? 0;
+    final releaseYear = _buildReleaseYear();
 
     return MouseRegion(
       onEnter: (_) => _onHover(true),
@@ -153,7 +224,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                               mainAxisAlignment: .spaceBetween,
                               children: [
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: _toggleFavorite,
                                   icon: Icon(
                                     isStarred
                                         ? Icons.favorite_rounded
@@ -202,7 +273,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                               mainAxisAlignment: .center,
                               children: [
                                 _ActionCircle(
-                                  onPressed: () {},
+                                  onPressed: _playAlbumShuffled,
                                   icon: Icons.shuffle_rounded,
                                   size: 28,
                                   background: secondaryButtonBackground,
@@ -218,7 +289,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                 ),
                                 const SizedBox(width: 12),
                                 _ActionCircle(
-                                  onPressed: () {},
+                                  onPressed: _addAlbumToQueue,
                                   icon: Icons.skip_next_rounded,
                                   size: 28,
                                   background: secondaryButtonBackground,
@@ -261,19 +332,62 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
               ),
             ),
             const SizedBox(height: 2),
-            Text(
-              widget.album.artist ?? '-',
-              maxLines: 1,
-              overflow: .ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .6),
-                fontSize: 12,
+            if (widget.showReleaseDate)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.album.artist ?? '-',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: .6,
+                        ),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  if (releaseYear != null && releaseYear.isNotEmpty) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      releaseYear,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: .6,
+                        ),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ],
+              )
+            else
+              Text(
+                widget.album.artist ?? '-',
+                maxLines: 1,
+                overflow: .ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: .6,
+                  ),
+                  fontSize: 12,
+                ),
               ),
-            ),
           ],
         ),
       ),
     );
+  }
+
+  String? _buildReleaseYear() {
+    final releaseDate = widget.album.releaseDate;
+    return switch (releaseDate) {
+      ReleaseDate(:final year?) => '$year',
+      _ => widget.album.year?.toString(),
+    };
   }
 }
 

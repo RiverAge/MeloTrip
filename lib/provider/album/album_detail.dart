@@ -12,7 +12,7 @@ class AlbumDetail extends _$AlbumDetail {
     return ref.read(albumDetailRepositoryProvider).fetchAlbumDetail(albumId);
   }
 
-  Future<SubsonicResponse?> toggleFavorite() async {
+  Future<SubsonicResponse?> toggleFavorite({bool? currentlyStarred}) async {
     final id = albumId;
     if (id == null) return null;
 
@@ -23,11 +23,11 @@ class AlbumDetail extends _$AlbumDetail {
       _ => null,
     };
 
-    final starred = current?.subsonicResponse?.album?.starred;
+    final starred = currentlyStarred ?? current?.subsonicResponse?.album?.starred != null;
 
     final result = await repository.toggleFavorite(
       albumId: id,
-      isStarred: starred != null,
+      isStarred: starred,
     );
 
     if (!ref.mounted) return result;

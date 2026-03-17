@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/provider/artist/artist_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
@@ -101,7 +102,7 @@ class ArtistDetailPage extends StatelessWidget {
                                     style: const TextStyle(fontWeight: .bold),
                                   ),
                                   Text(
-                                    '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${item.year != null ? ' ${item.year}' : ''}',
+                                    '${item.songCount}${AppLocalizations.of(context)!.songCountUnit} ${_albumReleaseDateText(item)}',
                                     overflow: .ellipsis,
                                     style: const TextStyle(fontSize: 10),
                                   ),
@@ -191,4 +192,24 @@ class ArtistDetailPage extends StatelessWidget {
       },
     );
   }
+}
+
+String _albumReleaseDateText(AlbumEntity album) {
+  final releaseDate = album.releaseDate;
+  final year = releaseDate?.year;
+  final month = releaseDate?.month;
+  final day = releaseDate?.day;
+  if (year != null && month != null && day != null) {
+    return '$year-$month-$day';
+  }
+  if (year != null && month != null) {
+    return '$year-$month';
+  }
+  if (year != null) {
+    return '$year';
+  }
+  if (album.year != null) {
+    return '${album.year}';
+  }
+  return '';
 }

@@ -168,7 +168,7 @@ class _ArtistCardState extends State<ArtistCard> {
                     ),
                     if (artist.albumCount != null)
                       Text(
-                        '',
+                        '${artist.albumCount} ${AppLocalizations.of(context)!.album}',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant.withValues(
                             alpha: _isHovered ? 0.82 : 0.6,
