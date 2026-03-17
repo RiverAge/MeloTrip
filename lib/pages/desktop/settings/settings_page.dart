@@ -34,9 +34,9 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
 
     return DefaultTabController(
       length: tabTitles.length,
-      child: Scaffold(
-        backgroundColor: theme.colorScheme.surface,
-        body: DecoratedBox(
+      child: Material(
+        color: theme.colorScheme.surface,
+        child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,

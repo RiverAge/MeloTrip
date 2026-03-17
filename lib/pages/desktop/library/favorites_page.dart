@@ -35,10 +35,11 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
+    return Material(
+      color: theme.colorScheme.surface.withValues(alpha: 0),
+      child: Column(
         crossAxisAlignment: .start,
         children: <Widget>[
           _PageHeader(

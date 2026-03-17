@@ -17,9 +17,9 @@ class DesktopArtistDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: AsyncValueBuilder(
+    return Material(
+      color: theme.colorScheme.surface,
+      child: AsyncValueBuilder(
         provider: artistDetailProvider(artistId),
         builder: (context, data, ref) {
           final artist = data.subsonicResponse?.artist;

@@ -64,9 +64,9 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
       color: headerColor,
     );
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
-      body: Column(
+    return Material(
+      color: theme.colorScheme.surface.withValues(alpha: 0),
+      child: Column(
         crossAxisAlignment: .start,
         children: [
           SongPageHeader(

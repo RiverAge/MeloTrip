@@ -27,9 +27,9 @@ class DesktopAlbumDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: AsyncValueBuilder(
+    return Material(
+      color: theme.colorScheme.surface,
+      child: AsyncValueBuilder(
         provider: albumDetailProvider(albumId),
         builder: (context, data, ref) {
           final AlbumEntity? album = data.subsonicResponse?.album;

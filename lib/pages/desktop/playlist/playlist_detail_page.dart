@@ -22,9 +22,9 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
-      body: AsyncValueBuilder(
+    return Material(
+      color: theme.colorScheme.surface.withValues(alpha: 0),
+      child: AsyncValueBuilder(
         provider: playlistDetailProvider(playlistId),
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),

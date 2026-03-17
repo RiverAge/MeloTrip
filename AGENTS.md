@@ -11,6 +11,7 @@
 - After code changes, run `flutter analyze` by default. Run `flutter test` when feasible.
 - On Windows, Codex must execute native commands directly such as `flutter analyze` or `gh run list`. Do not wrap them in `powershell -Command` or `cmd /c`.
 - Pages and widgets must not import `package:melo_trip/repository/...` directly. Go through providers unless there is a strong reason not to.
+- Treat all rules in this document as strict priorities: follow them to the maximum extent possible. Only use an alternative implementation when no viable compliant solution exists, and document the reason in the handoff.
 - Git commit messages must be written in English and follow:
   - `<type>(<platform>): <summary> [agent:<free-text>]`
   - `agent` is required but must remain free-text (do not enforce a fixed allowlist).
@@ -47,6 +48,8 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - **Prioritize Global Theme**: Always use predefined `textTheme` styles. Avoid `copyWith` with hardcoded `fontWeight` or `fontSize`. If a label looks "wrong," try another standard style (e.g., `labelLarge` vs `titleSmall`) before creating a custom one.
 - **Hierarchy via Contrast**: Use font weight, scale, and color opacity (e.g., `onSurfaceVariant` with alpha) to distinguish primary/secondary info. Remove explicit dividers, lines, and complex backgrounds.
 - **Desktop Focus**: Maintain tight and purposeful spacing (e.g., using `EdgeInsets.fromLTRB` for fine-tuning). Avoid excessive "web-like" whitespace.
+- **Material-First Components**: Prefer built-in Material widgets (e.g., `ListTile`, `Card`, `FilledButton`, `OutlinedButton`, `TabBar`, `Dialog`, `NavigationRail`) before custom `Container` + `InkWell` compositions.
+- **Custom UI as Last Resort**: Only use manual composition when built-in Material components cannot meet the requirement without unacceptable tradeoffs. Note the reason in handoff when taking this path.
 
 ### Dart Conventions
 

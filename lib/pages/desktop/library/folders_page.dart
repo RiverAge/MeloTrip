@@ -18,10 +18,11 @@ class DesktopFoldersPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
+    return Material(
+      color: theme.colorScheme.surface.withValues(alpha: 0),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _PageHeader(l10n: l10n),

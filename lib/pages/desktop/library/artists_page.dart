@@ -48,11 +48,11 @@ class _DesktopArtistsPageState extends ConsumerState<DesktopArtistsPage> {
         .take(state.offset)
         .toList(growable: false);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(
+    return Material(
+      color: Theme.of(context).colorScheme.surface.withValues(
         alpha: 0,
       ),
-      body: Column(
+      child: Column(
         crossAxisAlignment: .start,
         children: [
           ArtistPageHeader(
