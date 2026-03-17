@@ -56,7 +56,10 @@ class ArtistTableView extends StatelessWidget {
                   child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                 );
               }
-              return ArtistTableRow(artist: artists[index]);
+              return ArtistTableRow(
+                key: ValueKey<String>(artists[index].id),
+                artist: artists[index],
+              );
             },
           ),
         ),

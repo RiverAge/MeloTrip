@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'artists.g.dart';
 
-const int kArtistPageSize = 60;
+const int kArtistPageSize = 24;
 
 class ArtistIndexEntry {
   const ArtistIndexEntry({

@@ -33,7 +33,10 @@ class ArtistGrid extends StatelessWidget {
             ),
           );
         }
-        return ArtistCard(artist: artists[index]);
+        return ArtistCard(
+          key: ValueKey<String>(artists[index].id),
+          artist: artists[index],
+        );
       },
     );
   }
