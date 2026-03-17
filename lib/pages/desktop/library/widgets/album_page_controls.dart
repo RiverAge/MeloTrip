@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
 
 class AlbumPageHeader extends StatelessWidget {
@@ -140,38 +139,6 @@ class _ViewItem extends StatelessWidget {
               ? theme.colorScheme.primary
               : theme.colorScheme.onSurfaceVariant,
         ),
-      ),
-    );
-  }
-}
-
-class AlbumToolbar extends StatelessWidget {
-  const AlbumToolbar({super.key, required this.l10n});
-
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final iconColor = theme.colorScheme.onSurfaceVariant;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        children: [
-          Text(
-            l10n.name,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: iconColor,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Icon(Icons.sort_by_alpha_rounded, size: 18, color: iconColor),
-          const SizedBox(width: 16),
-          Icon(Icons.filter_list_rounded, size: 18, color: iconColor),
-          const SizedBox(width: 16),
-          Icon(Icons.refresh_rounded, size: 18, color: iconColor),
-        ],
       ),
     );
   }

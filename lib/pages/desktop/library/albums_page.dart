@@ -66,7 +66,6 @@ class _DesktopAlbumsPageState extends ConsumerState<DesktopAlbumsPage> {
             viewType: _viewType,
             onViewTypeChanged: (type) => setState(() => _viewType = type),
           ),
-          AlbumToolbar(l10n: l10n),
           Expanded(
             child: albumState.items.isEmpty && albumState.isLoading
                 ? const Center(child: CircularProgressIndicator())
