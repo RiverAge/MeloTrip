@@ -100,8 +100,8 @@ class _SongControls extends StatelessWidget {
                     onAddToPlaylist: () =>
                         navigation.openAddToPlaylist(context, song),
                     onToggleFavorite: () => ref
-                        .read(songFavoriteProvider.notifier)
-                        .toggleFavoriteResult(song),
+                        .read(songDetailProvider(song.id).notifier)
+                        .toggleFavoriteResult(),
                   ),
                   _SongMeta(
                     song: song,

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/artist/artist_detail.dart';
@@ -86,18 +85,16 @@ void main() {
 
     final playlistsNotifier = container.read(playlistActionsProvider.notifier);
     expect(await playlistsNotifier.createPlaylist(null), isNull);
-    expect(await playlistsNotifier.deletePlaytlist(null), isNull);
 
     final detail = await container.read(playlistDetailResultProvider('p1').future);
     expect(detail?.data?.subsonicResponse?.status, 'ok');
-
     expect(
-      await container.read(playlistUpdateProvider.notifier).build(),
+      await container.read(playlistDetailResultProvider(null).notifier).deleteResult(),
       isNull,
     );
   });
 
-  test('playlistUpdateProvider supports songIdToAdd branch', () async {
+  test('playlistDetailResultProvider supports songIdToAdd branch', () async {
     final adapter = RecordingRouteAdapter((options) {
       if (options.path != '/rest/updatePlaylist') return null;
       expect(options.queryParameters['playlistId'], 'p1');
@@ -112,30 +109,27 @@ void main() {
     );
     addTearDown(container.dispose);
     final subscription = container.listen(
-      playlistUpdateProvider,
+      playlistDetailResultProvider('p1'),
       (_, _) {},
       fireImmediately: true,
     );
     addTearDown(subscription.close);
 
     final result = await container
-        .read(playlistUpdateProvider.notifier)
-        .modifyResult(playlistId: 'p1', songIdToAdd: 's1');
+        .read(playlistDetailResultProvider('p1').notifier)
+        .modifyResult(songIdToAdd: 's1');
 
-    expect(result.isOk, isTrue);
+    expect(result?.isOk, isTrue);
   });
 
   test('song favorite null guards return null', () async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    final songFavorite = container.read(songFavoriteProvider.notifier);
-    final songRating = container.read(songRatingProvider.notifier);
+    final songDetail = container.read(songDetailProvider(null).notifier);
 
-    expect(await songFavorite.toggleFavoriteResult(null), isNull);
-    expect(await songFavorite.toggleFavoriteResult(const SongEntity()), isNull);
-    expect(await songRating.updateRatingResult(null, 5), isNull);
-    expect(await songRating.updateRatingResult('s1', null), isNull);
+    expect(await songDetail.toggleFavoriteResult(), isNull);
+    expect(await songDetail.updateRatingResult(5), isNull);
   });
 
   test('lyrics provider merges best source and skips latn lines', () async {

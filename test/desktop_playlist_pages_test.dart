@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -49,6 +50,15 @@ SongEntity _song({
   return SongEntity(id: id, title: title, duration: duration, artist: 'tester');
 }
 
+class _FakePlaylistDetailResult extends PlaylistDetailResult {
+  _FakePlaylistDetailResult(this._value);
+
+  final Result<SubsonicResponse, AppFailure> _value;
+
+  @override
+  Future<Result<SubsonicResponse, AppFailure>?> build(String? _) async => _value;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -94,14 +104,18 @@ void main() {
             ),
           ),
           playlistDetailResultProvider('pl-1').overrideWith(
-            (_) async => Result.ok(_playlistDetailResponse(
-              id: 'pl-1',
-              name: 'My Playlist 1',
-              songs: [
-                _song(id: 's1', title: 'Track 1', duration: 65),
-                _song(id: 's2', title: 'Track 2', duration: 125),
-              ],
-            )),
+            () => _FakePlaylistDetailResult(
+              Result.ok(
+                _playlistDetailResponse(
+                  id: 'pl-1',
+                  name: 'My Playlist 1',
+                  songs: [
+                    _song(id: 's1', title: 'Track 1', duration: 65),
+                    _song(id: 's2', title: 'Track 2', duration: 125),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
         child: MaterialApp(

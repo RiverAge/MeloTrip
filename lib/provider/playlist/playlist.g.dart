@@ -33,7 +33,7 @@ final class PlaylistActionsProvider
   PlaylistActions create() => PlaylistActions();
 }
 
-String _$playlistActionsHash() => r'e79a39719ea55c9892fe63b2f3908a7a4680599d';
+String _$playlistActionsHash() => r'80635744a0bfd3f09a08b74d731fbfaa1c33f2d3';
 
 abstract class _$PlaylistActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
@@ -46,51 +46,6 @@ abstract class _$PlaylistActions extends $AsyncNotifier<void> {
             as $ClassProviderElement<
               AnyNotifier<AsyncValue<void>, void>,
               AsyncValue<void>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(PlaylistUpdate)
-final playlistUpdateProvider = PlaylistUpdateProvider._();
-
-final class PlaylistUpdateProvider
-    extends $AsyncNotifierProvider<PlaylistUpdate, SubsonicResponse?> {
-  PlaylistUpdateProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'playlistUpdateProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$playlistUpdateHash();
-
-  @$internal
-  @override
-  PlaylistUpdate create() => PlaylistUpdate();
-}
-
-String _$playlistUpdateHash() => r'6823a5e395168c865c79266ddaedbd3843ab7986';
-
-abstract class _$PlaylistUpdate extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
               Object?,
               Object?
             >;
@@ -139,19 +94,15 @@ final class PlaylistsResultProvider
 
 String _$playlistsResultHash() => r'1b9b6c77f82de8ee9b53ea4ec2c649cc45bf6f42';
 
-@ProviderFor(playlistDetailResult)
+@ProviderFor(PlaylistDetailResult)
 final playlistDetailResultProvider = PlaylistDetailResultFamily._();
 
 final class PlaylistDetailResultProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
-          Result<SubsonicResponse, AppFailure>?,
-          FutureOr<Result<SubsonicResponse, AppFailure>?>
-        >
-    with
-        $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
-        $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
+        $AsyncNotifierProvider<
+          PlaylistDetailResult,
+          Result<SubsonicResponse, AppFailure>?
+        > {
   PlaylistDetailResultProvider._({
     required PlaylistDetailResultFamily super.from,
     required String? super.argument,
@@ -175,15 +126,7 @@ final class PlaylistDetailResultProvider
 
   @$internal
   @override
-  $FutureProviderElement<Result<SubsonicResponse, AppFailure>?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
-    final argument = this.argument as String?;
-    return playlistDetailResult(ref, argument);
-  }
+  PlaylistDetailResult create() => PlaylistDetailResult();
 
   @override
   bool operator ==(Object other) {
@@ -197,11 +140,14 @@ final class PlaylistDetailResultProvider
 }
 
 String _$playlistDetailResultHash() =>
-    r'3dae4e6f6539ccc151a466dfc2ea4e0a155dd701';
+    r'e0dda4da19cbb82c8480e59029be2c0bb32f61cb';
 
 final class PlaylistDetailResultFamily extends $Family
     with
-        $FunctionalFamilyOverride<
+        $ClassFamilyOverride<
+          PlaylistDetailResult,
+          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+          Result<SubsonicResponse, AppFailure>?,
           FutureOr<Result<SubsonicResponse, AppFailure>?>,
           String?
         > {
@@ -219,4 +165,34 @@ final class PlaylistDetailResultFamily extends $Family
 
   @override
   String toString() => r'playlistDetailResultProvider';
+}
+
+abstract class _$PlaylistDetailResult
+    extends $AsyncNotifier<Result<SubsonicResponse, AppFailure>?> {
+  late final _$args = ref.$arg as String?;
+  String? get playlistId => _$args;
+
+  FutureOr<Result<SubsonicResponse, AppFailure>?> build(String? playlistId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+              Result<SubsonicResponse, AppFailure>?
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+                Result<SubsonicResponse, AppFailure>?
+              >,
+              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
 }

@@ -50,7 +50,7 @@ final class AlbumDetailProvider
   }
 }
 
-String _$albumDetailHash() => r'22b23a2ab54ac04ffffcda94d66173ca468264cf';
+String _$albumDetailHash() => r'04cfd2855006645ac761f89d648ecc4cdea9b307';
 
 final class AlbumDetailFamily extends $Family
     with
@@ -178,94 +178,4 @@ final class AlbumDetailResultFamily extends $Family
 
   @override
   String toString() => r'albumDetailResultProvider';
-}
-
-@ProviderFor(AlbumFavorite)
-final albumFavoriteProvider = AlbumFavoriteProvider._();
-
-final class AlbumFavoriteProvider
-    extends $AsyncNotifierProvider<AlbumFavorite, SubsonicResponse?> {
-  AlbumFavoriteProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'albumFavoriteProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$albumFavoriteHash();
-
-  @$internal
-  @override
-  AlbumFavorite create() => AlbumFavorite();
-}
-
-String _$albumFavoriteHash() => r'ba1cd629d21eabf254373328e1bfaebdf7a8d3c6';
-
-abstract class _$AlbumFavorite extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(AlbumRating)
-final albumRatingProvider = AlbumRatingProvider._();
-
-final class AlbumRatingProvider
-    extends $AsyncNotifierProvider<AlbumRating, SubsonicResponse?> {
-  AlbumRatingProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'albumRatingProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$albumRatingHash();
-
-  @$internal
-  @override
-  AlbumRating create() => AlbumRating();
-}
-
-String _$albumRatingHash() => r'd6a77bcc7a4900d28408cd3b2fed9eb88e52759f';
-
-abstract class _$AlbumRating extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
 }

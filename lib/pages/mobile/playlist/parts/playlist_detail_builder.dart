@@ -9,9 +9,8 @@ class _PlaylistDetailBuilder extends StatelessWidget {
     final playlistId = playlist.id;
     if (playlistId == null) return;
     ref
-        .read(playlistUpdateProvider.notifier)
+        .read(playlistDetailResultProvider(playlistId).notifier)
         .modifyResult(
-          playlistId: playlistId,
           songIndexToRemove: songIndexToRemove,
         );
   }

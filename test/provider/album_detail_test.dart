@@ -139,8 +139,8 @@ void main() {
     });
   });
 
-  group('albumFavoriteProvider', () {
-    test('returns null when albumId is null', () async {
+  group('albumDetailProvider toggleFavoriteResult', () {
+    test('returns null when family albumId is null', () async {
       final mockRepository = _MockAlbumDetailRepository(
         detailResult: okResponse,
         toggleResult: const Result.ok(okResponse),
@@ -153,8 +153,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumFavoriteProvider.notifier);
-      final result = await notifier.toggleFavoriteResult(albumId: null);
+      final notifier = container.read(albumDetailProvider(null).notifier);
+      final result = await notifier.toggleFavoriteResult();
 
       expect(result, isNull);
       expect(mockRepository.toggleCalled, isFalse);
@@ -173,8 +173,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumFavoriteProvider.notifier);
-      final result = await notifier.toggleFavoriteResult(albumId: '123');
+      final notifier = container.read(albumDetailProvider('123').notifier);
+      final result = await notifier.toggleFavoriteResult();
 
       expect(result?.isOk, isTrue);
       expect(mockRepository.toggleCalled, isTrue);
@@ -182,8 +182,8 @@ void main() {
     });
   });
 
-  group('albumRatingProvider', () {
-    test('returns null when albumId is null', () async {
+  group('albumDetailProvider setRatingResult', () {
+    test('returns null when family albumId is null', () async {
       final mockRepository = _MockAlbumDetailRepository(
         detailResult: okResponse,
         toggleResult: const Result.ok(okResponse),
@@ -196,8 +196,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumRatingProvider.notifier);
-      final result = await notifier.setRatingResult(albumId: null, rating: 5);
+      final notifier = container.read(albumDetailProvider(null).notifier);
+      final result = await notifier.setRatingResult(5);
 
       expect(result, isNull);
       expect(mockRepository.ratingCalled, isFalse);
@@ -216,8 +216,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumRatingProvider.notifier);
-      final result = await notifier.setRatingResult(albumId: '123', rating: null);
+      final notifier = container.read(albumDetailProvider('123').notifier);
+      final result = await notifier.setRatingResult(null);
 
       expect(result, isNull);
       expect(mockRepository.ratingCalled, isFalse);
@@ -236,8 +236,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(albumRatingProvider.notifier);
-      final result = await notifier.setRatingResult(albumId: '123', rating: 5);
+      final notifier = container.read(albumDetailProvider('123').notifier);
+      final result = await notifier.setRatingResult(5);
 
       expect(result?.isOk, isTrue);
       expect(mockRepository.ratingCalled, isTrue);

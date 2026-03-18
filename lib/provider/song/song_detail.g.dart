@@ -9,19 +9,11 @@ part of 'song_detail.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(songDetail)
+@ProviderFor(SongDetail)
 final songDetailProvider = SongDetailFamily._();
 
 final class SongDetailProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>
-        >
-    with
-        $FutureModifier<SubsonicResponse?>,
-        $FutureProvider<SubsonicResponse?> {
+    extends $AsyncNotifierProvider<SongDetail, SubsonicResponse?> {
   SongDetailProvider._({
     required SongDetailFamily super.from,
     required String? super.argument,
@@ -45,15 +37,7 @@ final class SongDetailProvider
 
   @$internal
   @override
-  $FutureProviderElement<SubsonicResponse?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<SubsonicResponse?> create(Ref ref) {
-    final argument = this.argument as String?;
-    return songDetail(ref, argument);
-  }
+  SongDetail create() => SongDetail();
 
   @override
   bool operator ==(Object other) {
@@ -66,10 +50,17 @@ final class SongDetailProvider
   }
 }
 
-String _$songDetailHash() => r'53603006eb5e37899f99463f2bd5a829ec0e27df';
+String _$songDetailHash() => r'0e988438de983fc489e5b3b6c100e9442aebd325';
 
 final class SongDetailFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {
+    with
+        $ClassFamilyOverride<
+          SongDetail,
+          AsyncValue<SubsonicResponse?>,
+          SubsonicResponse?,
+          FutureOr<SubsonicResponse?>,
+          String?
+        > {
   SongDetailFamily._()
     : super(
         retry: null,
@@ -84,6 +75,28 @@ final class SongDetailFamily extends $Family
 
   @override
   String toString() => r'songDetailProvider';
+}
+
+abstract class _$SongDetail extends $AsyncNotifier<SubsonicResponse?> {
+  late final _$args = ref.$arg as String?;
+  String? get songId => _$args;
+
+  FutureOr<SubsonicResponse?> build(String? songId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
+              AsyncValue<SubsonicResponse?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
 }
 
 @ProviderFor(songDetailResult)
@@ -165,94 +178,4 @@ final class SongDetailResultFamily extends $Family
 
   @override
   String toString() => r'songDetailResultProvider';
-}
-
-@ProviderFor(SongFavorite)
-final songFavoriteProvider = SongFavoriteProvider._();
-
-final class SongFavoriteProvider
-    extends $AsyncNotifierProvider<SongFavorite, SubsonicResponse?> {
-  SongFavoriteProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'songFavoriteProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$songFavoriteHash();
-
-  @$internal
-  @override
-  SongFavorite create() => SongFavorite();
-}
-
-String _$songFavoriteHash() => r'2600446ccc61b84b9b4c4743d33f06f1030597b4';
-
-abstract class _$SongFavorite extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(SongRating)
-final songRatingProvider = SongRatingProvider._();
-
-final class SongRatingProvider
-    extends $AsyncNotifierProvider<SongRating, SubsonicResponse?> {
-  SongRatingProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'songRatingProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$songRatingHash();
-
-  @$internal
-  @override
-  SongRating create() => SongRating();
-}
-
-String _$songRatingHash() => r'5006543fe9ab863bdf0522925c1be655cb381d36';
-
-abstract class _$SongRating extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
 }

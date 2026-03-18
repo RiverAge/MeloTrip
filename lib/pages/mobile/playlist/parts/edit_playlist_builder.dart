@@ -19,14 +19,13 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
     final playlistId = widget.playlist.id;
     if (playlistId == null) return;
     final result = await ref
-        .read(playlistUpdateProvider.notifier)
+        .read(playlistDetailResultProvider(playlistId).notifier)
         .modifyResult(
-          playlistId: playlistId,
           name: _nameController.text,
           comment: _commentController.text,
           public: _isPublic,
         );
-    if (result.isOk && mounted) {
+    if (result?.isOk == true && mounted) {
       Navigator.of(context).pop();
     }
   }
@@ -105,7 +104,7 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
                   children: [
                     Expanded(
                       child: AsyncValueBuilder(
-                        provider: playlistUpdateProvider,
+                        provider: playlistDetailResultProvider(widget.playlist.id),
                         loading: (context, _) => const ElevatedButton(
                           onPressed: null,
                           child: FixedCenterCircular(size: 15),

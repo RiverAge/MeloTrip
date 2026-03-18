@@ -100,11 +100,8 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     });
 
     final result = await ref
-        .read(albumFavoriteProvider.notifier)
-        .toggleFavoriteResult(
-          albumId: albumId,
-          currentlyStarred: currentlyStarred,
-        );
+        .read(albumDetailProvider(albumId).notifier)
+        .toggleFavoriteResult(currentlyStarred: currentlyStarred);
 
     if (!mounted) return;
     if (result == null || result.isErr) {
@@ -252,11 +249,12 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                         _optimisticRating = value;
                                       });
                                       final res = await ref
-                                          .read(albumRatingProvider.notifier)
-                                          .setRatingResult(
-                                            albumId: widget.album.id,
-                                            rating: value,
-                                          );
+                                          .read(
+                                            albumDetailProvider(
+                                              widget.album.id,
+                                            ).notifier,
+                                          )
+                                          .setRatingResult(value);
                                       if (!mounted) return;
                                       if (res == null || res.isErr) {
                                         setState(() {

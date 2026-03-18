@@ -166,7 +166,10 @@ void main() {
       expect(mockRepository.createCalled, isTrue);
     });
 
-    test('deletePlaytlist returns null when playlistId is null', () async {
+  });
+
+  group('playlistDetailResultProvider notifier', () {
+    test('deleteResult returns null when playlistId is null', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -175,14 +178,14 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistActionsProvider.notifier);
-      final result = await notifier.deletePlaytlist(null);
+      final notifier = container.read(playlistDetailResultProvider(null).notifier);
+      final result = await notifier.deleteResult();
 
       expect(result, isNull);
       expect(mockRepository.deleteCalled, isFalse);
     });
 
-    test('deletePlaytlist calls repository and refreshes', () async {
+    test('deleteResult calls repository and refreshes', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(status: 'ok'),
       );
@@ -194,16 +197,30 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistActionsProvider.notifier);
-      final result = await notifier.deletePlaytlist('123');
+      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final result = await notifier.deleteResult();
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);
       expect(mockRepository.deleteCalled, isTrue);
     });
-  });
 
-  group('playlistUpdateProvider', () {
+    test('modifyResult returns null when playlistId is null', () async {
+      final mockRepository = _MockPlaylistRepository(null);
+      final container = ProviderContainer(
+        overrides: [
+          playlistRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(playlistDetailResultProvider(null).notifier);
+      final result = await notifier.modifyResult();
+
+      expect(result, isNull);
+      expect(mockRepository.updateCalled, isFalse);
+    });
+
     test('modifyResult returns Result.err when update fails', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
@@ -213,11 +230,11 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistUpdateProvider.notifier);
-      final result = await notifier.modifyResult(playlistId: '123');
+      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final result = await notifier.modifyResult();
 
-      expect(result.isErr, isTrue);
-      expect(result.error, isA<AppFailure>());
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
       expect(mockRepository.updateCalled, isTrue);
     });
 
@@ -233,11 +250,11 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistUpdateProvider.notifier);
-      final result = await notifier.modifyResult(playlistId: '123');
+      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final result = await notifier.modifyResult();
 
       expect(result, isNotNull);
-      expect(result.data?.subsonicResponse?.status, equals('ok'));
+      expect(result?.data?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.updateCalled, isTrue);
     });
   });
@@ -272,11 +289,11 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistUpdateProvider.notifier);
-      final result = await notifier.modifyResult(playlistId: '123');
+      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final result = await notifier.modifyResult();
 
-      expect(result.isErr, isTrue);
-      expect(result.error, isA<AppFailure>());
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
     });
   });
 }

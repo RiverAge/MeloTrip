@@ -93,8 +93,8 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
     setState(() => _optimisticStarred = !original);
 
     final res = await ref
-        .read(songFavoriteProvider.notifier)
-        .toggleFavoriteResult(widget.song);
+        .read(songDetailProvider(widget.song.id).notifier)
+        .toggleFavoriteResult(currentlyStarred: original);
     if (!mounted) return;
     if (res == null || res.isErr) {
       setState(() => _optimisticStarred = original);

@@ -13,6 +13,71 @@ class AlbumDetail extends _$AlbumDetail {
     if (albumId == null) return null;
     return ref.read(albumDetailRepositoryProvider).fetchAlbumDetail(albumId);
   }
+
+  Future<Result<SubsonicResponse, AppFailure>?> toggleFavoriteResult({
+    bool? currentlyStarred,
+  }) async {
+    final id = albumId;
+    if (id == null) return null;
+
+    final current = switch (state) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    final starred = currentlyStarred ?? current?.subsonicResponse?.album?.starred != null;
+
+    final result = await ref.read(albumDetailRepositoryProvider).toggleFavoriteResult(
+      albumId: id,
+      isStarred: starred,
+    );
+
+    if (result.isOk) {
+      ref.invalidateSelf();
+      ref.invalidate(albumDetailResultProvider(id));
+    }
+
+    final previous = switch (state) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    if (!ref.mounted) {
+      return result;
+    }
+    state = result.when(
+      ok: AsyncData.new,
+      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+    );
+    return result;
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>?> setRatingResult(
+    int? rating,
+  ) async {
+    final id = albumId;
+    if (id == null || rating == null) return null;
+    final result = await ref.read(albumDetailRepositoryProvider).setRatingResult(
+      albumId: id,
+      rating: rating,
+    );
+
+    if (result.isOk) {
+      ref.invalidateSelf();
+      ref.invalidate(albumDetailResultProvider(id));
+    }
+
+    final previous = switch (state) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    if (!ref.mounted) {
+      return result;
+    }
+    state = result.when(
+      ok: AsyncData.new,
+      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+    );
+    return result;
+  }
 }
 
 @riverpod
@@ -23,77 +88,4 @@ Future<Result<SubsonicResponse, AppFailure>?> albumDetailResult(
   if (albumId == null) return null;
   final repository = ref.read(albumDetailRepositoryProvider);
   return repository.fetchAlbumDetailResult(albumId);
-}
-
-@riverpod
-class AlbumFavorite extends _$AlbumFavorite {
-  @override
-  Future<SubsonicResponse?> build() async => null;
-
-  Future<Result<SubsonicResponse, AppFailure>?> toggleFavoriteResult({
-    required String? albumId,
-    bool? currentlyStarred,
-  }) async {
-    if (albumId == null) return null;
-    final detail = await ref.read(albumDetailProvider(albumId).future);
-    final starred = currentlyStarred ?? detail?.subsonicResponse?.album?.starred != null;
-
-    final result = await ref.read(albumDetailRepositoryProvider).toggleFavoriteResult(
-      albumId: albumId,
-      isStarred: starred,
-    );
-
-    if (result.isOk) {
-      ref.invalidate(albumDetailProvider(albumId));
-      ref.invalidate(albumDetailResultProvider(albumId));
-    }
-
-    final previous = switch (state) {
-      AsyncData(:final value) => value,
-      _ => null,
-    };
-    if (!ref.mounted) {
-      return result;
-    }
-    state = result.when(
-      ok: AsyncData.new,
-      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
-    );
-    return result;
-  }
-}
-
-@riverpod
-class AlbumRating extends _$AlbumRating {
-  @override
-  Future<SubsonicResponse?> build() async => null;
-
-  Future<Result<SubsonicResponse, AppFailure>?> setRatingResult({
-    required String? albumId,
-    required int? rating,
-  }) async {
-    if (albumId == null || rating == null) return null;
-    final result = await ref.read(albumDetailRepositoryProvider).setRatingResult(
-      albumId: albumId,
-      rating: rating,
-    );
-
-    if (result.isOk) {
-      ref.invalidate(albumDetailProvider(albumId));
-      ref.invalidate(albumDetailResultProvider(albumId));
-    }
-
-    final previous = switch (state) {
-      AsyncData(:final value) => value,
-      _ => null,
-    };
-    if (!ref.mounted) {
-      return result;
-    }
-    state = result.when(
-      ok: AsyncData.new,
-      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
-    );
-    return result;
-  }
 }
