@@ -32,9 +32,7 @@ class AlbumDetail extends _$AlbumDetail {
 
     if (!ref.mounted) return result;
 
-    if (result?.subsonicResponse?.status == 'ok') {
-      ref.invalidateSelf();
-    }
+    ref.invalidateSelf();
 
     return result;
   }
@@ -48,9 +46,7 @@ class AlbumDetail extends _$AlbumDetail {
 
     if (!ref.mounted) return result;
 
-    if (result?.subsonicResponse?.status == 'ok') {
-      ref.invalidateSelf();
-    }
+    ref.invalidateSelf();
 
     return result;
   }

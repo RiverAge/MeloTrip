@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/library_index/library_index.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/artist/artists.dart';
+import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class ArtistsRepository {
   ArtistsRepository(this._readApi);
@@ -14,10 +14,10 @@ class ArtistsRepository {
   Future<List<ArtistIndexEntry>> fetchAllArtists() async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>('/rest/getArtists');
-    final data = res.data;
-    if (data == null) return const <ArtistIndexEntry>[];
-
-    final response = SubsonicResponse.fromJson(data);
+    final response = parseSubsonicResponseOrThrow(
+      res.data,
+      endpoint: '/rest/getArtists',
+    );
     final List<ArtistIndexBucketEntity> indexes =
         response.subsonicResponse?.artists?.index ??
         const <ArtistIndexBucketEntity>[];

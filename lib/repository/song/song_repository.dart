@@ -4,13 +4,14 @@ import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/song/songs.dart';
+import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class SongRepository {
   SongRepository(this._readApi);
 
   final Future<Dio> Function() _readApi;
 
-  Future<SubsonicResponse?> fetchSongSearchResponse({
+  Future<SubsonicResponse> fetchSongSearchResponse({
     required SongSearchQuery query,
     CancelToken? cancelToken,
   }) async {
@@ -21,9 +22,7 @@ class SongRepository {
       cancelToken: cancelToken,
     );
 
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/search3');
   }
 
   Future<List<SongEntity>> fetchSongSearchItems({
@@ -34,7 +33,7 @@ class SongRepository {
       query: query,
       cancelToken: cancelToken,
     );
-    return response?.subsonicResponse?.searchResult3?.song ??
+    return response.subsonicResponse?.searchResult3?.song ??
         const <SongEntity>[];
   }
 }

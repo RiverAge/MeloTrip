@@ -39,8 +39,6 @@ Future<SubsonicResponse?> updatePlaylistRequest({
     comment: comment,
     public: public,
   );
-  if (subsonicRes == null) return null;
-
   ref.invalidate(playlistDetailProvider(playlistId));
   ref.invalidate(playlistsProvider);
   return subsonicRes;
@@ -59,7 +57,6 @@ class Playlists extends _$Playlists {
 
     final repository = ref.read(playlistRepositoryProvider);
     final data = await repository.createPlaylist(name);
-    if (data == null) return null;
     ref.invalidateSelf();
     return data;
   }
@@ -68,7 +65,6 @@ class Playlists extends _$Playlists {
     if (playlistId == null) return null;
     final repository = ref.read(playlistRepositoryProvider);
     final data = await repository.deletePlaylist(playlistId);
-    if (data == null) return null;
     ref.invalidateSelf();
     return data;
   }
@@ -106,7 +102,6 @@ class PlaylistUpdate extends _$PlaylistUpdate {
       comment: comment,
       public: public,
     );
-    if (subsonicRes == null) return null;
     state = AsyncData(subsonicRes);
     return subsonicRes;
   }

@@ -2,18 +2,20 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class PlayQueueRepository {
   PlayQueueRepository(this._readApi);
 
   final Future<Dio> Function() _readApi;
 
-  Future<SubsonicResponse?> fetchPlayQueue() async {
+  Future<SubsonicResponse> fetchPlayQueue() async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>('/rest/getPlayQueue');
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    return parseSubsonicResponseOrThrow(
+      res.data,
+      endpoint: '/rest/getPlayQueue',
+    );
   }
 }
 

@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/library_index/library_index.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/folder/folders.dart';
+import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class FoldersRepository {
   FoldersRepository(this._readApi);
@@ -14,10 +14,10 @@ class FoldersRepository {
   Future<List<FolderIndexEntry>> fetchFolderIndexes() async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>('/rest/getIndexes');
-    final data = res.data;
-    if (data == null) return const <FolderIndexEntry>[];
-
-    final response = SubsonicResponse.fromJson(data);
+    final response = parseSubsonicResponseOrThrow(
+      res.data,
+      endpoint: '/rest/getIndexes',
+    );
     final List<ArtistIndexBucketEntity> indexes =
         response.subsonicResponse?.indexes?.index ??
         const <ArtistIndexBucketEntity>[];
@@ -41,10 +41,10 @@ class FoldersRepository {
       '/rest/getMusicDirectory',
       queryParameters: {'id': id},
     );
-    final data = res.data;
-    if (data == null) return const <FolderIndexEntry>[];
-
-    final response = SubsonicResponse.fromJson(data);
+    final response = parseSubsonicResponseOrThrow(
+      res.data,
+      endpoint: '/rest/getMusicDirectory',
+    );
     final List<DirectoryChildEntity> children =
         response.subsonicResponse?.directory?.child ??
         const <DirectoryChildEntity>[];

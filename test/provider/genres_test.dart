@@ -16,9 +16,9 @@ class _MockGenresRepository extends GenresRepository {
   bool itemsCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchGenresResponse() async {
+  Future<SubsonicResponse> fetchGenresResponse() async {
     responseCalled = true;
-    return _fetchResponse;
+    return _fetchResponse!;
   }
 
   @override

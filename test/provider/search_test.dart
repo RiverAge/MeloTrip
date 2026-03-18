@@ -13,12 +13,12 @@ class _MockSongRepository extends SongRepository {
   bool searchCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchSongSearchResponse({
+  Future<SubsonicResponse> fetchSongSearchResponse({
     required SongSearchQuery query,
     CancelToken? cancelToken,
   }) async {
     searchCalled = true;
-    return _searchResult;
+    return _searchResult!;
   }
 }
 

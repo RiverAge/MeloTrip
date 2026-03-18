@@ -14,27 +14,27 @@ class _MockAlbumDetailRepository extends AlbumDetailRepository {
   bool ratingCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchAlbumDetail(String albumId) async {
+  Future<SubsonicResponse> fetchAlbumDetail(String albumId) async {
     detailCalled = true;
-    return _detailResult;
+    return _detailResult!;
   }
 
   @override
-  Future<SubsonicResponse?> toggleFavorite({
+  Future<SubsonicResponse> toggleFavorite({
     required String albumId,
     required bool isStarred,
   }) async {
     toggleCalled = true;
-    return _detailResult;
+    return _detailResult!;
   }
 
   @override
-  Future<SubsonicResponse?> setRating({
+  Future<SubsonicResponse> setRating({
     required String albumId,
     required int rating,
   }) async {
     ratingCalled = true;
-    return _detailResult;
+    return _detailResult!;
   }
 }
 

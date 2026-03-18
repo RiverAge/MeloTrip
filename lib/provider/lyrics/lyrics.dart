@@ -11,7 +11,5 @@ Future<SubsonicResponse?> lyrics(Ref ref, String? songId) async {
 
   final repository = ref.read(lyricsRepositoryProvider);
   final response = await repository.fetchLyrics(songId);
-  if (response == null) return null;
-
   return mergePreferredStructuredLyrics(response);
 }

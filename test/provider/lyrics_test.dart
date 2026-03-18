@@ -12,9 +12,9 @@ class _MockLyricsRepository extends LyricsRepository {
   bool fetchCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchLyrics(String songId) async {
+  Future<SubsonicResponse> fetchLyrics(String songId) async {
     fetchCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
@@ -35,7 +35,7 @@ void main() {
       expect(mockRepository.fetchCalled, isFalse);
     });
 
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockLyricsRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -44,10 +44,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result =
-          await container.read(lyricsProvider('song123').future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(lyricsProvider('song123').future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
     });
 

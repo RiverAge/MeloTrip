@@ -14,15 +14,15 @@ class _MockScanStatusRepository extends ScanStatusRepository {
   bool fetchCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchScanStatus() async {
+  Future<SubsonicResponse> fetchScanStatus() async {
     fetchCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
 void main() {
   group('scanStatusProvider', () {
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockScanStatusRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -31,9 +31,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(scanStatusProvider.future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(scanStatusProvider.future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
     });
 

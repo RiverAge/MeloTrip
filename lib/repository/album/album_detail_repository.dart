@@ -2,25 +2,24 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class AlbumDetailRepository {
   AlbumDetailRepository(this._readApi);
 
   final Future<Dio> Function() _readApi;
 
-  Future<SubsonicResponse?> fetchAlbumDetail(String albumId) async {
+  Future<SubsonicResponse> fetchAlbumDetail(String albumId) async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(
       '/rest/getAlbum',
       queryParameters: <String, dynamic>{'id': albumId},
     );
 
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/getAlbum');
   }
 
-  Future<SubsonicResponse?> toggleFavorite({
+  Future<SubsonicResponse> toggleFavorite({
     required String albumId,
     required bool isStarred,
   }) async {
@@ -30,12 +29,13 @@ class AlbumDetailRepository {
       queryParameters: <String, dynamic>{'albumId': albumId},
     );
 
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    return parseSubsonicResponseOrThrow(
+      res.data,
+      endpoint: '/rest/${isStarred ? 'un' : ''}star',
+    );
   }
 
-  Future<SubsonicResponse?> setRating({
+  Future<SubsonicResponse> setRating({
     required String albumId,
     required int rating,
   }) async {
@@ -45,9 +45,7 @@ class AlbumDetailRepository {
       queryParameters: <String, dynamic>{'id': albumId, 'rating': rating},
     );
 
-    final data = res.data;
-    if (data == null) return null;
-    return SubsonicResponse.fromJson(data);
+    return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/setRating');
   }
 }
 

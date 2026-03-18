@@ -209,6 +209,7 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Do not traverse Subsonic payloads with ad-hoc map paths such as `data['subsonic-response']?...` inside feature repositories or feature providers. Transport-layer interceptors are the only exception for minimal error extraction.
 - When an endpoint field is missing from current models, add or extend the response model first, then run code generation; do not keep a temporary manual-map parser.
 - If legacy manual parsing cannot be removed immediately, document the blocking reason in handoff and create a follow-up task.
+- Repository networking methods must not use `null` to represent request failure. Parse failures, empty payloads, and non-`ok` Subsonic statuses must throw typed exceptions (or `StateError`) so providers receive `AsyncError` instead of ambiguous empty values.
 
 ### User Configuration Persistence
 

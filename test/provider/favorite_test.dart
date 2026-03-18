@@ -13,15 +13,15 @@ class _MockFavoriteRepository extends FavoriteRepository {
   bool fetchCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchStarred() async {
+  Future<SubsonicResponse> fetchStarred() async {
     fetchCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
 void main() {
   group('favoriteProvider', () {
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockFavoriteRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -30,9 +30,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(favoriteProvider.future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(favoriteProvider.future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
     });
 

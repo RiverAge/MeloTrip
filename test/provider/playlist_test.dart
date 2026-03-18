@@ -15,31 +15,31 @@ class _MockPlaylistRepository extends PlaylistRepository {
   bool updateCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchPlaylists() async {
+  Future<SubsonicResponse> fetchPlaylists() async {
     fetchCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 
   @override
-  Future<SubsonicResponse?> fetchPlaylistDetail(String playlistId) async {
+  Future<SubsonicResponse> fetchPlaylistDetail(String playlistId) async {
     fetchCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 
   @override
-  Future<SubsonicResponse?> createPlaylist(String name) async {
+  Future<SubsonicResponse> createPlaylist(String name) async {
     createCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 
   @override
-  Future<SubsonicResponse?> deletePlaylist(String playlistId) async {
+  Future<SubsonicResponse> deletePlaylist(String playlistId) async {
     deleteCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 
   @override
-  Future<SubsonicResponse?> updatePlaylist({
+  Future<SubsonicResponse> updatePlaylist({
     required String playlistId,
     int? songIndexToRemove,
     String? songIdToAdd,
@@ -48,13 +48,13 @@ class _MockPlaylistRepository extends PlaylistRepository {
     bool? public,
   }) async {
     updateCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
 void main() {
   group('playlistsProvider', () {
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -63,9 +63,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(playlistsProvider.future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(playlistsProvider.future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
     });
 
@@ -200,7 +201,7 @@ void main() {
   });
 
   group('playlistUpdateProvider', () {
-    test('modify returns null when update fails', () async {
+    test('modify throws when update fails', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -210,9 +211,10 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistUpdateProvider.notifier);
-      final result = await notifier.modify(playlistId: '123');
-
-      expect(result, isNull);
+      await expectLater(
+        notifier.modify(playlistId: '123'),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.updateCalled, isTrue);
     });
 
