@@ -1,3 +1,5 @@
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/repository/artist/artist_detail_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,4 +15,18 @@ Future<SubsonicResponse?> artistDetail(Ref ref, String? artistId) async {
 
   final repository = ref.read(artistDetailRepositoryProvider);
   return repository.fetchArtistDetail(id);
+}
+
+@riverpod
+Future<Result<SubsonicResponse, AppFailure>?> artistDetailResult(
+  Ref ref,
+  String? artistId,
+) async {
+  final id = artistId;
+  if (id == null) {
+    return null;
+  }
+
+  final repository = ref.read(artistDetailRepositoryProvider);
+  return repository.fetchArtistDetailResult(id);
 }

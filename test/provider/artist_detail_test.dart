@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/artist/artist_detail.dart';
@@ -88,6 +89,47 @@ void main() {
       expect(result?.subsonicResponse?.status, equals('ok'));
       expect(result?.subsonicResponse?.artist?.id, equals('artist-123'));
       expect(result?.subsonicResponse?.artist?.name, equals('Test Artist'));
+    });
+
+    test('artistDetailResult returns Result.err when repository throws', () async {
+      final mockRepository = _MockArtistDetailRepository();
+      mockRepository.setFetchResult(null);
+
+      final container = ProviderContainer(
+        overrides: [
+          artistDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(artistDetailResultProvider('artist-123').future);
+
+      expect(result, isNotNull);
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
+    });
+
+    test('artistDetailResult returns Result.ok on success', () async {
+      final mockResponse = SubsonicResponse(
+        subsonicResponse: SubsonicResponseClass(
+          status: 'ok',
+          artist: ArtistEntity(id: 'artist-123', name: 'Test Artist'),
+        ),
+      );
+      final mockRepository = _MockArtistDetailRepository();
+      mockRepository.setFetchResult(mockResponse);
+
+      final container = ProviderContainer(
+        overrides: [
+          artistDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(artistDetailResultProvider('artist-123').future);
+
+      expect(result?.isOk, isTrue);
+      expect(result?.data?.subsonicResponse?.artist?.name, 'Test Artist');
     });
   });
 }

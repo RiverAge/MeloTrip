@@ -64,13 +64,24 @@ void main() {
       expect(result.subsonicResponse?.artist?.name, 'Test Artist');
     });
 
-    test('fetchArtistDetail returns null for null data', () async {
+    test('fetchArtistDetail throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(artistDetailRepositoryProvider);
-      final result = await repository.fetchArtistDetail('artist-456');
+      await expectLater(
+        repository.fetchArtistDetail('artist-456'),
+        throwsA(isA<StateError>()),
+      );
+    });
 
-      expect(result, isNull);
+    test('fetchArtistDetailResult returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(artistDetailRepositoryProvider);
+      final result = await repository.fetchArtistDetailResult('artist-456');
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
     });
   });
 }

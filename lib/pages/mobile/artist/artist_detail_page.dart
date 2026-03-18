@@ -14,9 +14,15 @@ class ArtistDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
-      provider: artistDetailProvider(artistId),
-      builder: (_, data, ref) {
-        final artist = data.subsonicResponse?.artist;
+      provider: artistDetailResultProvider(artistId),
+      builder: (_, result, ref) {
+        if (result.isErr) {
+          return Scaffold(
+            appBar: AppBar(title: Text(AppLocalizations.of(context)!.artist)),
+            body: const Center(child: NoData()),
+          );
+        }
+        final artist = result.data?.subsonicResponse?.artist;
         if (artist == null) {
           return Scaffold(
             appBar: AppBar(title: Text(AppLocalizations.of(context)!.artist)),
