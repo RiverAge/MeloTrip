@@ -314,10 +314,7 @@ class SettingColorRow extends StatelessWidget {
             flex: 3,
             child: Text(
               label,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: .w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
-              ),
+              style: theme.textTheme.titleSmall,
             ),
           ),
           const SizedBox(width: 24),
