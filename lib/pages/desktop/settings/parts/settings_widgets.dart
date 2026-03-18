@@ -112,40 +112,66 @@ class SettingRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final Widget subtitle = Column(
-      crossAxisAlignment: .start,
-      mainAxisSize: .min,
-      children: <Widget>[
-        if (description.isNotEmpty)
-          Text(
-            description,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-              height: 1.3,
+    final Widget content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        crossAxisAlignment: .center,
+        children: <Widget>[
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _kSettingLabelMaxWidth),
+            child: Column(
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
+              children: <Widget>[
+                Text(
+                  label,
+                  style: theme.textTheme.titleSmall,
+                  maxLines: 2,
+                  overflow: .ellipsis,
+                ),
+                if (description.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.7,
+                      ),
+                      height: 1.3,
+                    ),
+                    maxLines: 2,
+                    overflow: .ellipsis,
+                  ),
+                ],
+                if (progress case final Widget progressWidget) ...<Widget>[
+                  const SizedBox(height: 10),
+                  progressWidget,
+                ],
+              ],
             ),
           ),
-        if (progress case final Widget progressWidget) ...<Widget>[
-          if (description.isNotEmpty) const SizedBox(height: 10),
-          progressWidget,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Align(
+              alignment: .centerRight,
+              child: trailing ?? const SizedBox.shrink(),
+            ),
+          ),
         ],
-      ],
+      ),
     );
 
-    return ListTile(
-      onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      title: Text(label, style: theme.textTheme.titleSmall),
-      subtitle: description.isNotEmpty || progress != null ? subtitle : null,
-      trailing: trailing != null
-          ? ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: 32,
-                maxWidth: 320,
-              ),
-              child: trailing!,
-            )
-          : null,
+    if (onTap == null) {
+      return content;
+    }
+
+    return Material(
+      color: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: content,
+      ),
     );
   }
 }
