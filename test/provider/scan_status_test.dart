@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/scan_status/scan_status.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
@@ -21,8 +22,8 @@ class _MockScanStatusRepository extends ScanStatusRepository {
 }
 
 void main() {
-  group('scanStatusProvider', () {
-    test('throws when repository throws', () async {
+  group('scanStatusResultProvider', () {
+    test('returns Result.err when repository throws', () async {
       final mockRepository = _MockScanStatusRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -31,14 +32,14 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await expectLater(
-        container.read(scanStatusProvider.future),
-        throwsA(isA<TypeError>()),
-      );
+      final result = await container.read(scanStatusResultProvider.future);
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isA<AppFailure>());
       expect(mockRepository.fetchCalled, isTrue);
     });
 
-    test('returns scan status response from repository', () async {
+    test('returns Result.ok scan status from repository', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(
           status: 'ok',
@@ -53,11 +54,11 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(scanStatusProvider.future);
+      final result = await container.read(scanStatusResultProvider.future);
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
-      expect(result?.subsonicResponse?.scanStatus, isNotNull);
+      expect(result.data?.subsonicResponse?.status, equals('ok'));
+      expect(result.data?.subsonicResponse?.scanStatus, isNotNull);
       expect(mockRepository.fetchCalled, isTrue);
     });
   });

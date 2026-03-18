@@ -23,10 +23,12 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(
-      albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
+    await expectLater(
+      container.read(
+        albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
+      ),
+      throwsA(isA<StateError>()),
     );
-    expect(result, isEmpty);
   });
 
   test('albumListProvider parses album list payload', () async {
@@ -43,24 +45,25 @@ void main() {
     expect(albums.first.name, 'Test Album');
   });
 
-  test('scanStatusProvider handles null API payload', () async {
+  test('scanStatusResultProvider handles null API payload', () async {
     final container = ProviderContainer(
       overrides: [apiProvider.overrideWith(FakeApiNull.new)],
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(scanStatusProvider.future);
-    expect(result, isNull);
+    final result = await container.read(scanStatusResultProvider.future);
+    expect(result.isErr, isTrue);
   });
 
-  test('scanStatusProvider parses status payload', () async {
+  test('scanStatusResultProvider parses status payload', () async {
     final container = ProviderContainer(
       overrides: [apiProvider.overrideWith(FakeApiScanStatus.new)],
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(scanStatusProvider.future);
-    expect(result?.subsonicResponse?.status, 'ok');
-    expect(result?.subsonicResponse?.version, '1.2.3');
+    final result = await container.read(scanStatusResultProvider.future);
+    expect(result.isOk, isTrue);
+    expect(result.data?.subsonicResponse?.status, 'ok');
+    expect(result.data?.subsonicResponse?.version, '1.2.3');
   });
 }

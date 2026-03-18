@@ -3,10 +3,10 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/persistence/persistence.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth.g.dart';
@@ -59,25 +59,16 @@ Future<AuthUser?> login(
     },
   );
 
-  final data = res.data;
-  if (data != null) {
-    final subsonicResponse = SubsonicResponse.fromJson(data);
-    if (subsonicResponse.subsonicResponse?.status == 'ok') {
-      final auth = AuthUser.fromJson({
-        'salt': salt,
-        'token': token,
-        'username': username,
-        'host': host,
-      });
-      await persistence.saveCurrentUser(auth);
-      return auth;
-    }
+  parseSubsonicResponseOrThrow(res.data, endpoint: '$host/rest/ping');
 
-    final errorMsg = subsonicResponse.subsonicResponse?.error?.message;
-    throw Exception(errorMsg ?? 'Login failed');
-  }
-
-  throw Exception('Login failed');
+  final auth = AuthUser.fromJson({
+    'salt': salt,
+    'token': token,
+    'username': username,
+    'host': host,
+  });
+  await persistence.saveCurrentUser(auth);
+  return auth;
 }
 
 @Riverpod(keepAlive: true)

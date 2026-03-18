@@ -26,10 +26,12 @@ class _ServerStatus extends StatelessWidget {
             ),
             Divider(),
             AsyncValueBuilder(
-              provider: scanStatusProvider,
-              builder: (context, data, ref) {
-                final scanStatus = data.subsonicResponse?.scanStatus;
+              provider: scanStatusResultProvider,
+              builder: (context, result, ref) {
+                final data = result.data;
+                final scanStatus = data?.subsonicResponse?.scanStatus;
                 final lastScan = scanStatus?.lastScan;
+                final isOnline = result.isOk;
                 return GridView.count(
                   primary: false,
                   // padding: const EdgeInsets.all(20),
@@ -41,7 +43,7 @@ class _ServerStatus extends StatelessWidget {
                       leading: Icon(Icons.cloud),
                       title: Text(AppLocalizations.of(context)!.serverStatus),
                       subtitle: Text(
-                        data.subsonicResponse?.status == 'ok'
+                        isOnline
                             ? AppLocalizations.of(context)!.serverOnline
                             : AppLocalizations.of(context)!.serverOffline,
                       ),
@@ -49,7 +51,7 @@ class _ServerStatus extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.commit),
                       title: Text(AppLocalizations.of(context)!.version),
-                      subtitle: Text(data.subsonicResponse?.version ?? ''),
+                      subtitle: Text(data?.subsonicResponse?.version ?? ''),
                     ),
                     ListTile(
                       leading: Icon(Icons.music_note),

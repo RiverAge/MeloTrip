@@ -9,43 +9,43 @@ part of 'scan_status.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(scanStatus)
-final scanStatusProvider = ScanStatusProvider._();
+@ProviderFor(scanStatusResult)
+final scanStatusResultProvider = ScanStatusResultProvider._();
 
-final class ScanStatusProvider
+final class ScanStatusResultProvider
     extends
         $FunctionalProvider<
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>
+          AsyncValue<Result<SubsonicResponse, AppFailure>>,
+          Result<SubsonicResponse, AppFailure>,
+          FutureOr<Result<SubsonicResponse, AppFailure>>
         >
     with
-        $FutureModifier<SubsonicResponse?>,
-        $FutureProvider<SubsonicResponse?> {
-  ScanStatusProvider._()
+        $FutureModifier<Result<SubsonicResponse, AppFailure>>,
+        $FutureProvider<Result<SubsonicResponse, AppFailure>> {
+  ScanStatusResultProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'scanStatusProvider',
+        name: r'scanStatusResultProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$scanStatusHash();
+  String debugGetCreateSourceHash() => _$scanStatusResultHash();
 
   @$internal
   @override
-  $FutureProviderElement<SubsonicResponse?> $createElement(
+  $FutureProviderElement<Result<SubsonicResponse, AppFailure>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<SubsonicResponse?> create(Ref ref) {
-    return scanStatus(ref);
+  FutureOr<Result<SubsonicResponse, AppFailure>> create(Ref ref) {
+    return scanStatusResult(ref);
   }
 }
 
-String _$scanStatusHash() => r'698d2c4677f8ad1baf19feed0c187410fea50f38';
+String _$scanStatusResultHash() => r'207a6e726b41883f42b552e68718f20d7a3616b0';
