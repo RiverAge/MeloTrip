@@ -74,26 +74,18 @@ class _ArtistCardState extends State<ArtistCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOutCubic,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: _isHovered ? hoverBorderColor : baseBorderColor,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withValues(
-                  alpha: _isHovered ? 0.16 : 0.08,
-                ),
-                blurRadius: _isHovered ? 22 : 12,
-                offset: Offset(0, _isHovered ? 10 : 4),
-              ),
-            ],
-          ),
-          child: Material(
+          child: Card(
+            margin: EdgeInsets.zero,
+            elevation: _isHovered ? 6 : 2,
             color: theme.colorScheme.surfaceContainerLow.withValues(
               alpha: _isHovered ? 0.96 : 0.82,
             ),
-            borderRadius: BorderRadius.circular(14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+              side: BorderSide(
+                color: _isHovered ? hoverBorderColor : baseBorderColor,
+              ),
+            ),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: () {
@@ -122,12 +114,9 @@ class _ArtistCardState extends State<ArtistCard> {
                                     height: double.infinity,
                                     fit: .cover,
                                   )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme
-                                          .surfaceContainerHighest
-                                          .withValues(alpha: 0.45),
-                                    ),
+                                : ColoredBox(
+                                    color: theme.colorScheme.surfaceContainerHighest
+                                        .withValues(alpha: 0.45),
                                     child: Center(
                                       child: Icon(
                                         Icons.person_rounded,
@@ -146,8 +135,10 @@ class _ArtistCardState extends State<ArtistCard> {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
-                                      Colors.transparent,
-                                      Colors.black.withValues(alpha: 0.12),
+                                      theme.colorScheme.scrim.withValues(alpha: 0),
+                                      theme.colorScheme.scrim.withValues(
+                                        alpha: 0.12,
+                                      ),
                                     ],
                                   ),
                                 ),

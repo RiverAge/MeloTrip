@@ -59,27 +59,22 @@ class _ScrollButton extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final enabled = onPressed != null;
-    return Material(
-      color: theme.colorScheme.surfaceContainerHighest.withValues(
-        alpha: enabled ? (isDark ? 0.28 : 0.72) : (isDark ? 0.08 : 0.24),
-      ),
-      borderRadius: BorderRadius.circular(4),
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(4),
-          child: Padding(
-            padding: const EdgeInsets.all(6),
-            child: Icon(
-              icon,
-              size: 12,
-              color: theme.colorScheme.onSurfaceVariant.withValues(
-                alpha: enabled ? 1.0 : 0.3,
-              ),
-            ),
-          ),
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(
+        icon,
+        size: 12,
+        color: theme.colorScheme.onSurfaceVariant.withValues(
+          alpha: enabled ? 1.0 : 0.3,
         ),
+      ),
+      style: IconButton.styleFrom(
+        backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(
+        alpha: enabled ? (isDark ? 0.28 : 0.72) : (isDark ? 0.08 : 0.24),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        padding: const EdgeInsets.all(6),
+        minimumSize: const Size(24, 24),
       ),
     );
   }
