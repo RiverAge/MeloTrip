@@ -22,7 +22,7 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    expect(await container.read(playlistDetailProvider(null).future), isNull);
+    expect(await container.read(playlistDetailResultProvider(null).future), isNull);
     expect(await container.read(artistDetailProvider(null).future), isNull);
     expect(await container.read(songDetailProvider(null).future), isNull);
     expect(await container.read(albumDetailProvider(null).future), isNull);
@@ -81,15 +81,15 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    final playlists = await container.read(playlistsProvider.future);
-    expect(playlists?.subsonicResponse?.playlists?.playlist?.first.id, 'p1');
+    final playlists = await container.read(playlistsResultProvider.future);
+    expect(playlists.data?.subsonicResponse?.playlists?.playlist?.first.id, 'p1');
 
-    final playlistsNotifier = container.read(playlistsProvider.notifier);
+    final playlistsNotifier = container.read(playlistActionsProvider.notifier);
     expect(await playlistsNotifier.createPlaylist(null), isNull);
     expect(await playlistsNotifier.deletePlaytlist(null), isNull);
 
-    final detail = await container.read(playlistDetailProvider('p1').future);
-    expect(detail?.subsonicResponse?.status, 'ok');
+    final detail = await container.read(playlistDetailResultProvider('p1').future);
+    expect(detail?.data?.subsonicResponse?.status, 'ok');
 
     expect(
       await container.read(playlistUpdateProvider.notifier).build(),
@@ -120,9 +120,9 @@ void main() {
 
     final result = await container
         .read(playlistUpdateProvider.notifier)
-        .modify(playlistId: 'p1', songIdToAdd: 's1');
+        .modifyResult(playlistId: 'p1', songIdToAdd: 's1');
 
-    expect(result?.subsonicResponse?.status, 'ok');
+    expect(result.isOk, isTrue);
   });
 
   test('song favorite null guards return null', () async {

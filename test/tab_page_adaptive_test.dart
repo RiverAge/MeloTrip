@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
@@ -58,8 +60,15 @@ void main() {
           albumListProvider(
             AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
           ).overrideWith((_) async => const <AlbumEntity>[]),
-          playlistsProvider.overrideWith(
-            () => FakePlaylistsData(playlistsResponse),
+          playlistsResultProvider.overrideWith(
+            (ref) async => playlistsResponse == null
+                ? Result.err(
+                    const AppFailure(
+                      type: AppFailureType.unknown,
+                      message: 'No playlist data',
+                    ),
+                  )
+                : Result.ok(playlistsResponse),
           ),
         ],
         child: MaterialApp(
@@ -181,13 +190,4 @@ void main() {
     expect(pageRoute.transitionDuration, Duration.zero);
     expect(pageRoute.reverseTransitionDuration, Duration.zero);
   });
-}
-
-class FakePlaylistsData extends Playlists {
-  FakePlaylistsData(this._response);
-
-  final SubsonicResponse? _response;
-
-  @override
-  Future<SubsonicResponse?> build() async => _response;
 }

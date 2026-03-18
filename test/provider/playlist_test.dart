@@ -54,8 +54,8 @@ class _MockPlaylistRepository extends PlaylistRepository {
 }
 
 void main() {
-  group('playlistsProvider', () {
-    test('throws when repository throws', () async {
+  group('playlistsResultProvider', () {
+    test('returns Result.err when repository throws', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -64,10 +64,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await expectLater(
-        container.read(playlistsProvider.future),
-        throwsA(isA<TypeError>()),
-      );
+      final result = await container.read(playlistsResultProvider.future);
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isA<AppFailure>());
       expect(mockRepository.fetchCalled, isTrue);
     });
 
@@ -83,15 +83,15 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(playlistsProvider.future);
+      final result = await container.read(playlistsResultProvider.future);
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
+      expect(result.data?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.fetchCalled, isTrue);
     });
   });
 
-  group('playlistDetailProvider', () {
+  group('playlistDetailResultProvider', () {
     test('returns null when playlistId is null', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
@@ -102,7 +102,7 @@ void main() {
       addTearDown(container.dispose);
 
       final result =
-          await container.read(playlistDetailProvider(null).future);
+          await container.read(playlistDetailResultProvider(null).future);
 
       expect(result, isNull);
       expect(mockRepository.fetchCalled, isFalse);
@@ -121,15 +121,15 @@ void main() {
       addTearDown(container.dispose);
 
       final result =
-          await container.read(playlistDetailProvider('123').future);
+          await container.read(playlistDetailResultProvider('123').future);
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
+      expect(result?.data?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.fetchCalled, isTrue);
     });
   });
 
-  group('Playlists notifier', () {
+  group('PlaylistActions notifier', () {
     test('createPlaylist returns null when name is null', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
@@ -139,7 +139,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistsProvider.notifier);
+      final notifier = container.read(playlistActionsProvider.notifier);
       final result = await notifier.createPlaylist(null);
 
       expect(result, isNull);
@@ -158,10 +158,11 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistsProvider.notifier);
+      final notifier = container.read(playlistActionsProvider.notifier);
       final result = await notifier.createPlaylist('My Playlist');
 
       expect(result, isNotNull);
+      expect(result?.isOk, isTrue);
       expect(mockRepository.createCalled, isTrue);
     });
 
@@ -174,7 +175,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistsProvider.notifier);
+      final notifier = container.read(playlistActionsProvider.notifier);
       final result = await notifier.deletePlaytlist(null);
 
       expect(result, isNull);
@@ -193,16 +194,17 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistsProvider.notifier);
+      final notifier = container.read(playlistActionsProvider.notifier);
       final result = await notifier.deletePlaytlist('123');
 
       expect(result, isNotNull);
+      expect(result?.isOk, isTrue);
       expect(mockRepository.deleteCalled, isTrue);
     });
   });
 
   group('playlistUpdateProvider', () {
-    test('modify throws when update fails', () async {
+    test('modifyResult returns Result.err when update fails', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -212,14 +214,14 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistUpdateProvider.notifier);
-      await expectLater(
-        notifier.modify(playlistId: '123'),
-        throwsA(isA<TypeError>()),
-      );
+      final result = await notifier.modifyResult(playlistId: '123');
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isA<AppFailure>());
       expect(mockRepository.updateCalled, isTrue);
     });
 
-    test('modify returns response on success', () async {
+    test('modifyResult returns Result.ok on success', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(status: 'ok'),
       );
@@ -232,16 +234,16 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistUpdateProvider.notifier);
-      final result = await notifier.modify(playlistId: '123');
+      final result = await notifier.modifyResult(playlistId: '123');
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
+      expect(result.data?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.updateCalled, isTrue);
     });
   });
 
   group('playlist Result APIs', () {
-    test('createPlaylistResult returns Result.ok on success', () async {
+    test('createPlaylist returns Result.ok on success', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(status: 'ok'),
       );
@@ -253,8 +255,8 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistsProvider.notifier);
-      final result = await notifier.createPlaylistResult('My Playlist');
+      final notifier = container.read(playlistActionsProvider.notifier);
+      final result = await notifier.createPlaylist('My Playlist');
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);

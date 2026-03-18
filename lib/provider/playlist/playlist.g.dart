@@ -9,126 +9,48 @@ part of 'playlist.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Playlists)
-final playlistsProvider = PlaylistsProvider._();
+@ProviderFor(PlaylistActions)
+final playlistActionsProvider = PlaylistActionsProvider._();
 
-final class PlaylistsProvider
-    extends $AsyncNotifierProvider<Playlists, SubsonicResponse?> {
-  PlaylistsProvider._()
+final class PlaylistActionsProvider
+    extends $AsyncNotifierProvider<PlaylistActions, void> {
+  PlaylistActionsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'playlistsProvider',
+        name: r'playlistActionsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$playlistsHash();
+  String debugGetCreateSourceHash() => _$playlistActionsHash();
 
   @$internal
   @override
-  Playlists create() => Playlists();
+  PlaylistActions create() => PlaylistActions();
 }
 
-String _$playlistsHash() => r'b7368d2c3a10c55fa2fbfaa4fd4c1ddb5e06a51e';
+String _$playlistActionsHash() => r'e79a39719ea55c9892fe63b2f3908a7a4680599d';
 
-abstract class _$Playlists extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
+abstract class _$PlaylistActions extends $AsyncNotifier<void> {
+  FutureOr<void> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
               Object?,
               Object?
             >;
     element.handleCreate(ref, build);
   }
-}
-
-@ProviderFor(playlistDetail)
-final playlistDetailProvider = PlaylistDetailFamily._();
-
-final class PlaylistDetailProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>
-        >
-    with
-        $FutureModifier<SubsonicResponse?>,
-        $FutureProvider<SubsonicResponse?> {
-  PlaylistDetailProvider._({
-    required PlaylistDetailFamily super.from,
-    required String? super.argument,
-  }) : super(
-         retry: null,
-         name: r'playlistDetailProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$playlistDetailHash();
-
-  @override
-  String toString() {
-    return r'playlistDetailProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<SubsonicResponse?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<SubsonicResponse?> create(Ref ref) {
-    final argument = this.argument as String?;
-    return playlistDetail(ref, argument);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is PlaylistDetailProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$playlistDetailHash() => r'2931a1c3c45da9ac8ab1ae68dc81a9b9e0d32d0c';
-
-final class PlaylistDetailFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {
-  PlaylistDetailFamily._()
-    : super(
-        retry: null,
-        name: r'playlistDetailProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  PlaylistDetailProvider call(String? playlistId) =>
-      PlaylistDetailProvider._(argument: playlistId, from: this);
-
-  @override
-  String toString() => r'playlistDetailProvider';
 }
 
 @ProviderFor(PlaylistUpdate)
@@ -155,7 +77,7 @@ final class PlaylistUpdateProvider
   PlaylistUpdate create() => PlaylistUpdate();
 }
 
-String _$playlistUpdateHash() => r'aba5d2f1afb53abdd4d13b8473c471e7d7269770';
+String _$playlistUpdateHash() => r'6823a5e395168c865c79266ddaedbd3843ab7986';
 
 abstract class _$PlaylistUpdate extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
