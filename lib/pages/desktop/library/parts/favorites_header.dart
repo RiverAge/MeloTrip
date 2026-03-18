@@ -5,15 +5,11 @@ class _PageHeader extends StatelessWidget {
     required this.title,
     required this.currentType,
     required this.onTypeChanged,
-    required this.viewType,
-    required this.onViewTypeChanged,
   });
 
   final String title;
   final String currentType;
   final ValueChanged<String> onTypeChanged;
-  final AppViewType viewType;
-  final ValueChanged<AppViewType> onViewTypeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +42,6 @@ class _PageHeader extends StatelessWidget {
                   fontWeight: .w900,
                   color: theme.colorScheme.onSurface,
                 ),
-              ),
-              const Spacer(),
-              AlbumViewSwitcher(
-                current: viewType,
-                onChanged: onViewTypeChanged,
-                showDetailOption: false,
               ),
             ],
           ),

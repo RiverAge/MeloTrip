@@ -5,16 +5,11 @@ import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
-import 'package:melo_trip/pages/desktop/artist/artist_detail_page.dart';
-import 'package:melo_trip/pages/desktop/library/widgets/view_types.dart';
-import 'package:melo_trip/pages/desktop/library/widgets/album_page_controls.dart';
-import 'package:melo_trip/pages/desktop/library/widgets/album_views.dart';
 import 'package:melo_trip/pages/desktop/library/artists_page.dart';
-import 'package:melo_trip/provider/artist/artists.dart';
 import 'package:melo_trip/pages/desktop/home/parts/desktop_album_card.dart';
 import 'package:melo_trip/pages/desktop/library/songs_page.dart';
+import 'package:melo_trip/provider/artist/artists.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
-import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 part 'parts/favorites_header.dart';
@@ -30,7 +25,6 @@ class DesktopFavoritesPage extends ConsumerStatefulWidget {
 
 class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
   String _currentType = 'songs';
-  AppViewType _viewType = AppViewType.grid;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +40,6 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
             title: l10n.myFavorites,
             currentType: _currentType,
             onTypeChanged: (type) => setState(() => _currentType = type),
-            viewType: _viewType,
-            onViewTypeChanged: (type) => setState(() => _viewType = type),
           ),
           const _Toolbar(),
           Expanded(
@@ -55,7 +47,7 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
               provider: favoriteProvider,
               builder: (context, data, ref) {
                 final starred = data.subsonicResponse?.starred;
-                return _buildContent(starred, l10n);
+                return _buildContent(starred);
               },
             ),
           ),
@@ -64,18 +56,14 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
     );
   }
 
-  Widget _buildContent(StarredEntity? starred, AppLocalizations l10n) {
+  Widget _buildContent(StarredEntity? starred) {
     switch (_currentType) {
       case 'albums':
         final albums = starred?.album ?? const <AlbumEntity>[];
-        return _viewType == AppViewType.grid
-            ? _AlbumGrid(albums: albums)
-            : _AlbumTableView(albums: albums, l10n: l10n);
+        return _AlbumGrid(albums: albums);
       case 'artists':
         final artists = starred?.artist ?? const <ArtistEntity>[];
-        return _viewType == AppViewType.grid
-            ? _ArtistGrid(artists: artists)
-            : _ArtistTableView(artists: artists, l10n: l10n);
+        return _ArtistGrid(artists: artists);
       case 'songs':
       default:
         final songs = starred?.song ?? const <SongEntity>[];
