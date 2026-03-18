@@ -20,6 +20,7 @@ class AppThemePage extends StatelessWidget {
         provider: userConfigProvider,
         builder: (context, config, ref) {
           final AppLocalizations l10n = AppLocalizations.of(context)!;
+          final ThemeData theme = Theme.of(context);
           final AppThemeSeed activeSeed = config.themeSeed ?? AppThemeSeed.rose;
           final List<ThemeSeedOption> themeSeeds = buildThemeSeedOptions(l10n);
           return ListView(
@@ -65,26 +66,51 @@ class AppThemePage extends StatelessWidget {
               const Divider(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                child: Text(
-                  l10n.themeColor,
-                  style: Theme.of(context).textTheme.titleSmall,
+                child: Text(l10n.themeColor, style: theme.textTheme.titleSmall),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: themeSeeds.map((ThemeSeedOption option) {
+                    final bool selected = option.seed == activeSeed;
+                    final Color swatchColor = option.seed.color;
+                    return InkWell(
+                      onTap: () => _onThemeSeedTap(ref, option.seed),
+                      borderRadius: BorderRadius.circular(6),
+                      child: Tooltip(
+                        message: option.label,
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: selected
+                                ? swatchColor
+                                : swatchColor.withValues(alpha: 0.82),
+                            border: Border.all(
+                              color: selected
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.outlineVariant.withValues(
+                                      alpha: 0.45,
+                                    ),
+                              width: selected ? 2.0 : 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: selected
+                              ? Icon(
+                                  Icons.check_rounded,
+                                  size: 16,
+                                  color: theme.colorScheme.onPrimary,
+                                )
+                              : null,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
-              ...themeSeeds.map((option) {
-                final bool selected = option.seed == activeSeed;
-                return ListTile(
-                  onTap: () => _onThemeSeedTap(ref, option.seed),
-                  leading: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: option.seed.color,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const SizedBox(width: 20, height: 20),
-                  ),
-                  title: Text(option.label),
-                  trailing: selected ? const Icon(Icons.check) : null,
-                );
-              }),
             ],
           );
         },
