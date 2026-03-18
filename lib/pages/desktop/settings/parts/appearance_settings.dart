@@ -68,6 +68,15 @@ class AppearanceSettings extends ConsumerWidget {
                                   option.seed.color.toARGB32(),
                             )
                             .toList(growable: false),
+                        tooltipForColor: (int colorValue) {
+                          return themeSeeds
+                              .firstWhere(
+                                (ThemeSeedOption option) =>
+                                    option.seed.color.toARGB32() == colorValue,
+                                orElse: () => themeSeeds.first,
+                              )
+                              .label;
+                        },
                         onChanged: (int colorValue) {
                           final AppThemeSeed nextSeed = themeSeeds
                               .firstWhere(

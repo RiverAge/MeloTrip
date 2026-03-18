@@ -295,12 +295,14 @@ class SettingColorRow extends StatelessWidget {
     required this.value,
     required this.palette,
     required this.onChanged,
+    this.tooltipForColor,
   });
 
   final String label;
   final int value;
   final List<int> palette;
   final ValueChanged<int> onChanged;
+  final String Function(int color)? tooltipForColor;
 
   @override
   Widget build(BuildContext context) {
@@ -312,10 +314,7 @@ class SettingColorRow extends StatelessWidget {
         children: <Widget>[
           Expanded(
             flex: 3,
-            child: Text(
-              label,
-              style: theme.textTheme.titleSmall,
-            ),
+            child: Text(label, style: theme.textTheme.titleSmall),
           ),
           const SizedBox(width: 24),
           Expanded(
@@ -330,39 +329,42 @@ class SettingColorRow extends StatelessWidget {
                 return InkWell(
                   onTap: () => onChanged(color),
                   borderRadius: BorderRadius.circular(6),
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: active
-                          ? swatchColor
-                          : swatchColor.withValues(alpha: 0.82),
-                      border: Border.all(
+                  child: Tooltip(
+                    message: tooltipForColor?.call(color) ?? '',
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
                         color: active
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.outlineVariant.withValues(
-                                alpha: 0.45,
-                              ),
-                        width: active ? 2.0 : 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: theme.shadowColor.withValues(
-                            alpha: active ? 0.08 : 0.04,
-                          ),
-                          blurRadius: active ? 8 : 5,
-                          offset: const Offset(0, 2),
+                            ? swatchColor
+                            : swatchColor.withValues(alpha: 0.82),
+                        border: Border.all(
+                          color: active
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.outlineVariant.withValues(
+                                  alpha: 0.45,
+                                ),
+                          width: active ? 2.0 : 1.0,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: theme.shadowColor.withValues(
+                              alpha: active ? 0.08 : 0.04,
+                            ),
+                            blurRadius: active ? 8 : 5,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: active
+                          ? Icon(
+                              Icons.check_rounded,
+                              size: 16,
+                              color: theme.colorScheme.onPrimary,
+                            )
+                          : null,
                     ),
-                    child: active
-                        ? Icon(
-                            Icons.check_rounded,
-                            size: 16,
-                            color: theme.colorScheme.onPrimary,
-                          )
-                        : null,
                   ),
                 );
               }).toList(),
