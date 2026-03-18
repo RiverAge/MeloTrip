@@ -119,7 +119,6 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final compact = constraints.maxWidth < 900;
               final ultraCompact = constraints.maxWidth < 560;
               return Row(
                 children: [
@@ -205,49 +204,47 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
-                  if (!compact) ...[
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        song.album ?? '-',
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                        style: theme.textTheme.bodySmall,
-                      ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      song.album ?? '-',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall,
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        song.genre ?? '-',
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                        style: theme.textTheme.bodySmall,
-                      ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      song.genre ?? '-',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall,
                     ),
-                    SizedBox(
-                      width: 60,
-                      child: Text(
-                        '${song.year ?? ''}',
-                        style: theme.textTheme.bodySmall,
-                      ),
+                  ),
+                  SizedBox(
+                    width: 60,
+                    child: Text(
+                      '${song.year ?? ''}',
+                      style: theme.textTheme.bodySmall,
                     ),
-                    IconButton(
-                      onPressed: _toggleFavorite,
-                      icon: Icon(
-                        _isStarred
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        size: 16,
-                        color: _isStarred
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant.withValues(
-                                alpha: 0.45,
-                              ),
-                      ),
-                      splashRadius: 16,
-                      visualDensity: .compact,
+                  ),
+                  IconButton(
+                    onPressed: _toggleFavorite,
+                    icon: Icon(
+                      _isStarred
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      size: 16,
+                      color: _isStarred
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.onSurfaceVariant.withValues(
+                              alpha: 0.45,
+                            ),
                     ),
-                  ],
+                    splashRadius: 16,
+                    visualDensity: .compact,
+                  ),
                 ],
               );
             },

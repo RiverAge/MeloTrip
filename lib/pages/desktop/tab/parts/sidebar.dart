@@ -7,7 +7,6 @@ class _DesktopSidebar extends ConsumerWidget {
     required this.onSelected,
     required this.onPlaylistSelected,
     required this.l10n,
-    required this.compact,
   });
 
   final int currentIndex;
@@ -15,8 +14,6 @@ class _DesktopSidebar extends ConsumerWidget {
   final ValueChanged<int> onSelected;
   final ValueChanged<String> onPlaylistSelected;
   final AppLocalizations l10n;
-  final bool compact;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -69,7 +66,7 @@ class _DesktopSidebar extends ConsumerWidget {
     return AnimatedContainer(
       duration: DesktopMotionTokens.slow,
       curve: DesktopMotionTokens.standardCurve,
-      width: compact ? 220 : 260,
+      width: 260,
       color: theme.colorScheme.surfaceContainer,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(

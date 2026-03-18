@@ -57,8 +57,6 @@ class DesktopTabPage extends ConsumerStatefulWidget {
 
 class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
     with SingleTickerProviderStateMixin {
-  static const double _desktopBreakpoint = 1280.0;
-
   final GlobalKey<NavigatorState> _contentNavigatorKey =
       GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> get contentNavigatorKey => _contentNavigatorKey;
@@ -206,23 +204,16 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final bool isDesktop = constraints.maxWidth >= _desktopBreakpoint;
-        return _buildLargeScaffold(
-          key: const ValueKey<String>('desktop-layout'),
-          l10n: l10n,
-          isDesktop: isDesktop,
-          currentIndex: _desktopIndex,
-        );
-      },
+    return _buildLargeScaffold(
+      key: const ValueKey<String>('desktop-layout'),
+      l10n: l10n,
+      currentIndex: _desktopIndex,
     );
   }
 
   Widget _buildLargeScaffold({
     required Key key,
     required AppLocalizations l10n,
-    required bool isDesktop,
     required int currentIndex,
   }) {
     return Scaffold(
@@ -246,7 +237,6 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
                             onSelected: _setDesktopTab,
                             onPlaylistSelected: _setPlaylistTab,
                             l10n: l10n,
-                            compact: !isDesktop,
                           ),
                           VerticalDivider(
                             width: 1,

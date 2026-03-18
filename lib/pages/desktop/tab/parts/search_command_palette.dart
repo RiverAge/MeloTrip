@@ -203,7 +203,6 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                             artists:
                                 searchResult?.artist ?? const <ArtistEntity>[],
                             maxItemsPerSection: 3,
-                            compact: true,
                             onSongTap: _playSong,
                             onAlbumTap: _openAlbum,
                             onArtistTap: _openArtist,

@@ -91,7 +91,6 @@ class DesktopSearchResultsView extends StatelessWidget {
     required this.onAlbumTap,
     required this.onArtistTap,
     this.maxItemsPerSection,
-    this.compact = false,
     super.key,
   });
 
@@ -102,7 +101,6 @@ class DesktopSearchResultsView extends StatelessWidget {
   final Future<void> Function(AlbumEntity album) onAlbumTap;
   final Future<void> Function(ArtistEntity artist) onArtistTap;
   final int? maxItemsPerSection;
-  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -112,20 +110,17 @@ class DesktopSearchResultsView extends StatelessWidget {
         _SearchSection<SongEntity>(
           title: l10n.song,
           items: _slice(songs),
-          compact: compact,
           itemBuilder: (BuildContext context, SongEntity song) {
-            return _SongResultTile(song: song, compact: compact, onTap: () => onSongTap(song));
+            return _SongResultTile(song: song, onTap: () => onSongTap(song));
           },
         ),
       if (albums.isNotEmpty)
         _SearchSection<AlbumEntity>(
           title: l10n.album,
           items: _slice(albums),
-          compact: compact,
           itemBuilder: (BuildContext context, AlbumEntity album) {
             return _AlbumResultTile(
               album: album,
-              compact: compact,
               onTap: () => onAlbumTap(album),
             );
           },
@@ -134,11 +129,9 @@ class DesktopSearchResultsView extends StatelessWidget {
         _SearchSection<ArtistEntity>(
           title: l10n.artist,
           items: _slice(artists),
-          compact: compact,
           itemBuilder: (BuildContext context, ArtistEntity artist) {
             return _ArtistResultTile(
               artist: artist,
-              compact: compact,
               onTap: () => onArtistTap(artist),
             );
           },
@@ -150,9 +143,9 @@ class DesktopSearchResultsView extends StatelessWidget {
     }
 
     return ListView.separated(
-      padding: EdgeInsets.all(compact ? 12 : 16),
+      padding: const EdgeInsets.all(16),
       itemCount: sections.length,
-      separatorBuilder: (_, _) => SizedBox(height: compact ? 12 : 16),
+      separatorBuilder: (_, _) => const SizedBox(height: 16),
       itemBuilder: (_, int index) => sections[index],
     );
   }
@@ -171,13 +164,11 @@ class _SearchSection<T> extends StatelessWidget {
     required this.title,
     required this.items,
     required this.itemBuilder,
-    required this.compact,
   });
 
   final String title;
   final List<T> items;
   final Widget Function(BuildContext context, T item) itemBuilder;
-  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -185,12 +176,12 @@ class _SearchSection<T> extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh.withValues(
-          alpha: compact ? 0.42 : 0.55,
+          alpha: 0.55,
         ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: EdgeInsets.all(compact ? 10 : 12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: .start,
           children: <Widget>[
@@ -200,7 +191,7 @@ class _SearchSection<T> extends StatelessWidget {
                 fontWeight: .w700,
               ),
             ),
-            SizedBox(height: compact ? 8 : 10),
+            const SizedBox(height: 10),
             ...items.map((T item) => itemBuilder(context, item)),
           ],
         ),
@@ -210,14 +201,9 @@ class _SearchSection<T> extends StatelessWidget {
 }
 
 class _SongResultTile extends StatelessWidget {
-  const _SongResultTile({
-    required this.song,
-    required this.compact,
-    required this.onTap,
-  });
+  const _SongResultTile({required this.song, required this.onTap});
 
   final SongEntity song;
-  final bool compact;
   final VoidCallback onTap;
 
   @override
@@ -226,21 +212,15 @@ class _SongResultTile extends StatelessWidget {
       title: song.title ?? '',
       subtitle: _joinNonEmpty(<String?>[song.album, song.artist]),
       artworkId: song.id,
-      compact: compact,
       onTap: onTap,
     );
   }
 }
 
 class _AlbumResultTile extends StatelessWidget {
-  const _AlbumResultTile({
-    required this.album,
-    required this.compact,
-    required this.onTap,
-  });
+  const _AlbumResultTile({required this.album, required this.onTap});
 
   final AlbumEntity album;
-  final bool compact;
   final VoidCallback onTap;
 
   @override
@@ -249,21 +229,15 @@ class _AlbumResultTile extends StatelessWidget {
       title: album.name ?? '',
       subtitle: _joinNonEmpty(<String?>[album.artist, album.year?.toString()]),
       artworkId: album.id,
-      compact: compact,
       onTap: onTap,
     );
   }
 }
 
 class _ArtistResultTile extends StatelessWidget {
-  const _ArtistResultTile({
-    required this.artist,
-    required this.compact,
-    required this.onTap,
-  });
+  const _ArtistResultTile({required this.artist, required this.onTap});
 
   final ArtistEntity artist;
-  final bool compact;
   final VoidCallback onTap;
 
   @override
@@ -275,7 +249,6 @@ class _ArtistResultTile extends StatelessWidget {
           ? ''
           : '${artist.albumCount} ${l10n.albumCount}',
       artworkId: artist.coverArt,
-      compact: compact,
       onTap: onTap,
     );
   }
@@ -286,30 +259,25 @@ class _ResultTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.artworkId,
-    required this.compact,
     required this.onTap,
   });
 
   final String title;
   final String subtitle;
   final String? artworkId;
-  final bool compact;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final double artworkSize = compact ? 42 : 52;
+    const double artworkSize = 52;
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 6 : 8,
-            vertical: compact ? 6 : 8,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
             children: <Widget>[
               ClipRRect(
@@ -322,7 +290,7 @@ class _ResultTile extends StatelessWidget {
                   fit: .cover,
                 ),
               ),
-              SizedBox(width: compact ? 10 : 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: .start,
