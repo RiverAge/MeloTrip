@@ -30,10 +30,10 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     final String? playlistId = _current?.id;
     final String? songId = widget.song?.id;
     if (playlistId == null || songId == null) return;
-    final subsonicRes = await ref
+    final result = await ref
         .read(playlistUpdateProvider.notifier)
-        .modify(playlistId: playlistId, songIdToAdd: songId);
-    if (subsonicRes == null) return;
+        .modifyResult(playlistId: playlistId, songIdToAdd: songId);
+    if (result.isErr) return;
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

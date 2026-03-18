@@ -18,15 +18,15 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
   void _submitForm(WidgetRef ref) async {
     final playlistId = widget.playlist.id;
     if (playlistId == null) return;
-    final res = await ref
+    final result = await ref
         .read(playlistUpdateProvider.notifier)
-        .modify(
+        .modifyResult(
           playlistId: playlistId,
           name: _nameController.text,
           comment: _commentController.text,
           public: _isPublic,
         );
-    if (res?.subsonicResponse?.status == 'ok' && mounted) {
+    if (result.isOk && mounted) {
       Navigator.of(context).pop();
     }
   }
