@@ -1,3 +1,5 @@
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/repository/song/song_detail_repository.dart';
@@ -14,6 +16,20 @@ Future<SubsonicResponse?> songDetail(Ref ref, String? songId) async {
 
   final repository = ref.read(songDetailRepositoryProvider);
   return repository.fetchSongDetail(id);
+}
+
+@riverpod
+Future<Result<SubsonicResponse, AppFailure>?> songDetailResult(
+  Ref ref,
+  String? songId,
+) async {
+  final id = songId;
+  if (id == null) {
+    return null;
+  }
+
+  final repository = ref.read(songDetailRepositoryProvider);
+  return repository.fetchSongDetailResult(id);
 }
 
 @riverpod
@@ -36,6 +52,39 @@ class SongFavorite extends _$SongFavorite {
     ref.invalidate(songDetailProvider(song.id));
     return subsonic;
   }
+
+  Future<Result<SubsonicResponse, AppFailure>?> toggleFavoriteResult(
+    SongEntity? song,
+  ) async {
+    if (song == null || song.id == null) {
+      return null;
+    }
+
+    final detail = await ref.read(songDetailProvider(song.id).future);
+    final starred = detail?.subsonicResponse?.song?.starred;
+    final result = await ref.read(songDetailRepositoryProvider).toggleFavoriteResult(
+      songId: song.id!,
+      isStarred: starred != null,
+    );
+
+    if (result.isOk) {
+      ref.invalidate(songDetailProvider(song.id));
+      ref.invalidate(songDetailResultProvider(song.id));
+    }
+
+    final previous = switch (state) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    if (!ref.mounted) {
+      return result;
+    }
+    state = result.when(
+      ok: AsyncData.new,
+      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+    );
+    return result;
+  }
 }
 
 @riverpod
@@ -55,5 +104,36 @@ class SongRating extends _$SongRating {
         .setRating(songId: songId, rating: rating);
     ref.invalidate(songDetailProvider(songId));
     return subsonic;
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>?> updateRatingResult(
+    String? songId,
+    int? rating,
+  ) async {
+    if (songId == null || rating == null) {
+      return null;
+    }
+
+    final result = await ref
+        .read(songDetailRepositoryProvider)
+        .setRatingResult(songId: songId, rating: rating);
+
+    if (result.isOk) {
+      ref.invalidate(songDetailProvider(songId));
+      ref.invalidate(songDetailResultProvider(songId));
+    }
+
+    final previous = switch (state) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    if (!ref.mounted) {
+      return result;
+    }
+    state = result.when(
+      ok: AsyncData.new,
+      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+    );
+    return result;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
@@ -73,6 +74,47 @@ void main() {
       expect(result?.subsonicResponse?.status, equals('ok'));
       expect(result?.subsonicResponse?.song?.id, equals('song-123'));
       expect(result?.subsonicResponse?.song?.title, equals('Test Song'));
+    });
+
+    test('songDetailResult returns Result.err when repository throws', () async {
+      final mockRepository = _MockSongDetailRepository();
+      mockRepository.setFetchResult(null);
+
+      final container = ProviderContainer(
+        overrides: [
+          songDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(songDetailResultProvider('song-123').future);
+
+      expect(result, isNotNull);
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
+    });
+
+    test('songDetailResult returns Result.ok on success', () async {
+      final mockResponse = SubsonicResponse(
+        subsonicResponse: SubsonicResponseClass(
+          status: 'ok',
+          song: SongEntity(id: 'song-123', title: 'OK Song'),
+        ),
+      );
+      final mockRepository = _MockSongDetailRepository();
+      mockRepository.setFetchResult(mockResponse);
+
+      final container = ProviderContainer(
+        overrides: [
+          songDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(songDetailResultProvider('song-123').future);
+
+      expect(result?.isOk, isTrue);
+      expect(result?.data?.subsonicResponse?.song?.title, 'OK Song');
     });
   });
 }

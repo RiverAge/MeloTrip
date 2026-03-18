@@ -100,13 +100,24 @@ void main() {
       expect(mockAdapter.lastRequest?.queryParameters['rating'], 4);
     });
 
-    test('fetchSongDetail returns null for null data', () async {
+    test('fetchSongDetail throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(songDetailRepositoryProvider);
-      final result = await repository.fetchSongDetail('song-789');
+      await expectLater(
+        repository.fetchSongDetail('song-789'),
+        throwsA(isA<StateError>()),
+      );
+    });
 
-      expect(result, isNull);
+    test('fetchSongDetailResult returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(songDetailRepositoryProvider);
+      final result = await repository.fetchSongDetailResult('song-789');
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
     });
   });
 }

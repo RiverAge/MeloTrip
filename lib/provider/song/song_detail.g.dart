@@ -86,6 +86,87 @@ final class SongDetailFamily extends $Family
   String toString() => r'songDetailProvider';
 }
 
+@ProviderFor(songDetailResult)
+final songDetailResultProvider = SongDetailResultFamily._();
+
+final class SongDetailResultProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+          Result<SubsonicResponse, AppFailure>?,
+          FutureOr<Result<SubsonicResponse, AppFailure>?>
+        >
+    with
+        $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
+        $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
+  SongDetailResultProvider._({
+    required SongDetailResultFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'songDetailResultProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$songDetailResultHash();
+
+  @override
+  String toString() {
+    return r'songDetailResultProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Result<SubsonicResponse, AppFailure>?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
+    final argument = this.argument as String?;
+    return songDetailResult(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SongDetailResultProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$songDetailResultHash() => r'a8ba1bcaf5d372e39232d9c7781de9f5fe922f5b';
+
+final class SongDetailResultFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<Result<SubsonicResponse, AppFailure>?>,
+          String?
+        > {
+  SongDetailResultFamily._()
+    : super(
+        retry: null,
+        name: r'songDetailResultProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  SongDetailResultProvider call(String? songId) =>
+      SongDetailResultProvider._(argument: songId, from: this);
+
+  @override
+  String toString() => r'songDetailResultProvider';
+}
+
 @ProviderFor(SongFavorite)
 final songFavoriteProvider = SongFavoriteProvider._();
 
@@ -110,7 +191,7 @@ final class SongFavoriteProvider
   SongFavorite create() => SongFavorite();
 }
 
-String _$songFavoriteHash() => r'5a1d653db35590d7561bcddd70fc6f5b81fd81ba';
+String _$songFavoriteHash() => r'2600446ccc61b84b9b4c4743d33f06f1030597b4';
 
 abstract class _$SongFavorite extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
@@ -155,7 +236,7 @@ final class SongRatingProvider
   SongRating create() => SongRating();
 }
 
-String _$songRatingHash() => r'701749764e071bfd3637aa26808464139f3817b6';
+String _$songRatingHash() => r'5006543fe9ab863bdf0522925c1be655cb381d36';
 
 abstract class _$SongRating extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
