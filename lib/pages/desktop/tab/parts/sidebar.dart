@@ -96,7 +96,7 @@ class _DesktopSidebar extends ConsumerWidget {
                   title: l10n.myPlaylist,
                   children: [
                     AsyncValueBuilder(
-                      provider: playlistsProvider,
+                      provider: playlistsResultProvider,
                       loading: (_, _) => const Center(
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
@@ -104,9 +104,13 @@ class _DesktopSidebar extends ConsumerWidget {
                         ),
                       ),
                       empty: (_, _) => const SizedBox.shrink(),
-                      builder: (context, data, _) {
+                      builder: (context, result, _) {
+                        if (result.isErr) {
+                          return const SizedBox.shrink();
+                        }
                         final list =
-                            data.subsonicResponse?.playlists?.playlist ?? [];
+                            result.data?.subsonicResponse?.playlists?.playlist ??
+                            [];
                         if (list.isEmpty) return const SizedBox.shrink();
                         return Column(
                           children: list

@@ -25,11 +25,14 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
       child: AsyncValueBuilder(
-        provider: playlistDetailProvider(playlistId),
+        provider: playlistDetailResultProvider(playlistId),
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),
-        builder: (context, data, ref) {
-          final playlist = data.subsonicResponse?.playlist;
+        builder: (context, result, ref) {
+          if (result.isErr) {
+            return const NoData();
+          }
+          final playlist = result.data?.subsonicResponse?.playlist;
           final List<SongEntity> songs =
               playlist?.entry ?? const <SongEntity>[];
           if (playlist == null) return const NoData();

@@ -78,9 +78,10 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
         ],
       ),
       body: AsyncValueBuilder(
-        provider: playlistsProvider,
-        builder: (p0, data, ref) {
-          final playlist = data.subsonicResponse?.playlists?.playlist;
+        provider: playlistsResultProvider,
+        builder: (p0, result, ref) {
+          if (result.isErr) return const NoData();
+          final playlist = result.data?.subsonicResponse?.playlists?.playlist;
           if (playlist == null || playlist.isEmpty) return const NoData();
           return ListView.separated(
             itemBuilder: (_, index) {

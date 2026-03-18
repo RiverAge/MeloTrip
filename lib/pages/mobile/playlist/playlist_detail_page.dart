@@ -30,9 +30,12 @@ class _PlaylistDetailPage extends State<PlaylistDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AsyncValueBuilder(
-        provider: playlistDetailProvider(widget.playlistId),
-        builder: (context, data, ref) {
-          final playlist = data.subsonicResponse?.playlist;
+        provider: playlistDetailResultProvider(widget.playlistId),
+        builder: (context, result, ref) {
+          if (result.isErr) {
+            return const NoData();
+          }
+          final playlist = result.data?.subsonicResponse?.playlist;
           if (playlist == null) {
             return const NoData();
           }

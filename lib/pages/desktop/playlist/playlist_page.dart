@@ -21,11 +21,15 @@ class DesktopPlaylistsPage extends ConsumerWidget {
         title: Text(l10n.myPlaylist),
       ),
       body: AsyncValueBuilder(
-        provider: playlistsProvider,
+        provider: playlistsResultProvider,
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),
-        builder: (context, data, _) {
-          final playlists = data.subsonicResponse?.playlists?.playlist ?? [];
+        builder: (context, result, _) {
+          if (result.isErr) {
+            return const NoData();
+          }
+          final playlists =
+              result.data?.subsonicResponse?.playlists?.playlist ?? [];
           if (playlists.isEmpty) return const NoData();
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),

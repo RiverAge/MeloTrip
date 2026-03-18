@@ -65,9 +65,12 @@ class _PlaylistPageState extends State<PlaylistPage> {
         title: Text(AppLocalizations.of(context)!.myPlaylist),
       ),
       body: AsyncValueBuilder(
-        provider: playlistsProvider,
-        builder: (p0, data, ref) {
-          final playlist = data.subsonicResponse?.playlists?.playlist;
+        provider: playlistsResultProvider,
+        builder: (p0, result, ref) {
+          if (result.isErr) {
+            return const Center(child: NoData());
+          }
+          final playlist = result.data?.subsonicResponse?.playlists?.playlist;
           if (playlist == null || playlist.isEmpty) {
             return const Center(child: NoData());
           }

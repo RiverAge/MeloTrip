@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
@@ -48,20 +49,6 @@ SongEntity _song({
   return SongEntity(id: id, title: title, duration: duration, artist: 'tester');
 }
 
-class _FakePlaylistsEmpty extends Playlists {
-  @override
-  Future<SubsonicResponse?> build() async => _playlistsResponse(const []);
-}
-
-class _FakePlaylistsOne extends Playlists {
-  @override
-  Future<SubsonicResponse?> build() async {
-    return _playlistsResponse([
-      const PlaylistEntity(id: 'pl-1', name: 'My Playlist 1', songCount: 2),
-    ]);
-  }
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -72,7 +59,9 @@ void main() {
       ProviderScope(
         overrides: [
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-          playlistsProvider.overrideWith(_FakePlaylistsEmpty.new),
+          playlistsResultProvider.overrideWith(
+            (ref) async => Result.ok(_playlistsResponse(const [])),
+          ),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -93,16 +82,26 @@ void main() {
       ProviderScope(
         overrides: [
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-          playlistsProvider.overrideWith(_FakePlaylistsOne.new),
-          playlistDetailProvider('pl-1').overrideWith(
-            (_) async => _playlistDetailResponse(
+          playlistsResultProvider.overrideWith(
+            (ref) async => Result.ok(
+              _playlistsResponse([
+                const PlaylistEntity(
+                  id: 'pl-1',
+                  name: 'My Playlist 1',
+                  songCount: 2,
+                ),
+              ]),
+            ),
+          ),
+          playlistDetailResultProvider('pl-1').overrideWith(
+            (_) async => Result.ok(_playlistDetailResponse(
               id: 'pl-1',
               name: 'My Playlist 1',
               songs: [
                 _song(id: 's1', title: 'Track 1', duration: 65),
                 _song(id: 's2', title: 'Track 2', duration: 125),
               ],
-            ),
+            )),
           ),
         ],
         child: MaterialApp(
