@@ -61,8 +61,8 @@ void main() {
       final result = await repository.fetchLyrics('song-123');
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayArtist, 'Test Artist');
-      expect(result?.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayTitle, 'Test Song');
+      expect(result.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayArtist, 'Test Artist');
+      expect(result.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayTitle, 'Test Song');
     });
 
     test('fetchLyrics returns null for null data', () async {

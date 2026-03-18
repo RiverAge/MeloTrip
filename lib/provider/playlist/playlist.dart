@@ -1,3 +1,5 @@
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/repository/playlist/playlist_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -44,6 +46,35 @@ Future<SubsonicResponse?> updatePlaylistRequest({
   return subsonicRes;
 }
 
+Future<Result<SubsonicResponse, AppFailure>> updatePlaylistRequestResult({
+  required Ref ref,
+  required String playlistId,
+  int? songIndexToRemove,
+  String? songIdToAdd,
+  String? name,
+  String? comment,
+  bool? public,
+}) async {
+  final repository = ref.read(playlistRepositoryProvider);
+  final result = await repository.updatePlaylistResult(
+    playlistId: playlistId,
+    songIndexToRemove: songIndexToRemove,
+    songIdToAdd: songIdToAdd,
+    name: name,
+    comment: comment,
+    public: public,
+  );
+
+  if (result.isOk) {
+    ref.invalidate(playlistDetailProvider(playlistId));
+    ref.invalidate(playlistsProvider);
+    ref.invalidate(playlistDetailResultProvider(playlistId));
+    ref.invalidate(playlistsResultProvider);
+  }
+
+  return result;
+}
+
 @riverpod
 class Playlists extends _$Playlists {
   @override
@@ -61,12 +92,38 @@ class Playlists extends _$Playlists {
     return data;
   }
 
+  Future<Result<SubsonicResponse, AppFailure>?> createPlaylistResult(
+    String? name,
+  ) async {
+    if (name == null) return null;
+    final repository = ref.read(playlistRepositoryProvider);
+    final result = await repository.createPlaylistResult(name);
+    if (result.isOk) {
+      ref.invalidateSelf();
+      ref.invalidate(playlistsResultProvider);
+    }
+    return result;
+  }
+
   Future<SubsonicResponse?> deletePlaytlist(String? playlistId) async {
     if (playlistId == null) return null;
     final repository = ref.read(playlistRepositoryProvider);
     final data = await repository.deletePlaylist(playlistId);
     ref.invalidateSelf();
     return data;
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>?> deletePlaytlistResult(
+    String? playlistId,
+  ) async {
+    if (playlistId == null) return null;
+    final repository = ref.read(playlistRepositoryProvider);
+    final result = await repository.deletePlaylistResult(playlistId);
+    if (result.isOk) {
+      ref.invalidateSelf();
+      ref.invalidate(playlistsResultProvider);
+    }
+    return result;
   }
 }
 
@@ -105,4 +162,54 @@ class PlaylistUpdate extends _$PlaylistUpdate {
     state = AsyncData(subsonicRes);
     return subsonicRes;
   }
+
+  Future<Result<SubsonicResponse, AppFailure>> modifyResult({
+    required String playlistId,
+    int? songIndexToRemove,
+    String? songIdToAdd,
+    String? name,
+    String? comment,
+    bool? public,
+  }) async {
+    final previous = switch (state) {
+      AsyncData(:final value) => value,
+      _ => null,
+    };
+    state = const AsyncLoading();
+    final result = await updatePlaylistRequestResult(
+      ref: ref,
+      playlistId: playlistId,
+      songIndexToRemove: songIndexToRemove,
+      songIdToAdd: songIdToAdd,
+      name: name,
+      comment: comment,
+      public: public,
+    );
+
+    if (!ref.mounted) {
+      return result;
+    }
+
+    state = result.when(
+      ok: AsyncData.new,
+      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+    );
+    return result;
+  }
+}
+
+@riverpod
+Future<Result<SubsonicResponse, AppFailure>> playlistsResult(Ref ref) async {
+  final repository = ref.read(playlistRepositoryProvider);
+  return repository.fetchPlaylistsResult();
+}
+
+@riverpod
+Future<Result<SubsonicResponse, AppFailure>?> playlistDetailResult(
+  Ref ref,
+  String? playlistId,
+) async {
+  if (playlistId == null) return null;
+  final repository = ref.read(playlistRepositoryProvider);
+  return repository.fetchPlaylistDetailResult(playlistId);
 }

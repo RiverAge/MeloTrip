@@ -59,8 +59,8 @@ void main() {
       final result = await repository.fetchSongDetail('song-789');
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.song?.id, 'song-789');
-      expect(result?.subsonicResponse?.song?.title, 'Test Song');
+      expect(result.subsonicResponse?.song?.id, 'song-789');
+      expect(result.subsonicResponse?.song?.title, 'Test Song');
     });
 
     test('toggleFavorite calls star when not starred', () async {

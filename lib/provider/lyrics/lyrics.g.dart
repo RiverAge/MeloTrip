@@ -66,7 +66,7 @@ final class LyricsProvider
   }
 }
 
-String _$lyricsHash() => r'04d7d76ca493e8d437773800584cacd25c59d6ee';
+String _$lyricsHash() => r'e154efe3c68aa34830ba9d37c87f0e82a905a0fd';
 
 final class LyricsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {

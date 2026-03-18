@@ -18,16 +18,16 @@ class _MockSongDetailRepository extends SongDetailRepository {
   }
 
   @override
-  Future<SubsonicResponse?> fetchSongDetail(String songId) async {
+  Future<SubsonicResponse> fetchSongDetail(String songId) async {
     fetchCalled = true;
     lastSongId = songId;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
 void main() {
   group('songDetailProvider', () {
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockSongDetailRepository();
       mockRepository.setFetchResult(null);
 
@@ -38,9 +38,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(songDetailProvider('song-123').future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(songDetailProvider('song-123').future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
       expect(mockRepository.lastSongId, 'song-123');
     });

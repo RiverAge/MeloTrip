@@ -57,8 +57,8 @@ void main() {
       final result = await repository.fetchStarred();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.starred?.song, hasLength(2));
-      expect(result?.subsonicResponse?.starred?.song?.first.id, 'song-1');
+      expect(result.subsonicResponse?.starred?.song, hasLength(2));
+      expect(result.subsonicResponse?.starred?.song?.first.id, 'song-1');
     });
 
     test('fetchStarred returns parsed response with albums and artists', () async {
@@ -80,8 +80,8 @@ void main() {
       final result = await repository.fetchStarred();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.starred?.album, hasLength(1));
-      expect(result?.subsonicResponse?.starred?.artist, hasLength(1));
+      expect(result.subsonicResponse?.starred?.album, hasLength(1));
+      expect(result.subsonicResponse?.starred?.artist, hasLength(1));
     });
 
     test('fetchStarred returns null for null data', () async {

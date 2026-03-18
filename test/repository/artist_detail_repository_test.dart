@@ -60,8 +60,8 @@ void main() {
       final result = await repository.fetchArtistDetail('artist-456');
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.artist?.id, 'artist-456');
-      expect(result?.subsonicResponse?.artist?.name, 'Test Artist');
+      expect(result.subsonicResponse?.artist?.id, 'artist-456');
+      expect(result.subsonicResponse?.artist?.name, 'Test Artist');
     });
 
     test('fetchArtistDetail returns null for null data', () async {

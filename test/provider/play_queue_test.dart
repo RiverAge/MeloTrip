@@ -13,15 +13,15 @@ class _MockPlayQueueRepository extends PlayQueueRepository {
   bool fetchCalled = false;
 
   @override
-  Future<SubsonicResponse?> fetchPlayQueue() async {
+  Future<SubsonicResponse> fetchPlayQueue() async {
     fetchCalled = true;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
 void main() {
   group('playQueueProvider', () {
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockPlayQueueRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -30,9 +30,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(playQueueProvider.future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(playQueueProvider.future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
     });
 

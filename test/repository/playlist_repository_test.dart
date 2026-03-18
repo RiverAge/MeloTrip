@@ -56,7 +56,7 @@ void main() {
       final result = await repository.fetchPlaylists();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.playlists?.playlist, hasLength(1));
+      expect(result.subsonicResponse?.playlists?.playlist, hasLength(1));
     });
 
     test('fetchPlaylistDetail sends correct request', () async {
@@ -142,7 +142,7 @@ void main() {
       expect(mockAdapter.lastRequest?.queryParameters.containsKey('songIdToAdd'), isFalse);
     });
 
-    test('updatePlaylist returns null for failed status', () async {
+    test('updatePlaylist throws for failed status', () async {
       mockAdapter.setResponse({
         'subsonic-response': {
           'status': 'failed',
@@ -151,18 +151,30 @@ void main() {
       });
 
       final repository = container.read(playlistRepositoryProvider);
-      final result = await repository.updatePlaylist(playlistId: 'pl-123');
-
-      expect(result, isNull);
+      await expectLater(
+        repository.updatePlaylist(playlistId: 'pl-123'),
+        throwsA(isA<StateError>()),
+      );
     });
 
-    test('fetchPlaylists returns null for null data', () async {
+    test('fetchPlaylists throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(playlistRepositoryProvider);
-      final result = await repository.fetchPlaylists();
+      await expectLater(
+        repository.fetchPlaylists(),
+        throwsA(isA<StateError>()),
+      );
+    });
 
-      expect(result, isNull);
+    test('fetchPlaylistsResult returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(playlistRepositoryProvider);
+      final result = await repository.fetchPlaylistsResult();
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
     });
   });
 }

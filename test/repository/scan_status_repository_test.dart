@@ -55,8 +55,8 @@ void main() {
       final result = await repository.fetchScanStatus();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.scanStatus?.scanning, true);
-      expect(result?.subsonicResponse?.scanStatus?.count, 1500);
+      expect(result.subsonicResponse?.scanStatus?.scanning, true);
+      expect(result.subsonicResponse?.scanStatus?.count, 1500);
     });
 
     test('fetchScanStatus returns parsed response when not scanning', () async {
@@ -71,7 +71,7 @@ void main() {
       final result = await repository.fetchScanStatus();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.scanStatus?.scanning, false);
+      expect(result.subsonicResponse?.scanStatus?.scanning, false);
     });
 
     test('fetchScanStatus returns null for null data', () async {

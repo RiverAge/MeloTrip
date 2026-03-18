@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/repository/playlist/playlist_repository.dart';
@@ -236,6 +237,44 @@ void main() {
       expect(result, isNotNull);
       expect(result?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.updateCalled, isTrue);
+    });
+  });
+
+  group('playlist Result APIs', () {
+    test('createPlaylistResult returns Result.ok on success', () async {
+      final mockResponse = const SubsonicResponse(
+        subsonicResponse: SubsonicResponseClass(status: 'ok'),
+      );
+      final mockRepository = _MockPlaylistRepository(mockResponse);
+      final container = ProviderContainer(
+        overrides: [
+          playlistRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(playlistsProvider.notifier);
+      final result = await notifier.createPlaylistResult('My Playlist');
+
+      expect(result, isNotNull);
+      expect(result?.isOk, isTrue);
+      expect(result?.data?.subsonicResponse?.status, 'ok');
+    });
+
+    test('modifyResult returns Result.err on failure', () async {
+      final mockRepository = _MockPlaylistRepository(null);
+      final container = ProviderContainer(
+        overrides: [
+          playlistRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(playlistUpdateProvider.notifier);
+      final result = await notifier.modifyResult(playlistId: '123');
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isA<AppFailure>());
     });
   });
 }

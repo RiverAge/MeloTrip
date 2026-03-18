@@ -60,8 +60,8 @@ void main() {
       final result = await repository.fetchPlayQueue();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.playQueue?.current, 'song-1');
-      expect(result?.subsonicResponse?.playQueue?.position, 30);
+      expect(result.subsonicResponse?.playQueue?.current, 'song-1');
+      expect(result.subsonicResponse?.playQueue?.position, 30);
     });
 
     test('fetchPlayQueue returns null for null data', () async {

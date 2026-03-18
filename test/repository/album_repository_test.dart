@@ -45,9 +45,9 @@ void main() {
       );
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, 'ok');
-      expect(result?.subsonicResponse?.albumList?.album, hasLength(1));
-      expect(result?.subsonicResponse?.albumList?.album?.first.id, 'album-1');
+      expect(result.subsonicResponse?.status, 'ok');
+      expect(result.subsonicResponse?.albumList?.album, hasLength(1));
+      expect(result.subsonicResponse?.albumList?.album?.first.id, 'album-1');
     });
 
     test('fetchAlbumListResponse sends correct query parameters', () async {

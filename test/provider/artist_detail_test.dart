@@ -18,10 +18,10 @@ class _MockArtistDetailRepository extends ArtistDetailRepository {
   }
 
   @override
-  Future<SubsonicResponse?> fetchArtistDetail(String artistId) async {
+  Future<SubsonicResponse> fetchArtistDetail(String artistId) async {
     fetchCalled = true;
     lastArtistId = artistId;
-    return _fetchResult;
+    return _fetchResult!;
   }
 }
 
@@ -42,7 +42,7 @@ void main() {
       expect(mockRepository.fetchCalled, isFalse);
     });
 
-    test('returns null when repository returns null', () async {
+    test('throws when repository throws', () async {
       final mockRepository = _MockArtistDetailRepository();
       mockRepository.setFetchResult(null);
 
@@ -53,9 +53,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailProvider('artist-123').future);
-
-      expect(result, isNull);
+      await expectLater(
+        container.read(artistDetailProvider('artist-123').future),
+        throwsA(isA<TypeError>()),
+      );
       expect(mockRepository.fetchCalled, isTrue);
       expect(mockRepository.lastArtistId, 'artist-123');
     });

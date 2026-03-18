@@ -57,7 +57,7 @@ void main() {
       final result = await repository.fetchGenresResponse();
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.genres?.genre, hasLength(2));
+      expect(result.subsonicResponse?.genres?.genre, hasLength(2));
     });
 
     test('fetchGenresItems returns empty list for null response', () async {

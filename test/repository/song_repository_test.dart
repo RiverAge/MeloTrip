@@ -85,7 +85,7 @@ void main() {
       );
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.searchResult3?.song, hasLength(1));
+      expect(result.subsonicResponse?.searchResult3?.song, hasLength(1));
     });
 
     test('fetchSongSearchItems returns empty list for null response', () async {

@@ -33,7 +33,7 @@ final class PlaylistsProvider
   Playlists create() => Playlists();
 }
 
-String _$playlistsHash() => r'1471efff1d565b4191d4c50c550b4e3998737b13';
+String _$playlistsHash() => r'b7368d2c3a10c55fa2fbfaa4fd4c1ddb5e06a51e';
 
 abstract class _$Playlists extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
@@ -155,7 +155,7 @@ final class PlaylistUpdateProvider
   PlaylistUpdate create() => PlaylistUpdate();
 }
 
-String _$playlistUpdateHash() => r'fd8297f306d114119833bf14d68af637aa219246';
+String _$playlistUpdateHash() => r'2e5a8fb0786e11e1e8ec6d27942b5e74ab26ac78';
 
 abstract class _$PlaylistUpdate extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
@@ -174,4 +174,127 @@ abstract class _$PlaylistUpdate extends $AsyncNotifier<SubsonicResponse?> {
             >;
     element.handleCreate(ref, build);
   }
+}
+
+@ProviderFor(playlistsResult)
+final playlistsResultProvider = PlaylistsResultProvider._();
+
+final class PlaylistsResultProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Result<SubsonicResponse, AppFailure>>,
+          Result<SubsonicResponse, AppFailure>,
+          FutureOr<Result<SubsonicResponse, AppFailure>>
+        >
+    with
+        $FutureModifier<Result<SubsonicResponse, AppFailure>>,
+        $FutureProvider<Result<SubsonicResponse, AppFailure>> {
+  PlaylistsResultProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'playlistsResultProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$playlistsResultHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Result<SubsonicResponse, AppFailure>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Result<SubsonicResponse, AppFailure>> create(Ref ref) {
+    return playlistsResult(ref);
+  }
+}
+
+String _$playlistsResultHash() => r'1b9b6c77f82de8ee9b53ea4ec2c649cc45bf6f42';
+
+@ProviderFor(playlistDetailResult)
+final playlistDetailResultProvider = PlaylistDetailResultFamily._();
+
+final class PlaylistDetailResultProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+          Result<SubsonicResponse, AppFailure>?,
+          FutureOr<Result<SubsonicResponse, AppFailure>?>
+        >
+    with
+        $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
+        $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
+  PlaylistDetailResultProvider._({
+    required PlaylistDetailResultFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'playlistDetailResultProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$playlistDetailResultHash();
+
+  @override
+  String toString() {
+    return r'playlistDetailResultProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Result<SubsonicResponse, AppFailure>?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
+    final argument = this.argument as String?;
+    return playlistDetailResult(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PlaylistDetailResultProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$playlistDetailResultHash() =>
+    r'3dae4e6f6539ccc151a466dfc2ea4e0a155dd701';
+
+final class PlaylistDetailResultFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<Result<SubsonicResponse, AppFailure>?>,
+          String?
+        > {
+  PlaylistDetailResultFamily._()
+    : super(
+        retry: null,
+        name: r'playlistDetailResultProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  PlaylistDetailResultProvider call(String? playlistId) =>
+      PlaylistDetailResultProvider._(argument: playlistId, from: this);
+
+  @override
+  String toString() => r'playlistDetailResultProvider';
 }

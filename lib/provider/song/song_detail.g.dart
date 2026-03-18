@@ -110,7 +110,7 @@ final class SongFavoriteProvider
   SongFavorite create() => SongFavorite();
 }
 
-String _$songFavoriteHash() => r'18770ed6e98e3041394763c7dc57d1486535b25e';
+String _$songFavoriteHash() => r'5a1d653db35590d7561bcddd70fc6f5b81fd81ba';
 
 abstract class _$SongFavorite extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
@@ -155,7 +155,7 @@ final class SongRatingProvider
   SongRating create() => SongRating();
 }
 
-String _$songRatingHash() => r'261f78bb09176eb54c5ffa18de8344744f37b776';
+String _$songRatingHash() => r'701749764e071bfd3637aa26808464139f3817b6';
 
 abstract class _$SongRating extends $AsyncNotifier<SubsonicResponse?> {
   FutureOr<SubsonicResponse?> build();
