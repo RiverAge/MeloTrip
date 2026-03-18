@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:update_installer/update_installer.dart';
 
 part 'update_flow.g.dart';
+part 'update_flow_download_tracker.dart';
 part 'update_flow_models.dart';
 
 @Riverpod(keepAlive: true)
@@ -86,121 +87,42 @@ class UpdateFlowController extends _$UpdateFlowController {
   }) async {
     if (state.isUpdating) return 'Update is already in progress.';
 
-    state = state.copyWith(
-      isUpdating: true,
-      downloadProgressPercent: 0,
-      downloadedBytes: 0,
-      totalBytes: update.fileSize,
-      downloadBytesPerSecond: 0,
-      clearEtaSeconds: true,
-      stage: .downloading,
-      clearPendingPackagePath: true,
-      clearPendingVersion: true,
-      availableUpdate: update,
-      clearCheckError: true,
-    );
-    var lastReceived = 0;
-    DateTime? lastTick;
-    DateTime? lastUiTick;
+    _beginDownloadFlow(update);
+    final tracker = _DownloadProgressTracker();
     try {
       final String packagePath = await _service.downloadAndVerifyPackagePath(
         update: update,
         onStageChanged: (UpdateDownloadStage stage) {
           if (!ref.mounted) return;
-          if (stage == .downloading) {
-            state = state.copyWith(stage: .downloading);
-            return;
-          }
-          state = state.copyWith(
-            stage: .verifying,
-            downloadBytesPerSecond: 0,
-            clearEtaSeconds: true,
-          );
+          _applyStageUpdate(stage);
         },
         onProgress: (int received, int total, double progress) {
           if (!ref.mounted) return;
-          final double percent = (progress * 100).clamp(0, 100).toDouble();
-          final DateTime now = DateTime.now();
-          var speed = state.downloadBytesPerSecond;
-          if (lastTick != null) {
-            final int deltaMs = now.difference(lastTick!).inMilliseconds;
-            final int deltaBytes = received - lastReceived;
-            if (deltaMs > 0 && deltaBytes >= 0) {
-              final double instantSpeed = deltaBytes / (deltaMs / 1000);
-              speed = speed <= 0
-                  ? instantSpeed
-                  : speed * 0.75 + instantSpeed * 0.25;
-            }
-          }
-          final int? rawEta = speed > 0 && total > 0
-              ? ((total - received).clamp(0, total) / speed).ceil()
-              : null;
-          final int? eta = rawEta == null ? null : ((rawEta / 5).round() * 5);
-          lastTick = now;
-          lastReceived = received;
-          final bool shouldThrottle =
-              lastUiTick != null &&
-              now.difference(lastUiTick!).inMilliseconds < 300 &&
-              (percent - state.downloadProgressPercent).abs() < 0.2;
-          if (shouldThrottle) return;
-          lastUiTick = now;
-          state = state.copyWith(
-            downloadProgressPercent: percent,
-            downloadedBytes: received,
-            totalBytes: total > 0 ? total : update.fileSize,
-            downloadBytesPerSecond: speed,
-            etaSeconds: eta,
-            clearEtaSeconds: eta == null,
+          final snapshot = tracker.compute(
+            received: received,
+            total: total,
+            progress: progress,
+            currentUiPercent: state.downloadProgressPercent,
           );
+          if (snapshot == null) {
+            return;
+          }
+          _applyProgressSnapshot(snapshot, fallbackTotalBytes: update.fileSize);
         },
       );
       if (!ref.mounted) return null;
-      state = state.copyWith(
-        downloadProgressPercent: 100,
-        downloadedBytes: state.totalBytes > 0
-            ? state.totalBytes
-            : update.fileSize,
+      _markDownloadCompleted(update);
+      await _installDownloadedPackage(
+        packagePath,
+        update: update,
+        updaterStrings: updaterStrings,
       );
-      if (_service.requiresHostExitForInstall) {
-        state = state.copyWith(
-          stage: .openingInstaller,
-          downloadBytesPerSecond: 0,
-          clearEtaSeconds: true,
-          pendingPackagePath: packagePath,
-          pendingVersionName: update.versionName,
-          pendingVersionCode: update.versionCode,
-        );
-        await _service.installDownloadedPackagePath(
-          packagePath,
-          updaterStrings: updaterStrings,
-        );
-        return null;
-      }
-      state = state.copyWith(
-        stage: .openingInstaller,
-        downloadBytesPerSecond: 0,
-        clearEtaSeconds: true,
-      );
-      await _service.installDownloadedPackagePath(packagePath);
       return null;
     } catch (err) {
-      if (ref.mounted &&
-          _service.requiresHostExitForInstall &&
-          state.pendingPackagePath != null) {
-        state = state.copyWith(stage: .readyToInstall);
-      }
+      _maybeMarkReadyToInstall();
       return '$err';
     } finally {
-      if (ref.mounted) {
-        state = state.copyWith(
-          isUpdating: false,
-          stage: state.stage == .readyToInstall ? .readyToInstall : .idle,
-          downloadBytesPerSecond: 0,
-          clearEtaSeconds: true,
-          clearPendingPackagePath: state.stage != .readyToInstall,
-          clearPendingVersion: state.stage != .readyToInstall,
-        );
-      }
+      _finishUpdateFlow();
     }
   }
 
@@ -237,5 +159,109 @@ class UpdateFlowController extends _$UpdateFlowController {
         );
       }
     }
+  }
+
+  void _beginDownloadFlow(AppUpdateInfo update) {
+    state = state.copyWith(
+      isUpdating: true,
+      downloadProgressPercent: 0,
+      downloadedBytes: 0,
+      totalBytes: update.fileSize,
+      downloadBytesPerSecond: 0,
+      clearEtaSeconds: true,
+      stage: .downloading,
+      clearPendingPackagePath: true,
+      clearPendingVersion: true,
+      availableUpdate: update,
+      clearCheckError: true,
+    );
+  }
+
+  void _applyStageUpdate(UpdateDownloadStage stage) {
+    if (stage == .downloading) {
+      state = state.copyWith(stage: .downloading);
+      return;
+    }
+    state = state.copyWith(
+      stage: .verifying,
+      downloadBytesPerSecond: 0,
+      clearEtaSeconds: true,
+    );
+  }
+
+  void _applyProgressSnapshot(
+    _DownloadProgressSnapshot snapshot, {
+    required int fallbackTotalBytes,
+  }) {
+    state = state.copyWith(
+      downloadProgressPercent: snapshot.percent,
+      downloadedBytes: snapshot.receivedBytes,
+      totalBytes: snapshot.totalBytes > 0
+          ? snapshot.totalBytes
+          : fallbackTotalBytes,
+      downloadBytesPerSecond: snapshot.speedBytesPerSecond,
+      etaSeconds: snapshot.etaSeconds,
+      clearEtaSeconds: snapshot.etaSeconds == null,
+    );
+  }
+
+  void _markDownloadCompleted(AppUpdateInfo update) {
+    state = state.copyWith(
+      downloadProgressPercent: 100,
+      downloadedBytes: state.totalBytes > 0
+          ? state.totalBytes
+          : update.fileSize,
+    );
+  }
+
+  Future<void> _installDownloadedPackage(
+    String packagePath, {
+    required AppUpdateInfo update,
+    required WindowsUpdaterStrings? updaterStrings,
+  }) async {
+    state = state.copyWith(
+      stage: .openingInstaller,
+      downloadBytesPerSecond: 0,
+      clearEtaSeconds: true,
+      pendingPackagePath: _service.requiresHostExitForInstall
+          ? packagePath
+          : null,
+      pendingVersionName: _service.requiresHostExitForInstall
+          ? update.versionName
+          : null,
+      pendingVersionCode: _service.requiresHostExitForInstall
+          ? update.versionCode
+          : null,
+      clearPendingPackagePath: !_service.requiresHostExitForInstall,
+      clearPendingVersion: !_service.requiresHostExitForInstall,
+    );
+    await _service.installDownloadedPackagePath(
+      packagePath,
+      updaterStrings: updaterStrings,
+    );
+  }
+
+  void _maybeMarkReadyToInstall() {
+    if (!ref.mounted ||
+        !_service.requiresHostExitForInstall ||
+        state.pendingPackagePath == null) {
+      return;
+    }
+    state = state.copyWith(stage: .readyToInstall);
+  }
+
+  void _finishUpdateFlow() {
+    if (!ref.mounted) {
+      return;
+    }
+    final bool keepPendingInstall = state.stage == .readyToInstall;
+    state = state.copyWith(
+      isUpdating: false,
+      stage: keepPendingInstall ? .readyToInstall : .idle,
+      downloadBytesPerSecond: 0,
+      clearEtaSeconds: true,
+      clearPendingPackagePath: !keepPendingInstall,
+      clearPendingVersion: !keepPendingInstall,
+    );
   }
 }
