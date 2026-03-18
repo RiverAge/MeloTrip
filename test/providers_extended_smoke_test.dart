@@ -22,7 +22,6 @@ void main() {
     addTearDown(container.dispose);
 
     expect(await container.read(playlistDetailResultProvider(null).future), isNull);
-    expect(await container.read(artistDetailProvider(null).future), isNull);
     expect(await container.read(artistDetailResultProvider(null).future), isNull);
     expect(await container.read(songDetailProvider(null).future), isNull);
     expect(await container.read(albumDetailProvider(null).future), isNull);

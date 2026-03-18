@@ -27,7 +27,7 @@ class _MockArtistDetailRepository extends ArtistDetailRepository {
 }
 
 void main() {
-  group('artistDetailProvider', () {
+  group('artistDetailResultProvider', () {
     test('returns null when artistId is null', () async {
       final mockRepository = _MockArtistDetailRepository();
       final container = ProviderContainer(
@@ -37,13 +37,13 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailProvider(null).future);
+      final result = await container.read(artistDetailResultProvider(null).future);
 
       expect(result, isNull);
       expect(mockRepository.fetchCalled, isFalse);
     });
 
-    test('throws when repository throws', () async {
+    test('returns Result.err when repository throws', () async {
       final mockRepository = _MockArtistDetailRepository();
       mockRepository.setFetchResult(null);
 
@@ -54,15 +54,15 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await expectLater(
-        container.read(artistDetailProvider('artist-123').future),
-        throwsA(isA<TypeError>()),
-      );
+      final result = await container.read(artistDetailResultProvider('artist-123').future);
+
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
       expect(mockRepository.fetchCalled, isTrue);
       expect(mockRepository.lastArtistId, 'artist-123');
     });
 
-    test('returns artist detail from repository', () async {
+    test('returns Result.ok on success', () async {
       final mockResponse = SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(
           status: 'ok',
@@ -83,53 +83,13 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailProvider('artist-123').future);
-
-      expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
-      expect(result?.subsonicResponse?.artist?.id, equals('artist-123'));
-      expect(result?.subsonicResponse?.artist?.name, equals('Test Artist'));
-    });
-
-    test('artistDetailResult returns Result.err when repository throws', () async {
-      final mockRepository = _MockArtistDetailRepository();
-      mockRepository.setFetchResult(null);
-
-      final container = ProviderContainer(
-        overrides: [
-          artistDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
       final result = await container.read(artistDetailResultProvider('artist-123').future);
 
       expect(result, isNotNull);
-      expect(result?.isErr, isTrue);
-      expect(result?.error, isA<AppFailure>());
-    });
-
-    test('artistDetailResult returns Result.ok on success', () async {
-      final mockResponse = SubsonicResponse(
-        subsonicResponse: SubsonicResponseClass(
-          status: 'ok',
-          artist: ArtistEntity(id: 'artist-123', name: 'Test Artist'),
-        ),
-      );
-      final mockRepository = _MockArtistDetailRepository();
-      mockRepository.setFetchResult(mockResponse);
-
-      final container = ProviderContainer(
-        overrides: [
-          artistDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final result = await container.read(artistDetailResultProvider('artist-123').future);
-
       expect(result?.isOk, isTrue);
-      expect(result?.data?.subsonicResponse?.artist?.name, 'Test Artist');
+      expect(result?.data?.subsonicResponse?.status, equals('ok'));
+      expect(result?.data?.subsonicResponse?.artist?.id, equals('artist-123'));
+      expect(result?.data?.subsonicResponse?.artist?.name, equals('Test Artist'));
     });
   });
 }
