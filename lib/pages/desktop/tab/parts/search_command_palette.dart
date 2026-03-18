@@ -115,124 +115,133 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
     return Center(
       child: Material(
         color: colorScheme.surface.withValues(alpha: 0),
-        child: Container(
-          width: 720,
-          height: 560,
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-            ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: 0.28),
-                blurRadius: 40,
-                offset: const Offset(0, 20),
-              ),
-            ],
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: 360,
+            minHeight: 420,
+            maxWidth: 720,
+            maxHeight: 560,
           ),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      l10n.searchHint,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: .w700,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.pop(context),
-                      style: IconButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(32, 32),
-                      ),
-                    ),
-                  ],
-                ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _controller,
-                  autofocus: true,
-                  onChanged: (_) => setState(() {}),
-                  onSubmitted: (_) => _openFullSearch(),
-                  decoration: InputDecoration(
-                    hintText: l10n.searchHint,
-                    prefixIcon: const Icon(Icons.search_rounded, size: 20),
-                    filled: true,
-                    fillColor: colorScheme.surfaceContainerHighest,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: colorScheme.shadow.withValues(alpha: 0.28),
+                  blurRadius: 40,
+                  offset: const Offset(0, 20),
+                ),
+              ],
+            ),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        l10n.searchHint,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: .w700,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.close, size: 20),
+                        onPressed: () => Navigator.pop(context),
+                        style: IconButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(32, 32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    controller: _controller,
+                    autofocus: true,
+                    onChanged: (_) => setState(() {}),
+                    onSubmitted: (_) => _openFullSearch(),
+                    decoration: InputDecoration(
+                      hintText: l10n.searchHint,
+                      prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                      filled: true,
+                      fillColor: colorScheme.surfaceContainerHighest,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: _query.isEmpty
-                    ? DesktopSearchHistoryPanel(
-                        onSelectQuery: (String value) {
-                          _controller.text = value;
-                          setState(() {});
-                        },
-                      )
-                    : AsyncValueBuilder(
-                        provider: searchProvider(_query),
-                        loading: (_, _) =>
-                            const Center(child: CircularProgressIndicator()),
-                        empty: (_, _) => const NoData(),
-                        builder: (BuildContext context, data, WidgetRef ref) {
-                          final searchResult =
-                              data.subsonicResponse?.searchResult3;
-                          return DesktopSearchResultsView(
-                            songs: searchResult?.song ?? const <SongEntity>[],
-                            albums:
-                                searchResult?.album ?? const <AlbumEntity>[],
-                            artists:
-                                searchResult?.artist ?? const <ArtistEntity>[],
-                            maxItemsPerSection: 3,
-                            onSongTap: _playSong,
-                            onAlbumTap: _openAlbum,
-                            onArtistTap: _openArtist,
-                          );
-                        },
+                const SizedBox(height: 16),
+                Expanded(
+                  child: _query.isEmpty
+                      ? DesktopSearchHistoryPanel(
+                          onSelectQuery: (String value) {
+                            _controller.text = value;
+                            setState(() {});
+                          },
+                        )
+                      : AsyncValueBuilder(
+                          provider: searchProvider(_query),
+                          loading: (_, _) =>
+                              const Center(child: CircularProgressIndicator()),
+                          empty: (_, _) => const NoData(),
+                          builder: (BuildContext context, data, WidgetRef ref) {
+                            final searchResult =
+                                data.subsonicResponse?.searchResult3;
+                            return DesktopSearchResultsView(
+                              songs: searchResult?.song ?? const <SongEntity>[],
+                              albums:
+                                  searchResult?.album ?? const <AlbumEntity>[],
+                              artists:
+                                  searchResult?.artist ??
+                                  const <ArtistEntity>[],
+                              maxItemsPerSection: 3,
+                              onSongTap: _playSong,
+                              onAlbumTap: _openAlbum,
+                              onArtistTap: _openArtist,
+                            );
+                          },
+                        ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.2,
+                        ),
                       ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: colorScheme.outlineVariant.withValues(alpha: 0.2),
                     ),
                   ),
+                  child: Row(
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: _query.isEmpty ? null : _openFullSearch,
+                        child: Text(l10n.viewAll),
+                      ),
+                      const Spacer(),
+                      const _KeyHint(label: 'ESC'),
+                      const SizedBox(width: 8),
+                      const _KeyHint(icon: Icons.keyboard_return_rounded),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: _query.isEmpty ? null : _openFullSearch,
-                      child: Text(l10n.viewAll),
-                    ),
-                    const Spacer(),
-                    const _KeyHint(label: 'ESC'),
-                    const SizedBox(width: 8),
-                    const _KeyHint(icon: Icons.keyboard_return_rounded),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

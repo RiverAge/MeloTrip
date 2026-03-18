@@ -27,12 +27,18 @@ class DesktopFoldersPage extends ConsumerWidget {
         children: [
           _PageHeader(l10n: l10n),
           const Divider(height: 1),
-          const Expanded(
+          Expanded(
             child: Row(
               children: [
-                SizedBox(width: 280, child: _LeftPane()),
-                VerticalDivider(width: 1),
-                Expanded(child: _RightPane()),
+                Flexible(
+                  flex: 3,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: 220, maxWidth: 320),
+                    child: _LeftPane(),
+                  ),
+                ),
+                const VerticalDivider(width: 1),
+                const Expanded(flex: 7, child: _RightPane()),
               ],
             ),
           ),

@@ -30,8 +30,11 @@ class _DesktopVolumeBar extends ConsumerWidget {
                     context,
                   ).colorScheme.onSurfaceVariant.withValues(alpha: 0.78),
                 ),
-                SizedBox(
-                  width: 120,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 84,
+                    maxWidth: 140,
+                  ),
                   child: SliderTheme(
                     data: SliderThemeData(
                       trackHeight: 2,
