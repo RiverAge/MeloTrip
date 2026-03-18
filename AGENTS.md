@@ -203,6 +203,13 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - For simple read and write state backed by one upstream source, prefer a single `@riverpod class` with `build()` for reads and explicit instance methods for writes.
 - Do not split simple settings flows into multiple controller or reader providers unless the behavior is complex enough to justify the indirection.
 
+### Subsonic Response Parsing
+
+- For Subsonic REST responses, repositories must deserialize through typed models in `lib/model/response/...` (typically via `SubsonicResponse.fromJson`).
+- Do not traverse Subsonic payloads with ad-hoc map paths such as `data['subsonic-response']?...` inside feature repositories or feature providers. Transport-layer interceptors are the only exception for minimal error extraction.
+- When an endpoint field is missing from current models, add or extend the response model first, then run code generation; do not keep a temporary manual-map parser.
+- If legacy manual parsing cannot be removed immediately, document the blocking reason in handoff and create a follow-up task.
+
 ### User Configuration Persistence
 
 - User preference and settings data should default to the existing app configuration storage path, for example database-backed `user_config`, instead of ad-hoc JSON files.

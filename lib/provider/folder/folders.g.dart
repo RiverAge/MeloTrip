@@ -58,6 +58,55 @@ abstract class _$FolderIndexes extends $AsyncNotifier<List<FolderIndexEntry>> {
   }
 }
 
+@ProviderFor(FolderContents)
+final folderContentsProvider = FolderContentsProvider._();
+
+final class FolderContentsProvider
+    extends $AsyncNotifierProvider<FolderContents, List<FolderIndexEntry>> {
+  FolderContentsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'folderContentsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$folderContentsHash();
+
+  @$internal
+  @override
+  FolderContents create() => FolderContents();
+}
+
+String _$folderContentsHash() => r'e5143a7b163c7f4c584ecdebe826d67eda9966f1';
+
+abstract class _$FolderContents extends $AsyncNotifier<List<FolderIndexEntry>> {
+  FutureOr<List<FolderIndexEntry>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<FolderIndexEntry>>, List<FolderIndexEntry>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<FolderIndexEntry>>,
+                List<FolderIndexEntry>
+              >,
+              AsyncValue<List<FolderIndexEntry>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(FolderPath)
 final folderPathProvider = FolderPathProvider._();
 
@@ -202,7 +251,7 @@ final class FolderChildrenCacheProvider
 }
 
 String _$folderChildrenCacheHash() =>
-    r'fd6a995533729cf2e25f135071cf59cabd9a6225';
+    r'8a52bf587f2d3f99124314792b0dc8f3ed6452c8';
 
 abstract class _$FolderChildrenCache
     extends $Notifier<Map<String, List<FolderIndexEntry>>> {
@@ -263,7 +312,7 @@ final class SelectedFolderProvider
   }
 }
 
-String _$selectedFolderHash() => r'49ad646ca0d219e1e3795545b93b8ac3c6e4c388';
+String _$selectedFolderHash() => r'37756fbc0ade44857def2b87216693be3bcfac08';
 
 abstract class _$SelectedFolder extends $Notifier<FolderIndexEntry?> {
   FolderIndexEntry? build();
@@ -318,7 +367,7 @@ final class FlattenedTreeProvider
   }
 }
 
-String _$flattenedTreeHash() => r'40cd9f831f569e0985cae6aff4ead885aa9c95c1';
+String _$flattenedTreeHash() => r'e845ce68ede09971325d4b14ddc0e0df92171576';
 
 abstract class _$FlattenedTree
     extends $Notifier<AsyncValue<List<TreeDisplayNode>>> {
@@ -340,55 +389,6 @@ abstract class _$FlattenedTree
                 AsyncValue<List<TreeDisplayNode>>
               >,
               AsyncValue<List<TreeDisplayNode>>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(FolderContents)
-final folderContentsProvider = FolderContentsProvider._();
-
-final class FolderContentsProvider
-    extends $AsyncNotifierProvider<FolderContents, List<FolderIndexEntry>> {
-  FolderContentsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'folderContentsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$folderContentsHash();
-
-  @$internal
-  @override
-  FolderContents create() => FolderContents();
-}
-
-String _$folderContentsHash() => r'e5143a7b163c7f4c584ecdebe826d67eda9966f1';
-
-abstract class _$FolderContents extends $AsyncNotifier<List<FolderIndexEntry>> {
-  FutureOr<List<FolderIndexEntry>> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref =
-        this.ref
-            as $Ref<AsyncValue<List<FolderIndexEntry>>, List<FolderIndexEntry>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<List<FolderIndexEntry>>,
-                List<FolderIndexEntry>
-              >,
-              AsyncValue<List<FolderIndexEntry>>,
               Object?,
               Object?
             >;

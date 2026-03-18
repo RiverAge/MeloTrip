@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/response/artist/artist.dart';
+import 'package:melo_trip/model/response/library_index/library_index.dart';
+import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/folder/folders.dart';
 
@@ -14,15 +17,16 @@ class FoldersRepository {
     final data = res.data;
     if (data == null) return const <FolderIndexEntry>[];
 
-    final indexes =
-        data['subsonic-response']?['indexes']?['index'] as List<dynamic>? ??
-        const <dynamic>[];
+    final response = SubsonicResponse.fromJson(data);
+    final List<ArtistIndexBucketEntity> indexes =
+        response.subsonicResponse?.indexes?.index ??
+        const <ArtistIndexBucketEntity>[];
     final entries = <FolderIndexEntry>[];
     for (final idx in indexes) {
-      final artists = idx['artist'] as List<dynamic>? ?? const <dynamic>[];
+      final artists = idx.artist ?? const <ArtistEntity>[];
       for (final artist in artists) {
-        final id = artist['id']?.toString() ?? '';
-        final name = artist['name']?.toString() ?? '';
+        final id = artist.id ?? '';
+        final name = artist.name ?? '';
         if (id.isNotEmpty) {
           entries.add(FolderIndexEntry(id: id, name: name));
         }
@@ -40,21 +44,22 @@ class FoldersRepository {
     final data = res.data;
     if (data == null) return const <FolderIndexEntry>[];
 
-    final children =
-        data['subsonic-response']?['directory']?['child'] as List<dynamic>? ??
-        const <dynamic>[];
+    final response = SubsonicResponse.fromJson(data);
+    final List<DirectoryChildEntity> children =
+        response.subsonicResponse?.directory?.child ??
+        const <DirectoryChildEntity>[];
 
     return children.map((c) {
       return FolderIndexEntry(
-        id: c['id']?.toString() ?? '',
-        name: c['title']?.toString() ?? c['name']?.toString() ?? '',
-        isDir: c['isDir'] == true,
-        album: c['album']?.toString(),
-        genre: c['genre']?.toString(),
-        year: int.tryParse(c['year']?.toString() ?? ''),
-        duration: int.tryParse(c['duration']?.toString() ?? ''),
-        coverArt: c['coverArt']?.toString(),
-        artist: c['artist']?.toString(),
+        id: c.id ?? '',
+        name: c.title ?? c.name ?? '',
+        isDir: c.isDir ?? false,
+        album: c.album,
+        genre: c.genre,
+        year: c.year,
+        duration: c.duration,
+        coverArt: c.coverArt,
+        artist: c.artist,
       );
     }).toList();
   }

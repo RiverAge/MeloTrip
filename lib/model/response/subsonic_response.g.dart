@@ -69,6 +69,15 @@ _SubsonicResponseClass _$SubsonicResponseClassFromJson(
   artist: json['artist'] == null
       ? null
       : ArtistEntity.fromJson(json['artist'] as Map<String, dynamic>),
+  artists: json['artists'] == null
+      ? null
+      : ArtistsEntity.fromJson(json['artists'] as Map<String, dynamic>),
+  indexes: json['indexes'] == null
+      ? null
+      : IndexesEntity.fromJson(json['indexes'] as Map<String, dynamic>),
+  directory: json['directory'] == null
+      ? null
+      : DirectoryEntity.fromJson(json['directory'] as Map<String, dynamic>),
   genres: json['genres'] == null
       ? null
       : GenresEntity.fromJson(json['genres'] as Map<String, dynamic>),
@@ -103,6 +112,9 @@ Map<String, dynamic> _$SubsonicResponseClassToJson(
   'scanStatus': instance.scanStatus,
   'starred': instance.starred,
   'artist': instance.artist,
+  'artists': instance.artists,
+  'indexes': instance.indexes,
+  'directory': instance.directory,
   'genres': instance.genres,
   'songsByGenre': instance.songsByGenre,
   'error': instance.error,

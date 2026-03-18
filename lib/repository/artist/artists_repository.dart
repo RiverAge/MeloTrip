@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/response/artist/artist.dart';
+import 'package:melo_trip/model/response/library_index/library_index.dart';
+import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/artist/artists.dart';
 
@@ -14,19 +17,20 @@ class ArtistsRepository {
     final data = res.data;
     if (data == null) return const <ArtistIndexEntry>[];
 
-    final indexes =
-        data['subsonic-response']?['artists']?['index'] as List<dynamic>? ??
-        const <dynamic>[];
+    final response = SubsonicResponse.fromJson(data);
+    final List<ArtistIndexBucketEntity> indexes =
+        response.subsonicResponse?.artists?.index ??
+        const <ArtistIndexBucketEntity>[];
     final entries = <ArtistIndexEntry>[];
     for (final idx in indexes) {
-      final artists = idx['artist'] as List<dynamic>? ?? const <dynamic>[];
+      final artists = idx.artist ?? const <ArtistEntity>[];
       for (final artist in artists) {
         entries.add(
           ArtistIndexEntry(
-            id: artist['id']?.toString() ?? '',
-            name: artist['name']?.toString() ?? '',
-            coverArt: artist['coverArt']?.toString(),
-            albumCount: artist['albumCount'] as int?,
+            id: artist.id ?? '',
+            name: artist.name ?? '',
+            coverArt: artist.coverArt,
+            albumCount: artist.albumCount,
           ),
         );
       }
