@@ -63,38 +63,47 @@ void main() {
       expect(result.subsonicResponse?.song?.title, 'Test Song');
     });
 
-    test('toggleFavorite calls star when not starred', () async {
+    test('toggleFavoriteResult calls star when not starred', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      await repository.toggleFavorite(songId: 'song-789', isStarred: false);
+      final result = await repository.toggleFavoriteResult(
+        songId: 'song-789',
+        isStarred: false,
+      );
 
+      expect(result.isOk, isTrue);
       expect(mockAdapter.lastRequest?.path, '/rest/star');
       expect(mockAdapter.lastRequest?.queryParameters['id'], 'song-789');
     });
 
-    test('toggleFavorite calls unstar when starred', () async {
+    test('toggleFavoriteResult calls unstar when starred', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      await repository.toggleFavorite(songId: 'song-789', isStarred: true);
+      final result = await repository.toggleFavoriteResult(
+        songId: 'song-789',
+        isStarred: true,
+      );
 
+      expect(result.isOk, isTrue);
       expect(mockAdapter.lastRequest?.path, '/rest/unstar');
       expect(mockAdapter.lastRequest?.queryParameters['id'], 'song-789');
     });
 
-    test('setRating sends correct parameters', () async {
+    test('setRatingResult sends correct parameters', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      await repository.setRating(songId: 'song-789', rating: 4);
+      final result = await repository.setRatingResult(songId: 'song-789', rating: 4);
 
+      expect(result.isOk, isTrue);
       expect(mockAdapter.lastRequest?.path, '/rest/setRating');
       expect(mockAdapter.lastRequest?.queryParameters['id'], 'song-789');
       expect(mockAdapter.lastRequest?.queryParameters['rating'], 4);

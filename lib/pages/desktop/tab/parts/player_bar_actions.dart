@@ -36,7 +36,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   onRating: (value) {
                     ref
                         .read(songRatingProvider.notifier)
-                        .updateRating(current?.id, value);
+                        .updateRatingResult(current?.id, value);
                   },
                 ),
               ],
@@ -50,7 +50,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                       ? null
                       : () => ref
                             .read(songFavoriteProvider.notifier)
-                            .toggleFavorite(current),
+                            .toggleFavoriteResult(current),
                   iconSize: 20,
                   visualDensity: .compact,
                   constraints: const BoxConstraints.tightFor(

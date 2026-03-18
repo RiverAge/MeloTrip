@@ -132,10 +132,10 @@ void main() {
     final songFavorite = container.read(songFavoriteProvider.notifier);
     final songRating = container.read(songRatingProvider.notifier);
 
-    expect(await songFavorite.toggleFavorite(null), isNull);
-    expect(await songFavorite.toggleFavorite(const SongEntity()), isNull);
-    expect(await songRating.updateRating(null, 5), isNull);
-    expect(await songRating.updateRating('s1', null), isNull);
+    expect(await songFavorite.toggleFavoriteResult(null), isNull);
+    expect(await songFavorite.toggleFavoriteResult(const SongEntity()), isNull);
+    expect(await songRating.updateRatingResult(null, 5), isNull);
+    expect(await songRating.updateRatingResult('s1', null), isNull);
   });
 
   test('lyrics provider merges best source and skips latn lines', () async {

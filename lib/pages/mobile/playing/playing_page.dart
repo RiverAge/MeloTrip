@@ -115,7 +115,7 @@ class PlayingPage extends StatelessWidget {
                     onPressed: () {
                       ref
                           .read(songFavoriteProvider.notifier)
-                          .toggleFavorite(current);
+                          .toggleFavoriteResult(current);
                     },
                     icon: Icon(
                       isStarred ? Icons.favorite : Icons.favorite_outline,

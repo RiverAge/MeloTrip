@@ -100,11 +100,14 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     });
 
     final result = await ref
-        .read(albumDetailProvider(albumId).notifier)
-        .toggleFavorite(currentlyStarred: currentlyStarred);
+        .read(albumFavoriteProvider.notifier)
+        .toggleFavoriteResult(
+          albumId: albumId,
+          currentlyStarred: currentlyStarred,
+        );
 
     if (!mounted) return;
-    if (result?.subsonicResponse?.status != 'ok') {
+    if (result == null || result.isErr) {
       setState(() {
         _optimisticStarred = currentlyStarred;
       });
@@ -249,15 +252,13 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                         _optimisticRating = value;
                                       });
                                       final res = await ref
-                                          .read(
-                                            albumDetailProvider(
-                                              widget.album.id,
-                                            ).notifier,
-                                          )
-                                          .setRating(value);
+                                          .read(albumRatingProvider.notifier)
+                                          .setRatingResult(
+                                            albumId: widget.album.id,
+                                            rating: value,
+                                          );
                                       if (!mounted) return;
-                                      if (res?.subsonicResponse?.status !=
-                                          'ok') {
+                                      if (res == null || res.isErr) {
                                         setState(() {
                                           _optimisticRating =
                                               widget.album.userRating;

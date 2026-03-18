@@ -56,7 +56,7 @@ class _SongTitle extends StatelessWidget {
                             onRating: (rating) {
                               ref
                                   .read(songRatingProvider.notifier)
-                                  .updateRating(song.id, rating);
+                                  .updateRatingResult(song.id, rating);
                             },
                             rating: song.userRating,
                           );

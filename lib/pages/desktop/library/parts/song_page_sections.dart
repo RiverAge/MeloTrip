@@ -94,9 +94,9 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
 
     final res = await ref
         .read(songFavoriteProvider.notifier)
-        .toggleFavorite(widget.song);
+        .toggleFavoriteResult(widget.song);
     if (!mounted) return;
-    if (res?.subsonicResponse?.status != 'ok') {
+    if (res == null || res.isErr) {
       setState(() => _optimisticStarred = original);
       return;
     }

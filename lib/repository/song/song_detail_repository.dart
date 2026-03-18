@@ -28,49 +28,36 @@ class SongDetailRepository {
     return runGuarded(() => fetchSongDetail(songId));
   }
 
-  Future<SubsonicResponse> toggleFavorite({
-    required String songId,
-    required bool isStarred,
-  }) async {
-    final api = await _readApi();
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/${isStarred ? 'un' : ''}star',
-      queryParameters: <String, dynamic>{'id': songId},
-    );
-
-    return parseSubsonicResponseOrThrow(
-      res.data,
-      endpoint: '/rest/${isStarred ? 'un' : ''}star',
-    );
-  }
-
   Future<Result<SubsonicResponse, AppFailure>> toggleFavoriteResult({
     required String songId,
     required bool isStarred,
   }) {
-    return runGuarded(
-      () => toggleFavorite(songId: songId, isStarred: isStarred),
-    );
-  }
+    return runGuarded(() async {
+      final api = await _readApi();
+      final endpoint = '/rest/${isStarred ? 'un' : ''}star';
+      final res = await api.get<Map<String, dynamic>>(
+        endpoint,
+        queryParameters: <String, dynamic>{'id': songId},
+      );
 
-  Future<SubsonicResponse> setRating({
-    required String songId,
-    required int rating,
-  }) async {
-    final api = await _readApi();
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/setRating',
-      queryParameters: <String, dynamic>{'id': songId, 'rating': rating},
-    );
-
-    return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/setRating');
+      return parseSubsonicResponseOrThrow(res.data, endpoint: endpoint);
+    });
   }
 
   Future<Result<SubsonicResponse, AppFailure>> setRatingResult({
     required String songId,
     required int rating,
   }) {
-    return runGuarded(() => setRating(songId: songId, rating: rating));
+    return runGuarded(() async {
+      final api = await _readApi();
+      final endpoint = '/rest/setRating';
+      final res = await api.get<Map<String, dynamic>>(
+        endpoint,
+        queryParameters: <String, dynamic>{'id': songId, 'rating': rating},
+      );
+
+      return parseSubsonicResponseOrThrow(res.data, endpoint: endpoint);
+    });
   }
 }
 

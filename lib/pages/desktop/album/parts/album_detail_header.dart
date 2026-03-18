@@ -240,12 +240,11 @@ class _AlbumDetailHeader extends StatelessWidget {
                                   color: headerSubTextColor,
                                   onRating: (value) {
                                     ref
-                                        .read(
-                                          albumDetailProvider(
-                                            album.id,
-                                          ).notifier,
-                                        )
-                                        .setRating(value);
+                                        .read(albumRatingProvider.notifier)
+                                        .setRatingResult(
+                                          albumId: album.id,
+                                          rating: value,
+                                        );
                                   },
                                 );
                               },
@@ -260,12 +259,8 @@ class _AlbumDetailHeader extends StatelessWidget {
                                       : l10n.favorite,
                                   onPressed: () async {
                                     await ref
-                                        .read(
-                                          albumDetailProvider(
-                                            album.id,
-                                          ).notifier,
-                                        )
-                                        .toggleFavorite();
+                                        .read(albumFavoriteProvider.notifier)
+                                        .toggleFavoriteResult(albumId: album.id);
                                   },
                                   icon: Icon(
                                     isFavorite

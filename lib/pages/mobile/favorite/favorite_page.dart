@@ -92,8 +92,8 @@ class _FavoritePageState extends State<FavoritePage>
                   albums: albums,
                   onToggleFavorite: (album) {
                     ref
-                        .read(albumDetailProvider(album.id).notifier)
-                        .toggleFavorite();
+                        .read(albumFavoriteProvider.notifier)
+                        .toggleFavoriteResult(albumId: album.id);
                   },
                 ),
                 _SongsBuilder(
@@ -101,7 +101,7 @@ class _FavoritePageState extends State<FavoritePage>
                   onToggleFavorite: (song) {
                     ref
                         .read(songFavoriteProvider.notifier)
-                        .toggleFavorite(song);
+                        .toggleFavoriteResult(song);
                   },
                 ),
               ],

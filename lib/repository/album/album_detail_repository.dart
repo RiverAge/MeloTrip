@@ -28,49 +28,36 @@ class AlbumDetailRepository {
     return runGuarded(() => fetchAlbumDetail(albumId));
   }
 
-  Future<SubsonicResponse> toggleFavorite({
-    required String albumId,
-    required bool isStarred,
-  }) async {
-    final api = await _readApi();
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/${isStarred ? 'un' : ''}star',
-      queryParameters: <String, dynamic>{'albumId': albumId},
-    );
-
-    return parseSubsonicResponseOrThrow(
-      res.data,
-      endpoint: '/rest/${isStarred ? 'un' : ''}star',
-    );
-  }
-
   Future<Result<SubsonicResponse, AppFailure>> toggleFavoriteResult({
     required String albumId,
     required bool isStarred,
   }) {
-    return runGuarded(
-      () => toggleFavorite(albumId: albumId, isStarred: isStarred),
-    );
-  }
+    return runGuarded(() async {
+      final api = await _readApi();
+      final endpoint = '/rest/${isStarred ? 'un' : ''}star';
+      final res = await api.get<Map<String, dynamic>>(
+        endpoint,
+        queryParameters: <String, dynamic>{'albumId': albumId},
+      );
 
-  Future<SubsonicResponse> setRating({
-    required String albumId,
-    required int rating,
-  }) async {
-    final api = await _readApi();
-    final res = await api.get<Map<String, dynamic>>(
-      '/rest/setRating',
-      queryParameters: <String, dynamic>{'id': albumId, 'rating': rating},
-    );
-
-    return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/setRating');
+      return parseSubsonicResponseOrThrow(res.data, endpoint: endpoint);
+    });
   }
 
   Future<Result<SubsonicResponse, AppFailure>> setRatingResult({
     required String albumId,
     required int rating,
   }) {
-    return runGuarded(() => setRating(albumId: albumId, rating: rating));
+    return runGuarded(() async {
+      final api = await _readApi();
+      final endpoint = '/rest/setRating';
+      final res = await api.get<Map<String, dynamic>>(
+        endpoint,
+        queryParameters: <String, dynamic>{'id': albumId, 'rating': rating},
+      );
+
+      return parseSubsonicResponseOrThrow(res.data, endpoint: endpoint);
+    });
   }
 }
 
