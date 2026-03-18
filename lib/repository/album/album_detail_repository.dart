@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/common/repository_guard.dart';
 import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class AlbumDetailRepository {
@@ -17,6 +20,12 @@ class AlbumDetailRepository {
     );
 
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/getAlbum');
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>> fetchAlbumDetailResult(
+    String albumId,
+  ) {
+    return runGuarded(() => fetchAlbumDetail(albumId));
   }
 
   Future<SubsonicResponse> toggleFavorite({
@@ -35,6 +44,15 @@ class AlbumDetailRepository {
     );
   }
 
+  Future<Result<SubsonicResponse, AppFailure>> toggleFavoriteResult({
+    required String albumId,
+    required bool isStarred,
+  }) {
+    return runGuarded(
+      () => toggleFavorite(albumId: albumId, isStarred: isStarred),
+    );
+  }
+
   Future<SubsonicResponse> setRating({
     required String albumId,
     required int rating,
@@ -46,6 +64,13 @@ class AlbumDetailRepository {
     );
 
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/setRating');
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>> setRatingResult({
+    required String albumId,
+    required int rating,
+  }) {
+    return runGuarded(() => setRating(albumId: albumId, rating: rating));
   }
 }
 

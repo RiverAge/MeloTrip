@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/repository/album/album_detail_repository.dart';
@@ -73,6 +74,40 @@ void main() {
       expect(result, isNotNull);
       expect(result?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.detailCalled, isTrue);
+    });
+
+    test('albumDetailResult returns Result.err when repository throws', () async {
+      final mockRepository = _MockAlbumDetailRepository(null);
+      final container = ProviderContainer(
+        overrides: [
+          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(albumDetailResultProvider('123').future);
+
+      expect(result, isNotNull);
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
+    });
+
+    test('albumDetailResult returns Result.ok on success', () async {
+      final mockResponse = const SubsonicResponse(
+        subsonicResponse: SubsonicResponseClass(status: 'ok'),
+      );
+      final mockRepository = _MockAlbumDetailRepository(mockResponse);
+      final container = ProviderContainer(
+        overrides: [
+          albumDetailRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(albumDetailResultProvider('123').future);
+
+      expect(result?.isOk, isTrue);
+      expect(result?.data?.subsonicResponse?.status, 'ok');
     });
   });
 
