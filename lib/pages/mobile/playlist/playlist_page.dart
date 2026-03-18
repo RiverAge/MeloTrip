@@ -25,10 +25,10 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   void _deletePlaylist(String? playlistId, WidgetRef ref) async {
     if (playlistId == null) return;
-    final res = await ref
+    final result = await ref
         .read(playlistsProvider.notifier)
-        .deletePlaytlist(playlistId);
-    if (res?.subsonicResponse?.status != 'ok') return;
+        .deletePlaytlistResult(playlistId);
+    if (result == null || result.isErr) return;
     if (!mounted) return;
     Navigator.of(context).pop();
   }
