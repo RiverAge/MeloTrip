@@ -68,14 +68,17 @@ class PlaybackSettings extends ConsumerWidget {
                           SettingSingleChoiceOption<PlaylistMode>(
                             value: PlaylistMode.none,
                             label: l10n.playModeNone,
+                            icon: Icons.queue_music_rounded,
                           ),
                           SettingSingleChoiceOption<PlaylistMode>(
                             value: PlaylistMode.loop,
                             label: l10n.playModeLoop,
+                            icon: Icons.repeat_rounded,
                           ),
                           SettingSingleChoiceOption<PlaylistMode>(
                             value: PlaylistMode.single,
                             label: l10n.playModeSingle,
+                            icon: Icons.repeat_one_rounded,
                           ),
                         ],
                         onChanged: (PlaylistMode value) {

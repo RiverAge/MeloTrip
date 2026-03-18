@@ -41,14 +41,17 @@ class AppearanceSettings extends ConsumerWidget {
                           SettingSingleChoiceOption<ThemeMode>(
                             value: ThemeMode.system,
                             label: l10n.systemDefault,
+                            icon: Icons.devices_rounded,
                           ),
                           SettingSingleChoiceOption<ThemeMode>(
                             value: ThemeMode.light,
                             label: l10n.themeLight,
+                            icon: Icons.light_mode_rounded,
                           ),
                           SettingSingleChoiceOption<ThemeMode>(
                             value: ThemeMode.dark,
                             label: l10n.themeDark,
+                            icon: Icons.dark_mode_rounded,
                           ),
                         ],
                         onChanged: (ThemeMode value) {

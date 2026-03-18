@@ -38,7 +38,7 @@ class AdvancedSettings extends ConsumerWidget {
                         description: cachedSizeAsync.when(
                           data: (size) => _formatBytes(size.toInt()),
                           loading: () => l10n.calculating,
-                          error: (_, _) => 'Error',
+                          error: (_, _) => l10n.encounterUnknownError,
                         ),
                         onTap: () async {
                           final path = await getCacheFilePath();
@@ -53,7 +53,6 @@ class AdvancedSettings extends ConsumerWidget {
                               SnackBar(
                                 content: Text(l10n.clearCacheSuccess),
                                 behavior: SnackBarBehavior.floating,
-                                width: 320,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -79,7 +78,6 @@ class AdvancedSettings extends ConsumerWidget {
                             SnackBar(
                               content: Text(l10n.deleted),
                               behavior: SnackBarBehavior.floating,
-                              width: 320,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

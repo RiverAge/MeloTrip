@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const double _kSettingLabelMaxWidth = 180;
+
 class SettingSectionHeader extends StatelessWidget {
   const SettingSectionHeader({super.key, required this.title, this.icon});
 
@@ -110,54 +112,40 @@ class SettingRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final bool isClickable = onTap != null;
-
-    final Widget content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        crossAxisAlignment: .center,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: .start,
-              mainAxisSize: .min,
-              children: <Widget>[
-                Text(label, style: theme.textTheme.titleSmall),
-                if (description.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.7,
-                      ),
-                      height: 1.3,
-                    ),
-                  ),
-                ],
-                if (progress case final Widget progressWidget) ...<Widget>[
-                  const SizedBox(height: 10),
-                  progressWidget,
-                ],
-              ],
+    final Widget subtitle = Column(
+      crossAxisAlignment: .start,
+      mainAxisSize: .min,
+      children: <Widget>[
+        if (description.isNotEmpty)
+          Text(
+            description,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              height: 1.3,
             ),
           ),
-          if (progress != null || trailing != null) const SizedBox(width: 24),
-          if (trailing != null)
-            ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 32),
-              child: Align(alignment: .centerRight, child: trailing!),
-            ),
+        if (progress case final Widget progressWidget) ...<Widget>[
+          if (description.isNotEmpty) const SizedBox(height: 10),
+          progressWidget,
         ],
-      ),
+      ],
     );
 
-    if (!isClickable) return content;
-
-    return InkWell(
+    return ListTile(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: content,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      title: Text(label, style: theme.textTheme.titleSmall),
+      subtitle: description.isNotEmpty || progress != null ? subtitle : null,
+      trailing: trailing != null
+          ? ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: 32,
+                maxWidth: 320,
+              ),
+              child: trailing!,
+            )
+          : null,
     );
   }
 }
@@ -210,13 +198,17 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
       child: Row(
         crossAxisAlignment: .center,
         children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Text(widget.label, style: theme.textTheme.titleSmall),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _kSettingLabelMaxWidth),
+            child: Text(
+              widget.label,
+              style: theme.textTheme.titleSmall,
+              maxLines: 2,
+              overflow: .ellipsis,
+            ),
           ),
-          const SizedBox(width: 24),
+          const SizedBox(width: 16),
           Expanded(
-            flex: 7,
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -312,13 +304,17 @@ class SettingColorRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: .center,
         children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Text(label, style: theme.textTheme.titleSmall),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _kSettingLabelMaxWidth),
+            child: Text(
+              label,
+              style: theme.textTheme.titleSmall,
+              maxLines: 2,
+              overflow: .ellipsis,
+            ),
           ),
-          const SizedBox(width: 24),
+          const SizedBox(width: 16),
           Expanded(
-            flex: 7,
             child: Wrap(
               alignment: WrapAlignment.end,
               spacing: 10,
@@ -326,19 +322,25 @@ class SettingColorRow extends StatelessWidget {
               children: palette.map((int color) {
                 final bool active = color == value;
                 final Color swatchColor = Color(color);
-                return InkWell(
-                  onTap: () => onChanged(color),
-                  borderRadius: BorderRadius.circular(6),
-                  child: Tooltip(
-                    message: tooltipForColor?.call(color) ?? '',
-                    child: Container(
-                      width: 28,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: active
-                            ? swatchColor
-                            : swatchColor.withValues(alpha: 0.82),
-                        border: Border.all(
+                return Tooltip(
+                  message: tooltipForColor?.call(color) ?? '',
+                  child: IconButton(
+                    onPressed: () => onChanged(color),
+                    icon: active
+                        ? Icon(
+                            Icons.check_rounded,
+                            size: 16,
+                            color: theme.colorScheme.onPrimary,
+                          )
+                        : const SizedBox.shrink(),
+                    visualDensity: VisualDensity.compact,
+                    style: IconButton.styleFrom(
+                      backgroundColor: active
+                          ? swatchColor
+                          : swatchColor.withValues(alpha: 0.82),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        side: BorderSide(
                           color: active
                               ? theme.colorScheme.primary
                               : theme.colorScheme.outlineVariant.withValues(
@@ -346,24 +348,9 @@ class SettingColorRow extends StatelessWidget {
                                 ),
                           width: active ? 2.0 : 1.0,
                         ),
-                        borderRadius: BorderRadius.circular(6),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: theme.shadowColor.withValues(
-                              alpha: active ? 0.08 : 0.04,
-                            ),
-                            blurRadius: active ? 8 : 5,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
                       ),
-                      child: active
-                          ? Icon(
-                              Icons.check_rounded,
-                              size: 16,
-                              color: theme.colorScheme.onPrimary,
-                            )
-                          : null,
+                      padding: const EdgeInsets.all(6),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
                 );
@@ -377,10 +364,15 @@ class SettingColorRow extends StatelessWidget {
 }
 
 class SettingSingleChoiceOption<T> {
-  const SettingSingleChoiceOption({required this.value, required this.label});
+  const SettingSingleChoiceOption({
+    required this.value,
+    required this.label,
+    this.icon,
+  });
 
   final T value;
   final String label;
+  final IconData? icon;
 }
 
 class SettingSingleChoiceRow<T> extends StatelessWidget {
@@ -405,13 +397,17 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
       child: Row(
         crossAxisAlignment: .center,
         children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Text(label, style: theme.textTheme.titleSmall),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _kSettingLabelMaxWidth),
+            child: Text(
+              label,
+              style: theme.textTheme.titleSmall,
+              maxLines: 2,
+              overflow: .ellipsis,
+            ),
           ),
-          const SizedBox(width: 24),
+          const SizedBox(width: 16),
           Expanded(
-            flex: 7,
             child: RadioGroup<T>(
               groupValue: value,
               onChanged: (T? next) {
@@ -443,27 +439,30 @@ class SettingSingleChoiceRow<T> extends StatelessWidget {
                       : theme.colorScheme.onSurfaceVariant.withValues(
                           alpha: 0.82,
                         );
-                  return InkWell(
-                    onTap: () => onChanged(option.value),
-                    borderRadius: BorderRadius.circular(10),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 140),
-                      curve: Curves.easeOutCubic,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: backgroundColor,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: borderColor, width: 1.2),
-                      ),
-                      child: Text(
-                        option.label,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: textColor,
-                        ),
-                      ),
+                  return ChoiceChip(
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (option.icon != null) ...[
+                          Icon(option.icon, size: 14, color: textColor),
+                          const SizedBox(width: 6),
+                        ],
+                        Text(option.label),
+                      ],
+                    ),
+                    selected: selected,
+                    onSelected: (_) => onChanged(option.value),
+                    showCheckmark: false,
+                    selectedColor: backgroundColor,
+                    backgroundColor: backgroundColor,
+                    side: BorderSide(color: borderColor, width: 1.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
+                      color: textColor,
                     ),
                   );
                 }).toList(),

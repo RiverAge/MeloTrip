@@ -199,14 +199,17 @@ class _DesktopLyricsSettingsTabState
                           SettingSingleChoiceOption<TextAlign>(
                             value: .start,
                             label: l10n.textAlignStart,
+                            icon: Icons.format_align_left_rounded,
                           ),
                           SettingSingleChoiceOption<TextAlign>(
                             value: .center,
                             label: l10n.textAlignCenter,
+                            icon: Icons.format_align_center_rounded,
                           ),
                           SettingSingleChoiceOption<TextAlign>(
                             value: .end,
                             label: l10n.textAlignEnd,
+                            icon: Icons.format_align_right_rounded,
                           ),
                         ],
                         onChanged: (TextAlign value) => _commit(
