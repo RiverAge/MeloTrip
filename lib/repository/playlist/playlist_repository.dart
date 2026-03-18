@@ -13,10 +13,6 @@ class PlaylistRepository {
   final Future<Dio> Function() _readApi;
 
   Future<SubsonicResponse> fetchPlaylists() async {
-    return _fetchPlaylists();
-  }
-
-  Future<SubsonicResponse> _fetchPlaylists() async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>('/rest/getPlaylists');
     return parseSubsonicResponseOrThrow(
@@ -30,10 +26,6 @@ class PlaylistRepository {
   }
 
   Future<SubsonicResponse> fetchPlaylistDetail(String playlistId) async {
-    return _fetchPlaylistDetail(playlistId);
-  }
-
-  Future<SubsonicResponse> _fetchPlaylistDetail(String playlistId) async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(
       '/rest/getPlaylist',
@@ -52,10 +44,6 @@ class PlaylistRepository {
   }
 
   Future<SubsonicResponse> createPlaylist(String name) async {
-    return _createPlaylist(name);
-  }
-
-  Future<SubsonicResponse> _createPlaylist(String name) async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(
       '/rest/createPlaylist',
@@ -74,10 +62,6 @@ class PlaylistRepository {
   }
 
   Future<SubsonicResponse> deletePlaylist(String playlistId) async {
-    return _deletePlaylist(playlistId);
-  }
-
-  Future<SubsonicResponse> _deletePlaylist(String playlistId) async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(
       '/rest/deletePlaylist',
@@ -96,24 +80,6 @@ class PlaylistRepository {
   }
 
   Future<SubsonicResponse> updatePlaylist({
-    required String playlistId,
-    int? songIndexToRemove,
-    String? songIdToAdd,
-    String? name,
-    String? comment,
-    bool? public,
-  }) {
-    return _updatePlaylist(
-      playlistId: playlistId,
-      songIndexToRemove: songIndexToRemove,
-      songIdToAdd: songIdToAdd,
-      name: name,
-      comment: comment,
-      public: public,
-    );
-  }
-
-  Future<SubsonicResponse> _updatePlaylist({
     required String playlistId,
     int? songIndexToRemove,
     String? songIdToAdd,

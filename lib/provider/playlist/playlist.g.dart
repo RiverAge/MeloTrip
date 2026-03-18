@@ -140,7 +140,7 @@ final class PlaylistDetailResultProvider
 }
 
 String _$playlistDetailResultHash() =>
-    r'e0dda4da19cbb82c8480e59029be2c0bb32f61cb';
+    r'eb729e50a01892296c82460b52773c36afd47396';
 
 final class PlaylistDetailResultFamily extends $Family
     with
