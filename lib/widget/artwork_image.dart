@@ -74,7 +74,9 @@ class _ArtworkImageState extends ConsumerState<ArtworkImage> {
         if (snapshot.connectionState != ConnectionState.done) {
           return widget.placeholder ?? _buildPlaceholder(context);
         }
-        if (snapshot.hasError || !snapshot.hasData) {
+        if (snapshot.hasError ||
+            !snapshot.hasData ||
+            snapshot.data!.isEmpty) {
           return widget.errorWidget ??
               Container(
                 width: widget.width,
@@ -190,7 +192,13 @@ class _ArtworkImageRequestPool {
   }
 
   static Future<Uint8List> _download(String url) async {
-    final data = await NetworkAssetBundle(Uri.parse(url)).load(url);
-    return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    try {
+      final data = await NetworkAssetBundle(Uri.parse(url)).load(url);
+      return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    } on FlutterError {
+      return Uint8List(0);
+    } on Exception {
+      return Uint8List(0);
+    }
   }
 }
