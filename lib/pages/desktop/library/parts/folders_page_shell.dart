@@ -99,46 +99,45 @@ class _Breadcrumbs extends ConsumerWidget {
       color: theme.colorScheme.onSurfaceVariant,
       fontSize: 13,
     );
+    final buttonStyle = TextButton.styleFrom(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      minimumSize: Size.zero,
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      foregroundColor: theme.colorScheme.onSurfaceVariant,
+    );
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                ref.read(selectedFolderProvider.notifier).set(null);
-                ref.read(folderPathProvider.notifier).set([]);
-              },
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.home_rounded,
-                      size: 18,
-                      color: path.isEmpty
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      l10n.home,
-                      style: style?.copyWith(
-                        fontWeight: path.isEmpty
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        color: path.isEmpty
-                            ? theme.colorScheme.onSurface
-                            : null,
-                      ),
-                    ),
-                  ],
+          TextButton(
+            onPressed: () {
+              ref.read(selectedFolderProvider.notifier).set(null);
+              ref.read(folderPathProvider.notifier).set([]);
+            },
+            style: buttonStyle,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.home_rounded,
+                  size: 18,
+                  color: path.isEmpty
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
                 ),
-              ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.home,
+                  style: style?.copyWith(
+                    fontWeight: path.isEmpty
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color: path.isEmpty ? theme.colorScheme.onSurface : null,
+                  ),
+                ),
+              ],
             ),
           ),
           for (int i = 0; i < path.length; i++) ...[
@@ -150,29 +149,21 @@ class _Breadcrumbs extends ConsumerWidget {
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .5),
               ),
             ),
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  final entry = path[i];
-                  ref.read(
-                    selectedFolderProvider.notifier,
-                  ).navigateTo(entry, path.sublist(0, i + 1));
-                },
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  child: Text(
-                    path[i].name,
-                    style: style?.copyWith(
-                      fontWeight: i == path.length - 1
-                          ? FontWeight.bold
-                          : null,
-                      color: i == path.length - 1
-                          ? theme.colorScheme.onSurface
-                          : null,
-                    ),
-                  ),
+            TextButton(
+              onPressed: () {
+                final entry = path[i];
+                ref.read(
+                  selectedFolderProvider.notifier,
+                ).navigateTo(entry, path.sublist(0, i + 1));
+              },
+              style: buttonStyle,
+              child: Text(
+                path[i].name,
+                style: style?.copyWith(
+                  fontWeight: i == path.length - 1 ? FontWeight.bold : null,
+                  color: i == path.length - 1
+                      ? theme.colorScheme.onSurface
+                      : null,
                 ),
               ),
             ),

@@ -49,7 +49,7 @@ class ArtistPageHeader extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              '',
+              '$count',
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -79,62 +79,41 @@ class ArtistViewSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          _ArtistViewItem(
-            icon: Icons.grid_view_rounded,
-            selected: current == AppViewType.grid,
-            onTap: () => onChanged(AppViewType.grid),
-          ),
-          _ArtistViewItem(
-            icon: Icons.view_list_rounded,
-            selected: current == AppViewType.table,
-            onTap: () => onChanged(AppViewType.table),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ArtistViewItem extends StatelessWidget {
-  const _ArtistViewItem({
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: selected ? theme.colorScheme.surface : Colors.transparent,
-          borderRadius: BorderRadius.circular(4),
+    return SegmentedButton<AppViewType>(
+      segments: const <ButtonSegment<AppViewType>>[
+        ButtonSegment<AppViewType>(
+          value: AppViewType.grid,
+          icon: Icon(Icons.grid_view_rounded, size: 18),
         ),
-        child: Icon(
-          icon,
-          size: 18,
-          color: selected
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurfaceVariant,
+        ButtonSegment<AppViewType>(
+          value: AppViewType.table,
+          icon: Icon(Icons.view_list_rounded, size: 18),
         ),
+      ],
+      selected: <AppViewType>{current},
+      onSelectionChanged: (Set<AppViewType> values) {
+        if (values.isNotEmpty) {
+          onChanged(values.first);
+        }
+      },
+      showSelectedIcon: false,
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return theme.colorScheme.surface;
+          }
+          return theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.5,
+          );
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return theme.colorScheme.primary;
+          }
+          return theme.colorScheme.onSurfaceVariant;
+        }),
+        padding: WidgetStateProperty.all(const EdgeInsets.all(6)),
+        side: WidgetStateProperty.all(BorderSide.none),
       ),
     );
   }
