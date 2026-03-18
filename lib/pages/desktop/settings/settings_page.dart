@@ -6,7 +6,6 @@ import 'package:melo_trip/pages/desktop/settings/parts/appearance_settings.dart'
 import 'package:melo_trip/pages/desktop/settings/parts/general_settings.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/lyrics_settings.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/playback_settings.dart';
-import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 
 class DesktopSettingsPage extends ConsumerStatefulWidget {
   const DesktopSettingsPage({super.key});
@@ -22,7 +21,6 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     l10n.settingsTabAppearance,
     l10n.settingsTabPlayback,
     l10n.settingsTabLyrics,
-    l10n.settingsTabHotkeys,
     l10n.settingsTabAdvanced,
   ];
 
@@ -85,7 +83,6 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
                             const AppearanceSettings(),
                             const PlaybackSettings(),
                             const DesktopLyricsSettingsTab(),
-                            _SettingsPlaceholder(title: tabTitles[4]),
                             const AdvancedSettings(),
                           ],
                         ),
@@ -151,34 +148,6 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     return TabBar(
       isScrollable: true,
       tabs: tabTitles.map((String title) => Tab(text: title)).toList(),
-    );
-  }
-}
-
-class _SettingsPlaceholder extends StatelessWidget {
-  const _SettingsPlaceholder({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ThemeData theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 20, 8, 10),
-      child: Center(
-        child: Column(
-          mainAxisSize: .min,
-          children: <Widget>[
-            SettingSectionHeader(
-              title: l10n.settingsTabGeneral,
-              icon: Icons.settings_suggest_rounded,
-            ),
-            const SizedBox(height: 24),
-            Text(title, style: theme.textTheme.titleSmall),
-          ],
-        ),
-      ),
     );
   }
 }

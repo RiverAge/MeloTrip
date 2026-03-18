@@ -701,9 +701,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTabLyrics => 'Lyrics';
 
   @override
-  String get settingsTabHotkeys => 'Hotkeys';
-
-  @override
   String get settingsTabAdvanced => 'Advanced';
 
   @override

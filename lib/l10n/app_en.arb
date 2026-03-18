@@ -1052,10 +1052,6 @@
     "@settingsTabLyrics": {
       "description": "Desktop settings lyrics tab label"
     },
-    "settingsTabHotkeys": "Hotkeys",
-    "@settingsTabHotkeys": {
-      "description": "Desktop settings hotkeys tab label"
-    },
     "settingsTabAdvanced": "Advanced",
     "@settingsTabAdvanced": {
       "description": "Desktop settings advanced tab label"

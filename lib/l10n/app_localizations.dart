@@ -1383,12 +1383,6 @@ abstract class AppLocalizations {
   /// **'Lyrics'**
   String get settingsTabLyrics;
 
-  /// Desktop settings hotkeys tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Hotkeys'**
-  String get settingsTabHotkeys;
-
   /// Desktop settings advanced tab label
   ///
   /// In en, this message translates to:

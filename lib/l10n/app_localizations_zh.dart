@@ -691,9 +691,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsTabLyrics => '歌词';
 
   @override
-  String get settingsTabHotkeys => '快捷键';
-
-  @override
   String get settingsTabAdvanced => '高级';
 
   @override
@@ -1391,9 +1388,6 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get settingsTabLyrics => '歌词';
-
-  @override
-  String get settingsTabHotkeys => '快捷键';
 
   @override
   String get settingsTabAdvanced => '高级';
