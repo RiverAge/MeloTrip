@@ -8,6 +8,7 @@
 - Do not use deprecated `Color.withOpacity()`. Use `withValues(alpha: ...)`.
 - UI semantic colors must come from `Theme.of(context).colorScheme` or theme-derived text colors.
 - Dart dot shorthand is required in this project when the surrounding type context is clear.
+- Prefer content-driven sizing for widgets. Avoid hardcoded width/height when layout can be naturally determined by content, padding, and margin.
 - After code changes, run `flutter analyze` by default. Run `flutter test` when feasible.
 - On Windows, Codex must execute native commands directly such as `flutter analyze` or `gh run list`. Do not wrap them in `powershell -Command` or `cmd /c`.
 - Pages and widgets must not import `package:melo_trip/repository/...` directly. Go through providers unless there is a strong reason not to.
