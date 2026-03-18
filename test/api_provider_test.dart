@@ -64,6 +64,36 @@ void main() {
       expect(error?.message, 'server boom');
     },
   );
+
+  test('apiProvider forwards subsonic error message from DioException response', () async {
+    final container = ProviderContainer(
+      overrides: [
+        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final Dio api = await container.read(apiProvider.future);
+    api.httpClientAdapter = RecordingAdapter(
+      (_) {
+        return {
+          'subsonic-response': {
+            'status': 'failed',
+            'error': {'message': 'request failed'},
+          },
+        };
+      },
+      statusCode: 500,
+    );
+
+    await expectLater(
+      api.get('/rest/getAlbumList'),
+      throwsA(isA<DioException>()),
+    );
+
+    final AppErrorEvent? error = container.read(appErrorProvider);
+    expect(error?.message, 'request failed');
+  });
 }
 
 class FakeCurrentUserLoggedIn extends CurrentUser {
@@ -79,9 +109,10 @@ class FakeCurrentUserLoggedIn extends CurrentUser {
 }
 
 class RecordingAdapter implements HttpClientAdapter {
-  RecordingAdapter(this._buildJson);
+  RecordingAdapter(this._buildJson, {this.statusCode = 200});
 
   final Map<String, dynamic> Function(RequestOptions options) _buildJson;
+  final int statusCode;
   String? lastRequestPath;
 
   @override
@@ -97,7 +128,7 @@ class RecordingAdapter implements HttpClientAdapter {
     final Map<String, dynamic> payload = _buildJson(options);
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(payload)),
-      200,
+      statusCode,
       headers: <String, List<String>>{
         Headers.contentTypeHeader: <String>[Headers.jsonContentType],
       },

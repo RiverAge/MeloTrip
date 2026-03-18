@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
+import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -58,15 +59,10 @@ class Api extends _$Api {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    if (response.requestOptions.responseType != ResponseType.stream &&
-        response.data is Map<String, dynamic>?) {
-      final Map<String, dynamic>? data = response.data as Map<String, dynamic>?;
-      final Object? error = data?['subsonic-response']?['error'];
-      if (error is Map<String, dynamic>) {
-        final String? errorMessage = error['message'] as String?;
-        if (errorMessage != null) {
-          _emitGlobalError(errorMessage);
-        }
+    if (response.requestOptions.responseType != ResponseType.stream) {
+      final errorMessage = _extractSubsonicErrorMessage(response.data);
+      if (errorMessage != null) {
+        _emitGlobalError(errorMessage);
       }
     }
 
@@ -74,15 +70,33 @@ class Api extends _$Api {
   }
 
   void _onError(DioException exception, ErrorInterceptorHandler handler) {
-    final String? responseError =
+    final String? responseError = _extractSubsonicErrorMessage(
+      exception.response?.data,
+    );
+    final String? plainResponseError =
         exception.response?.data is Map<String, dynamic>
-        ? exception.response?.data['error'] as String?
+        ? (exception.response?.data as Map<String, dynamic>)['error'] as String?
         : null;
     final String? responseMessage = exception.message;
     final int? statusCode = exception.response?.statusCode;
 
-    _emitGlobalError(responseError ?? responseMessage ?? '$statusCode');
+    _emitGlobalError(
+      responseError ?? plainResponseError ?? responseMessage ?? '$statusCode',
+    );
     handler.next(exception);
+  }
+
+  String? _extractSubsonicErrorMessage(dynamic payload) {
+    if (payload is! Map<String, dynamic>) {
+      return null;
+    }
+
+    try {
+      final response = SubsonicResponse.fromJson(payload);
+      return response.subsonicResponse?.error?.message;
+    } catch (_) {
+      return null;
+    }
   }
 
   void _emitGlobalError(String message) {
