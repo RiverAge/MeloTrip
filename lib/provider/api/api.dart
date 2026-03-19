@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
 import 'package:melo_trip/provider/app/error.dart';
@@ -8,10 +10,24 @@ part 'api.g.dart';
 
 @Riverpod(keepAlive: true)
 class Api extends _$Api {
+  static const String _correlationIdHeader = 'X-Correlation-Id';
+  static const String _correlationIdExtraKey = 'correlation_id';
+  static const String _retryCountExtraKey = 'retry_count';
+  static const int _maxTransportRetryCount = 1;
+
+  Dio? _dio;
+
   @override
   Future<Dio> build() async {
-    final Dio dio = Dio();
+    final Dio dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 10),
+        sendTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 20),
+      ),
+    );
     _configureInterceptors(dio);
+    _dio = dio;
     return dio;
   }
 
@@ -28,6 +44,9 @@ class Api extends _$Api {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    final correlationId = _resolveCorrelationId(options);
+    options.headers.putIfAbsent(_correlationIdHeader, () => correlationId);
+
     options.queryParameters.putIfAbsent('_', () => DateTime.now().toIso8601String());
     options.queryParameters.putIfAbsent('v', () => subsonicApiVersion);
     options.queryParameters.putIfAbsent('c', () => subsonicClientName);
@@ -53,13 +72,26 @@ class Api extends _$Api {
     handler.next(options);
   }
 
-  void _onError(DioException exception, ErrorInterceptorHandler handler) {
-    if (_isTransportFailure(exception)) {
+  Future<void> _onError(
+    DioException exception,
+    ErrorInterceptorHandler handler,
+  ) async {
+    final Object? retryOutcome = await _retryTransportFailureOnce(exception);
+    if (retryOutcome is Response<dynamic>) {
+      handler.resolve(retryOutcome);
+      return;
+    }
+
+    final DioException finalException =
+        retryOutcome is DioException ? retryOutcome : exception;
+    if (_isTransportFailure(finalException)) {
       final String fallback =
-          exception.message ?? exception.error?.toString() ?? exception.type.name;
+          finalException.message ??
+          finalException.error?.toString() ??
+          finalException.type.name;
       _emitGlobalError(fallback);
     }
-    handler.next(exception);
+    handler.next(finalException);
   }
 
   bool _isTransportFailure(DioException exception) {
@@ -71,6 +103,43 @@ class Api extends _$Api {
       DioExceptionType.unknown => true,
       _ => false,
     };
+  }
+
+  String _resolveCorrelationId(RequestOptions options) {
+    final existing = options.extra[_correlationIdExtraKey] as String?;
+    if (existing != null && existing.isNotEmpty) {
+      return existing;
+    }
+
+    final correlationId = 'req-${DateTime.now().microsecondsSinceEpoch}';
+    options.extra[_correlationIdExtraKey] = correlationId;
+    return correlationId;
+  }
+
+  Future<Object?> _retryTransportFailureOnce(DioException exception) async {
+    if (!_isTransportFailure(exception)) {
+      return null;
+    }
+    if (_dio == null) {
+      return null;
+    }
+
+    final options = exception.requestOptions;
+    final retryCount = (options.extra[_retryCountExtraKey] as int?) ?? 0;
+    final shouldRetry =
+        options.method.toUpperCase() == 'GET' &&
+        retryCount < _maxTransportRetryCount;
+    if (!shouldRetry) {
+      return null;
+    }
+
+    options.extra[_retryCountExtraKey] = retryCount + 1;
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    try {
+      return await _dio!.fetch<dynamic>(options);
+    } on DioException catch (retryException) {
+      return retryException;
+    }
   }
 
   void _emitGlobalError(String message) {

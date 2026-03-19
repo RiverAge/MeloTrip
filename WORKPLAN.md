@@ -14,9 +14,9 @@ Last updated: 2026-03-19
 
 ## Next
 
-- [ ] Add typed transport baseline in API layer
-  - Scope: default timeout, retry policy (bounded), and request correlation id.
-  - Goal: improve online diagnosis and reduce silent network instability.
+- [x] Add typed transport baseline in API layer
+  - Status: API now has default timeout, one-shot bounded retry for transport failures on GET, and request correlation id header injection.
+  - Validation: `api_provider_test` covers timeout setup, correlation-id injection, and retry behavior.
 
 - [ ] Align album/playlist/folder provider boundaries to orchestration-only style
   - Scope: keep provider focused on state transitions; keep request assembly/response shaping in repository.
@@ -36,3 +36,4 @@ Last updated: 2026-03-19
 - [x] Moved lyrics merge flow into repository boundary.
 - [x] Removed direct Dio usage from player scrobble runtime via scrobble repository.
 - [x] Restricted global API error bus to transport failures only.
+- [x] Added API timeout/retry/correlation-id transport baseline.

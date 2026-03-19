@@ -28,6 +28,7 @@ void main() {
       expect(options.queryParameters['c'], 'melo_trip');
       expect(options.queryParameters['f'], 'json');
       expect(options.queryParameters['_'], isA<String>());
+      expect(options.headers['X-Correlation-Id'], isA<String>());
       return {
         'subsonic-response': {'status': 'ok'},
       };
@@ -36,6 +37,20 @@ void main() {
 
     await api.get('/rest/getAlbumList');
     expect(adapter.lastRequestPath, '/rest/getAlbumList');
+  });
+
+  test('apiProvider configures default timeouts', () async {
+    final container = ProviderContainer(
+      overrides: [
+        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final Dio api = await container.read(apiProvider.future);
+    expect(api.options.connectTimeout, const Duration(seconds: 10));
+    expect(api.options.sendTimeout, const Duration(seconds: 10));
+    expect(api.options.receiveTimeout, const Duration(seconds: 20));
   });
 
   test(
@@ -115,6 +130,26 @@ void main() {
     expect(error, isNotNull);
     expect(error?.message, contains('connection failed'));
   });
+
+  test('apiProvider retries once for transport failures on GET', () async {
+    final container = ProviderContainer(
+      overrides: [
+        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final Dio api = await container.read(apiProvider.future);
+    final flakyAdapter = FlakyTransportAdapter();
+    api.httpClientAdapter = flakyAdapter;
+
+    final response = await api.get('/rest/getAlbumList');
+
+    expect(response.statusCode, 200);
+    expect(flakyAdapter.callCount, 2);
+    final AppErrorEvent? error = container.read(appErrorProvider);
+    expect(error, isNull);
+  });
 }
 
 class FakeCurrentUserLoggedIn extends CurrentUser {
@@ -171,6 +206,41 @@ class TransportErrorAdapter implements HttpClientAdapter {
       requestOptions: options,
       type: DioExceptionType.connectionError,
       message: 'connection failed',
+    );
+  }
+}
+
+class FlakyTransportAdapter implements HttpClientAdapter {
+  int callCount = 0;
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    callCount += 1;
+    if (callCount == 1) {
+      throw DioException(
+        requestOptions: options,
+        type: DioExceptionType.connectionError,
+        message: 'temporary connection issue',
+      );
+    }
+
+    return ResponseBody.fromBytes(
+      utf8.encode(
+        jsonEncode({
+          'subsonic-response': {'status': 'ok'},
+        }),
+      ),
+      200,
+      headers: <String, List<String>>{
+        Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+      },
     );
   }
 }
