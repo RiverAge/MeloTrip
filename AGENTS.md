@@ -206,6 +206,9 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - When a provider talks to repository APIs that can fail, prefer a single Result-based read path directly on the primary provider (for example `Future<Result<..., AppFailure>?> build(...)`).
 - Do not keep dual-track providers for the same data (for example raw `fooProvider` plus `fooResultProvider`). Pick one boundary and keep it consistent.
 - Provider names must not include a `Result` suffix such as `*ResultProvider` when they represent the primary read boundary for a feature. Prefer domain-first names like `artistDetailProvider`, `playlistDetailProvider`, or `scanStatusProvider`, while keeping the provider value type as `Result<..., AppFailure>` when needed.
+- Repository APIs that return `Future<Result<..., AppFailure>>` must use `try`-prefixed domain verbs, for example `tryFetchPlaylistDetail`, `tryUpdatePlaylist`, or `tryToggleFavorite`.
+- Do not introduce repository method names ending with `Result` (for example `fetchXxxResult` or `updateXxxResult`).
+- Keep dual-form semantics explicit: non-`try` repository methods are allowed to throw (typed failures), while `try*` methods must wrap failures into `Result.err`.
 - Do not split simple settings flows into multiple controller or reader providers unless the behavior is complex enough to justify the indirection.
 
 ### Subsonic Response Parsing
