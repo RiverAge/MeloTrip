@@ -72,15 +72,16 @@ void main() {
       expect(mockAdapter.lastRequest?.queryParameters['genre'], 'Rock');
     });
 
-    test('fetchAlbumListItems returns empty list for null response', () async {
+    test('fetchAlbumListItems throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(albumRepositoryProvider);
-      final result = await repository.fetchAlbumListItems(
-        query: const AlbumListQuery(type: 'newest'),
+      await expectLater(
+        repository.fetchAlbumListItems(
+          query: const AlbumListQuery(type: 'newest'),
+        ),
+        throwsA(isA<StateError>()),
       );
-
-      expect(result, isEmpty);
     });
 
     test('fetchAlbumListItems returns albums from response', () async {

@@ -126,13 +126,14 @@ void main() {
       expect(result[0].albumCount, isNull);
     });
 
-    test('fetchAllArtists returns empty list for null data', () async {
+    test('fetchAllArtists throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(artistsRepositoryProvider);
-      final result = await repository.fetchAllArtists();
-
-      expect(result, isEmpty);
+      await expectLater(
+        repository.fetchAllArtists(),
+        throwsA(isA<StateError>()),
+      );
     });
 
     test('fetchAllArtists returns empty list for missing artists', () async {
