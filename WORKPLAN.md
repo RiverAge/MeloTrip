@@ -20,6 +20,7 @@ Last updated: 2026-03-19
 
 - [ ] Align album/playlist/folder provider boundaries to orchestration-only style
   - Scope: keep provider focused on state transitions; keep request assembly/response shaping in repository.
+  - Progress: album and folder boundary alignment are complete; playlist boundary alignment remains.
 
 ## Later
 

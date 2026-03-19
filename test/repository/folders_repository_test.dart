@@ -182,6 +182,37 @@ void main() {
 
       expect(result[0].name, 'Folder Name');
     });
+
+    test('fetchDirectoryFolders keeps only directory entries', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'directory': {
+            'child': [
+              {'id': 'dir-1', 'title': 'Folder', 'isDir': true},
+              {'id': 'song-1', 'title': 'Song', 'isDir': false},
+            ],
+          },
+        },
+      });
+
+      final repository = container.read(foldersRepositoryProvider);
+      final result = await repository.fetchDirectoryFolders('root');
+
+      expect(result, hasLength(1));
+      expect(result.first.id, 'dir-1');
+      expect(result.first.isDir, isTrue);
+    });
+
+    test('tryFetchFolderIndexes returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(foldersRepositoryProvider);
+      final result = await repository.tryFetchFolderIndexes();
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
+    });
   });
 }
 

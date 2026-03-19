@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/library_index/library_index.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/folder/folders.dart';
+import 'package:melo_trip/repository/common/repository_guard.dart';
 import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class FoldersRepository {
@@ -35,6 +38,10 @@ class FoldersRepository {
     return entries;
   }
 
+  Future<Result<List<FolderIndexEntry>, AppFailure>> tryFetchFolderIndexes() {
+    return runGuarded(fetchFolderIndexes);
+  }
+
   Future<List<FolderIndexEntry>> fetchMusicDirectory(String id) async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(
@@ -62,6 +69,23 @@ class FoldersRepository {
         artist: c.artist,
       );
     }).toList();
+  }
+
+  Future<Result<List<FolderIndexEntry>, AppFailure>> tryFetchMusicDirectory(
+    String id,
+  ) {
+    return runGuarded(() => fetchMusicDirectory(id));
+  }
+
+  Future<List<FolderIndexEntry>> fetchDirectoryFolders(String id) async {
+    final entries = await fetchMusicDirectory(id);
+    return entries.where((entry) => entry.isDir).toList(growable: false);
+  }
+
+  Future<Result<List<FolderIndexEntry>, AppFailure>> tryFetchDirectoryFolders(
+    String id,
+  ) {
+    return runGuarded(() => fetchDirectoryFolders(id));
   }
 }
 
