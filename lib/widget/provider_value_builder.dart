@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 import 'package:melo_trip/widget/no_data.dart';
 
@@ -33,9 +35,12 @@ class AsyncValueBuilder<T> extends StatelessWidget {
           error: (error, stack) {
             log('ERR', level: 1, error: error);
             debugPrintStack(stackTrace: stack);
-            return const _Error();
+            return _Error(error: error);
           },
           data: (value) {
+            if (value case Result<dynamic, AppFailure>(isErr: true, :final error)) {
+              return _Error(failure: error);
+            }
             if (value == null) {
               return empty != null ? empty!(context, ref) : const NoData();
             } else if (builder != null) {
@@ -48,12 +53,28 @@ class AsyncValueBuilder<T> extends StatelessWidget {
 }
 
 class _Error extends StatelessWidget {
-  const _Error();
+  const _Error({this.error, this.failure});
+
+  final Object? error;
+  final AppFailure? failure;
+
+  String _resolveMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final resolved = failure ?? (error is AppFailure ? error as AppFailure : null);
+    return switch (resolved?.type) {
+      AppFailureType.network => l10n.globalErrorNetwork,
+      AppFailureType.unauthorized => l10n.globalErrorUnauthorized,
+      AppFailureType.server => l10n.globalErrorServer,
+      AppFailureType.protocol => l10n.globalErrorProtocol,
+      AppFailureType.unknown || null => l10n.encounterUnknownError,
+    };
+  }
+
   @override
   Widget build(BuildContext context) => Center(
     child: Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(AppLocalizations.of(context)!.encounterUnknownError),
+      child: Text(_resolveMessage(context)),
     ),
   );
 }
