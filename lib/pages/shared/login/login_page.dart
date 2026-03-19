@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
@@ -102,8 +101,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       body: Stack(
         children: [
@@ -125,8 +122,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         maxWidth: isDesktop ? 900 : 420,
                       ),
                       child: isDesktop
-                          ? _buildDesktopLoginShell(context, isDark)
-                          : _buildMobileLoginShell(context, isDark),
+                          ? _buildDesktopLoginShell(context)
+                          : _buildMobileLoginShell(context),
                     ),
                   ),
                 );
@@ -138,103 +135,83 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Widget _buildDesktopLoginShell(BuildContext context, bool isDark) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-        child: Container(
-          decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(
-              alpha: 0.2,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: (isDark ? Colors.white : Colors.black).withValues(
-                alpha: 0.08,
-              ),
-              width: 0.8,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-                blurRadius: 40,
-                offset: const Offset(0, 20),
-                spreadRadius: -10,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 11,
-                child: Padding(
-                  padding: const EdgeInsets.all(48),
-                  child: _buildHero(context, isDark),
-                ),
-              ),
-              VerticalDivider(
-                width: 1,
-                thickness: 1,
-                color: (isDark ? Colors.white : Colors.black).withValues(
-                  alpha: 0.1,
-                ),
-              ),
-              Expanded(
-                flex: 9,
-                child: Padding(
-                  padding: const EdgeInsets.all(48),
-                  child: _buildLoginForm(context, isDark),
-                ),
-              ),
-            ],
-          ),
+  Widget _buildDesktopLoginShell(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 0.8,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 14),
+            spreadRadius: -10,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 11,
+            child: Padding(
+              padding: const EdgeInsets.all(48),
+              child: _buildHero(context),
+            ),
+          ),
+          VerticalDivider(
+            width: 1,
+            thickness: 1,
+            color: colorScheme.outlineVariant.withValues(alpha: 0.35),
+          ),
+          Expanded(
+            flex: 9,
+            child: Padding(
+              padding: const EdgeInsets.all(48),
+              child: _buildLoginForm(context),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildMobileLoginShell(BuildContext context, bool isDark) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-        child: Container(
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: (isDark ? Colors.black : Colors.white).withValues(
-              alpha: 0.25,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: (isDark ? Colors.white : Colors.black).withValues(
-                alpha: 0.08,
-              ),
-              width: 0.8,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-                blurRadius: 40,
-                offset: const Offset(0, 20),
-                spreadRadius: -10,
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHero(context, isDark, compact: true),
-              const SizedBox(height: 32),
-              _buildLoginForm(context, isDark),
-            ],
-          ),
+  Widget _buildMobileLoginShell(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withValues(alpha: 0),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 0.8,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 14),
+            spreadRadius: -10,
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildHero(context, compact: true),
+          const SizedBox(height: 32),
+          _buildLoginForm(context),
+        ],
       ),
     );
   }
 
-  Widget _buildHero(BuildContext context, bool isDark, {bool compact = false}) {
+  Widget _buildHero(BuildContext context, {bool compact = false}) {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -264,9 +241,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: Text(
                 'MeloTrip',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: colorScheme.onPrimary,
                   fontWeight: FontWeight.w900,
                   letterSpacing: -1.2,
+                  fontSize: compact ? 34 : 48,
                 ),
               ),
             ),
@@ -274,18 +252,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               width: 1.5,
               height: 24,
               decoration: BoxDecoration(
-                color: (isDark ? Colors.white : Colors.black).withValues(
-                  alpha: 0.1,
-                ),
+                color: colorScheme.outlineVariant.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
             Text(
               AppLocalizations.of(context)!.login,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: (isDark ? Colors.white : Colors.black).withValues(
-                  alpha: 0.4,
-                ),
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w300,
               ),
             ),
@@ -295,7 +269,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Widget _buildLoginForm(BuildContext context, bool isDark) {
+  Widget _buildLoginForm(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return Column(
@@ -306,21 +280,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           controller: _hostController,
           hint: l10n.loginInputHostHint,
           icon: Icons.dns_rounded,
-          isDark: isDark,
         ),
         const SizedBox(height: 16),
         _buildTextField(
           controller: _unameController,
           hint: l10n.loginInputUserHint,
           icon: Icons.person_rounded,
-          isDark: isDark,
         ),
         const SizedBox(height: 16),
         _buildTextField(
           controller: _pwdController,
           hint: l10n.loginInputPasswordHint,
           icon: Icons.lock_rounded,
-          isDark: isDark,
           obscureText: true,
           action: TextInputAction.done,
           onSubmitted: _loading ? null : (_) => _onLogin(),
@@ -335,45 +306,44 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     required TextEditingController controller,
     required String hint,
     required IconData icon,
-    required bool isDark,
     bool obscureText = false,
     TextInputAction action = TextInputAction.next,
     void Function(String)? onSubmitted,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return TextField(
       controller: controller,
       obscureText: obscureText,
       textInputAction: action,
       onSubmitted: onSubmitted,
-      style: TextStyle(
-        color: isDark ? Colors.white : Colors.black87,
-        fontSize: 15,
-      ),
+      style: TextStyle(color: colorScheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
-          color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.4),
+          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
         ),
         prefixIcon: Icon(
           icon,
           size: 20,
-          color: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.5),
+          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
         ),
         filled: true,
-        fillColor: (isDark ? Colors.white : Colors.black).withValues(
-          alpha: 0.05,
-        ),
+        fillColor: colorScheme.surface.withValues(alpha: 0.7),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 16,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.28),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.28),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -439,27 +409,17 @@ class _LoginBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  colorScheme.surface,
-                  Color.lerp(colorScheme.surface, colorScheme.primary, 0.05)!,
-                  colorScheme.surfaceContainerHigh,
-                ]
-              : [
-                  colorScheme.surfaceContainerLow,
-                  Color.lerp(
-                    colorScheme.surfaceContainerLow,
-                    colorScheme.primary,
-                    0.05,
-                  )!,
-                ],
+          colors: [
+            colorScheme.surfaceContainerLow,
+            Color.lerp(colorScheme.surface, colorScheme.primary, 0.05)!,
+            colorScheme.surfaceContainerHigh,
+          ],
         ),
       ),
       child: Stack(
