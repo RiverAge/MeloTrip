@@ -205,6 +205,7 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Split out separate `Actions` providers only for collection-level operations that are not bound to a single entity instance, such as create/list refresh actions.
 - When a provider talks to repository APIs that can fail, prefer a single Result-based read path directly on the primary provider (for example `Future<Result<..., AppFailure>?> build(...)`).
 - Do not keep dual-track providers for the same data (for example raw `fooProvider` plus `fooResultProvider`). Pick one boundary and keep it consistent.
+- Provider names must not include a `Result` suffix such as `*ResultProvider` when they represent the primary read boundary for a feature. Prefer domain-first names like `artistDetailProvider`, `playlistDetailProvider`, or `scanStatusProvider`, while keeping the provider value type as `Result<..., AppFailure>` when needed.
 - Do not split simple settings flows into multiple controller or reader providers unless the behavior is complex enough to justify the indirection.
 
 ### Subsonic Response Parsing
