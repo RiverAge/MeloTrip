@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/song/songs.dart';
 import 'package:melo_trip/repository/song/song_repository.dart';
@@ -179,5 +181,14 @@ class _MockSongRepository extends SongRepository {
 
     final end = (offset + count).clamp(0, _songs.length);
     return _songs.sublist(offset, end);
+  }
+
+  @override
+  Future<Result<List<SongEntity>, AppFailure>> tryFetchSongSearchItems({
+    required SongSearchQuery query,
+    CancelToken? cancelToken,
+  }) async {
+    final items = await fetchSongSearchItems(query: query, cancelToken: cancelToken);
+    return Result.ok(items);
   }
 }

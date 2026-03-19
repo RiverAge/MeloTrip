@@ -30,25 +30,28 @@ class PaginatedArtists extends _$PaginatedArtists {
 
   Future<void> loadInitial() async {
     state = const PaginatedListSnapshot<ArtistIndexEntry>(isLoading: true);
-    try {
-      final repository = ref.read(artistsRepositoryProvider);
-      final List<ArtistIndexEntry> artists = await repository.fetchAllArtists();
-      if (!ref.mounted) return;
-      final int visibleCount = artists.length < kArtistPageSize
-          ? artists.length
-          : kArtistPageSize;
-      state = PaginatedListSnapshot<ArtistIndexEntry>(
-        items: artists,
-        offset: visibleCount,
-        hasMore: visibleCount < artists.length,
-      );
-    } catch (error) {
-      if (!ref.mounted) return;
-      state = PaginatedListSnapshot<ArtistIndexEntry>(
-        hasMore: false,
-        error: PaginatedListFailure.from(error),
-      );
-    }
+    final repository = ref.read(artistsRepositoryProvider);
+    final result = await repository.tryFetchAllArtists();
+    if (!ref.mounted) return;
+
+    result.when(
+      ok: (artists) {
+        final int visibleCount = artists.length < kArtistPageSize
+            ? artists.length
+            : kArtistPageSize;
+        state = PaginatedListSnapshot<ArtistIndexEntry>(
+          items: artists,
+          offset: visibleCount,
+          hasMore: visibleCount < artists.length,
+        );
+      },
+      err: (error) {
+        state = PaginatedListSnapshot<ArtistIndexEntry>(
+          hasMore: false,
+          error: PaginatedListFailure(message: error.message, cause: error),
+        );
+      },
+    );
   }
 
   void loadMore() {

@@ -48,6 +48,15 @@ class SongRepository {
     return response.subsonicResponse?.searchResult3?.song ??
         const <SongEntity>[];
   }
+
+  Future<Result<List<SongEntity>, AppFailure>> tryFetchSongSearchItems({
+    required SongSearchQuery query,
+    CancelToken? cancelToken,
+  }) {
+    return runGuarded(
+      () => fetchSongSearchItems(query: query, cancelToken: cancelToken),
+    );
+  }
 }
 
 final songRepositoryProvider = Provider<SongRepository>((ref) {

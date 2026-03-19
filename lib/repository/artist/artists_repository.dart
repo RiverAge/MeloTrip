@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/library_index/library_index.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/artist/artists.dart';
+import 'package:melo_trip/repository/common/repository_guard.dart';
 import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class ArtistsRepository {
@@ -36,6 +39,10 @@ class ArtistsRepository {
       }
     }
     return entries;
+  }
+
+  Future<Result<List<ArtistIndexEntry>, AppFailure>> tryFetchAllArtists() {
+    return runGuarded(fetchAllArtists);
   }
 }
 

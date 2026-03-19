@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/genre/genres.dart';
@@ -25,6 +27,12 @@ class _MockGenresRepository extends GenresRepository {
   Future<List<GenreEntity>> fetchGenresItems() async {
     itemsCalled = true;
     return _fetchItems;
+  }
+
+  @override
+  Future<Result<List<GenreEntity>, AppFailure>> tryFetchGenresItems() async {
+    itemsCalled = true;
+    return Result.ok(_fetchItems);
   }
 }
 

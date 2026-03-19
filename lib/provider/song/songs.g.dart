@@ -64,7 +64,7 @@ final class PaginatedSongListProvider
   }
 }
 
-String _$paginatedSongListHash() => r'113d814c5967487ad9372061a14adc2662eea370';
+String _$paginatedSongListHash() => r'93d3842f08a3f953c8a5efa5493654c2e5d5c9b5';
 
 final class PaginatedSongListFamily extends $Family
     with

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/provider/artist/artists.dart';
 import 'package:melo_trip/repository/artist/artists_repository.dart';
 
@@ -137,5 +139,10 @@ class _MockArtistsRepository extends ArtistsRepository {
   @override
   Future<List<ArtistIndexEntry>> fetchAllArtists() async {
     return _artists;
+  }
+
+  @override
+  Future<Result<List<ArtistIndexEntry>, AppFailure>> tryFetchAllArtists() async {
+    return Result.ok(_artists);
   }
 }

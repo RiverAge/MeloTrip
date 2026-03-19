@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/provider/folder/folders.dart';
 import 'package:melo_trip/repository/folder/folders_repository.dart';
 
@@ -28,10 +30,25 @@ class _MockFoldersRepository extends FoldersRepository {
   }
 
   @override
+  Future<Result<List<FolderIndexEntry>, AppFailure>> tryFetchFolderIndexes() async {
+    fetchIndexesCalled = true;
+    return Result.ok(_indexesResult);
+  }
+
+  @override
   Future<List<FolderIndexEntry>> fetchMusicDirectory(String id) async {
     fetchDirectoryCalled = true;
     lastDirectoryId = id;
     return _directoryResult;
+  }
+
+  @override
+  Future<Result<List<FolderIndexEntry>, AppFailure>> tryFetchMusicDirectory(
+    String id,
+  ) async {
+    fetchDirectoryCalled = true;
+    lastDirectoryId = id;
+    return Result.ok(_directoryResult);
   }
 }
 

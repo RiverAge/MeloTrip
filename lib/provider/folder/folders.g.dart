@@ -33,7 +33,7 @@ final class FolderIndexesProvider
   FolderIndexes create() => FolderIndexes();
 }
 
-String _$folderIndexesHash() => r'e7e5c76eb5262b592850ccec2bbb3f2ce9b94645';
+String _$folderIndexesHash() => r'67283a20701e514b5949393d430a955538073db8';
 
 abstract class _$FolderIndexes extends $AsyncNotifier<List<FolderIndexEntry>> {
   FutureOr<List<FolderIndexEntry>> build();
@@ -82,7 +82,7 @@ final class FolderContentsProvider
   FolderContents create() => FolderContents();
 }
 
-String _$folderContentsHash() => r'e5143a7b163c7f4c584ecdebe826d67eda9966f1';
+String _$folderContentsHash() => r'2e8b008e9ea26ba89138774a05e5ccdcc57a580d';
 
 abstract class _$FolderContents extends $AsyncNotifier<List<FolderIndexEntry>> {
   FutureOr<List<FolderIndexEntry>> build();
@@ -251,7 +251,7 @@ final class FolderChildrenCacheProvider
 }
 
 String _$folderChildrenCacheHash() =>
-    r'8a52bf587f2d3f99124314792b0dc8f3ed6452c8';
+    r'396a715d93b990d57e4f897c2bda78e867ac2c33';
 
 abstract class _$FolderChildrenCache
     extends $Notifier<Map<String, List<FolderIndexEntry>>> {

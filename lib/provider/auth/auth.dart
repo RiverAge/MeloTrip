@@ -3,10 +3,9 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/persistence/persistence.dart';
 import 'package:melo_trip/provider/user_config/user_config.dart';
-import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
+import 'package:melo_trip/repository/auth/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth.g.dart';
@@ -20,19 +19,14 @@ class CurrentUser extends _$CurrentUser {
   }
 }
 
-/// 生成随机盐 (Salt)
 String _generateSalt() {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  return List.generate(
-    10,
-    (index) => chars[Random().nextInt(chars.length)],
-  ).join();
+  return List.generate(10, (_) => chars[Random().nextInt(chars.length)]).join();
 }
 
-/// 生成 Token: md5(password + salt)
 String _generateToken(String password, String salt) {
-  var bytes = utf8.encode(password + salt); // 将 密码+盐 转为字节
-  return md5.convert(bytes).toString(); // 计算 MD5 并转为十六进制字符串
+  final bytes = utf8.encode(password + salt);
+  return md5.convert(bytes).toString();
 }
 
 @riverpod
@@ -42,24 +36,19 @@ Future<AuthUser?> login(
   required String username,
   required String password,
 }) async {
-  final api = await ref.read(apiProvider.future);
   final persistence = await ref.read(appPersistenceProvider.future);
+  final repository = ref.read(authRepositoryProvider);
   final salt = _generateSalt();
   final token = _generateToken(password, salt);
-  final res = await api.get<Map<String, dynamic>>(
-    '$host/rest/ping',
-    queryParameters: {
-      'u': username,
-      't': token, // 假设 token 是这样传递
-      's': salt, // 假设 salt 是这样传递
-      '_': DateTime.now().toIso8601String(),
-      'v': '1.16.1',
-      'c': 'melo_trip',
-      'f': 'json',
-    },
+  final pingResult = await repository.tryPing(
+    host: host,
+    username: username,
+    token: token,
+    salt: salt,
   );
-
-  parseSubsonicResponseOrThrow(res.data, endpoint: '$host/rest/ping');
+  if (pingResult.isErr) {
+    throw Exception(pingResult.error?.message);
+  }
 
   final auth = AuthUser.fromJson({
     'salt': salt,

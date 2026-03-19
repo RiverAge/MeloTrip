@@ -1,4 +1,6 @@
 import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
+import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/repository/song/song_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -74,53 +76,57 @@ class PaginatedSongList extends _$PaginatedSongList {
 
   Future<void> loadInitial() async {
     state = const PaginatedListSnapshot<SongEntity>(isLoading: true);
-    try {
-      final result = await _fetchPage(0);
-      if (!ref.mounted) return;
-      final pageSize = _query.songCount ?? result.length;
-      state = PaginatedListSnapshot<SongEntity>(
-        items: result,
-        offset: result.length,
-        hasMore: pageSize > 0 && result.length >= pageSize,
-      );
-    } catch (error) {
-      if (!ref.mounted) return;
-      state = PaginatedListSnapshot<SongEntity>(
-        hasMore: false,
-        error: PaginatedListFailure.from(error),
-      );
-    }
+    final result = await _fetchPage(0);
+    if (!ref.mounted) return;
+    result.when(
+      ok: (items) {
+        final pageSize = _query.songCount ?? items.length;
+        state = PaginatedListSnapshot<SongEntity>(
+          items: items,
+          offset: items.length,
+          hasMore: pageSize > 0 && items.length >= pageSize,
+        );
+      },
+      err: (error) {
+        state = PaginatedListSnapshot<SongEntity>(
+          hasMore: false,
+          error: PaginatedListFailure(message: error.message, cause: error),
+        );
+      },
+    );
   }
 
   Future<void> loadMore() async {
     if (state.isLoading || !state.hasMore) return;
     state = state.copyWith(isLoading: true, error: null);
-    try {
-      final result = await _fetchPage(state.offset);
-      if (!ref.mounted) return;
-      final pageSize = _query.songCount ?? result.length;
-      state = state.copyWith(
-        items: <SongEntity>[...state.items, ...result],
-        offset: state.offset + result.length,
-        hasMore: pageSize > 0 && result.length >= pageSize,
-        isLoading: false,
-      );
-    } catch (error) {
-      if (!ref.mounted) return;
-      state = state.copyWith(
-        isLoading: false,
-        error: PaginatedListFailure.from(error),
-      );
-    }
+    final result = await _fetchPage(state.offset);
+    if (!ref.mounted) return;
+    result.when(
+      ok: (items) {
+        final pageSize = _query.songCount ?? items.length;
+        state = state.copyWith(
+          items: <SongEntity>[...state.items, ...items],
+          offset: state.offset + items.length,
+          hasMore: pageSize > 0 && items.length >= pageSize,
+          isLoading: false,
+        );
+      },
+      err: (error) {
+        state = state.copyWith(
+          isLoading: false,
+          error: PaginatedListFailure(message: error.message, cause: error),
+        );
+      },
+    );
   }
 
   Future<void> refresh() async {
     await loadInitial();
   }
 
-  Future<List<SongEntity>> _fetchPage(int offset) async {
+  Future<Result<List<SongEntity>, AppFailure>> _fetchPage(int offset) async {
     final repository = ref.read(songRepositoryProvider);
-    return repository.fetchSongSearchItems(
+    return repository.tryFetchSongSearchItems(
       query: _query.copyWith(songOffset: offset),
     );
   }

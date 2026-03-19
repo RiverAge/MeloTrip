@@ -5,7 +5,11 @@ class FolderIndexes extends _$FolderIndexes {
   @override
   Future<List<FolderIndexEntry>> build() async {
     final repository = ref.read(foldersRepositoryProvider);
-    return repository.fetchFolderIndexes();
+    final result = await repository.tryFetchFolderIndexes();
+    return result.when(
+      ok: (items) => items,
+      err: (failure) => throw failure,
+    );
   }
 }
 
@@ -19,6 +23,10 @@ class FolderContents extends _$FolderContents {
     }
 
     final repository = ref.read(foldersRepositoryProvider);
-    return repository.fetchMusicDirectory(selected.id);
+    final result = await repository.tryFetchMusicDirectory(selected.id);
+    return result.when(
+      ok: (items) => items,
+      err: (failure) => throw failure,
+    );
   }
 }

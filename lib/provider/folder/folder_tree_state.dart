@@ -54,7 +54,11 @@ class FolderChildrenCache extends _$FolderChildrenCache {
 
   Future<List<FolderIndexEntry>> _fetchAndCacheChildren(String parentId) async {
     final repository = ref.read(foldersRepositoryProvider);
-    final dirs = await repository.fetchDirectoryFolders(parentId);
+    final result = await repository.tryFetchDirectoryFolders(parentId);
+    final dirs = result.when(
+      ok: (items) => items,
+      err: (failure) => throw failure,
+    );
     state = {...state, parentId: dirs};
     return dirs;
   }

@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/common/repository_guard.dart';
 import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class GenresRepository {
@@ -16,9 +19,17 @@ class GenresRepository {
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/getGenres');
   }
 
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchGenresResponse() {
+    return runGuarded(fetchGenresResponse);
+  }
+
   Future<List<GenreEntity>> fetchGenresItems() async {
     final response = await fetchGenresResponse();
     return response.subsonicResponse?.genres?.genre ?? const <GenreEntity>[];
+  }
+
+  Future<Result<List<GenreEntity>, AppFailure>> tryFetchGenresItems() {
+    return runGuarded(fetchGenresItems);
   }
 }
 

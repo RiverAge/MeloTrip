@@ -46,7 +46,7 @@ final class PaginatedArtistsProvider
   }
 }
 
-String _$paginatedArtistsHash() => r'38ad4d1e90b47dc6799652f8bc060023d49a2678';
+String _$paginatedArtistsHash() => r'a52a9f414016101f431c14b9afc592d217c67c30';
 
 abstract class _$PaginatedArtists
     extends $Notifier<PaginatedListSnapshot<ArtistIndexEntry>> {
