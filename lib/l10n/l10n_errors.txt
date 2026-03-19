@@ -1,9 +1,1 @@
-{
-  "zh_CN": [
-    "playback",
-    "shuffle",
-    "clearCache",
-    "clearCacheSuccess",
-    "settingsTabAppearance"
-  ]
-}
+{}

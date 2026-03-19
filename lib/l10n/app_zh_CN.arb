@@ -24,6 +24,8 @@
 
   "play": "播放",
   "pause": "暂停",
+  "playback": "播放",
+  "shuffle": "随机播放",
   "previousSong": "上一首",
   "nextSong": "下一首",
 
@@ -60,6 +62,8 @@
 
     "cachedSize": "已缓存",
     "calculating": "计算中...",
+    "clearCache": "清除缓存",
+    "clearCacheSuccess": "缓存已清除",
 
     "recentAdded": "近期添加",
     "randomAlbum": "随机专辑",
@@ -413,6 +417,7 @@
 ,
     "resetToDefaults": "恢复默认",
     "settingsTabGeneral": "通用",
+    "settingsTabAppearance": "外观",
     "settingsTabPlayback": "播放",
     "settingsTabLyrics": "歌词",
     "settingsTabAdvanced": "高级",

@@ -798,6 +798,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get pause => '暂停';
 
   @override
+  String get playback => '播放';
+
+  @override
+  String get shuffle => '随机播放';
+
+  @override
   String get previousSong => '上一首';
 
   @override
@@ -867,6 +873,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get calculating => '计算中...';
+
+  @override
+  String get clearCache => '清除缓存';
+
+  @override
+  String get clearCacheSuccess => '缓存已清除';
 
   @override
   String get recentAdded => '近期添加';
@@ -1406,6 +1418,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get settingsTabGeneral => '通用';
+
+  @override
+  String get settingsTabAppearance => '外观';
 
   @override
   String get settingsTabPlayback => '播放';
