@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/helper/app_failure_message.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -33,8 +34,14 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     final result = await ref
         .read(playlistDetailProvider(playlistId).notifier)
         .modify(songIdToAdd: songId);
-    if (result == null || result.isErr) return;
+    if (result == null) return;
     if (!mounted) return;
+    if (result.isErr) {
+      final l10n = AppLocalizations.of(context)!;
+      final message = resolveAppFailureMessage(l10n, failure: result.error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      return;
+    }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

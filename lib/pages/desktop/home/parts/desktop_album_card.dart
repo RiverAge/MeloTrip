@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/helper/app_failure_message.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
@@ -94,6 +96,8 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
   Future<void> _toggleFavorite() async {
     final albumId = widget.album.id;
     if (albumId == null) return;
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
 
     final currentlyStarred = _optimisticStarred ?? widget.album.starred != null;
     setState(() {
@@ -106,6 +110,10 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
 
     if (!mounted) return;
     if (result == null || result.isErr) {
+      if (result?.error != null) {
+        final message = resolveAppFailureMessage(l10n, failure: result!.error);
+        messenger.showSnackBar(SnackBar(content: Text(message)));
+      }
       setState(() {
         _optimisticStarred = currentlyStarred;
       });
@@ -246,6 +254,12 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                     rating: rating,
                                     color: overlayForeground,
                                     onRating: (value) async {
+                                      final l10n = AppLocalizations.of(
+                                        context,
+                                      )!;
+                                      final messenger = ScaffoldMessenger.of(
+                                        context,
+                                      );
                                       setState(() {
                                         _optimisticRating = value;
                                       });
@@ -258,6 +272,15 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                           .setRating(value);
                                       if (!mounted) return;
                                       if (res == null || res.isErr) {
+                                        if (res?.error != null) {
+                                          final message = resolveAppFailureMessage(
+                                            l10n,
+                                            failure: res!.error,
+                                          );
+                                          messenger.showSnackBar(
+                                            SnackBar(content: Text(message)),
+                                          );
+                                        }
                                         setState(() {
                                           _optimisticRating =
                                               widget.album.userRating;
