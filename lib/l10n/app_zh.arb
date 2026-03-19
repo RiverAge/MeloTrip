@@ -200,6 +200,10 @@
       }
     },
     "unknownError": "未知错误",
+    "globalErrorNetwork": "网络连接失败，请检查网络后重试。",
+    "globalErrorUnauthorized": "认证失败，请重新登录。",
+    "globalErrorServer": "服务器暂时不可用，请稍后重试。",
+    "globalErrorProtocol": "响应数据异常，请稍后重试。",
     "encounterUnknownError": "遇到未知错误",
     "noSongPlaying": "当前没有播放歌曲",
     "audioChannelStereo": "立体声",

@@ -628,20 +628,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unknownError => '未知错误';
 
   @override
-  String get globalErrorNetwork =>
-      'Network connection failed. Please check your network and try again.';
+  String get globalErrorNetwork => '网络连接失败，请检查网络后重试。';
 
   @override
-  String get globalErrorUnauthorized =>
-      'Authentication failed. Please log in again.';
+  String get globalErrorUnauthorized => '认证失败，请重新登录。';
 
   @override
-  String get globalErrorServer =>
-      'Server is temporarily unavailable. Please try again later.';
+  String get globalErrorServer => '服务器暂时不可用，请稍后重试。';
 
   @override
-  String get globalErrorProtocol =>
-      'Response data is invalid. Please try again later.';
+  String get globalErrorProtocol => '响应数据异常，请稍后重试。';
 
   @override
   String get encounterUnknownError => '遇到未知错误';
@@ -1344,6 +1340,18 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get unknownError => '未知错误';
+
+  @override
+  String get globalErrorNetwork => '网络连接失败，请检查网络后重试。';
+
+  @override
+  String get globalErrorUnauthorized => '认证失败，请重新登录。';
+
+  @override
+  String get globalErrorServer => '服务器暂时不可用，请稍后重试。';
+
+  @override
+  String get globalErrorProtocol => '响应数据异常，请稍后重试。';
 
   @override
   String get encounterUnknownError => '遇到未知错误';
