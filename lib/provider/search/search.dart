@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
@@ -27,12 +26,8 @@ final searchByQueryProvider =
     ) async {
       if (query.isEmpty) return null;
 
-      final cancelToken = CancelToken();
-      ref.onDispose(() => cancelToken.cancel());
-
       final repository = ref.read(songRepositoryProvider);
       return repository.tryFetchSongSearchResponse(
         query: SongSearchQuery(query: query),
-        cancelToken: cancelToken,
       );
     });

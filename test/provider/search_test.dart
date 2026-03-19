@@ -12,6 +12,7 @@ class _MockSongRepository extends SongRepository {
 
   final SubsonicResponse? _searchResult;
   bool searchCalled = false;
+  SongSearchQuery? lastQuery;
 
   @override
   Future<SubsonicResponse> fetchSongSearchResponse({
@@ -19,6 +20,7 @@ class _MockSongRepository extends SongRepository {
     CancelToken? cancelToken,
   }) async {
     searchCalled = true;
+    lastQuery = query;
     return _searchResult!;
   }
 }
@@ -78,6 +80,7 @@ void main() {
       expect(result?.isOk, isTrue);
       expect(result?.data?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.searchCalled, isTrue);
+      expect(mockRepository.lastQuery, const SongSearchQuery(query: 'test'));
     });
 
     test('returns Result.err when repository throws', () async {
