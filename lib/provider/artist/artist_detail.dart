@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'artist_detail.g.dart';
 
 @riverpod
-Future<Result<SubsonicResponse, AppFailure>?> artistDetailResult(
+Future<Result<SubsonicResponse, AppFailure>?> artistDetail(
   Ref ref,
   String? artistId,
 ) async {

@@ -20,7 +20,7 @@ class DesktopArtistDetailPage extends ConsumerWidget {
     return Material(
       color: theme.colorScheme.surface,
       child: AsyncValueBuilder(
-        provider: artistDetailResultProvider(artistId),
+        provider: artistDetailProvider(artistId),
         builder: (context, result, ref) {
           if (result.isErr) {
             return const NoData();

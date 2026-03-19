@@ -14,7 +14,7 @@ class ArtistDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
-      provider: artistDetailResultProvider(artistId),
+      provider: artistDetailProvider(artistId),
       builder: (_, result, ref) {
         if (result.isErr) {
           return Scaffold(

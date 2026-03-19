@@ -9,10 +9,10 @@ part of 'artist_detail.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(artistDetailResult)
-final artistDetailResultProvider = ArtistDetailResultFamily._();
+@ProviderFor(artistDetail)
+final artistDetailProvider = ArtistDetailFamily._();
 
-final class ArtistDetailResultProvider
+final class ArtistDetailProvider
     extends
         $FunctionalProvider<
           AsyncValue<Result<SubsonicResponse, AppFailure>?>,
@@ -22,23 +22,23 @@ final class ArtistDetailResultProvider
     with
         $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
         $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
-  ArtistDetailResultProvider._({
-    required ArtistDetailResultFamily super.from,
+  ArtistDetailProvider._({
+    required ArtistDetailFamily super.from,
     required String? super.argument,
   }) : super(
          retry: null,
-         name: r'artistDetailResultProvider',
+         name: r'artistDetailProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$artistDetailResultHash();
+  String debugGetCreateSourceHash() => _$artistDetailHash();
 
   @override
   String toString() {
-    return r'artistDetailResultProvider'
+    return r'artistDetailProvider'
         ''
         '($argument)';
   }
@@ -52,12 +52,12 @@ final class ArtistDetailResultProvider
   @override
   FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
     final argument = this.argument as String?;
-    return artistDetailResult(ref, argument);
+    return artistDetail(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ArtistDetailResultProvider && other.argument == argument;
+    return other is ArtistDetailProvider && other.argument == argument;
   }
 
   @override
@@ -66,27 +66,26 @@ final class ArtistDetailResultProvider
   }
 }
 
-String _$artistDetailResultHash() =>
-    r'dc0c287fa6af15dff00f53c947988f2b4564df4d';
+String _$artistDetailHash() => r'28bad23aabe601e5a43e31e4eb935fffebd1874a';
 
-final class ArtistDetailResultFamily extends $Family
+final class ArtistDetailFamily extends $Family
     with
         $FunctionalFamilyOverride<
           FutureOr<Result<SubsonicResponse, AppFailure>?>,
           String?
         > {
-  ArtistDetailResultFamily._()
+  ArtistDetailFamily._()
     : super(
         retry: null,
-        name: r'artistDetailResultProvider',
+        name: r'artistDetailProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  ArtistDetailResultProvider call(String? artistId) =>
-      ArtistDetailResultProvider._(argument: artistId, from: this);
+  ArtistDetailProvider call(String? artistId) =>
+      ArtistDetailProvider._(argument: artistId, from: this);
 
   @override
-  String toString() => r'artistDetailResultProvider';
+  String toString() => r'artistDetailProvider';
 }

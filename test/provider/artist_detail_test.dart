@@ -27,7 +27,7 @@ class _MockArtistDetailRepository extends ArtistDetailRepository {
 }
 
 void main() {
-  group('artistDetailResultProvider', () {
+  group('artistDetailProvider', () {
     test('returns null when artistId is null', () async {
       final mockRepository = _MockArtistDetailRepository();
       final container = ProviderContainer(
@@ -37,7 +37,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailResultProvider(null).future);
+      final result = await container.read(artistDetailProvider(null).future);
 
       expect(result, isNull);
       expect(mockRepository.fetchCalled, isFalse);
@@ -54,7 +54,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailResultProvider('artist-123').future);
+      final result = await container.read(artistDetailProvider('artist-123').future);
 
       expect(result?.isErr, isTrue);
       expect(result?.error, isA<AppFailure>());
@@ -83,7 +83,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailResultProvider('artist-123').future);
+      final result = await container.read(artistDetailProvider('artist-123').future);
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);
