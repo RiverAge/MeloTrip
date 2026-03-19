@@ -32,7 +32,7 @@ class DesktopAlbumDetailPage extends ConsumerWidget {
       child: AsyncValueBuilder(
         provider: albumDetailProvider(albumId),
         builder: (context, data, ref) {
-          final AlbumEntity? album = data.subsonicResponse?.album;
+          final AlbumEntity? album = data.data?.subsonicResponse?.album;
           final List<SongEntity> songs = album?.song ?? <SongEntity>[];
           if (album == null) {
             return const NoData();

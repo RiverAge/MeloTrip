@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -52,7 +54,8 @@ class _FakeAlbumDetail extends AlbumDetail {
   final SubsonicResponse _response;
 
   @override
-  Future<SubsonicResponse?> build(String? albumId) async => _response;
+  Future<Result<SubsonicResponse, AppFailure>?> build(String? albumId) async =>
+      Result.ok(_response);
 }
 
 void main() {
@@ -99,41 +102,39 @@ void main() {
         playingStream: Stream.value(true),
       );
 
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: [
-        appPlayerHandlerProvider.overrideWith(
-          () => _FakeAppPlayerHandler(stubPlayer),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appPlayerHandlerProvider.overrideWith(
+              () => _FakeAppPlayerHandler(stubPlayer),
+            ),
+            albumDetailProvider(
+              'album-1',
+            ).overrideWith(() => _FakeAlbumDetail(fakeAlbumResponse(songs))),
+            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const AlbumDetailPage(albumId: 'album-1'),
+          ),
         ),
-        albumDetailProvider(
-          'album-1',
-        ).overrideWith(
-          () => _FakeAlbumDetail(fakeAlbumResponse(songs)),
-        ),
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
-      ],
-      child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const AlbumDetailPage(albumId: 'album-1'),
-      ),
-    ),
-  );
+      );
 
-  await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-  final playingGif = find.byWidgetPredicate((widget) {
-    if (widget is! Image) return false;
-    final image = widget.image;
-    return image is AssetImage && image.assetName == 'images/playing.gif';
-  });
+      final playingGif = find.byWidgetPredicate((widget) {
+        if (widget is! Image) return false;
+        final image = widget.image;
+        return image is AssetImage && image.assetName == 'images/playing.gif';
+      });
 
-  expect(playingGif, findsOneWidget);
-  expect(find.text('Song 1'), findsOneWidget);
-  expect(find.text('Song 2'), findsOneWidget);
-},
-// Depends on AppPlayer extension internals; covered by integration flows.
-skip: true,
+      expect(playingGif, findsOneWidget);
+      expect(find.text('Song 1'), findsOneWidget);
+      expect(find.text('Song 2'), findsOneWidget);
+    },
+    // Depends on AppPlayer extension internals; covered by integration flows.
+    skip: true,
   );
 
   testWidgets(
@@ -156,11 +157,9 @@ skip: true,
             appPlayerHandlerProvider.overrideWith(
               () => _FakeAppPlayerHandler(stubPlayer),
             ),
-        albumDetailProvider(
-          'album-1',
-        ).overrideWith(
-          () => _FakeAlbumDetail(fakeAlbumResponse(songs)),
-        ),
+            albumDetailProvider(
+              'album-1',
+            ).overrideWith(() => _FakeAlbumDetail(fakeAlbumResponse(songs))),
             currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           ],
           child: MaterialApp(

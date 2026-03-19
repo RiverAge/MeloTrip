@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
@@ -24,7 +26,8 @@ class _FakeAlbumDetail extends AlbumDetail {
   final SubsonicResponse _response;
 
   @override
-  Future<SubsonicResponse?> build(String? albumId) async => _response;
+  Future<Result<SubsonicResponse, AppFailure>?> build(String? albumId) async =>
+      Result.ok(_response);
 }
 
 void main() {

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
@@ -10,16 +11,18 @@ import 'package:melo_trip/repository/song/song_detail_repository.dart';
 class _MockSongDetailRepository extends SongDetailRepository {
   _MockSongDetailRepository() : super(() async => Dio());
 
-  SubsonicResponse? _fetchResult;
+  Result<SubsonicResponse, AppFailure>? _fetchResult;
   bool fetchCalled = false;
   String? lastSongId;
 
-  void setFetchResult(SubsonicResponse? result) {
+  void setFetchResult(Result<SubsonicResponse, AppFailure> result) {
     _fetchResult = result;
   }
 
   @override
-  Future<SubsonicResponse> fetchSongDetail(String songId) async {
+  Future<Result<SubsonicResponse, AppFailure>> fetchSongDetailResult(
+    String songId,
+  ) async {
     fetchCalled = true;
     lastSongId = songId;
     return _fetchResult!;
@@ -28,9 +31,13 @@ class _MockSongDetailRepository extends SongDetailRepository {
 
 void main() {
   group('songDetailProvider', () {
-    test('throws when repository throws', () async {
+    test('returns Result.err when repository returns error result', () async {
       final mockRepository = _MockSongDetailRepository();
-      mockRepository.setFetchResult(null);
+      mockRepository.setFetchResult(
+        const Result.err(
+          AppFailure(type: AppFailureType.unknown, message: 'mock-error'),
+        ),
+      );
 
       final container = ProviderContainer(
         overrides: [
@@ -39,15 +46,15 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await expectLater(
-        container.read(songDetailProvider('song-123').future),
-        throwsA(isA<TypeError>()),
+      final result = await container.read(
+        songDetailProvider('song-123').future,
       );
+      expect(result?.isErr, isTrue);
       expect(mockRepository.fetchCalled, isTrue);
       expect(mockRepository.lastSongId, 'song-123');
     });
 
-    test('returns song detail from repository', () async {
+    test('returns Result.ok with song detail from repository', () async {
       final mockResponse = SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(
           status: 'ok',
@@ -59,7 +66,7 @@ void main() {
         ),
       );
       final mockRepository = _MockSongDetailRepository();
-      mockRepository.setFetchResult(mockResponse);
+      mockRepository.setFetchResult(Result.ok(mockResponse));
 
       final container = ProviderContainer(
         overrides: [
@@ -68,53 +75,15 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(songDetailProvider('song-123').future);
+      final result = await container.read(
+        songDetailProvider('song-123').future,
+      );
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
-      expect(result?.subsonicResponse?.song?.id, equals('song-123'));
-      expect(result?.subsonicResponse?.song?.title, equals('Test Song'));
-    });
-
-    test('songDetailResult returns Result.err when repository throws', () async {
-      final mockRepository = _MockSongDetailRepository();
-      mockRepository.setFetchResult(null);
-
-      final container = ProviderContainer(
-        overrides: [
-          songDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final result = await container.read(songDetailResultProvider('song-123').future);
-
-      expect(result, isNotNull);
-      expect(result?.isErr, isTrue);
-      expect(result?.error, isA<AppFailure>());
-    });
-
-    test('songDetailResult returns Result.ok on success', () async {
-      final mockResponse = SubsonicResponse(
-        subsonicResponse: SubsonicResponseClass(
-          status: 'ok',
-          song: SongEntity(id: 'song-123', title: 'OK Song'),
-        ),
-      );
-      final mockRepository = _MockSongDetailRepository();
-      mockRepository.setFetchResult(mockResponse);
-
-      final container = ProviderContainer(
-        overrides: [
-          songDetailRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-      addTearDown(container.dispose);
-
-      final result = await container.read(songDetailResultProvider('song-123').future);
-
       expect(result?.isOk, isTrue);
-      expect(result?.data?.subsonicResponse?.song?.title, 'OK Song');
+      expect(result?.data?.subsonicResponse?.status, equals('ok'));
+      expect(result?.data?.subsonicResponse?.song?.id, equals('song-123'));
+      expect(result?.data?.subsonicResponse?.song?.title, equals('Test Song'));
     });
   });
 }

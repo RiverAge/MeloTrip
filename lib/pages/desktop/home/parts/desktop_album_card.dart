@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/album/album_detail_page.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
 import 'package:melo_trip/app_player/player.dart';
@@ -83,7 +84,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     if (player == null) return;
 
     final data = await ref.read(albumDetailProvider(albumId).future);
-    final songs = data?.subsonicResponse?.album?.song ?? [];
+    final songs = data?.data?.subsonicResponse?.album?.song ?? <SongEntity>[];
     if (songs.isNotEmpty) {
       await player.setPlaylist(songs: songs, initialId: songs.firstOrNull?.id);
       await player.play();
@@ -123,7 +124,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     if (player == null) return;
 
     final data = await ref.read(albumDetailProvider(albumId).future);
-    final songs = data?.subsonicResponse?.album?.song ?? [];
+    final songs = data?.data?.subsonicResponse?.album?.song ?? <SongEntity>[];
     if (songs.isEmpty) return;
 
     final shuffledSongs = List.of(songs)..shuffle(Random());
@@ -142,7 +143,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     if (player == null) return;
 
     final data = await ref.read(albumDetailProvider(albumId).future);
-    final songs = data?.subsonicResponse?.album?.song ?? [];
+    final songs = data?.data?.subsonicResponse?.album?.song ?? <SongEntity>[];
     for (final song in songs) {
       await player.insertToEnd(song);
     }

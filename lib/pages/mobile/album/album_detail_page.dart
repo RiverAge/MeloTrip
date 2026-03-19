@@ -30,7 +30,7 @@ class AlbumDetailPage extends StatelessWidget {
       provider: albumDetailProvider(albumId),
 
       builder: (context, data, ref) {
-        final album = data.subsonicResponse?.album;
+        final album = data.data?.subsonicResponse?.album;
         if (album == null) {
           return const NoData();
         }

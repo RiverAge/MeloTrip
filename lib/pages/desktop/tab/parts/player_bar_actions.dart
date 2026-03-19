@@ -19,7 +19,8 @@ class _DesktopPlayerBarActions extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final detail = ref.watch(songDetailProvider(current?.id));
-        final effectiveSong = detail.asData?.value?.subsonicResponse?.song ?? current;
+        final effectiveSong =
+            detail.asData?.value?.data?.subsonicResponse?.song ?? current;
         final rating = effectiveSong?.userRating ?? 0;
         final isStarred = effectiveSong?.starred != null;
         return Column(
@@ -34,9 +35,9 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                 Rating(
                   rating: rating,
                   onRating: (value) {
-                    ref.read(songDetailProvider(current?.id).notifier).updateRatingResult(
-                      value,
-                    );
+                    ref
+                        .read(songDetailProvider(current?.id).notifier)
+                        .updateRatingResult(value);
                   },
                 ),
               ],
@@ -119,7 +120,8 @@ class _DesktopAudioOutputDeviceButton extends StatelessWidget {
               orElse: AudioDevice.auto,
             );
             return IconButton(
-              tooltip: '${l10n.audioOutputDevice}: ${_deviceLabel(l10n, selected)}',
+              tooltip:
+                  '${l10n.audioOutputDevice}: ${_deviceLabel(l10n, selected)}',
               onPressed: () => _showAudioOutputDialog(
                 context: context,
                 l10n: l10n,
@@ -129,10 +131,7 @@ class _DesktopAudioOutputDeviceButton extends StatelessWidget {
               ),
               visualDensity: .compact,
               iconSize: 18,
-              constraints: const BoxConstraints.tightFor(
-                width: 34,
-                height: 34,
-              ),
+              constraints: const BoxConstraints.tightFor(width: 34, height: 34),
               padding: EdgeInsets.zero,
               style: IconButton.styleFrom(
                 backgroundColor: theme.colorScheme.surfaceContainerHighest

@@ -93,7 +93,8 @@ class _AlbumDetailItem extends ConsumerWidget {
             child: AsyncValueBuilder(
               provider: albumDetailProvider(album.id ?? ''),
               builder: (context, data, ref) {
-                final List<SongEntity> songs = data.subsonicResponse?.album?.song ?? <SongEntity>[];
+                final List<SongEntity> songs =
+                    data.data?.subsonicResponse?.album?.song ?? <SongEntity>[];
                 return Column(
                   children: songs
                       .asMap()

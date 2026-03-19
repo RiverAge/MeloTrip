@@ -13,7 +13,11 @@ part of 'song_detail.dart';
 final songDetailProvider = SongDetailFamily._();
 
 final class SongDetailProvider
-    extends $AsyncNotifierProvider<SongDetail, SubsonicResponse?> {
+    extends
+        $AsyncNotifierProvider<
+          SongDetail,
+          Result<SubsonicResponse, AppFailure>?
+        > {
   SongDetailProvider._({
     required SongDetailFamily super.from,
     required String? super.argument,
@@ -50,15 +54,15 @@ final class SongDetailProvider
   }
 }
 
-String _$songDetailHash() => r'0e988438de983fc489e5b3b6c100e9442aebd325';
+String _$songDetailHash() => r'13630fd0fd86a12dc4728dd247c285e05e00b2c2';
 
 final class SongDetailFamily extends $Family
     with
         $ClassFamilyOverride<
           SongDetail,
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>,
+          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+          Result<SubsonicResponse, AppFailure>?,
+          FutureOr<Result<SubsonicResponse, AppFailure>?>,
           String?
         > {
   SongDetailFamily._()
@@ -77,105 +81,32 @@ final class SongDetailFamily extends $Family
   String toString() => r'songDetailProvider';
 }
 
-abstract class _$SongDetail extends $AsyncNotifier<SubsonicResponse?> {
+abstract class _$SongDetail
+    extends $AsyncNotifier<Result<SubsonicResponse, AppFailure>?> {
   late final _$args = ref.$arg as String?;
   String? get songId => _$args;
 
-  FutureOr<SubsonicResponse?> build(String? songId);
+  FutureOr<Result<SubsonicResponse, AppFailure>?> build(String? songId);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+        this.ref
+            as $Ref<
+              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+              Result<SubsonicResponse, AppFailure>?
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
+              AnyNotifier<
+                AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+                Result<SubsonicResponse, AppFailure>?
+              >,
+              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
               Object?,
               Object?
             >;
     element.handleCreate(ref, () => build(_$args));
   }
-}
-
-@ProviderFor(songDetailResult)
-final songDetailResultProvider = SongDetailResultFamily._();
-
-final class SongDetailResultProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
-          Result<SubsonicResponse, AppFailure>?,
-          FutureOr<Result<SubsonicResponse, AppFailure>?>
-        >
-    with
-        $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
-        $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
-  SongDetailResultProvider._({
-    required SongDetailResultFamily super.from,
-    required String? super.argument,
-  }) : super(
-         retry: null,
-         name: r'songDetailResultProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$songDetailResultHash();
-
-  @override
-  String toString() {
-    return r'songDetailResultProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<Result<SubsonicResponse, AppFailure>?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
-    final argument = this.argument as String?;
-    return songDetailResult(ref, argument);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is SongDetailResultProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$songDetailResultHash() => r'a8ba1bcaf5d372e39232d9c7781de9f5fe922f5b';
-
-final class SongDetailResultFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<Result<SubsonicResponse, AppFailure>?>,
-          String?
-        > {
-  SongDetailResultFamily._()
-    : super(
-        retry: null,
-        name: r'songDetailResultProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  SongDetailResultProvider call(String? songId) =>
-      SongDetailResultProvider._(argument: songId, from: this);
-
-  @override
-  String toString() => r'songDetailResultProvider';
 }

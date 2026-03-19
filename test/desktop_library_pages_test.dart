@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
@@ -30,7 +32,8 @@ class _FakeAlbumDetail extends AlbumDetail {
   final SubsonicResponse _response;
 
   @override
-  Future<SubsonicResponse?> build(String? albumId) async => _response;
+  Future<Result<SubsonicResponse, AppFailure>?> build(String? albumId) async =>
+      Result.ok(_response);
 }
 
 void main() {
@@ -100,11 +103,9 @@ void main() {
       child: const DesktopAlbumsPage(),
       overrides: [
         apiProvider.overrideWith(FakeApiDesktopLibrary.new),
-    albumDetailProvider(
-      'album-1',
-    ).overrideWith(
-      () => _FakeAlbumDetail(albumDetailResponse),
-    ),
+        albumDetailProvider(
+          'album-1',
+        ).overrideWith(() => _FakeAlbumDetail(albumDetailResponse)),
       ],
     );
 
@@ -133,18 +134,18 @@ void main() {
     expect(find.text('Aimer'), findsWidgets);
   });
 
-testWidgets('DesktopArtistsPage renders artists parsed from getArtists', (
-  tester,
-) async {
-  await pumpDesktopPage(
+  testWidgets('DesktopArtistsPage renders artists parsed from getArtists', (
     tester,
-    child: const DesktopArtistsPage(),
-    overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
-  );
+  ) async {
+    await pumpDesktopPage(
+      tester,
+      child: const DesktopArtistsPage(),
+      overrides: [apiProvider.overrideWith(FakeApiDesktopLibrary.new)],
+    );
 
-  expect(find.text('Adele'), findsOneWidget);
-  expect(find.text('Aimer'), findsOneWidget);
-});
+    expect(find.text('Adele'), findsOneWidget);
+    expect(find.text('Aimer'), findsOneWidget);
+  });
 
   testWidgets('DesktopGenresPage renders genres parsed from getGenres', (
     tester,

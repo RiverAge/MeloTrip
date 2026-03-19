@@ -13,7 +13,11 @@ part of 'album_detail.dart';
 final albumDetailProvider = AlbumDetailFamily._();
 
 final class AlbumDetailProvider
-    extends $AsyncNotifierProvider<AlbumDetail, SubsonicResponse?> {
+    extends
+        $AsyncNotifierProvider<
+          AlbumDetail,
+          Result<SubsonicResponse, AppFailure>?
+        > {
   AlbumDetailProvider._({
     required AlbumDetailFamily super.from,
     required String? super.argument,
@@ -50,15 +54,15 @@ final class AlbumDetailProvider
   }
 }
 
-String _$albumDetailHash() => r'04cfd2855006645ac761f89d648ecc4cdea9b307';
+String _$albumDetailHash() => r'e5f7930972892382fa89ee1a02f8215f08dded18';
 
 final class AlbumDetailFamily extends $Family
     with
         $ClassFamilyOverride<
           AlbumDetail,
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>,
+          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+          Result<SubsonicResponse, AppFailure>?,
+          FutureOr<Result<SubsonicResponse, AppFailure>?>,
           String?
         > {
   AlbumDetailFamily._()
@@ -77,105 +81,32 @@ final class AlbumDetailFamily extends $Family
   String toString() => r'albumDetailProvider';
 }
 
-abstract class _$AlbumDetail extends $AsyncNotifier<SubsonicResponse?> {
+abstract class _$AlbumDetail
+    extends $AsyncNotifier<Result<SubsonicResponse, AppFailure>?> {
   late final _$args = ref.$arg as String?;
   String? get albumId => _$args;
 
-  FutureOr<SubsonicResponse?> build(String? albumId);
+  FutureOr<Result<SubsonicResponse, AppFailure>?> build(String? albumId);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+        this.ref
+            as $Ref<
+              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+              Result<SubsonicResponse, AppFailure>?
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
+              AnyNotifier<
+                AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+                Result<SubsonicResponse, AppFailure>?
+              >,
+              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
               Object?,
               Object?
             >;
     element.handleCreate(ref, () => build(_$args));
   }
-}
-
-@ProviderFor(albumDetailResult)
-final albumDetailResultProvider = AlbumDetailResultFamily._();
-
-final class AlbumDetailResultProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
-          Result<SubsonicResponse, AppFailure>?,
-          FutureOr<Result<SubsonicResponse, AppFailure>?>
-        >
-    with
-        $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
-        $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
-  AlbumDetailResultProvider._({
-    required AlbumDetailResultFamily super.from,
-    required String? super.argument,
-  }) : super(
-         retry: null,
-         name: r'albumDetailResultProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$albumDetailResultHash();
-
-  @override
-  String toString() {
-    return r'albumDetailResultProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<Result<SubsonicResponse, AppFailure>?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
-    final argument = this.argument as String?;
-    return albumDetailResult(ref, argument);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is AlbumDetailResultProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$albumDetailResultHash() => r'a37e4a2e55a8a961c17c498ba9b60df838cb5d88';
-
-final class AlbumDetailResultFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<Result<SubsonicResponse, AppFailure>?>,
-          String?
-        > {
-  AlbumDetailResultFamily._()
-    : super(
-        retry: null,
-        name: r'albumDetailResultProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  AlbumDetailResultProvider call(String? albumId) =>
-      AlbumDetailResultProvider._(argument: albumId, from: this);
-
-  @override
-  String toString() => r'albumDetailResultProvider';
 }

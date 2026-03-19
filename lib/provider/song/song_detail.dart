@@ -9,14 +9,14 @@ part 'song_detail.g.dart';
 @riverpod
 class SongDetail extends _$SongDetail {
   @override
-  Future<SubsonicResponse?> build(String? songId) async {
+  Future<Result<SubsonicResponse, AppFailure>?> build(String? songId) async {
     final id = songId;
     if (id == null) {
       return null;
     }
 
     final repository = ref.read(songDetailRepositoryProvider);
-    return repository.fetchSongDetail(id);
+    return repository.fetchSongDetailResult(id);
   }
 
   Future<Result<SubsonicResponse, AppFailure>?> toggleFavoriteResult({
@@ -28,18 +28,17 @@ class SongDetail extends _$SongDetail {
     }
 
     final current = switch (state) {
-      AsyncData(:final value) => value,
+      AsyncData(:final value) => value?.data,
       _ => null,
     };
-    final starred = currentlyStarred ?? current?.subsonicResponse?.song?.starred != null;
-    final result = await ref.read(songDetailRepositoryProvider).toggleFavoriteResult(
-      songId: id,
-      isStarred: starred,
-    );
+    final starred =
+        currentlyStarred ?? current?.subsonicResponse?.song?.starred != null;
+    final result = await ref
+        .read(songDetailRepositoryProvider)
+        .toggleFavoriteResult(songId: id, isStarred: starred);
 
     if (result.isOk) {
       ref.invalidateSelf();
-      ref.invalidate(songDetailResultProvider(id));
     }
 
     final previous = switch (state) {
@@ -50,8 +49,9 @@ class SongDetail extends _$SongDetail {
       return result;
     }
     state = result.when(
-      ok: AsyncData.new,
-      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+      ok: (_) => AsyncData(result),
+      err: (_) =>
+          previous == null ? const AsyncData(null) : AsyncData(previous),
     );
     return result;
   }
@@ -70,7 +70,6 @@ class SongDetail extends _$SongDetail {
 
     if (result.isOk) {
       ref.invalidateSelf();
-      ref.invalidate(songDetailResultProvider(id));
     }
 
     final previous = switch (state) {
@@ -81,23 +80,10 @@ class SongDetail extends _$SongDetail {
       return result;
     }
     state = result.when(
-      ok: AsyncData.new,
-      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
+      ok: (_) => AsyncData(result),
+      err: (_) =>
+          previous == null ? const AsyncData(null) : AsyncData(previous),
     );
     return result;
   }
-}
-
-@riverpod
-Future<Result<SubsonicResponse, AppFailure>?> songDetailResult(
-  Ref ref,
-  String? songId,
-) async {
-  final id = songId;
-  if (id == null) {
-    return null;
-  }
-
-  final repository = ref.read(songDetailRepositoryProvider);
-  return repository.fetchSongDetailResult(id);
 }

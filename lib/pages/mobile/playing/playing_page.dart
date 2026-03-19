@@ -110,7 +110,7 @@ class PlayingPage extends StatelessWidget {
                 empty: (_, _) => SizedBox.shrink(),
                 builder: (ctx, data, ref) {
                   final isStarred =
-                      data.subsonicResponse?.song?.starred != null;
+                      data.data?.subsonicResponse?.song?.starred != null;
                   return IconButton(
                     onPressed: () {
                       ref

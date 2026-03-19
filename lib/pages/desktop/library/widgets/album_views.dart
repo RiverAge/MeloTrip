@@ -191,15 +191,23 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
                               ),
                               child: Center(
                                 child: IconButton(
-                                  icon: const Icon(Icons.play_arrow_rounded,
-                                      color: Colors.white),
+                                  icon: const Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: Colors.white,
+                                  ),
                                   onPressed: () async {
                                     final albumData = await ref.read(
-                                        albumDetailProvider(album.id).future);
-                                    final songs = albumData?.subsonicResponse?.album?.song;
+                                      albumDetailProvider(album.id).future,
+                                    );
+                                    final songs = albumData
+                                        ?.data
+                                        ?.subsonicResponse
+                                        ?.album
+                                        ?.song;
                                     if (songs != null && songs.isNotEmpty) {
                                       final player = await ref.read(
-                                          appPlayerHandlerProvider.future);
+                                        appPlayerHandlerProvider.future,
+                                      );
                                       if (player != null) {
                                         await player.setPlaylist(
                                           songs: songs,
@@ -273,7 +281,9 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
               Icon(
                 Icons.favorite_border_rounded,
                 size: 16,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.4,
+                ),
               ),
             ],
           ),

@@ -88,7 +88,7 @@ class _SongControls extends StatelessWidget {
         child: AsyncValueBuilder(
           provider: songDetailProvider(songId),
           builder: (ctx, data, ref) {
-            final song = data.subsonicResponse?.song;
+            final song = data.data?.subsonicResponse?.song;
             if (song == null) return const Center(child: NoData());
             return SafeArea(
               child: Column(
