@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 
 import 'test_helpers.dart';
@@ -40,7 +40,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           desktopLyricsSettingsProvider.overrideWith(
             _FakeDesktopLyricsSettings.new,
@@ -72,7 +72,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           desktopLyricsSettingsProvider.overrideWith(
             _FakeDesktopLyricsSettings.new,
@@ -106,7 +106,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           desktopLyricsSettingsProvider.overrideWith(
             _FakeDesktopLyricsSettings.new,
@@ -138,7 +138,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           desktopLyricsSettingsProvider.overrideWith(
             _FakeDesktopLyricsSettings.new,

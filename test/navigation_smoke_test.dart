@@ -10,7 +10,7 @@ import 'package:melo_trip/pages/shared/initial/tab_page.dart';
 import 'package:melo_trip/pages/shared/login/login_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
@@ -25,7 +25,7 @@ void main() {
       ProviderScope(
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -59,13 +59,11 @@ void main() {
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name, size: 50),
           ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
-          currentUserProvider.overrideWith(
-            () => FakeCurrentUserLoggedIn(
-              const AuthUser(
-                salt: 'salt',
-                token: 'token',
-                host: 'https://example.com',
-              ),
+          sessionAuthProvider.overrideWith(
+            (_) async => const AuthUser(
+              salt: 'salt',
+              token: 'token',
+              host: 'https://example.com',
             ),
           ),
           playQueueProvider.overrideWith(

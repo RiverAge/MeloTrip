@@ -14,7 +14,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 import 'test_helpers.dart';
 
@@ -111,7 +111,7 @@ void main() {
             albumDetailProvider(
               'album-1',
             ).overrideWith(() => _FakeAlbumDetail(fakeAlbumResponse(songs))),
-            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+            sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           ],
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -160,7 +160,7 @@ void main() {
             albumDetailProvider(
               'album-1',
             ).overrideWith(() => _FakeAlbumDetail(fakeAlbumResponse(songs))),
-            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+            sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           ],
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,

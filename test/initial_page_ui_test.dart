@@ -11,7 +11,7 @@ import 'package:melo_trip/pages/shared/initial/initial_bootstrap_service.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/pages/shared/login/login_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 import 'test_helpers.dart';
 
@@ -78,7 +78,7 @@ void main() {
             appPlayerHandlerProvider.overrideWith(
               _CountingAppPlayerHandler.new,
             ),
-            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+            sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           ],
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,

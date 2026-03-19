@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/pages/shared/settings/theme_seed_options.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 class AppThemePage extends StatelessWidget {
@@ -17,7 +17,7 @@ class AppThemePage extends StatelessWidget {
         elevation: 3.0,
       ),
       body: AsyncValueBuilder(
-        provider: userConfigProvider,
+        provider: sessionConfigProvider,
         builder: (context, config, ref) {
           final AppLocalizations l10n = AppLocalizations.of(context)!;
           final ThemeData theme = Theme.of(context);
@@ -120,13 +120,13 @@ class AppThemePage extends StatelessWidget {
 
   void _onTap(WidgetRef ref, ThemeMode mode) {
     ref
-        .read(userConfigProvider.notifier)
+        .read(userSessionProvider.notifier)
         .setConfiguration(theme: ValueUpdater(mode));
   }
 
   void _onThemeSeedTap(WidgetRef ref, AppThemeSeed seed) {
     ref
-        .read(userConfigProvider.notifier)
+        .read(userSessionProvider.notifier)
         .setConfiguration(themeSeed: ValueUpdater(seed));
   }
 }

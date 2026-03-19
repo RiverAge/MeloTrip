@@ -5,7 +5,7 @@ import 'package:melo_trip/helper/app_failure_log.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/provider/app/error.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'api.g.dart';
@@ -54,7 +54,7 @@ class Api extends _$Api {
     options.queryParameters.putIfAbsent('c', () => subsonicClientName);
     options.queryParameters.putIfAbsent('f', () => 'json');
 
-    final auth = await ref.read(currentUserProvider.future);
+    final auth = await ref.read(sessionAuthProvider.future);
     final token = auth?.token;
     final host = auth?.host;
     final hasExplicitAuth =

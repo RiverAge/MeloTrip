@@ -5,7 +5,7 @@ import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -22,7 +22,7 @@ class DesktopSearchHistoryPanel extends ConsumerWidget {
     final ColorScheme colorScheme = theme.colorScheme;
 
     return AsyncValueBuilder<String?>(
-      provider: userConfigProvider.select(
+      provider: sessionConfigProvider.select(
         (AsyncValue<Configuration?> value) =>
             value.whenData((Configuration? config) => config?.recentSearches),
       ),
@@ -52,7 +52,7 @@ class DesktopSearchHistoryPanel extends ConsumerWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () {
-                    ref.read(userConfigProvider.notifier).setConfiguration(
+                    ref.read(userSessionProvider.notifier).setConfiguration(
                       recentSearches: const ValueUpdater<String>(''),
                     );
                   },

@@ -10,7 +10,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/tab/parts/search_command_palette.dart';
 import 'package:melo_trip/provider/search/search.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 import 'test_helpers.dart';
 
@@ -19,7 +19,7 @@ void main() {
 
   Widget buildApp(Widget child) {
     return ProviderScope(
-      overrides: [userConfigProvider.overrideWith(FakeUserConfigNull.new)],
+      overrides: [sessionConfigProvider.overrideWith(fakeSessionConfigNull)],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -62,7 +62,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [userConfigProvider.overrideWith(FakeUserConfigNull.new)],
+        overrides: [sessionConfigProvider.overrideWith(fakeSessionConfigNull)],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -103,7 +103,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          userConfigProvider.overrideWith(FakeUserConfigNull.new),
+          sessionConfigProvider.overrideWith(fakeSessionConfigNull),
           searchByQueryProvider('rock').overrideWith(
             (ref) async => Result.ok(searchResponse()),
           ),

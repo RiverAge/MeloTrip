@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 void main() {
   group('ValueUpdater', () {

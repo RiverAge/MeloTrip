@@ -21,7 +21,7 @@ class _SearchHistory extends StatelessWidget {
                   builder: (context, ref, child) {
                     return IconButton(
                       onPressed: () {
-                        ref.read(userConfigProvider.notifier).setConfiguration(
+                        ref.read(userSessionProvider.notifier).setConfiguration(
                           recentSearches: const ValueUpdater<String>(''),
                         );
                       },
@@ -34,7 +34,7 @@ class _SearchHistory extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: AsyncValueBuilder(
-                provider: userConfigProvider,
+                provider: sessionConfigProvider,
                 empty: (context, ref) => const SizedBox.shrink(),
                 builder: (context, config, ref) {
                   final effectiveSearches = config.recentSearches;

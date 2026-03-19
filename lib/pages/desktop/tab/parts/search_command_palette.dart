@@ -11,7 +11,7 @@ import 'package:melo_trip/pages/desktop/search/search_page.dart';
 import 'package:melo_trip/pages/desktop/search/search_shared_widgets.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/search/search.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
@@ -42,7 +42,7 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
 
   Future<void> _saveToHistory(String value) async {
     await ref
-        .read(userConfigProvider.notifier)
+        .read(userSessionProvider.notifier)
         .setConfiguration(recentSearch: ValueUpdater<String>(value));
   }
 

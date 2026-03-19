@@ -4,7 +4,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 import 'package:melo_trip/pages/shared/settings/theme_seed_options.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 class AppearanceSettings extends ConsumerWidget {
   const AppearanceSettings({super.key});
@@ -12,7 +12,7 @@ class AppearanceSettings extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final userConfig = ref.watch(userConfigProvider).value;
+    final userConfig = ref.watch(sessionConfigProvider).value;
     final AppThemeSeed selectedSeed =
         userConfig?.themeSeed ?? AppThemeSeed.rose;
     final List<ThemeSeedOption> themeSeeds = buildThemeSeedOptions(l10n);
@@ -56,7 +56,7 @@ class AppearanceSettings extends ConsumerWidget {
                         ],
                         onChanged: (ThemeMode value) {
                           ref
-                              .read(userConfigProvider.notifier)
+                              .read(userSessionProvider.notifier)
                               .setConfiguration(
                                 theme: ValueUpdater<ThemeMode?>(value),
                               );
@@ -89,7 +89,7 @@ class AppearanceSettings extends ConsumerWidget {
                               )
                               .seed;
                           ref
-                              .read(userConfigProvider.notifier)
+                              .read(userSessionProvider.notifier)
                               .setConfiguration(
                                 themeSeed: ValueUpdater<AppThemeSeed?>(
                                   nextSeed,

@@ -13,7 +13,7 @@ import 'package:melo_trip/pages/desktop/tab/tab_page.dart';
 import 'package:melo_trip/pages/shared/initial/tab_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 
 import 'test_helpers.dart';
@@ -37,7 +37,7 @@ void main() {
       ProviderScope(
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.random.name),
           ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),

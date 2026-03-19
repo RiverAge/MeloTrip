@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
 
 typedef ApplyRestoredPlayQueue =
@@ -32,7 +32,7 @@ Future<void> ensurePlayQueueRestored(
 
   final future = () async {
     try {
-      final auth = await ref.read(currentUserProvider.future);
+      final auth = await ref.read(sessionAuthProvider.future);
       final userKey = '${auth?.host}|${auth?.username}|${auth?.token}';
       if (_restoredPlayQueueUserKey == userKey) {
         return;

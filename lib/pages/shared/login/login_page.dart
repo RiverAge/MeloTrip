@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -48,12 +47,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       _loading = true;
     });
     try {
-      final data = await ref.read(
-        loginProvider(
-          host: host,
-          username: _unameController.text,
-          password: _pwdController.text,
-        ).future,
+      final data = await ref.read(userSessionProvider.notifier).login(
+        host: host,
+        username: _unameController.text,
+        password: _pwdController.text,
       );
       if (!mounted) return;
       if (data == null) {
@@ -63,8 +60,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         return;
       }
 
-      ref.invalidate(currentUserProvider);
-      ref.invalidate(userConfigProvider);
       navigator.pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation1, animation2) => const InitialPage(),

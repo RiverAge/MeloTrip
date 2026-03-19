@@ -66,7 +66,7 @@ Future<void> _pumpDesktopHome(
     ProviderScope(
       overrides: [
         appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.random.name),
         ).overrideWith((_) async => Result.ok(random)),

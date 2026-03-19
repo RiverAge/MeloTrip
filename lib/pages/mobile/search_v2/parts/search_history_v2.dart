@@ -8,7 +8,7 @@ class _SearchHistory extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueBuilder<String?>(
-      provider: userConfigProvider.select(
+      provider: sessionConfigProvider.select(
         (v) => v.whenData((config) => config?.recentSearches),
       ),
       loading: (context, ref) => const SizedBox.shrink(),
@@ -33,7 +33,7 @@ class _SearchHistory extends ConsumerWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    ref.read(userConfigProvider.notifier).setConfiguration(
+                    ref.read(userSessionProvider.notifier).setConfiguration(
                       recentSearches: const ValueUpdater<String>(''),
                     );
                   },

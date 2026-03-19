@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'desktop_lyrics_settings_provider.g.dart';
@@ -34,13 +34,13 @@ class DesktopLyricsSettings extends _$DesktopLyricsSettings {
 
   @override
   Future<DesktopLyricsConfig> build() async {
-    final configuration = await ref.watch(userConfigProvider.future);
+    final configuration = await ref.watch(sessionConfigProvider.future);
     return _decodeStoredConfig(configuration?.desktopLyricsConfig);
   }
 
   Future<void> updateConfig(DesktopLyricsConfig config) async {
     state = AsyncData(config);
-    await ref.read(userConfigProvider.notifier).setConfiguration(
+    await ref.read(userSessionProvider.notifier).setConfiguration(
       desktopLyricsConfig: ValueUpdater<String?>(
         jsonEncode(_encodeConfig(config)),
       ),

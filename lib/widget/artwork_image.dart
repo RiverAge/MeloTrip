@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/helper/subsonic_uri_builder.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 class ArtworkImage extends ConsumerStatefulWidget {
   const ArtworkImage({
@@ -41,7 +41,7 @@ class _ArtworkImageState extends ConsumerState<ArtworkImage> {
       return widget.errorWidget ?? _buildPlaceholder(context);
     }
 
-    final auth = ref.watch(currentUserProvider);
+    final auth = ref.watch(sessionAuthProvider);
     final theme = Theme.of(context);
 
     return switch (auth) {

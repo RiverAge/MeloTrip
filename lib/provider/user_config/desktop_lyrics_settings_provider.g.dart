@@ -34,7 +34,7 @@ final class DesktopLyricsSettingsProvider
 }
 
 String _$desktopLyricsSettingsHash() =>
-    r'f5391be44b5ea99c829dad566af4b4e8caa3302f';
+    r'6c108ddefec6f62748b94c55a94e072c8d15decf';
 
 abstract class _$DesktopLyricsSettings
     extends $AsyncNotifier<DesktopLyricsConfig> {

@@ -12,7 +12,7 @@ import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/app/route_observer.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
@@ -93,7 +93,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     final RouteObserver<ModalRoute<void>> observer = ref.watch(
       routeObserverProvider,
     );
-    final config = ref.watch(userConfigProvider).asData?.value;
+    final config = ref.watch(sessionConfigProvider).asData?.value;
     final Color seedColor = (config?.themeSeed ?? AppThemeSeed.rose).color;
 
     return MaterialApp(

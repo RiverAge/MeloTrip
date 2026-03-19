@@ -12,7 +12,7 @@ import 'package:melo_trip/pages/mobile/settings/language_page.dart';
 import 'package:melo_trip/pages/mobile/settings/music_quality_page.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/cached_data/cached_data.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
@@ -210,7 +210,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                     onPressed: () async {
                       final NavigatorState navigator = Navigator.of(context);
                       await player.pause();
-                      await ref.read(logoutProvider.future);
+                      await ref.read(userSessionProvider.notifier).logout();
                       navigator.pushAndRemoveUntil(
                         PageRouteBuilder<void>(
                           pageBuilder: (BuildContext context, _, _) =>

@@ -2,37 +2,30 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
 
 class FakeAppPlayerHandler extends AppPlayerHandler {
   @override
   Future<AppPlayer?> build() async => null;
 }
 
-class FakeCurrentUserLoggedOut extends CurrentUser {
-  @override
-  Future<AuthUser?> build() async => null;
+Future<AuthUser?> fakeSessionAuthLoggedOut(Ref _) async => null;
+
+Future<AuthUser?> fakeSessionAuthLoggedIn(Ref _) async {
+  return const AuthUser(
+    salt: 'salt',
+    token: 'token',
+    username: 'tester',
+    host: 'https://example.com',
+  );
 }
 
-class FakeCurrentUserLoggedIn extends CurrentUser {
-  FakeCurrentUserLoggedIn(this.user);
-
-  final AuthUser user;
-
-  @override
-  Future<AuthUser?> build() async => user;
-}
-
-class FakeUserConfigNull extends UserConfig {
-  @override
-  Future<Configuration?> build() async => null;
-}
+Future<Configuration?> fakeSessionConfigNull(Ref _) async => null;
 
 class FakeApiNull extends Api {
   @override

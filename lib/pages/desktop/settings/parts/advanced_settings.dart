@@ -6,7 +6,7 @@ import 'package:melo_trip/helper/cache_file_path.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 import 'package:melo_trip/provider/cached_data/cached_data.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 class AdvancedSettings extends ConsumerWidget {
   const AdvancedSettings({super.key});
@@ -70,7 +70,7 @@ class AdvancedSettings extends ConsumerWidget {
                         label: l10n.searchHistory,
                         description: l10n.resetToDefaults,
                         onTap: () {
-                          ref.read(userConfigProvider.notifier).setConfiguration(
+                          ref.read(userSessionProvider.notifier).setConfiguration(
                                 recentSearches:
                                     const ValueUpdater<String?>(null),
                               );

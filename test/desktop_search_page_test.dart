@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
@@ -9,46 +8,10 @@ import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/model/auth_user/configuration.dart';
-import 'package:melo_trip/model/auth_user/theme_seed.dart';
 import 'package:melo_trip/pages/desktop/search/search_page.dart';
 import 'package:melo_trip/provider/search/search.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/no_data.dart';
-
-class _FakeUserConfig extends UserConfig {
-  @override
-  Future<Configuration?> build() async => null;
-
-  @override
-  Future<void> setConfiguration({
-    ValueUpdater<ThemeMode?>? theme,
-    ValueUpdater<AppThemeSeed?>? themeSeed,
-    ValueUpdater<String?>? maxRate,
-    ValueUpdater<PlaylistMode?>? playlistMode,
-    ValueUpdater<bool?>? shuffle,
-    ValueUpdater<Locale?>? locale,
-    ValueUpdater<String?>? recentSearches,
-    ValueUpdater<String>? recentSearch,
-    ValueUpdater<String?>? desktopLyricsConfig,
-  }) async {
-    final String? nextRecentSearches = recentSearch == null
-        ? recentSearches?.value
-        : recentSearch.value;
-    state = AsyncData(
-      Configuration(
-        recentSearches: nextRecentSearches,
-        theme: theme?.value,
-        themeSeed: themeSeed?.value,
-        maxRate: maxRate?.value,
-        playlistMode: playlistMode?.value,
-        shuffle: shuffle?.value,
-        locale: locale?.value,
-        desktopLyricsConfig: desktopLyricsConfig?.value,
-      ),
-    );
-  }
-}
 
 SubsonicResponse _searchResponse({
   required List<AlbumEntity> albums,
@@ -83,7 +46,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          userConfigProvider.overrideWith(_FakeUserConfig.new),
+          sessionConfigProvider.overrideWith((_) async => null),
           searchProvider.overrideWith((_) async => null),
         ],
         child: MaterialApp(
@@ -112,7 +75,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          userConfigProvider.overrideWith(_FakeUserConfig.new),
+          sessionConfigProvider.overrideWith((_) async => null),
           searchProvider.overrideWith(
             (_) async => Result.ok(
               _searchResponse(

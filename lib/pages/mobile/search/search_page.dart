@@ -10,7 +10,7 @@ import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/pages/mobile/artist/artist_detail_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/no_data.dart';

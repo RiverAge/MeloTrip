@@ -11,7 +11,7 @@ class _SidebarServerCard extends ConsumerWidget {
     final isOnline = scanStatus.asData?.value.isOk == true;
     final statusText = isOnline ? l10n.serverOnline : l10n.serverOffline;
     return AsyncValueBuilder(
-      provider: currentUserProvider,
+      provider: sessionAuthProvider,
       loading: (_, _) => const SizedBox.shrink(),
       empty: (_, _) => const SizedBox.shrink(),
       builder: (context, user, _) {
@@ -52,7 +52,7 @@ class _SidebarServerCard extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      '${user.username ?? '-'} · $statusText',
+                      '${user.username ?? '-'} 路 $statusText',
                       maxLines: 1,
                       overflow: .ellipsis,
                       style: TextStyle(

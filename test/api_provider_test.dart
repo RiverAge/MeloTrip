@@ -4,17 +4,18 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/model/auth_user/auth_user.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app/error.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
+
+import 'test_helpers.dart';
 
 void main() {
   test('apiProvider injects auth and subsonic query parameters', () async {
     final container = ProviderContainer(
       overrides: [
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
       ],
     );
     addTearDown(container.dispose);
@@ -43,7 +44,7 @@ void main() {
   test('apiProvider configures default timeouts', () async {
     final container = ProviderContainer(
       overrides: [
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
       ],
     );
     addTearDown(container.dispose);
@@ -59,7 +60,7 @@ void main() {
     () async {
       final container = ProviderContainer(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
         ],
       );
       addTearDown(container.dispose);
@@ -84,7 +85,7 @@ void main() {
   test('apiProvider does not emit global error for http response failures', () async {
     final container = ProviderContainer(
       overrides: [
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
       ],
     );
     addTearDown(container.dispose);
@@ -114,7 +115,7 @@ void main() {
   test('apiProvider emits global error for transport failures', () async {
     final container = ProviderContainer(
       overrides: [
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
       ],
     );
     addTearDown(container.dispose);
@@ -136,7 +137,7 @@ void main() {
   test('apiProvider retries once for transport failures on GET', () async {
     final container = ProviderContainer(
       overrides: [
-        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
       ],
     );
     addTearDown(container.dispose);
@@ -152,18 +153,6 @@ void main() {
     final AppErrorEvent? error = container.read(appErrorProvider);
     expect(error, isNull);
   });
-}
-
-class FakeCurrentUserLoggedIn extends CurrentUser {
-  @override
-  Future<AuthUser?> build() async {
-    return const AuthUser(
-      salt: 'salt',
-      token: 'token',
-      username: 'tester',
-      host: 'https://example.com',
-    );
-  }
 }
 
 class RecordingAdapter implements HttpClientAdapter {

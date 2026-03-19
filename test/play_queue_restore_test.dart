@@ -11,17 +11,8 @@ import 'package:melo_trip/model/response/play_queue/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
-
-class _FakeCurrentUser extends CurrentUser {
-  _FakeCurrentUser(this._user);
-
-  final AuthUser? _user;
-
-  @override
-  Future<AuthUser?> build() async => _user;
-}
 
 class _FakeAppPlayerHandler extends AppPlayerHandler {
   _FakeAppPlayerHandler(this._player);
@@ -35,11 +26,6 @@ class _FakeAppPlayerHandler extends AppPlayerHandler {
 class _FakeAppPlayer implements AppPlayer {
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class _ExplodingCurrentUser extends CurrentUser {
-  @override
-  Future<AuthUser?> build() async => throw StateError('boom');
 }
 
 SongEntity _song(String id) {
@@ -103,14 +89,12 @@ void main() {
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(() {
+        sessionAuthProvider.overrideWith((_) async {
           authLoads++;
-          return _FakeCurrentUser(
-            const AuthUser(
-              host: 'https://example.com',
-              username: 'tester',
-              token: 'token',
-            ),
+          return const AuthUser(
+            host: 'https://example.com',
+            username: 'tester',
+            token: 'token',
           );
         }),
         playQueueProvider.overrideWith((ref) async {
@@ -151,14 +135,12 @@ void main() {
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(() {
+        sessionAuthProvider.overrideWith((_) async {
           authLoads++;
-          return _FakeCurrentUser(
-            const AuthUser(
-              host: 'https://example.com',
-              username: 'tester',
-              token: 'token',
-            ),
+          return const AuthUser(
+            host: 'https://example.com',
+            username: 'tester',
+            token: 'token',
           );
         }),
         playQueueProvider.overrideWith((ref) async {
@@ -206,13 +188,11 @@ void main() {
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(
-          () => _FakeCurrentUser(
-            const AuthUser(
-              host: 'https://example.com',
-              username: 'tester',
-              token: 'token',
-            ),
+        sessionAuthProvider.overrideWith(
+          (_) async => const AuthUser(
+            host: 'https://example.com',
+            username: 'tester',
+            token: 'token',
           ),
         ),
         playQueueProvider.overrideWith(
@@ -233,7 +213,9 @@ void main() {
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(_ExplodingCurrentUser.new),
+        sessionAuthProvider.overrideWith(
+          (_) async => throw StateError('boom'),
+        ),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(null),
         ),
@@ -248,13 +230,11 @@ void main() {
     final ref = await _pumpRef(
       tester,
       overrides: [
-        currentUserProvider.overrideWith(
-          () => _FakeCurrentUser(
-            const AuthUser(
-              host: 'https://example.com',
-              username: 'tester',
-              token: 'token',
-            ),
+        sessionAuthProvider.overrideWith(
+          (_) async => const AuthUser(
+            host: 'https://example.com',
+            username: 'tester',
+            token: 'token',
           ),
         ),
         playQueueProvider.overrideWith((ref) async {

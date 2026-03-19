@@ -4,8 +4,7 @@ import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/update/update_flow.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:update_installer/update_installer.dart';
@@ -30,7 +29,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final UpdateFlowState updateState = ref.watch(updateFlowControllerProvider);
-    final userConfig = ref.watch(userConfigProvider).value;
+    final userConfig = ref.watch(sessionConfigProvider).value;
 
     final bool isReadyToInstall =
         updateState.stage == .readyToInstall &&
@@ -177,10 +176,10 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                 const SizedBox(height: 10),
                 _LanguageOption(
                   label: l10n.systemDefault,
-                  selected: ref.watch(userConfigProvider).value?.locale == null,
+                  selected: ref.watch(sessionConfigProvider).value?.locale == null,
                   onTap: () {
                     ref
-                        .read(userConfigProvider.notifier)
+                        .read(userSessionProvider.notifier)
                         .setConfiguration(
                           locale: const ValueUpdater<Locale?>(null),
                         );
@@ -190,11 +189,11 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                 _LanguageOption(
                   label: l10n.simpleChinese,
                   selected:
-                      ref.watch(userConfigProvider).value?.locale?.languageCode ==
+                      ref.watch(sessionConfigProvider).value?.locale?.languageCode ==
                       'zh',
                   onTap: () {
                     ref
-                        .read(userConfigProvider.notifier)
+                        .read(userSessionProvider.notifier)
                         .setConfiguration(
                           locale: const ValueUpdater<Locale?>(
                             Locale('zh', 'CN'),
@@ -206,11 +205,11 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                 _LanguageOption(
                   label: l10n.english,
                   selected:
-                      ref.watch(userConfigProvider).value?.locale?.languageCode ==
+                      ref.watch(sessionConfigProvider).value?.locale?.languageCode ==
                       'en',
                   onTap: () {
                     ref
-                        .read(userConfigProvider.notifier)
+                        .read(userSessionProvider.notifier)
                         .setConfiguration(
                           locale: const ValueUpdater<Locale?>(
                             Locale('en', 'US'),
@@ -334,7 +333,7 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
     if (player != null) {
       await player.pause();
     }
-    await ref.read(logoutProvider.future);
+    await ref.read(userSessionProvider.notifier).logout();
     if (!mounted) return;
     navigator.pushAndRemoveUntil(
       PageRouteBuilder<void>(

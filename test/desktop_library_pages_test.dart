@@ -22,7 +22,7 @@ import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 import 'test_helpers.dart';
 
@@ -56,7 +56,7 @@ void main() {
       ProviderScope(
         overrides: [
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           ...overrides,
         ],
         child: MaterialApp(

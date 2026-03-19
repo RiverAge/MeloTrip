@@ -3,7 +3,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/desktop/settings/parts/settings_widgets.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
 class PlaybackSettings extends ConsumerWidget {
   const PlaybackSettings({super.key});
@@ -11,7 +11,7 @@ class PlaybackSettings extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final userConfig = ref.watch(userConfigProvider).value;
+    final userConfig = ref.watch(sessionConfigProvider).value;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
@@ -56,7 +56,7 @@ class PlaybackSettings extends ConsumerWidget {
                           ),
                         ],
                         onChanged: (String value) {
-                          ref.read(userConfigProvider.notifier).setConfiguration(
+                          ref.read(userSessionProvider.notifier).setConfiguration(
                                 maxRate: ValueUpdater<String?>(value),
                               );
                         },
@@ -82,7 +82,7 @@ class PlaybackSettings extends ConsumerWidget {
                           ),
                         ],
                         onChanged: (PlaylistMode value) {
-                          ref.read(userConfigProvider.notifier).setConfiguration(
+                          ref.read(userSessionProvider.notifier).setConfiguration(
                                 playlistMode: ValueUpdater<PlaylistMode?>(value),
                               );
                         },
@@ -92,7 +92,7 @@ class PlaybackSettings extends ConsumerWidget {
                         trailing: Switch(
                           value: userConfig?.shuffle ?? false,
                           onChanged: (bool value) {
-                            ref.read(userConfigProvider.notifier).setConfiguration(
+                            ref.read(userSessionProvider.notifier).setConfiguration(
                                   shuffle: ValueUpdater<bool?>(value),
                                 );
                           },

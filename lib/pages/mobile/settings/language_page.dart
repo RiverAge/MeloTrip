@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 class LanguagePage extends StatelessWidget {
@@ -14,14 +14,14 @@ class LanguagePage extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.language),
       ),
       body: AsyncValueBuilder(
-        provider: userConfigProvider,
+        provider: sessionConfigProvider,
         builder: (context, config, ref) {
           return ListView(
             children: [
               ListTile(
                 onTap: () {
                   ref
-                      .read(userConfigProvider.notifier)
+                      .read(userSessionProvider.notifier)
                       .setConfiguration(locale: ValueUpdater(null));
                 },
                 title: Text(AppLocalizations.of(context)!.systemDefault),
@@ -34,7 +34,7 @@ class LanguagePage extends StatelessWidget {
               ListTile(
                 onTap: () {
                   ref
-                      .read(userConfigProvider.notifier)
+                      .read(userSessionProvider.notifier)
                       .setConfiguration(
                         locale: ValueUpdater(Locale('en', 'US')),
                       );
@@ -49,7 +49,7 @@ class LanguagePage extends StatelessWidget {
               ListTile(
                 onTap: () {
                   ref
-                      .read(userConfigProvider.notifier)
+                      .read(userSessionProvider.notifier)
                       .setConfiguration(
                         locale: ValueUpdater(Locale('zh', 'CN')),
                       );

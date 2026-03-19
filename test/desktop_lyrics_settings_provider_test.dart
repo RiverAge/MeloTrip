@@ -4,54 +4,58 @@ import 'package:desktop_lyrics/desktop_lyrics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/model/auth_user/theme_seed.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 
-class _FakeUserConfig extends UserConfig {
+class _FakeUserSession extends UserSession {
   static Configuration? currentValue;
   static String? savedDesktopLyricsConfig;
 
   @override
-  Future<Configuration?> build() async => currentValue;
+  Future<UserSessionSnapshot> build() async {
+    return UserSessionSnapshot(auth: null, config: currentValue);
+  }
 
   @override
   Future<void> setConfiguration({
+    ValueUpdater<String?>? desktopLyricsConfig,
     ValueUpdater<ThemeMode?>? theme,
-    ValueUpdater<AppThemeSeed?>? themeSeed,
     ValueUpdater<String?>? maxRate,
-    ValueUpdater<PlaylistMode?>? playlistMode,
     ValueUpdater<bool?>? shuffle,
     ValueUpdater<Locale?>? locale,
     ValueUpdater<String?>? recentSearches,
     ValueUpdater<String>? recentSearch,
-    ValueUpdater<String?>? desktopLyricsConfig,
+    ValueUpdater<PlaylistMode?>? playlistMode,
+    ValueUpdater<AppThemeSeed?>? themeSeed,
   }) async {
     savedDesktopLyricsConfig = desktopLyricsConfig?.value;
     currentValue = currentValue?.copyWith(
       desktopLyricsConfig: savedDesktopLyricsConfig,
     );
-    state = AsyncData(currentValue);
+    state = AsyncData(
+      UserSessionSnapshot(auth: null, config: currentValue),
+    );
   }
 }
 
 void main() {
   tearDown(() {
-    _FakeUserConfig.currentValue = null;
-    _FakeUserConfig.savedDesktopLyricsConfig = null;
+    _FakeUserSession.currentValue = null;
+    _FakeUserSession.savedDesktopLyricsConfig = null;
   });
 
   test(
     'desktopLyricsSettingsProvider reads config from user config JSON',
     () async {
-      _FakeUserConfig.currentValue = const Configuration(
+      _FakeUserSession.currentValue = const Configuration(
         desktopLyricsConfig:
             '{"fontSize":42,"textAlign":2,"fontWeight":4,"gradientEnabled":true,"overlayWidth":760}',
       );
       final container = ProviderContainer(
-        overrides: [userConfigProvider.overrideWith(_FakeUserConfig.new)],
+        overrides: [userSessionProvider.overrideWith(_FakeUserSession.new)],
       );
       addTearDown(container.dispose);
 
@@ -66,11 +70,11 @@ void main() {
   );
 
   test('desktopLyricsSettingsProvider defaults text align to center', () async {
-    _FakeUserConfig.currentValue = const Configuration(
+    _FakeUserSession.currentValue = const Configuration(
       desktopLyricsConfig: '{"fontSize":42}',
     );
     final container = ProviderContainer(
-      overrides: [userConfigProvider.overrideWith(_FakeUserConfig.new)],
+      overrides: [userSessionProvider.overrideWith(_FakeUserSession.new)],
     );
     addTearDown(container.dispose);
 
@@ -82,9 +86,9 @@ void main() {
   test(
     'desktopLyricsSettingsProvider writes config back into user config',
     () async {
-      _FakeUserConfig.currentValue = const Configuration(username: 'tester');
+      _FakeUserSession.currentValue = const Configuration(username: 'tester');
       final container = ProviderContainer(
-        overrides: [userConfigProvider.overrideWith(_FakeUserConfig.new)],
+        overrides: [userSessionProvider.overrideWith(_FakeUserSession.new)],
       );
       addTearDown(container.dispose);
 
@@ -106,9 +110,9 @@ void main() {
 
       await notifier.updateConfig(next);
 
-      expect(_FakeUserConfig.savedDesktopLyricsConfig, isNotNull);
+      expect(_FakeUserSession.savedDesktopLyricsConfig, isNotNull);
       final savedJson =
-          jsonDecode(_FakeUserConfig.savedDesktopLyricsConfig!)
+          jsonDecode(_FakeUserSession.savedDesktopLyricsConfig!)
               as Map<String, dynamic>;
       expect(savedJson['interactionEnabled'], isTrue);
       expect(savedJson['clickThrough'], isTrue);
@@ -123,9 +127,9 @@ void main() {
   test(
     'desktopLyricsSettingsProvider persists centered align and transparent background',
     () async {
-      _FakeUserConfig.currentValue = const Configuration(username: 'tester');
+      _FakeUserSession.currentValue = const Configuration(username: 'tester');
       final container = ProviderContainer(
-        overrides: [userConfigProvider.overrideWith(_FakeUserConfig.new)],
+        overrides: [userSessionProvider.overrideWith(_FakeUserSession.new)],
       );
       addTearDown(container.dispose);
 
@@ -147,9 +151,9 @@ void main() {
 
       await notifier.updateConfig(next);
 
-      expect(_FakeUserConfig.savedDesktopLyricsConfig, isNotNull);
+      expect(_FakeUserSession.savedDesktopLyricsConfig, isNotNull);
       final savedJson =
-          jsonDecode(_FakeUserConfig.savedDesktopLyricsConfig!)
+          jsonDecode(_FakeUserSession.savedDesktopLyricsConfig!)
               as Map<String, dynamic>;
       expect(savedJson['textAlign'], TextAlign.center.index);
       expect(savedJson['backgroundOpacity'], 0.0);

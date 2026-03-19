@@ -7,7 +7,7 @@ import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/pages/mobile/playlist/playlist_page.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/widget/no_data.dart';
 
@@ -30,7 +30,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+            sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
             playlistsProvider.overrideWith(
               (_) async => Result.err(
                 AppFailure(type: c, message: 'mock-${c.name}'),
@@ -61,7 +61,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           playlistsProvider.overrideWith(
             (_) async => const Result.ok(<PlaylistEntity>[]),
           ),

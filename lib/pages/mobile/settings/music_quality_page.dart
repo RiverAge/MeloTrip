@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 
 class MusicQualityPage extends StatelessWidget {
@@ -20,7 +20,7 @@ class MusicQualityPage extends StatelessWidget {
         itemCount: _list.length,
         itemBuilder: (contex, index) {
           return AsyncValueBuilder(
-            provider: userConfigProvider,
+            provider: sessionConfigProvider,
             builder: (context, data, ref) {
               return ListTile(
                 title: Text(
@@ -42,7 +42,7 @@ class MusicQualityPage extends StatelessWidget {
                     : null,
                 onTap: () {
                   ref
-                      .read(userConfigProvider.notifier)
+                      .read(userSessionProvider.notifier)
                       .setConfiguration(maxRate: ValueUpdater(_list[index]));
                 },
               );

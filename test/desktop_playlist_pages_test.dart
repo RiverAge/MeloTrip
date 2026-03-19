@@ -8,7 +8,7 @@ import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_page.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/widget/no_data.dart';
 
@@ -53,7 +53,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           playlistsProvider.overrideWith(
             (ref) async => const Result.ok(<PlaylistEntity>[]),
           ),
@@ -76,7 +76,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
+          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           playlistsProvider.overrideWith(
             (ref) async => Result.ok(
               [

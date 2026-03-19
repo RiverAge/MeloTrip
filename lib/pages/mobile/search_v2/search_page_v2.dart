@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/provider/search/search.dart';
-import 'package:melo_trip/provider/user_config/user_config.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/widget/no_data.dart';
@@ -50,7 +50,7 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
   }
 
   Future<void> _saveToHistory(String value) async {
-    await ref.read(userConfigProvider.notifier).setConfiguration(
+    await ref.read(userSessionProvider.notifier).setConfiguration(
       recentSearch: ValueUpdater<String>(value),
     );
   }

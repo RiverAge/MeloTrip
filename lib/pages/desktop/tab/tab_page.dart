@@ -26,7 +26,7 @@ import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
 import 'package:melo_trip/pages/desktop/tab/parts/search_command_palette.dart';
 import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/app/player.dart';
-import 'package:melo_trip/provider/auth/auth.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
