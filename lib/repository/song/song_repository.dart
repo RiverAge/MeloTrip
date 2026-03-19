@@ -28,7 +28,7 @@ class SongRepository {
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/search3');
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchSongSearchResponseResult({
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchSongSearchResponse({
     required SongSearchQuery query,
     CancelToken? cancelToken,
   }) {

@@ -74,11 +74,11 @@ void main() {
       );
     });
 
-    test('fetchPlayQueueResult returns Result.err for empty payload', () async {
+    test('tryFetchPlayQueue returns Result.err for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(playQueueRepositoryProvider);
-      final result = await repository.fetchPlayQueueResult();
+      final result = await repository.tryFetchPlayQueue();
 
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);

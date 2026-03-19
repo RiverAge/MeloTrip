@@ -25,7 +25,7 @@ class LyricsRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchLyricsResult(String songId) {
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchLyrics(String songId) {
     return runGuarded(() => fetchLyrics(songId));
   }
 }

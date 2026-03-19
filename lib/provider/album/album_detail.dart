@@ -13,7 +13,7 @@ class AlbumDetail extends _$AlbumDetail {
     if (albumId == null) return null;
     return ref
         .read(albumDetailRepositoryProvider)
-        .fetchAlbumDetailResult(albumId);
+        .tryFetchAlbumDetail(albumId);
   }
 
   Future<Result<SubsonicResponse, AppFailure>?> toggleFavorite({
@@ -31,7 +31,7 @@ class AlbumDetail extends _$AlbumDetail {
 
     final result = await ref
         .read(albumDetailRepositoryProvider)
-        .toggleFavoriteResult(albumId: id, isStarred: starred);
+        .tryToggleFavorite(albumId: id, isStarred: starred);
 
     if (result.isOk) {
       ref.invalidateSelf();
@@ -59,7 +59,7 @@ class AlbumDetail extends _$AlbumDetail {
     if (id == null || rating == null) return null;
     final result = await ref
         .read(albumDetailRepositoryProvider)
-        .setRatingResult(albumId: id, rating: rating);
+        .trySetRating(albumId: id, rating: rating);
 
     if (result.isOk) {
       ref.invalidateSelf();

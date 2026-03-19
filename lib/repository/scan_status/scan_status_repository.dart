@@ -21,7 +21,7 @@ class ScanStatusRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchScanStatusResult() {
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchScanStatus() {
     return runGuarded(fetchScanStatus);
   }
 }

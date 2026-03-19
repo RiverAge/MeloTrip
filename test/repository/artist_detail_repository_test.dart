@@ -74,11 +74,11 @@ void main() {
       );
     });
 
-    test('fetchArtistDetailResult returns Result.err for empty payload', () async {
+    test('tryFetchArtistDetail returns Result.err for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(artistDetailRepositoryProvider);
-      final result = await repository.fetchArtistDetailResult('artist-456');
+      final result = await repository.tryFetchArtistDetail('artist-456');
 
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);

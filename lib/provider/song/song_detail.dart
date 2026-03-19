@@ -16,7 +16,7 @@ class SongDetail extends _$SongDetail {
     }
 
     final repository = ref.read(songDetailRepositoryProvider);
-    return repository.fetchSongDetailResult(id);
+    return repository.tryFetchSongDetail(id);
   }
 
   Future<Result<SubsonicResponse, AppFailure>?> toggleFavorite({
@@ -35,7 +35,7 @@ class SongDetail extends _$SongDetail {
         currentlyStarred ?? current?.subsonicResponse?.song?.starred != null;
     final result = await ref
         .read(songDetailRepositoryProvider)
-        .toggleFavoriteResult(songId: id, isStarred: starred);
+        .tryToggleFavorite(songId: id, isStarred: starred);
 
     if (result.isOk) {
       ref.invalidateSelf();
@@ -66,7 +66,7 @@ class SongDetail extends _$SongDetail {
 
     final result = await ref
         .read(songDetailRepositoryProvider)
-        .setRatingResult(songId: id, rating: rating);
+        .trySetRating(songId: id, rating: rating);
 
     if (result.isOk) {
       ref.invalidateSelf();

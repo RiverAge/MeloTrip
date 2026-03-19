@@ -11,6 +11,6 @@ class Favorite extends _$Favorite {
   @override
   Future<Result<SubsonicResponse, AppFailure>> build() async {
     final repository = ref.read(favoriteRepositoryProvider);
-    return repository.fetchStarredResult();
+    return repository.tryFetchStarred();
   }
 }

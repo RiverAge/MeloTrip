@@ -22,7 +22,7 @@ class ArtistDetailRepository {
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/getArtist');
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchArtistDetailResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchArtistDetail(
     String artistId,
   ) {
     return runGuarded(() => fetchArtistDetail(artistId));

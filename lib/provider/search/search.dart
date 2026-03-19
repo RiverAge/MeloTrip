@@ -31,7 +31,7 @@ final searchByQueryProvider =
       ref.onDispose(() => cancelToken.cancel());
 
       final repository = ref.read(songRepositoryProvider);
-      return repository.fetchSongSearchResponseResult(
+      return repository.tryFetchSongSearchResponse(
         query: SongSearchQuery(query: query),
         cancelToken: cancelToken,
       );

@@ -22,13 +22,13 @@ class AlbumDetailRepository {
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/getAlbum');
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchAlbumDetailResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchAlbumDetail(
     String albumId,
   ) {
     return runGuarded(() => fetchAlbumDetail(albumId));
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> toggleFavoriteResult({
+  Future<Result<SubsonicResponse, AppFailure>> tryToggleFavorite({
     required String albumId,
     required bool isStarred,
   }) {
@@ -44,7 +44,7 @@ class AlbumDetailRepository {
     });
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> setRatingResult({
+  Future<Result<SubsonicResponse, AppFailure>> trySetRating({
     required String albumId,
     required int rating,
   }) {

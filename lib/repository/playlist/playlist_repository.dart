@@ -21,7 +21,7 @@ class PlaylistRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchPlaylistsResult() {
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchPlaylists() {
     return runGuarded(fetchPlaylists);
   }
 
@@ -37,7 +37,7 @@ class PlaylistRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchPlaylistDetailResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchPlaylistDetail(
     String playlistId,
   ) {
     return runGuarded(() => fetchPlaylistDetail(playlistId));
@@ -55,7 +55,7 @@ class PlaylistRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> createPlaylistResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryCreatePlaylist(
     String name,
   ) {
     return runGuarded(() => createPlaylist(name));
@@ -73,7 +73,7 @@ class PlaylistRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> deletePlaylistResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryDeletePlaylist(
     String playlistId,
   ) {
     return runGuarded(() => deletePlaylist(playlistId));
@@ -115,7 +115,7 @@ class PlaylistRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> updatePlaylistResult({
+  Future<Result<SubsonicResponse, AppFailure>> tryUpdatePlaylist({
     required String playlistId,
     int? songIndexToRemove,
     String? songIdToAdd,

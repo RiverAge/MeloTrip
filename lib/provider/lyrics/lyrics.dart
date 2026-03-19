@@ -12,7 +12,7 @@ Future<Result<SubsonicResponse, AppFailure>?> lyrics(Ref ref, String? songId) as
   if (songId == null) return null;
 
   final repository = ref.read(lyricsRepositoryProvider);
-  final result = await repository.fetchLyricsResult(songId);
+  final result = await repository.tryFetchLyrics(songId);
   return result.when(
     ok: (response) => Result.ok(mergePreferredStructuredLyrics(response)),
     err: Result.err,

@@ -9,5 +9,5 @@ part 'scan_status.g.dart';
 @riverpod
 Future<Result<SubsonicResponse, AppFailure>> scanStatus(Ref ref) async {
   final repository = ref.read(scanStatusRepositoryProvider);
-  return repository.fetchScanStatusResult();
+  return repository.tryFetchScanStatus();
 }

@@ -63,13 +63,13 @@ void main() {
       expect(result.subsonicResponse?.song?.title, 'Test Song');
     });
 
-    test('toggleFavoriteResult calls star when not starred', () async {
+    test('tryToggleFavorite calls star when not starred', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      final result = await repository.toggleFavoriteResult(
+      final result = await repository.tryToggleFavorite(
         songId: 'song-789',
         isStarred: false,
       );
@@ -79,13 +79,13 @@ void main() {
       expect(mockAdapter.lastRequest?.queryParameters['id'], 'song-789');
     });
 
-    test('toggleFavoriteResult calls unstar when starred', () async {
+    test('tryToggleFavorite calls unstar when starred', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      final result = await repository.toggleFavoriteResult(
+      final result = await repository.tryToggleFavorite(
         songId: 'song-789',
         isStarred: true,
       );
@@ -95,13 +95,13 @@ void main() {
       expect(mockAdapter.lastRequest?.queryParameters['id'], 'song-789');
     });
 
-    test('setRatingResult sends correct parameters', () async {
+    test('trySetRating sends correct parameters', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      final result = await repository.setRatingResult(songId: 'song-789', rating: 4);
+      final result = await repository.trySetRating(songId: 'song-789', rating: 4);
 
       expect(result.isOk, isTrue);
       expect(mockAdapter.lastRequest?.path, '/rest/setRating');
@@ -119,11 +119,11 @@ void main() {
       );
     });
 
-    test('fetchSongDetailResult returns Result.err for empty payload', () async {
+    test('tryFetchSongDetail returns Result.err for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(songDetailRepositoryProvider);
-      final result = await repository.fetchSongDetailResult('song-789');
+      final result = await repository.tryFetchSongDetail('song-789');
 
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);

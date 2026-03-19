@@ -16,7 +16,7 @@ class PlaylistActions extends _$PlaylistActions {
   ) async {
     if (name == null) return null;
     final repository = ref.read(playlistRepositoryProvider);
-    final result = await repository.createPlaylistResult(name);
+    final result = await repository.tryCreatePlaylist(name);
     if (result.isOk) {
       ref.invalidate(playlistsProvider);
     }
@@ -27,7 +27,7 @@ class PlaylistActions extends _$PlaylistActions {
 @riverpod
 Future<Result<SubsonicResponse, AppFailure>> playlists(Ref ref) async {
   final repository = ref.read(playlistRepositoryProvider);
-  return repository.fetchPlaylistsResult();
+  return repository.tryFetchPlaylists();
 }
 
 @riverpod
@@ -36,7 +36,7 @@ class PlaylistDetail extends _$PlaylistDetail {
   Future<Result<SubsonicResponse, AppFailure>?> build(String? playlistId) async {
     if (playlistId == null) return null;
     final repository = ref.read(playlistRepositoryProvider);
-    return repository.fetchPlaylistDetailResult(playlistId);
+    return repository.tryFetchPlaylistDetail(playlistId);
   }
 
   Future<Result<SubsonicResponse, AppFailure>?> delete() async {
@@ -49,7 +49,7 @@ class PlaylistDetail extends _$PlaylistDetail {
     };
     state = const AsyncLoading();
     final repository = ref.read(playlistRepositoryProvider);
-    final result = await repository.deletePlaylistResult(id);
+    final result = await repository.tryDeletePlaylist(id);
 
     if (result.isOk) {
       ref.invalidate(playlistsProvider);
@@ -82,7 +82,7 @@ class PlaylistDetail extends _$PlaylistDetail {
     };
     state = const AsyncLoading();
     final repository = ref.read(playlistRepositoryProvider);
-    final result = await repository.updatePlaylistResult(
+    final result = await repository.tryUpdatePlaylist(
       playlistId: id,
       songIndexToRemove: songIndexToRemove,
       songIdToAdd: songIdToAdd,

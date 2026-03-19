@@ -167,11 +167,11 @@ void main() {
       );
     });
 
-    test('fetchPlaylistsResult returns Result.err for empty payload', () async {
+    test('tryFetchPlaylists returns Result.err for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(playlistRepositoryProvider);
-      final result = await repository.fetchPlaylistsResult();
+      final result = await repository.tryFetchPlaylists();
 
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);

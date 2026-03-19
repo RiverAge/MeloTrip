@@ -26,7 +26,7 @@ class _MockAlbumDetailRepository extends AlbumDetailRepository {
   int? lastRating;
 
   @override
-  Future<Result<SubsonicResponse, AppFailure>> fetchAlbumDetailResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchAlbumDetail(
     String albumId,
   ) async {
     detailCalled = true;
@@ -35,7 +35,7 @@ class _MockAlbumDetailRepository extends AlbumDetailRepository {
   }
 
   @override
-  Future<Result<SubsonicResponse, AppFailure>> toggleFavoriteResult({
+  Future<Result<SubsonicResponse, AppFailure>> tryToggleFavorite({
     required String albumId,
     required bool isStarred,
   }) async {
@@ -46,7 +46,7 @@ class _MockAlbumDetailRepository extends AlbumDetailRepository {
   }
 
   @override
-  Future<Result<SubsonicResponse, AppFailure>> setRatingResult({
+  Future<Result<SubsonicResponse, AppFailure>> trySetRating({
     required String albumId,
     required int rating,
   }) async {
@@ -125,7 +125,7 @@ void main() {
     });
   });
 
-  group('albumDetailProvider toggleFavoriteResult', () {
+  group('albumDetailProvider toggleFavorite', () {
     test('returns null when family albumId is null', () async {
       final mockRepository = _MockAlbumDetailRepository(
         detailResult: const Result.ok(okResponse),
@@ -146,7 +146,7 @@ void main() {
       expect(mockRepository.toggleCalled, isFalse);
     });
 
-    test('calls repository toggleFavoriteResult', () async {
+    test('calls repository tryToggleFavorite', () async {
       final mockRepository = _MockAlbumDetailRepository(
         detailResult: const Result.ok(okResponse),
         toggleResult: const Result.ok(okResponse),
@@ -168,7 +168,7 @@ void main() {
     });
   });
 
-  group('albumDetailProvider setRatingResult', () {
+  group('albumDetailProvider setRating', () {
     test('returns null when family albumId is null', () async {
       final mockRepository = _MockAlbumDetailRepository(
         detailResult: const Result.ok(okResponse),
@@ -209,7 +209,7 @@ void main() {
       expect(mockRepository.ratingCalled, isFalse);
     });
 
-    test('calls repository setRatingResult', () async {
+    test('calls repository trySetRating', () async {
       final mockRepository = _MockAlbumDetailRepository(
         detailResult: const Result.ok(okResponse),
         toggleResult: const Result.ok(okResponse),

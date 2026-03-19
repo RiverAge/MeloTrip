@@ -18,7 +18,7 @@ class FavoriteRepository {
     return parseSubsonicResponseOrThrow(res.data, endpoint: '/rest/getStarred');
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchStarredResult() {
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchStarred() {
     return runGuarded(fetchStarred);
   }
 }

@@ -75,11 +75,11 @@ void main() {
       );
     });
 
-    test('fetchLyricsResult returns Result.err for empty payload', () async {
+    test('tryFetchLyrics returns Result.err for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(lyricsRepositoryProvider);
-      final result = await repository.fetchLyricsResult('song-123');
+      final result = await repository.tryFetchLyrics('song-123');
 
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);

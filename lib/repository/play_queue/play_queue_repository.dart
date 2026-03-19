@@ -21,7 +21,7 @@ class PlayQueueRepository {
     );
   }
 
-  Future<Result<SubsonicResponse, AppFailure>> fetchPlayQueueResult() {
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchPlayQueue() {
     return runGuarded(fetchPlayQueue);
   }
 }

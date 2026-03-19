@@ -17,5 +17,5 @@ Future<Result<SubsonicResponse, AppFailure>?> artistDetail(
   }
 
   final repository = ref.read(artistDetailRepositoryProvider);
-  return repository.fetchArtistDetailResult(id);
+  return repository.tryFetchArtistDetail(id);
 }

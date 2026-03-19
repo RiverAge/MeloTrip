@@ -9,5 +9,5 @@ part 'play_queue.g.dart';
 @riverpod
 Future<Result<SubsonicResponse, AppFailure>> playQueue(Ref ref) async {
   final repository = ref.read(playQueueRepositoryProvider);
-  return repository.fetchPlayQueueResult();
+  return repository.tryFetchPlayQueue();
 }

@@ -20,7 +20,7 @@ class _MockSongDetailRepository extends SongDetailRepository {
   }
 
   @override
-  Future<Result<SubsonicResponse, AppFailure>> fetchSongDetailResult(
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchSongDetail(
     String songId,
   ) async {
     fetchCalled = true;
