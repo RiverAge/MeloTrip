@@ -50,8 +50,8 @@ SongEntity _song({
   return SongEntity(id: id, title: title, duration: duration, artist: 'tester');
 }
 
-class _FakePlaylistDetailResult extends PlaylistDetail {
-  _FakePlaylistDetailResult(this._value);
+class _FakePlaylistDetail extends PlaylistDetail {
+  _FakePlaylistDetail(this._value);
 
   final Result<SubsonicResponse, AppFailure> _value;
 
@@ -104,7 +104,7 @@ void main() {
             ),
           ),
           playlistDetailProvider('pl-1').overrideWith(
-            () => _FakePlaylistDetailResult(
+            () => _FakePlaylistDetail(
               Result.ok(
                 _playlistDetailResponse(
                   id: 'pl-1',

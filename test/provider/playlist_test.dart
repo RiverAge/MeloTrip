@@ -259,7 +259,7 @@ void main() {
     });
   });
 
-  group('playlist Result APIs', () {
+  group('playlist APIs', () {
     test('createPlaylist returns Result.ok on success', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(status: 'ok'),
