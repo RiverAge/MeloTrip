@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/repository/lyrics/lyrics_repository.dart';
@@ -10,12 +11,20 @@ class _MockLyricsRepository extends LyricsRepository {
   _MockLyricsRepository(this._fetchResult) : super(() async => Dio());
 
   final SubsonicResponse? _fetchResult;
-  bool fetchCalled = false;
+  bool tryFetchMergedCalled = false;
 
   @override
-  Future<SubsonicResponse> fetchLyrics(String songId) async {
-    fetchCalled = true;
-    return _fetchResult!;
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchMergedLyrics(
+    String songId,
+  ) async {
+    tryFetchMergedCalled = true;
+    final response = _fetchResult;
+    if (response == null) {
+      return const Result.err(
+        AppFailure(type: AppFailureType.unknown, message: 'mock-error'),
+      );
+    }
+    return Result.ok(response);
   }
 }
 
@@ -33,7 +42,7 @@ void main() {
       final result = await container.read(lyricsProvider(null).future);
 
       expect(result, isNull);
-      expect(mockRepository.fetchCalled, isFalse);
+      expect(mockRepository.tryFetchMergedCalled, isFalse);
     });
 
     test('returns Result.err when repository throws', () async {
@@ -49,7 +58,7 @@ void main() {
 
       expect(result?.isErr, isTrue);
       expect(result?.error, isA<AppFailure>());
-      expect(mockRepository.fetchCalled, isTrue);
+      expect(mockRepository.tryFetchMergedCalled, isTrue);
     });
 
     test('returns Result.ok lyrics response from repository', () async {
@@ -72,7 +81,7 @@ void main() {
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);
       expect(result?.data?.subsonicResponse?.status, equals('ok'));
-      expect(mockRepository.fetchCalled, isTrue);
+      expect(mockRepository.tryFetchMergedCalled, isTrue);
     });
   });
 }

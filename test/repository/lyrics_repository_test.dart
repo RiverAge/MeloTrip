@@ -84,6 +84,42 @@ void main() {
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);
     });
+
+    test('tryFetchMergedLyrics merges preferred structured lyrics', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'lyricsList': {
+            'structuredLyrics': [
+              {
+                'lang': 'ori-NetEase',
+                'line': [
+                  {'start': 0, 'value': 'Hello'},
+                  {'start': 1000, 'value': 'World'},
+                ],
+              },
+              {
+                'lang': 'zho-NetEase',
+                'line': [
+                  {'start': 0, 'value': 'CN-1'},
+                  {'start': 1000, 'value': 'CN-2'},
+                ],
+              },
+            ],
+          },
+        },
+      });
+
+      final repository = container.read(lyricsRepositoryProvider);
+      final result = await repository.tryFetchMergedLyrics('song-123');
+
+      expect(result.isOk, isTrue);
+      final merged = result.data?.subsonicResponse?.lyricsList?.structuredLyrics;
+      expect(merged, isNotNull);
+      expect(merged, hasLength(1));
+      expect(merged!.first.lang, 'NetEase');
+      expect(merged.first.line!.first.value, ['Hello', 'CN-1']);
+    });
   });
 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
-import 'package:melo_trip/provider/lyrics/lyrics_merge.dart';
+import 'package:melo_trip/repository/lyrics/lyrics_merge.dart';
 
 void main() {
   test('mergePreferredStructuredLyrics picks best source and skips latn', () {

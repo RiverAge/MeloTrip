@@ -5,6 +5,7 @@ import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/repository/common/repository_guard.dart';
+import 'package:melo_trip/repository/lyrics/lyrics_merge.dart';
 import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class LyricsRepository {
@@ -27,6 +28,15 @@ class LyricsRepository {
 
   Future<Result<SubsonicResponse, AppFailure>> tryFetchLyrics(String songId) {
     return runGuarded(() => fetchLyrics(songId));
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchMergedLyrics(
+    String songId,
+  ) {
+    return runGuarded(() async {
+      final response = await fetchLyrics(songId);
+      return mergePreferredStructuredLyrics(response);
+    });
   }
 }
 
