@@ -15,7 +15,6 @@ import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/provider/search/search.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 
 part 'parts/search_bar.dart';
 part 'parts/album_item.dart';
@@ -75,15 +74,21 @@ class _SearchPageState extends State<SearchPage> {
             : _controller.text == ''
             ? const SizedBox.shrink()
             : SafeArea(
-                child: AsyncValueBuilder<SubsonicResponse?>(
+                child: AsyncValueBuilder(
                   provider: searchProvider(_controller.text),
-                  builder: (context, value, _) {
+                  builder: (context, result, _) {
+                    if (result.isErr) {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: NoData(),
+                      );
+                    }
                     final songs =
-                        value?.subsonicResponse?.searchResult3?.song ?? [];
+                        result.data?.subsonicResponse?.searchResult3?.song ?? [];
                     final albums =
-                        value?.subsonicResponse?.searchResult3?.album ?? [];
+                        result.data?.subsonicResponse?.searchResult3?.album ?? [];
                     final artists =
-                        value?.subsonicResponse?.searchResult3?.artist ?? [];
+                        result.data?.subsonicResponse?.searchResult3?.artist ?? [];
                     if (songs.isEmpty && albums.isEmpty && artists.isEmpty) {
                       return const Padding(
                         padding: EdgeInsets.only(top: 20.0),

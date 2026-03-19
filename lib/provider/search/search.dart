@@ -1,37 +1,38 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/song/songs.dart';
 import 'package:melo_trip/repository/song/song_repository.dart';
 
-// 1. 原始输入词 (V2 使用)
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-// 2. 核心搜索结果 Provider (V2 使用)
-final searchResultProvider = FutureProvider<SubsonicResponse?>((ref) async {
-  final query = ref.watch(searchQueryProvider);
-  if (query.isEmpty) return null;
+final searchResultProvider =
+    FutureProvider<Result<SubsonicResponse, AppFailure>?>((ref) async {
+      final query = ref.watch(searchQueryProvider);
+      if (query.isEmpty) return null;
 
-  await Future.delayed(const Duration(milliseconds: 600));
-  if (ref.read(searchQueryProvider) != query) return null;
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (ref.read(searchQueryProvider) != query) return null;
 
-  return ref.read(searchProvider(query).future);
-});
+      return ref.read(searchProvider(query).future);
+    });
 
-// 3. 兼容层 Provider (V1 使用，同时作为 V2 的核心实现)
-final searchProvider = FutureProvider.family<SubsonicResponse?, String>((
-  ref,
-  query,
-) async {
-  if (query.isEmpty) return null;
+final searchProvider =
+    FutureProvider.family<Result<SubsonicResponse, AppFailure>?, String>((
+      ref,
+      query,
+    ) async {
+      if (query.isEmpty) return null;
 
-  final cancelToken = CancelToken();
-  ref.onDispose(() => cancelToken.cancel());
+      final cancelToken = CancelToken();
+      ref.onDispose(() => cancelToken.cancel());
 
-  final repository = ref.read(songRepositoryProvider);
-  return repository.fetchSongSearchResponse(
-    query: SongSearchQuery(query: query),
-    cancelToken: cancelToken,
-  );
-});
+      final repository = ref.read(songRepositoryProvider);
+      return repository.fetchSongSearchResponseResult(
+        query: SongSearchQuery(query: query),
+        cancelToken: cancelToken,
+      );
+    });

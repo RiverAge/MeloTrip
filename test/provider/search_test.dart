@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/search/search.dart';
 import 'package:melo_trip/provider/song/songs.dart';
@@ -59,7 +60,7 @@ void main() {
       expect(mockRepository.searchCalled, isFalse);
     });
 
-    test('returns search result from repository', () async {
+    test('returns Result.ok from repository', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(status: 'ok'),
       );
@@ -74,7 +75,24 @@ void main() {
       final result = await container.read(searchProvider('test').future);
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
+      expect(result?.isOk, isTrue);
+      expect(result?.data?.subsonicResponse?.status, equals('ok'));
+      expect(mockRepository.searchCalled, isTrue);
+    });
+
+    test('returns Result.err when repository throws', () async {
+      final mockRepository = _MockSongRepository(null);
+      final container = ProviderContainer(
+        overrides: [
+          songRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(searchProvider('test').future);
+
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
       expect(mockRepository.searchCalled, isTrue);
     });
   });

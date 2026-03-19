@@ -121,16 +121,19 @@ class _DesktopSearchPageState extends ConsumerState<DesktopSearchPage> {
                         ref.read(searchQueryProvider.notifier).state = value;
                       },
                     )
-                  : AsyncValueBuilder(
-                      provider: searchResultProvider,
-                      loading: (_, _) =>
-                          const Center(child: CircularProgressIndicator()),
-                      empty: (_, _) => const NoData(),
-                      builder: (BuildContext context, data, WidgetRef ref) {
-                        final searchResult =
-                            data.subsonicResponse?.searchResult3;
-                        return DesktopSearchResultsView(
-                          songs: searchResult?.song ?? const <SongEntity>[],
+                      : AsyncValueBuilder(
+                          provider: searchResultProvider,
+                          loading: (_, _) =>
+                              const Center(child: CircularProgressIndicator()),
+                          empty: (_, _) => const NoData(),
+                          builder: (BuildContext context, result, WidgetRef ref) {
+                            if (result.isErr) {
+                              return const NoData();
+                            }
+                            final searchResult =
+                                result.data?.subsonicResponse?.searchResult3;
+                            return DesktopSearchResultsView(
+                              songs: searchResult?.song ?? const <SongEntity>[],
                           albums: searchResult?.album ?? const <AlbumEntity>[],
                           artists:
                               searchResult?.artist ?? const <ArtistEntity>[],

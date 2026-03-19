@@ -209,9 +209,9 @@ void main() {
 
     expect(await container.read(searchProvider('').future), isNull);
     final result = await container.read(searchProvider('keyword').future);
-    expect(result?.subsonicResponse?.status, 'ok');
+    expect(result?.isOk, isTrue);
     expect(
-      result?.subsonicResponse?.searchResult3?.song?.first.title,
+      result?.data?.subsonicResponse?.searchResult3?.song?.first.title,
       'keyword',
     );
   });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
@@ -103,7 +104,9 @@ void main() {
       ProviderScope(
         overrides: [
           userConfigProvider.overrideWith(FakeUserConfigNull.new),
-          searchProvider('rock').overrideWith((ref) async => searchResponse()),
+          searchProvider('rock').overrideWith(
+            (ref) async => Result.ok(searchResponse()),
+          ),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,

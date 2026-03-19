@@ -9,7 +9,6 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/pages/mobile/artist/artist_detail_page.dart';
 import 'package:melo_trip/pages/mobile/song_control/song_control.dart';
@@ -93,7 +92,7 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
                 _focusNode.unfocus();
               },
             )
-          : AsyncValueBuilder<SubsonicResponse?>(
+          : AsyncValueBuilder(
               provider: searchResultProvider,
               loading: (context, ref) => const Center(
                 child: Padding(
@@ -101,9 +100,15 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
                   child: CircularProgressIndicator(),
                 ),
               ),
-              builder: (context, response, ref) {
+              builder: (context, result, ref) {
+                if (result.isErr) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: NoData(),
+                  );
+                }
                 final SearchResult3Entity? searchResult =
-                    response?.subsonicResponse?.searchResult3;
+                    result.data?.subsonicResponse?.searchResult3;
                 final List<SongEntity> songs = searchResult?.song ?? [];
                 final List<AlbumEntity> albums = searchResult?.album ?? [];
                 final List<ArtistEntity> artists = searchResult?.artist ?? [];

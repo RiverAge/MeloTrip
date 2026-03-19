@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
@@ -113,25 +114,27 @@ void main() {
         overrides: [
           userConfigProvider.overrideWith(_FakeUserConfig.new),
           searchResultProvider.overrideWith(
-            (_) async => _searchResponse(
-              albums: const <AlbumEntity>[
-                AlbumEntity(
-                  id: 'a1',
-                  name: 'Search Album 1',
-                  artist: 'Search Artist 1',
-                ),
-              ],
-              songs: const <SongEntity>[
-                SongEntity(
-                  id: 's1',
-                  title: 'Search Song 1',
-                  album: 'Search Album 1',
-                  artist: 'Search Artist 1',
-                ),
-              ],
-              artists: const <ArtistEntity>[
-                ArtistEntity(id: 'ar1', name: 'Search Artist 1', albumCount: 3),
-              ],
+            (_) async => Result.ok(
+              _searchResponse(
+                albums: const <AlbumEntity>[
+                  AlbumEntity(
+                    id: 'a1',
+                    name: 'Search Album 1',
+                    artist: 'Search Artist 1',
+                  ),
+                ],
+                songs: const <SongEntity>[
+                  SongEntity(
+                    id: 's1',
+                    title: 'Search Song 1',
+                    album: 'Search Album 1',
+                    artist: 'Search Artist 1',
+                  ),
+                ],
+                artists: const <ArtistEntity>[
+                  ArtistEntity(id: 'ar1', name: 'Search Artist 1', albumCount: 3),
+                ],
+              ),
             ),
           ),
         ],
