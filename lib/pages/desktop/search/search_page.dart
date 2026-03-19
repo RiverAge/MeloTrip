@@ -122,7 +122,7 @@ class _DesktopSearchPageState extends ConsumerState<DesktopSearchPage> {
                       },
                     )
                       : AsyncValueBuilder(
-                          provider: searchResultProvider,
+                          provider: searchProvider,
                           loading: (_, _) =>
                               const Center(child: CircularProgressIndicator()),
                           empty: (_, _) => const NoData(),
@@ -156,3 +156,4 @@ class _DesktopSearchPageState extends ConsumerState<DesktopSearchPage> {
     );
   }
 }
+

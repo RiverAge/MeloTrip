@@ -54,7 +54,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(searchProvider('').future);
+      final result = await container.read(searchByQueryProvider('').future);
 
       expect(result, isNull);
       expect(mockRepository.searchCalled, isFalse);
@@ -72,7 +72,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(searchProvider('test').future);
+      final result = await container.read(searchByQueryProvider('test').future);
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);
@@ -89,7 +89,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(searchProvider('test').future);
+      final result = await container.read(searchByQueryProvider('test').future);
 
       expect(result?.isErr, isTrue);
       expect(result?.error, isA<AppFailure>());
@@ -97,7 +97,7 @@ void main() {
     });
   });
 
-  group('searchResultProvider', () {
+  group('searchProvider', () {
     test('returns null when query is empty', () async {
       final mockRepository = _MockSongRepository(null);
       final container = ProviderContainer(
@@ -109,9 +109,10 @@ void main() {
 
       container.read(searchQueryProvider.notifier).state = '';
 
-      final result = await container.read(searchResultProvider.future);
+      final result = await container.read(searchProvider.future);
 
       expect(result, isNull);
     });
   });
 }
+

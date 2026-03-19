@@ -104,7 +104,7 @@ void main() {
       ProviderScope(
         overrides: [
           userConfigProvider.overrideWith(FakeUserConfigNull.new),
-          searchProvider('rock').overrideWith(
+          searchByQueryProvider('rock').overrideWith(
             (ref) async => Result.ok(searchResponse()),
           ),
         ],
@@ -125,3 +125,4 @@ void main() {
     expect(find.text('Quick Artist'), findsWidgets);
   });
 }
+

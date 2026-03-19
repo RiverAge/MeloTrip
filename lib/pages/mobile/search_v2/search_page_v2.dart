@@ -93,7 +93,7 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
               },
             )
           : AsyncValueBuilder(
-              provider: searchResultProvider,
+              provider: searchProvider,
               loading: (context, ref) => const Center(
                 child: Padding(
                   padding: EdgeInsets.only(top: 60),
@@ -131,3 +131,4 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
     );
   }
 }
+

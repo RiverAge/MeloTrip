@@ -9,7 +9,7 @@ import 'package:melo_trip/repository/song/song_repository.dart';
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final searchResultProvider =
+final searchProvider =
     FutureProvider<Result<SubsonicResponse, AppFailure>?>((ref) async {
       final query = ref.watch(searchQueryProvider);
       if (query.isEmpty) return null;
@@ -17,10 +17,10 @@ final searchResultProvider =
       await Future.delayed(const Duration(milliseconds: 600));
       if (ref.read(searchQueryProvider) != query) return null;
 
-      return ref.read(searchProvider(query).future);
+      return ref.read(searchByQueryProvider(query).future);
     });
 
-final searchProvider =
+final searchByQueryProvider =
     FutureProvider.family<Result<SubsonicResponse, AppFailure>?, String>((
       ref,
       query,

@@ -84,7 +84,7 @@ void main() {
       ProviderScope(
         overrides: [
           userConfigProvider.overrideWith(_FakeUserConfig.new),
-          searchResultProvider.overrideWith((_) async => null),
+          searchProvider.overrideWith((_) async => null),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -113,7 +113,7 @@ void main() {
       ProviderScope(
         overrides: [
           userConfigProvider.overrideWith(_FakeUserConfig.new),
-          searchResultProvider.overrideWith(
+          searchProvider.overrideWith(
             (_) async => Result.ok(
               _searchResponse(
                 albums: const <AlbumEntity>[
@@ -152,3 +152,4 @@ void main() {
     expect(find.text('Search Artist 1'), findsWidgets);
   });
 }
+

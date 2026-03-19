@@ -75,7 +75,7 @@ class _SearchPageState extends State<SearchPage> {
             ? const SizedBox.shrink()
             : SafeArea(
                 child: AsyncValueBuilder(
-                  provider: searchProvider(_controller.text),
+                  provider: searchByQueryProvider(_controller.text),
                   builder: (context, result, _) {
                     if (result.isErr) {
                       return const Padding(
@@ -149,3 +149,4 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+

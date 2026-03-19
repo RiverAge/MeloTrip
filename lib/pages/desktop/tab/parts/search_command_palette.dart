@@ -194,7 +194,7 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                           },
                         )
                       : AsyncValueBuilder(
-                          provider: searchProvider(_query),
+                          provider: searchByQueryProvider(_query),
                           loading: (_, _) =>
                               const Center(child: CircularProgressIndicator()),
                           empty: (_, _) => const NoData(),
@@ -283,3 +283,4 @@ class _KeyHint extends StatelessWidget {
     );
   }
 }
+
