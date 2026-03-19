@@ -23,12 +23,10 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    await expectLater(
-      container.read(
-        albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
-      ),
-      throwsA(isA<StateError>()),
+    final result = await container.read(
+      albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
     );
+    expect(result.isErr, isTrue);
   });
 
   test('albumListProvider parses album list payload', () async {
@@ -40,7 +38,8 @@ void main() {
     final result = await container.read(
       albumListProvider(AlbumListQuery(type: AlbumListType.newest.name)).future,
     );
-    final albums = result;
+    expect(result.isOk, isTrue);
+    final albums = result.data!;
     expect(albums.length, 1);
     expect(albums.first.name, 'Test Album');
   });

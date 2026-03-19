@@ -69,25 +69,25 @@ Future<void> _pumpDesktopHome(
         currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.random.name),
-        ).overrideWith((_) async => random),
+        ).overrideWith((_) async => Result.ok(random)),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.recent.name),
-        ).overrideWith((_) async => recent),
+        ).overrideWith((_) async => Result.ok(recent)),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.recent.name, size: 50),
-        ).overrideWith((_) async => recent),
+        ).overrideWith((_) async => Result.ok(recent)),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.newest.name),
-        ).overrideWith((_) async => newest),
+        ).overrideWith((_) async => Result.ok(newest)),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.newest.name, size: 50),
-        ).overrideWith((_) async => newest),
+        ).overrideWith((_) async => Result.ok(newest)),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.frequent.name),
-        ).overrideWith((_) async => frequent),
+        ).overrideWith((_) async => Result.ok(frequent)),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
-        ).overrideWith((_) async => frequent),
+        ).overrideWith((_) async => Result.ok(frequent)),
         albumDetailProvider('album-1').overrideWith(
           () => _FakeAlbumDetail(detail),
         ),

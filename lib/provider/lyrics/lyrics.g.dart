@@ -66,7 +66,7 @@ final class LyricsProvider
   }
 }
 
-String _$lyricsHash() => r'b668365a64a15b6d13a722c617fc8f5de15fd7d8';
+String _$lyricsHash() => r'c45c3fbace362f7f02d3b6edf888549fe9d471bd';
 
 final class LyricsFamily extends $Family
     with

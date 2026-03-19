@@ -65,7 +65,7 @@ final class PaginatedAlbumListProvider
 }
 
 String _$paginatedAlbumListHash() =>
-    r'177c7e1ff15d318d0f0878991eadbda9bdadfa8e';
+    r'bd74d02e8386b5a010348101aeb5849a7dca8901';
 
 final class PaginatedAlbumListFamily extends $Family
     with
@@ -128,13 +128,13 @@ final albumListProvider = AlbumListFamily._();
 final class AlbumListProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<AlbumEntity>>,
-          List<AlbumEntity>,
-          FutureOr<List<AlbumEntity>>
+          AsyncValue<Result<List<AlbumEntity>, AppFailure>>,
+          Result<List<AlbumEntity>, AppFailure>,
+          FutureOr<Result<List<AlbumEntity>, AppFailure>>
         >
     with
-        $FutureModifier<List<AlbumEntity>>,
-        $FutureProvider<List<AlbumEntity>> {
+        $FutureModifier<Result<List<AlbumEntity>, AppFailure>>,
+        $FutureProvider<Result<List<AlbumEntity>, AppFailure>> {
   AlbumListProvider._({
     required AlbumListFamily super.from,
     required AlbumListQuery super.argument,
@@ -158,12 +158,12 @@ final class AlbumListProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<AlbumEntity>> $createElement(
+  $FutureProviderElement<Result<List<AlbumEntity>, AppFailure>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<AlbumEntity>> create(Ref ref) {
+  FutureOr<Result<List<AlbumEntity>, AppFailure>> create(Ref ref) {
     final argument = this.argument as AlbumListQuery;
     return albumList(ref, argument);
   }
@@ -179,11 +179,14 @@ final class AlbumListProvider
   }
 }
 
-String _$albumListHash() => r'631d4f2f5081f73a1b97833f70e506ec8b3d4e40';
+String _$albumListHash() => r'48ae68d9136f25f6d663da381bf5d63746f3c333';
 
 final class AlbumListFamily extends $Family
     with
-        $FunctionalFamilyOverride<FutureOr<List<AlbumEntity>>, AlbumListQuery> {
+        $FunctionalFamilyOverride<
+          FutureOr<Result<List<AlbumEntity>, AppFailure>>,
+          AlbumListQuery
+        > {
   AlbumListFamily._()
     : super(
         retry: null,

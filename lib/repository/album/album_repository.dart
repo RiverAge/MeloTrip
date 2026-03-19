@@ -42,6 +42,12 @@ class AlbumRepository {
     return response.subsonicResponse?.albumList?.album ??
         const <AlbumEntity>[];
   }
+
+  Future<Result<List<AlbumEntity>, AppFailure>> tryFetchAlbumListItems({
+    required AlbumListQuery query,
+  }) {
+    return runGuarded(() => fetchAlbumListItems(query: query));
+  }
 }
 
 final albumRepositoryProvider = Provider<AlbumRepository>((ref) {

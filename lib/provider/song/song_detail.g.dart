@@ -54,7 +54,7 @@ final class SongDetailProvider
   }
 }
 
-String _$songDetailHash() => r'13630fd0fd86a12dc4728dd247c285e05e00b2c2';
+String _$songDetailHash() => r'7f323067950162a07a256112b46dc07910dbf07f';
 
 final class SongDetailFamily extends $Family
     with

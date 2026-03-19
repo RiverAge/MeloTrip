@@ -54,7 +54,7 @@ final class AlbumDetailProvider
   }
 }
 
-String _$albumDetailHash() => r'e5f7930972892382fa89ee1a02f8215f08dded18';
+String _$albumDetailHash() => r'250d85bf14714918ac51bd61fef7ffcb690292a0';
 
 final class AlbumDetailFamily extends $Family
     with

@@ -108,7 +108,8 @@ class _DesktopAlbumSectionState extends ConsumerState<_DesktopAlbumSection> {
               ),
               empty: (_, _) => const SizedBox.shrink(),
               builder: (context, data, _) {
-                final albums = data;
+                if (data.isErr) return const SizedBox.shrink();
+                final albums = data.data ?? const [];
                 if (albums.isEmpty) return const SizedBox.shrink();
 
                 // Trigger scroll state update once the list is built

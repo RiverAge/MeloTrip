@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/repository/album/album_repository.dart';
@@ -194,8 +196,9 @@ void main() {
       const query = AlbumListQuery(type: 'random');
       final result = await container.read(albumListProvider(query).future);
 
-      expect(result, hasLength(2));
-      expect(result[0].id, 'album-1');
+      expect(result.isOk, isTrue);
+      expect(result.data, hasLength(2));
+      expect(result.data?[0].id, 'album-1');
 
       container.dispose();
     });
@@ -218,5 +221,13 @@ class _MockAlbumRepository extends AlbumRepository {
 
     final end = (offset + size).clamp(0, _albums.length);
     return _albums.sublist(offset, end);
+  }
+
+  @override
+  Future<Result<List<AlbumEntity>, AppFailure>> tryFetchAlbumListItems({
+    required AlbumListQuery query,
+  }) async {
+    final albums = await fetchAlbumListItems(query: query);
+    return Result.ok(albums);
   }
 }

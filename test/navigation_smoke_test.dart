@@ -49,16 +49,16 @@ void main() {
           appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.newest.name),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.newest.name, size: 50),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name, size: 50),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           currentUserProvider.overrideWith(
             () => FakeCurrentUserLoggedIn(
               const AuthUser(

@@ -33,7 +33,7 @@ final class PlaylistActionsProvider
   PlaylistActions create() => PlaylistActions();
 }
 
-String _$playlistActionsHash() => r'90bf2fc6a923b274952c89257e50615367c22d82';
+String _$playlistActionsHash() => r'57c9ea5a8687083af5911fb014233bed86ea784d';
 
 abstract class _$PlaylistActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
@@ -92,7 +92,7 @@ final class PlaylistsProvider
   }
 }
 
-String _$playlistsHash() => r'448da176760f45b0647df2a3ba1c3c247c2117fa';
+String _$playlistsHash() => r'd472fc55008a285f1558e5a32c03b752bc04eb9b';
 
 @ProviderFor(PlaylistDetail)
 final playlistDetailProvider = PlaylistDetailFamily._();
@@ -139,7 +139,7 @@ final class PlaylistDetailProvider
   }
 }
 
-String _$playlistDetailHash() => r'a0e68908b511a8bd86d66420b1ca11031df6a56d';
+String _$playlistDetailHash() => r'a1c5b5b464d75580cf95298aa14332a7f13d4bcf';
 
 final class PlaylistDetailFamily extends $Family
     with

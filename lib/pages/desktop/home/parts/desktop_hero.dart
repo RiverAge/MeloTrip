@@ -18,7 +18,8 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
       ),
       loading: (_, _) => const SizedBox(height: 280),
       builder: (context, data, _) {
-        final album = data.firstOrNull;
+        if (data.isErr) return const SizedBox.shrink();
+        final album = data.data?.firstOrNull;
         if (album == null) return const SizedBox.shrink();
 
         return MouseRegion(

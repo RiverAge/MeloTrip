@@ -41,25 +41,25 @@ void main() {
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.random.name),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.newest.name),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.newest.name, size: 50),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name, size: 50),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.frequent.name),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           albumListProvider(
             AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
-          ).overrideWith((_) async => const <AlbumEntity>[]),
+          ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           playlistsProvider.overrideWith(
             (ref) async => playlistsResponse == null
                 ? Result.err(

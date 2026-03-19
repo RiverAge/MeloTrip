@@ -48,4 +48,4 @@ final class ScanStatusProvider
   }
 }
 
-String _$scanStatusHash() => r'c55b9aa19754ff6c646392060ce7340d5c9a760f';
+String _$scanStatusHash() => r'b0876fa5b53cbd18a70e9fd5255a0aa5a285774e';

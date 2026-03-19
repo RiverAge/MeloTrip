@@ -48,4 +48,4 @@ final class PlayQueueProvider
   }
 }
 
-String _$playQueueHash() => r'400a58b3d4682c8214a7b61727b2a457a249ae3c';
+String _$playQueueHash() => r'50bdef08a4f63bada53029d8c35a284cdd8ff1d3';

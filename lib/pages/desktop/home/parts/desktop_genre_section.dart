@@ -33,7 +33,8 @@ class _DesktopGenreSection extends ConsumerWidget {
             AlbumListQuery(type: AlbumListType.recent.name),
           ),
           builder: (context, data, _) {
-            final albums = data;
+            if (data.isErr) return const SizedBox.shrink();
+            final albums = data.data ?? const [];
             final fallback = albums
                 .map((it) => it.genre?.trim())
                 .whereType<String>()

@@ -53,7 +53,8 @@ class _Albums extends StatelessWidget {
         AsyncValueBuilder(
           provider: albumListProvider(AlbumListQuery(type: type.name)),
           builder: (context, data, ref) {
-            var albums = data;
+            if (data.isErr) return const SizedBox.shrink();
+            var albums = data.data ?? const <AlbumEntity>[];
             if (albums.isEmpty) return const SizedBox.shrink();
 
             if (limit != null) {

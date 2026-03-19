@@ -145,7 +145,10 @@ class _AlbumRecommendationsSection extends StatelessWidget {
                   ),
                 ),
                 builder: (context, data, _) {
-                  final List<AlbumEntity> albums = data
+                  if (data.isErr) {
+                    return const SizedBox.shrink();
+                  }
+                  final List<AlbumEntity> albums = (data.data ?? const <AlbumEntity>[])
                       .where((AlbumEntity item) => item.id != album.id)
                       .toList();
                   if (albums.isEmpty) {

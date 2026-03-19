@@ -1,3 +1,5 @@
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -105,14 +107,18 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
 
   Future<List<AlbumEntity>> _fetchPage(int offset) async {
     final repository = ref.read(albumRepositoryProvider);
-    return repository.fetchAlbumListItems(
+    final result = await repository.tryFetchAlbumListItems(
       query: _query.copyWith(offset: offset),
     );
+    return result.when(ok: (data) => data, err: (error) => throw error);
   }
 }
 
 @riverpod
-Future<List<AlbumEntity>> albumList(Ref ref, AlbumListQuery query) async {
+Future<Result<List<AlbumEntity>, AppFailure>> albumList(
+  Ref ref,
+  AlbumListQuery query,
+) async {
   final repository = ref.read(albumRepositoryProvider);
-  return repository.fetchAlbumListItems(query: query);
+  return repository.tryFetchAlbumListItems(query: query);
 }
