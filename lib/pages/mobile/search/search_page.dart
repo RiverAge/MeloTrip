@@ -77,12 +77,6 @@ class _SearchPageState extends State<SearchPage> {
                 child: AsyncValueBuilder(
                   provider: searchByQueryProvider(_controller.text),
                   builder: (context, result, _) {
-                    if (result.isErr) {
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: NoData(),
-                      );
-                    }
                     final songs =
                         result.data?.subsonicResponse?.searchResult3?.song ?? [];
                     final albums =

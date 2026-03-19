@@ -22,9 +22,6 @@ class DesktopArtistDetailPage extends ConsumerWidget {
       child: AsyncValueBuilder(
         provider: artistDetailProvider(artistId),
         builder: (context, result, ref) {
-          if (result.isErr) {
-            return const NoData();
-          }
           final artist = result.data?.subsonicResponse?.artist;
           if (artist == null) {
             return const NoData();

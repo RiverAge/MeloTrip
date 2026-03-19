@@ -80,7 +80,6 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
       body: AsyncValueBuilder(
         provider: playlistsProvider,
         builder: (p0, result, ref) {
-          if (result.isErr) return const NoData();
           final playlist = result.data ?? const <PlaylistEntity>[];
           if (playlist.isEmpty) return const NoData();
           return ListView.separated(

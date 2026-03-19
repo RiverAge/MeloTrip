@@ -105,9 +105,6 @@ class _DesktopSidebar extends ConsumerWidget {
                       ),
                       empty: (_, _) => const SizedBox.shrink(),
                       builder: (context, result, _) {
-                        if (result.isErr) {
-                          return const SizedBox.shrink();
-                        }
                         final list = result.data ?? const <PlaylistEntity>[];
                         if (list.isEmpty) return const SizedBox.shrink();
                         return Column(

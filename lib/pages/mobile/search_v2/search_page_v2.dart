@@ -101,12 +101,6 @@ class _SearchPageV2State extends ConsumerState<SearchPageV2> {
                 ),
               ),
               builder: (context, result, ref) {
-                if (result.isErr) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: NoData(),
-                  );
-                }
                 final SearchResult3Entity? searchResult =
                     result.data?.subsonicResponse?.searchResult3;
                 final List<SongEntity> songs = searchResult?.song ?? [];

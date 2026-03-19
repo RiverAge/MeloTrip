@@ -29,9 +29,6 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),
         builder: (context, result, ref) {
-          if (result.isErr) {
-            return const NoData();
-          }
           final playlist = result.data;
           final List<SongEntity> songs =
               playlist?.entry ?? const <SongEntity>[];

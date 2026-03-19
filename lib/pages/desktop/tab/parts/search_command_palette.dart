@@ -199,9 +199,6 @@ class _SearchCommandPaletteState extends ConsumerState<SearchCommandPalette> {
                               const Center(child: CircularProgressIndicator()),
                           empty: (_, _) => const NoData(),
                           builder: (BuildContext context, result, WidgetRef ref) {
-                            if (result.isErr) {
-                              return const NoData();
-                            }
                             final searchResult =
                                 result.data?.subsonicResponse?.searchResult3;
                             return DesktopSearchResultsView(

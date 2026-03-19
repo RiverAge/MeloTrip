@@ -19,9 +19,6 @@ class EditPlaylistPage extends StatelessWidget {
     return AsyncValueBuilder(
       provider: playlistDetailProvider(playlistId),
       builder: (context, result, ref) {
-        if (result.isErr) {
-          return const Center(child: NoData());
-        }
         final playlist = result.data;
         if (playlist == null) return const Center(child: NoData());
         return _EditPlaylistBuilder(playlist: playlist);

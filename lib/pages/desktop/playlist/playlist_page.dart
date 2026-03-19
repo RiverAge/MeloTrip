@@ -26,9 +26,6 @@ class DesktopPlaylistsPage extends ConsumerWidget {
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),
         builder: (context, result, _) {
-          if (result.isErr) {
-            return const NoData();
-          }
           final playlists = result.data ?? const <PlaylistEntity>[];
           if (playlists.isEmpty) return const NoData();
           return ListView.separated(

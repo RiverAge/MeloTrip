@@ -31,6 +31,7 @@ Last updated: 2026-03-19
   - Scope: centralize failure-to-message conversion strategy per `AppFailureType`.
   - Progress: global snackbar now maps `AppFailureType` to localized user-facing messages, and a contract test prevents rendering raw error payload text directly in app-level listener.
   - Progress: `AsyncValueBuilder` now maps `Result.err(AppFailure)` and `AsyncError(AppFailure)` to unified localized copy, reducing page-level ad-hoc `NoData` fallback on failures.
+  - Progress: removed redundant `result.isErr` branches in pages already using `AsyncValueBuilder`, so error rendering path stays centralized.
 
 ## Completed
 

@@ -32,9 +32,6 @@ class _PlaylistDetailPage extends State<PlaylistDetailPage> {
       body: AsyncValueBuilder(
         provider: playlistDetailProvider(widget.playlistId),
         builder: (context, result, ref) {
-          if (result.isErr) {
-            return const NoData();
-          }
           final playlist = result.data;
           if (playlist == null) {
             return const NoData();

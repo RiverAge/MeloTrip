@@ -67,9 +67,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
       body: AsyncValueBuilder(
         provider: playlistsProvider,
         builder: (p0, result, ref) {
-          if (result.isErr) {
-            return const Center(child: NoData());
-          }
           final playlist = result.data ?? const <PlaylistEntity>[];
           if (playlist.isEmpty) {
             return const Center(child: NoData());
