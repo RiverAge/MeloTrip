@@ -24,8 +24,8 @@ Last updated: 2026-03-19
 
 ## Later
 
-- [ ] CI guard for naming conventions
-  - Enforce: repository `Future<Result<...>>` methods must be `try*`; forbid new `*ResultProvider` primary naming.
+- [x] CI guard for naming conventions
+  - Status: contract tests now enforce repository `Future<Result<...>>` methods use `try*`, and non-generated provider sources forbid `*ResultProvider` naming.
 
 - [ ] Evaluate unified user-facing error mapping
   - Scope: centralize failure-to-message conversion strategy per `AppFailureType`.
