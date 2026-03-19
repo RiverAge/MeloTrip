@@ -61,56 +61,55 @@ class PaginatedAlbumList extends _$PaginatedAlbumList {
 
   Future<void> loadInitial() async {
     state = const PaginatedListSnapshot<AlbumEntity>(isLoading: true);
-    try {
-      final result = await _fetchPage(0);
-      if (!ref.mounted) return;
-      final pageSize = _query.size ?? result.length;
-      state = PaginatedListSnapshot<AlbumEntity>(
-        items: result,
-        offset: result.length,
-        hasMore: pageSize > 0 && result.length >= pageSize,
-      );
-    } catch (error) {
-      if (!ref.mounted) return;
-      state = PaginatedListSnapshot<AlbumEntity>(
+    final result = await _fetchPage(0);
+    if (!ref.mounted) return;
+    state = result.when(
+      ok: (items) {
+        final pageSize = _query.size ?? items.length;
+        return PaginatedListSnapshot<AlbumEntity>(
+          items: items,
+          offset: items.length,
+          hasMore: pageSize > 0 && items.length >= pageSize,
+        );
+      },
+      err: (error) => PaginatedListSnapshot<AlbumEntity>(
         hasMore: false,
-        error: PaginatedListFailure.from(error),
-      );
-    }
+        error: PaginatedListFailure(message: error.message, cause: error),
+      ),
+    );
   }
 
   Future<void> loadMore() async {
     if (state.isLoading || !state.hasMore) return;
     state = state.copyWith(isLoading: true, error: null);
-    try {
-      final result = await _fetchPage(state.offset);
-      if (!ref.mounted) return;
-      final pageSize = _query.size ?? result.length;
-      state = state.copyWith(
-        items: <AlbumEntity>[...state.items, ...result],
-        offset: state.offset + result.length,
-        hasMore: pageSize > 0 && result.length >= pageSize,
+    final result = await _fetchPage(state.offset);
+    if (!ref.mounted) return;
+    state = result.when(
+      ok: (items) {
+        final pageSize = _query.size ?? items.length;
+        return state.copyWith(
+          items: <AlbumEntity>[...state.items, ...items],
+          offset: state.offset + items.length,
+          hasMore: pageSize > 0 && items.length >= pageSize,
+          isLoading: false,
+        );
+      },
+      err: (error) => state.copyWith(
         isLoading: false,
-      );
-    } catch (error) {
-      if (!ref.mounted) return;
-      state = state.copyWith(
-        isLoading: false,
-        error: PaginatedListFailure.from(error),
-      );
-    }
+        error: PaginatedListFailure(message: error.message, cause: error),
+      ),
+    );
   }
 
   Future<void> refresh() async {
     await loadInitial();
   }
 
-  Future<List<AlbumEntity>> _fetchPage(int offset) async {
+  Future<Result<List<AlbumEntity>, AppFailure>> _fetchPage(int offset) async {
     final repository = ref.read(albumRepositoryProvider);
-    final result = await repository.tryFetchAlbumListItems(
+    return repository.tryFetchAlbumListItems(
       query: _query.copyWith(offset: offset),
     );
-    return result.when(ok: (data) => data, err: (error) => throw error);
   }
 }
 

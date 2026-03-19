@@ -176,6 +176,27 @@ void main() {
       final snapshot = container.read(paginatedAlbumListProvider(query));
       expect(snapshot.items, hasLength(3));
     });
+
+    test('loadInitial stores typed error when repository returns Result.err', () async {
+      final container2 = ProviderContainer(
+        overrides: [
+          albumRepositoryProvider.overrideWith((ref) {
+            return _MockFailingAlbumRepository();
+          }),
+        ],
+      );
+      addTearDown(container2.dispose);
+
+      const query = AlbumListQuery(type: 'newest', size: 10);
+      await container2.read(paginatedAlbumListProvider(query).notifier).loadInitial();
+
+      final snapshot = container2.read(paginatedAlbumListProvider(query));
+      expect(snapshot.items, isEmpty);
+      expect(snapshot.hasMore, isFalse);
+      expect(snapshot.error, isNotNull);
+      expect(snapshot.error?.message, 'mock-failure');
+      expect(snapshot.error?.cause, isA<AppFailure>());
+    });
   });
 
   group('albumListProvider', () {
@@ -229,5 +250,18 @@ class _MockAlbumRepository extends AlbumRepository {
   }) async {
     final albums = await fetchAlbumListItems(query: query);
     return Result.ok(albums);
+  }
+}
+
+class _MockFailingAlbumRepository extends AlbumRepository {
+  _MockFailingAlbumRepository() : super(() async => Dio());
+
+  @override
+  Future<Result<List<AlbumEntity>, AppFailure>> tryFetchAlbumListItems({
+    required AlbumListQuery query,
+  }) async {
+    return const Result.err(
+      AppFailure(type: AppFailureType.network, message: 'mock-failure'),
+    );
   }
 }

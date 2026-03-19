@@ -4,9 +4,9 @@ Last updated: 2026-03-19
 
 ## Now
 
-- [ ] Unify album failure semantics end-to-end
-  - Status: `albumListProvider` now returns `Result<List<AlbumEntity>, AppFailure>` and read surfaces are disambiguated; paginated album flow still maps Result errors into thrown exceptions for snapshot compatibility.
-  - Target: decide whether paginated snapshots should carry `AppFailure` directly to remove remaining throw-based translation.
+- [x] Unify album failure semantics end-to-end
+  - Status: `albumListProvider` returns `Result<List<AlbumEntity>, AppFailure>` and paginated album flow now consumes repository `Result` directly without throw-based translation.
+  - Validation: `albums_test` includes a Result.err pagination case and full test suite is green.
 
 - [x] Eliminate duplicate error handling between global error bus and page-local handling
   - Status: API interceptor now emits global errors only for transport failures (timeout/connection), while business and HTTP response failures are handled in feature context.
