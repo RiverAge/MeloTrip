@@ -94,9 +94,13 @@ class _MusicBarState extends State<MusicBar> {
                   subtitle: AsyncValueBuilder(
                     provider: lyricsProvider(current.id),
                     loading: (_, _) => const SizedBox.shrink(),
-                    builder: (_, lyrics, _) {
-                      final lines = lyrics
-                          .subsonicResponse
+                    builder: (_, lyricsResult, _) {
+                      if (lyricsResult.isErr) {
+                        return const SizedBox.shrink();
+                      }
+                      final lines = lyricsResult
+                          .data
+                          ?.subsonicResponse
                           ?.lyricsList
                           ?.structuredLyrics
                           ?.firstOrNull

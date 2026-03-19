@@ -15,13 +15,13 @@ final lyricsProvider = LyricsFamily._();
 final class LyricsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>
+          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+          Result<SubsonicResponse, AppFailure>?,
+          FutureOr<Result<SubsonicResponse, AppFailure>?>
         >
     with
-        $FutureModifier<SubsonicResponse?>,
-        $FutureProvider<SubsonicResponse?> {
+        $FutureModifier<Result<SubsonicResponse, AppFailure>?>,
+        $FutureProvider<Result<SubsonicResponse, AppFailure>?> {
   LyricsProvider._({
     required LyricsFamily super.from,
     required String? super.argument,
@@ -45,12 +45,12 @@ final class LyricsProvider
 
   @$internal
   @override
-  $FutureProviderElement<SubsonicResponse?> $createElement(
+  $FutureProviderElement<Result<SubsonicResponse, AppFailure>?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<SubsonicResponse?> create(Ref ref) {
+  FutureOr<Result<SubsonicResponse, AppFailure>?> create(Ref ref) {
     final argument = this.argument as String?;
     return lyrics(ref, argument);
   }
@@ -66,10 +66,14 @@ final class LyricsProvider
   }
 }
 
-String _$lyricsHash() => r'e154efe3c68aa34830ba9d37c87f0e82a905a0fd';
+String _$lyricsHash() => r'b668365a64a15b6d13a722c617fc8f5de15fd7d8';
 
 final class LyricsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<SubsonicResponse?>, String?> {
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<Result<SubsonicResponse, AppFailure>?>,
+          String?
+        > {
   LyricsFamily._()
     : super(
         retry: null,

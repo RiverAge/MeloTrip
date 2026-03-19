@@ -45,8 +45,8 @@ class _DesktopFavoritesPageState extends ConsumerState<DesktopFavoritesPage> {
           Expanded(
             child: AsyncValueBuilder(
               provider: favoriteProvider,
-              builder: (context, data, ref) {
-                final starred = data.subsonicResponse?.starred;
+              builder: (context, result, ref) {
+                final starred = result.data?.subsonicResponse?.starred;
                 return _buildContent(starred);
               },
             ),

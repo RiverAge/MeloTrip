@@ -49,8 +49,9 @@ void main() {
     addTearDown(container.dispose);
 
     final result = await container.read(favoriteProvider.future);
-    expect(result?.subsonicResponse?.status, 'ok');
-    expect(result?.subsonicResponse?.starred?.song?.first.id, 's1');
+    expect(result.isOk, isTrue);
+    expect(result.data?.subsonicResponse?.status, 'ok');
+    expect(result.data?.subsonicResponse?.starred?.song?.first.id, 's1');
   });
 
   test('playlists provider parses payload and null guards work', () async {
@@ -178,7 +179,8 @@ void main() {
     addTearDown(container.dispose);
 
     final result = await container.read(lyricsProvider('song-1').future);
-    final merged = result?.subsonicResponse?.lyricsList?.structuredLyrics;
+    expect(result?.isOk, isTrue);
+    final merged = result?.data?.subsonicResponse?.lyricsList?.structuredLyrics;
     expect(merged, isNotNull);
     expect(merged!.length, 1);
     expect(merged.first.lang, 'NetEase');

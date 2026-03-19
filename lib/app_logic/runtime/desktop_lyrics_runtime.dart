@@ -59,6 +59,7 @@ class DesktopLyricsRuntime {
         final resp = await ref.read(lyricsProvider(songId).future);
         lyricsLines = requestId == lyricsRequestId
             ? resp
+                  ?.data
                   ?.subsonicResponse
                   ?.lyricsList
                   ?.structuredLyrics

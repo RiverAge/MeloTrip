@@ -12,6 +12,8 @@ import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:melo_trip/provider/play_queue/play_queue.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 
 import 'test_helpers.dart';
 
@@ -66,7 +68,14 @@ void main() {
               ),
             ),
           ),
-          playQueueProvider.overrideWith((_) async => null),
+          playQueueProvider.overrideWith(
+            (_) async => const Result.err(
+              AppFailure(
+                type: AppFailureType.unknown,
+                message: 'skip restore',
+              ),
+            ),
+          ),
           initialBootstrapServiceProvider.overrideWithValue(
             InitialBootstrapService(
               loadAuthUser: () async => const AuthUser(

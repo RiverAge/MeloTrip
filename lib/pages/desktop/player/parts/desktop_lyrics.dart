@@ -12,10 +12,22 @@ class _DesktopLyrics extends ConsumerWidget {
 
     return AsyncValueBuilder(
       provider: lyricsProvider(songId!),
-      builder: (context, subsonicLyrics, _) {
+      builder: (context, lyricsResult, _) {
+        if (lyricsResult.isErr) {
+          return Center(
+            child: Text(
+              AppLocalizations.of(context)!.noLyricsFound,
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 18,
+              ),
+            ),
+          );
+        }
         final lines =
-            subsonicLyrics
-                .subsonicResponse
+            lyricsResult
+                .data
+                ?.subsonicResponse
                 ?.lyricsList
                 ?.structuredLyrics
                 ?.firstOrNull

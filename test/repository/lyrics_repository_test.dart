@@ -65,13 +65,24 @@ void main() {
       expect(result.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayTitle, 'Test Song');
     });
 
-    test('fetchLyrics returns null for null data', () async {
+    test('fetchLyrics throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(lyricsRepositoryProvider);
-      final result = await repository.fetchLyrics('song-123');
+      await expectLater(
+        repository.fetchLyrics('song-123'),
+        throwsA(isA<StateError>()),
+      );
+    });
 
-      expect(result, isNull);
+    test('fetchLyricsResult returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(lyricsRepositoryProvider);
+      final result = await repository.fetchLyricsResult('song-123');
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
     });
   });
 }

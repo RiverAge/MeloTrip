@@ -38,9 +38,16 @@ class _MusicControls extends StatelessWidget {
                 AsyncValueBuilder(
                   provider: lyricsProvider(current?.id),
                   loading: (_, _) => const SizedBox.shrink(),
-                  builder: (_, lyrics, _) {
+                  builder: (_, lyricsResult, _) {
+                    if (lyricsResult.isErr) {
+                      return const SizedBox.shrink();
+                    }
                     final structuredLyrics =
-                        lyrics.subsonicResponse?.lyricsList?.structuredLyrics ??
+                        lyricsResult
+                            .data
+                            ?.subsonicResponse
+                            ?.lyricsList
+                            ?.structuredLyrics ??
                         [];
                     if (structuredLyrics.isEmpty) {
                       return const SizedBox.shrink();

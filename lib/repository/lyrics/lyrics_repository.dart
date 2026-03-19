@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
+import 'package:melo_trip/repository/common/repository_guard.dart';
 import 'package:melo_trip/repository/common/subsonic_response_parser.dart';
 
 class LyricsRepository {
@@ -20,6 +23,10 @@ class LyricsRepository {
       res.data,
       endpoint: '/rest/getLyricsBySongId',
     );
+  }
+
+  Future<Result<SubsonicResponse, AppFailure>> fetchLyricsResult(String songId) {
+    return runGuarded(() => fetchLyrics(songId));
   }
 }
 

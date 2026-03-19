@@ -64,13 +64,24 @@ void main() {
       expect(result.subsonicResponse?.playQueue?.position, 30);
     });
 
-    test('fetchPlayQueue returns null for null data', () async {
+    test('fetchPlayQueue throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(playQueueRepositoryProvider);
-      final result = await repository.fetchPlayQueue();
+      await expectLater(
+        repository.fetchPlayQueue(),
+        throwsA(isA<StateError>()),
+      );
+    });
 
-      expect(result, isNull);
+    test('fetchPlayQueueResult returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(playQueueRepositoryProvider);
+      final result = await repository.fetchPlayQueueResult();
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
     });
   });
 }

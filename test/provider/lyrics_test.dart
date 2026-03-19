@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/repository/lyrics/lyrics_repository.dart';
@@ -35,7 +36,7 @@ void main() {
       expect(mockRepository.fetchCalled, isFalse);
     });
 
-    test('throws when repository throws', () async {
+    test('returns Result.err when repository throws', () async {
       final mockRepository = _MockLyricsRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -44,14 +45,14 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await expectLater(
-        container.read(lyricsProvider('song123').future),
-        throwsA(isA<TypeError>()),
-      );
+      final result = await container.read(lyricsProvider('song123').future);
+
+      expect(result?.isErr, isTrue);
+      expect(result?.error, isA<AppFailure>());
       expect(mockRepository.fetchCalled, isTrue);
     });
 
-    test('returns lyrics response from repository', () async {
+    test('returns Result.ok lyrics response from repository', () async {
       final mockResponse = const SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(
           status: 'ok',
@@ -69,7 +70,8 @@ void main() {
           await container.read(lyricsProvider('song123').future);
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
+      expect(result?.isOk, isTrue);
+      expect(result?.data?.subsonicResponse?.status, equals('ok'));
       expect(mockRepository.fetchCalled, isTrue);
     });
   });

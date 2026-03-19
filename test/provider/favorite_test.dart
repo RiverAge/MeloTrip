@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
@@ -21,7 +22,7 @@ class _MockFavoriteRepository extends FavoriteRepository {
 
 void main() {
   group('favoriteProvider', () {
-    test('throws when repository throws', () async {
+    test('returns Result.err when repository throws', () async {
       final mockRepository = _MockFavoriteRepository(null);
       final container = ProviderContainer(
         overrides: [
@@ -30,14 +31,14 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await expectLater(
-        container.read(favoriteProvider.future),
-        throwsA(isA<TypeError>()),
-      );
+      final result = await container.read(favoriteProvider.future);
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isA<AppFailure>());
       expect(mockRepository.fetchCalled, isTrue);
     });
 
-    test('returns starred response from repository', () async {
+    test('returns Result.ok starred response from repository', () async {
       final mockResponse = SubsonicResponse(
         subsonicResponse: const SubsonicResponseClass(
           status: 'ok',
@@ -55,8 +56,9 @@ void main() {
       final result = await container.read(favoriteProvider.future);
 
       expect(result, isNotNull);
-      expect(result?.subsonicResponse?.status, equals('ok'));
-      expect(result?.subsonicResponse?.starred, isNotNull);
+      expect(result.isOk, isTrue);
+      expect(result.data?.subsonicResponse?.status, equals('ok'));
+      expect(result.data?.subsonicResponse?.starred, isNotNull);
       expect(mockRepository.fetchCalled, isTrue);
     });
   });

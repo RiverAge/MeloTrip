@@ -34,9 +34,13 @@ class _RoundedCover extends StatelessWidget {
             AsyncValueBuilder(
               provider: lyricsProvider(current.id),
               loading: (_, _) => const SizedBox.shrink(),
-              builder: (_, lyrics, _) {
-                final lyricsLines = lyrics
-                    .subsonicResponse
+              builder: (_, lyricsResult, _) {
+                if (lyricsResult.isErr) {
+                  return const SizedBox.shrink();
+                }
+                final lyricsLines = lyricsResult
+                    .data
+                    ?.subsonicResponse
                     ?.lyricsList
                     ?.structuredLyrics
                     ?.firstOrNull

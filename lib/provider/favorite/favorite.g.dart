@@ -13,7 +13,8 @@ part of 'favorite.dart';
 final favoriteProvider = FavoriteProvider._();
 
 final class FavoriteProvider
-    extends $AsyncNotifierProvider<Favorite, SubsonicResponse?> {
+    extends
+        $AsyncNotifierProvider<Favorite, Result<SubsonicResponse, AppFailure>> {
   FavoriteProvider._()
     : super(
         from: null,
@@ -33,20 +34,28 @@ final class FavoriteProvider
   Favorite create() => Favorite();
 }
 
-String _$favoriteHash() => r'fe5248ebd656f8e2bf4a15584e60a2cc7de48d84';
+String _$favoriteHash() => r'fc0d40897f0c1acc9de597bd5a8e7b584fd545b6';
 
-abstract class _$Favorite extends $AsyncNotifier<SubsonicResponse?> {
-  FutureOr<SubsonicResponse?> build();
+abstract class _$Favorite
+    extends $AsyncNotifier<Result<SubsonicResponse, AppFailure>> {
+  FutureOr<Result<SubsonicResponse, AppFailure>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<AsyncValue<SubsonicResponse?>, SubsonicResponse?>;
+        this.ref
+            as $Ref<
+              AsyncValue<Result<SubsonicResponse, AppFailure>>,
+              Result<SubsonicResponse, AppFailure>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<SubsonicResponse?>, SubsonicResponse?>,
-              AsyncValue<SubsonicResponse?>,
+              AnyNotifier<
+                AsyncValue<Result<SubsonicResponse, AppFailure>>,
+                Result<SubsonicResponse, AppFailure>
+              >,
+              AsyncValue<Result<SubsonicResponse, AppFailure>>,
               Object?,
               Object?
             >;

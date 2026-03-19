@@ -38,8 +38,10 @@ Future<void> ensurePlayQueueRestored(
         return;
       }
 
-      final queue =
-          (await ref.read(playQueueProvider.future))?.subsonicResponse?.playQueue;
+      final queue = (await ref.read(playQueueProvider.future))
+          .data
+          ?.subsonicResponse
+          ?.playQueue;
 
       final AppPlayer? player = await ref.read(appPlayerHandlerProvider.future);
       if (player == null) {

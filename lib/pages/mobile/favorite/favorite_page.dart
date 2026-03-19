@@ -60,9 +60,9 @@ class _FavoritePageState extends State<FavoritePage>
       length: 2,
       child: AsyncValueBuilder(
         provider: favoriteProvider,
-        builder: (_, data, ref) {
-          final songs = data.subsonicResponse?.starred?.song;
-          final albums = data.subsonicResponse?.starred?.album;
+        builder: (_, result, ref) {
+          final songs = result.data?.subsonicResponse?.starred?.song;
+          final albums = result.data?.subsonicResponse?.starred?.album;
           final canPlayAll =
               songs != null && songs.isNotEmpty && _currentIndex == 1;
           return Scaffold(

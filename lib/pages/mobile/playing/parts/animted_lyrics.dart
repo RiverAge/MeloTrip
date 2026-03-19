@@ -16,10 +16,16 @@ class _AnimtedLyrics extends StatelessWidget {
       }
       return AsyncValueBuilder(
         provider: lyricsProvider(effectiveCurrentId),
-        builder: (context, subsonicLyrics, _) {
+        builder: (context, lyricsResult, _) {
+          if (lyricsResult.isErr) {
+            return Center(
+              child: Text(AppLocalizations.of(context)!.noLyricsFound),
+            );
+          }
           final lines =
-              subsonicLyrics
-                  .subsonicResponse
+              lyricsResult
+                  .data
+                  ?.subsonicResponse
                   ?.lyricsList
                   ?.structuredLyrics
                   ?.firstOrNull

@@ -15,13 +15,13 @@ final playQueueProvider = PlayQueueProvider._();
 final class PlayQueueProvider
     extends
         $FunctionalProvider<
-          AsyncValue<SubsonicResponse?>,
-          SubsonicResponse?,
-          FutureOr<SubsonicResponse?>
+          AsyncValue<Result<SubsonicResponse, AppFailure>>,
+          Result<SubsonicResponse, AppFailure>,
+          FutureOr<Result<SubsonicResponse, AppFailure>>
         >
     with
-        $FutureModifier<SubsonicResponse?>,
-        $FutureProvider<SubsonicResponse?> {
+        $FutureModifier<Result<SubsonicResponse, AppFailure>>,
+        $FutureProvider<Result<SubsonicResponse, AppFailure>> {
   PlayQueueProvider._()
     : super(
         from: null,
@@ -38,14 +38,14 @@ final class PlayQueueProvider
 
   @$internal
   @override
-  $FutureProviderElement<SubsonicResponse?> $createElement(
+  $FutureProviderElement<Result<SubsonicResponse, AppFailure>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<SubsonicResponse?> create(Ref ref) {
+  FutureOr<Result<SubsonicResponse, AppFailure>> create(Ref ref) {
     return playQueue(ref);
   }
 }
 
-String _$playQueueHash() => r'9bbd8b1bd698325ad63ed3c716e57cdcbe1a9cc5';
+String _$playQueueHash() => r'400a58b3d4682c8214a7b61727b2a457a249ae3c';

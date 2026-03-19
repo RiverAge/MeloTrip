@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/app_logic/restore/play_queue_restore.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
+import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/play_queue/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
@@ -114,7 +115,7 @@ void main() {
         }),
         playQueueProvider.overrideWith((ref) async {
           queueLoads++;
-          return _queueResponse(songs: songs, current: 's2');
+          return Result.ok(_queueResponse(songs: songs, current: 's2'));
         }),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(_FakeAppPlayer()),
@@ -162,7 +163,7 @@ void main() {
         }),
         playQueueProvider.overrideWith((ref) async {
           queueLoads++;
-          return _queueResponse(songs: <SongEntity>[_song('s1')]);
+          return Result.ok(_queueResponse(songs: <SongEntity>[_song('s1')]));
         }),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(_FakeAppPlayer()),
@@ -215,7 +216,7 @@ void main() {
           ),
         ),
         playQueueProvider.overrideWith(
-          (ref) async => _queueResponse(songs: <SongEntity>[_song('s1')]),
+          (ref) async => Result.ok(_queueResponse(songs: <SongEntity>[_song('s1')])),
         ),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(null),
@@ -257,7 +258,7 @@ void main() {
           ),
         ),
         playQueueProvider.overrideWith((ref) async {
-          return _queueResponse(songs: <SongEntity>[_song('s1')]);
+          return Result.ok(_queueResponse(songs: <SongEntity>[_song('s1')]));
         }),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(_FakeAppPlayer()),
