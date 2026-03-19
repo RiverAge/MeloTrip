@@ -18,18 +18,24 @@ class _NavTile extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
-      child: ListTile(
-        onTap: onTap,
-        selected: selected,
-        dense: true,
-        visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        tileColor: colorScheme.surface.withValues(alpha: 0),
-        hoverColor: colorScheme.primary.withValues(alpha: 0.1),
-        selectedTileColor: colorScheme.primary.withValues(alpha: 0.2),
-        leading: Icon(icon, size: 18),
-        title: Text(title),
+      child: Material(
+        type: .transparency,
+        child: ListTile(
+          onTap: onTap,
+          selected: selected,
+          dense: true,
+          visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 0,
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          tileColor: colorScheme.surface.withValues(alpha: 0),
+          hoverColor: colorScheme.primary.withValues(alpha: 0.1),
+          selectedTileColor: colorScheme.primary.withValues(alpha: 0.2),
+          leading: Icon(icon, size: 18),
+          title: Text(title),
+        ),
       ),
     );
   }
