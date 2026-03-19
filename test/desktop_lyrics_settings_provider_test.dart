@@ -96,7 +96,7 @@ void main() {
         ),
         text: DesktopLyricsTextConfig(
           fontSize: 40,
-          textAlign: TextAlign.end,
+          textAlign: .end,
           fontWeight: FontWeight.w700,
         ),
         background: DesktopLyricsBackgroundConfig(opacity: 0.88),
@@ -137,7 +137,7 @@ void main() {
         ),
         text: DesktopLyricsTextConfig(
           fontSize: 34,
-          textAlign: TextAlign.center,
+          textAlign: .center,
         ),
         background: DesktopLyricsBackgroundConfig(
           opacity: 0.0,

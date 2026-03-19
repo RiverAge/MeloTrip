@@ -63,20 +63,20 @@ class PlaybackSettings extends ConsumerWidget {
                       ),
                       SettingSingleChoiceRow<PlaylistMode>(
                         label: l10n.playback,
-                        value: userConfig?.playlistMode ?? PlaylistMode.none,
+                        value: userConfig?.playlistMode ?? .none,
                         options: <SettingSingleChoiceOption<PlaylistMode>>[
                           SettingSingleChoiceOption<PlaylistMode>(
-                            value: PlaylistMode.none,
+                            value: .none,
                             label: l10n.playModeNone,
                             icon: Icons.queue_music_rounded,
                           ),
                           SettingSingleChoiceOption<PlaylistMode>(
-                            value: PlaylistMode.loop,
+                            value: .loop,
                             label: l10n.playModeLoop,
                             icon: Icons.repeat_rounded,
                           ),
                           SettingSingleChoiceOption<PlaylistMode>(
-                            value: PlaylistMode.single,
+                            value: .single,
                             label: l10n.playModeSingle,
                             icon: Icons.repeat_one_rounded,
                           ),

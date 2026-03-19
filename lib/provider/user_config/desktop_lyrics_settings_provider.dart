@@ -14,7 +14,7 @@ class DesktopLyricsSettings extends _$DesktopLyricsSettings {
       enabled: false,
       clickThrough: false,
     ),
-    text: DesktopLyricsTextConfig(fontSize: 34, textAlign: TextAlign.center),
+    text: DesktopLyricsTextConfig(fontSize: 34, textAlign: .center),
     background: DesktopLyricsBackgroundConfig(opacity: 0.93),
     gradient: DesktopLyricsGradientConfig(),
     layout: DesktopLyricsLayoutConfig(overlayWidth: 980),

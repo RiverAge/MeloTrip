@@ -36,20 +36,20 @@ class AppearanceSettings extends ConsumerWidget {
                     children: <Widget>[
                       SettingSingleChoiceRow<ThemeMode>(
                         label: l10n.theme,
-                        value: userConfig?.theme ?? ThemeMode.system,
+                        value: userConfig?.theme ?? .system,
                         options: <SettingSingleChoiceOption<ThemeMode>>[
                           SettingSingleChoiceOption<ThemeMode>(
-                            value: ThemeMode.system,
+                            value: .system,
                             label: l10n.systemDefault,
                             icon: Icons.devices_rounded,
                           ),
                           SettingSingleChoiceOption<ThemeMode>(
-                            value: ThemeMode.light,
+                            value: .light,
                             label: l10n.themeLight,
                             icon: Icons.light_mode_rounded,
                           ),
                           SettingSingleChoiceOption<ThemeMode>(
-                            value: ThemeMode.dark,
+                            value: .dark,
                             label: l10n.themeDark,
                             icon: Icons.dark_mode_rounded,
                           ),

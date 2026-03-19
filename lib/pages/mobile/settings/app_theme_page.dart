@@ -26,40 +26,40 @@ class AppThemePage extends StatelessWidget {
           return ListView(
             children: [
               ListTile(
-                onTap: () => _onTap(ref, ThemeMode.system),
+                onTap: () => _onTap(ref, .system),
                 leading: Icon(
-                  config.theme == ThemeMode.system
+                  config.theme == .system
                       ? Icons.auto_mode
                       : Icons.auto_mode_outlined,
                 ),
                 title: Text(l10n.systemDefault),
-                trailing: config.theme == ThemeMode.system
+                trailing: config.theme == .system
                     ? const Icon(Icons.check)
                     : null,
               ),
               const Divider(),
               ListTile(
-                onTap: () => _onTap(ref, ThemeMode.light),
+                onTap: () => _onTap(ref, .light),
                 leading: Icon(
-                  config.theme == ThemeMode.light
+                  config.theme == .light
                       ? Icons.light_mode
                       : Icons.light_mode_outlined,
                 ),
                 title: Text(l10n.themeLight),
-                trailing: config.theme == ThemeMode.light
+                trailing: config.theme == .light
                     ? const Icon(Icons.check)
                     : null,
               ),
               const Divider(),
               ListTile(
-                onTap: () => _onTap(ref, ThemeMode.dark),
+                onTap: () => _onTap(ref, .dark),
                 leading: Icon(
-                  config.theme == ThemeMode.dark
+                  config.theme == .dark
                       ? Icons.dark_mode
                       : Icons.dark_mode_outlined,
                 ),
                 title: Text(l10n.themeDark),
-                trailing: config.theme == ThemeMode.dark
+                trailing: config.theme == .dark
                     ? const Icon(Icons.check)
                     : null,
               ),

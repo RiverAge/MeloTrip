@@ -1,15 +1,14 @@
-import 'package:audio_session/audio_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/app_player/interruption_state.dart';
 
 void main() {
   test('pause begin while playing transitions to pausedByInterruption', () {
     final decision = resolveInterruptionDecision(
-      type: AudioInterruptionType.pause,
+      type: .pause,
       isBegin: true,
       isPlaying: true,
-      playbackState: PlaybackInterruptionState.normal,
-      duckingState: DuckingState.normal,
+      playbackState: .normal,
+      duckingState: .normal,
     );
 
     expect(decision.pausePlayback, isTrue);
@@ -22,11 +21,11 @@ void main() {
 
   test('pause end resumes only when paused by interruption', () {
     final decision = resolveInterruptionDecision(
-      type: AudioInterruptionType.pause,
+      type: .pause,
       isBegin: false,
       isPlaying: false,
-      playbackState: PlaybackInterruptionState.pausedByInterruption,
-      duckingState: DuckingState.normal,
+      playbackState: .pausedByInterruption,
+      duckingState: .normal,
     );
 
     expect(decision.pausePlayback, isFalse);
@@ -36,11 +35,11 @@ void main() {
 
   test('duck begin enters ducking without pausing playback', () {
     final decision = resolveInterruptionDecision(
-      type: AudioInterruptionType.duck,
+      type: .duck,
       isBegin: true,
       isPlaying: true,
-      playbackState: PlaybackInterruptionState.normal,
-      duckingState: DuckingState.normal,
+      playbackState: .normal,
+      duckingState: .normal,
     );
 
     expect(decision.beginDucking, isTrue);
@@ -50,11 +49,11 @@ void main() {
 
   test('duck end exits ducking', () {
     final decision = resolveInterruptionDecision(
-      type: AudioInterruptionType.duck,
+      type: .duck,
       isBegin: false,
       isPlaying: true,
-      playbackState: PlaybackInterruptionState.normal,
-      duckingState: DuckingState.ducking,
+      playbackState: .normal,
+      duckingState: .ducking,
     );
 
     expect(decision.endDucking, isTrue);
@@ -63,11 +62,11 @@ void main() {
 
   test('unknown end clears playback interruption state', () {
     final decision = resolveInterruptionDecision(
-      type: AudioInterruptionType.unknown,
+      type: .unknown,
       isBegin: false,
       isPlaying: false,
-      playbackState: PlaybackInterruptionState.pausedByInterruption,
-      duckingState: DuckingState.normal,
+      playbackState: .pausedByInterruption,
+      duckingState: .normal,
     );
 
     expect(decision.pausePlayback, isFalse);

@@ -1,16 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:audio_session/audio_session.dart';
 import 'package:melo_trip/app_player/interruption_state.dart';
 
 void main() {
   group('resolveInterruptionDecision - begin interruption', () {
     test('duck type starts ducking', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.duck,
+        type: .duck,
         isBegin: true,
         isPlaying: true,
-        playbackState: PlaybackInterruptionState.normal,
-        duckingState: DuckingState.normal,
+        playbackState: .normal,
+        duckingState: .normal,
       );
 
       expect(result.beginDucking, isTrue);
@@ -22,11 +21,11 @@ void main() {
 
     test('pause type pauses playback when playing', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.pause,
+        type: .pause,
         isBegin: true,
         isPlaying: true,
-        playbackState: PlaybackInterruptionState.normal,
-        duckingState: DuckingState.normal,
+        playbackState: .normal,
+        duckingState: .normal,
       );
 
       expect(result.pausePlayback, isTrue);
@@ -36,11 +35,11 @@ void main() {
 
     test('pause type does not pause when not playing', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.pause,
+        type: .pause,
         isBegin: true,
         isPlaying: false,
-        playbackState: PlaybackInterruptionState.normal,
-        duckingState: DuckingState.normal,
+        playbackState: .normal,
+        duckingState: .normal,
       );
 
       expect(result.pausePlayback, isFalse);
@@ -49,11 +48,11 @@ void main() {
 
     test('unknown type behaves like pause', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.unknown,
+        type: .unknown,
         isBegin: true,
         isPlaying: true,
-        playbackState: PlaybackInterruptionState.normal,
-        duckingState: DuckingState.normal,
+        playbackState: .normal,
+        duckingState: .normal,
       );
 
       expect(result.pausePlayback, isTrue);
@@ -64,11 +63,11 @@ void main() {
   group('resolveInterruptionDecision - end interruption', () {
     test('duck type ends ducking', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.duck,
+        type: .duck,
         isBegin: false,
         isPlaying: false,
-        playbackState: PlaybackInterruptionState.normal,
-        duckingState: DuckingState.ducking,
+        playbackState: .normal,
+        duckingState: .ducking,
       );
 
       expect(result.endDucking, isTrue);
@@ -78,11 +77,11 @@ void main() {
 
     test('pause type resumes when was paused by interruption', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.pause,
+        type: .pause,
         isBegin: false,
         isPlaying: false,
-        playbackState: PlaybackInterruptionState.pausedByInterruption,
-        duckingState: DuckingState.normal,
+        playbackState: .pausedByInterruption,
+        duckingState: .normal,
       );
 
       expect(result.resumePlayback, isTrue);
@@ -91,11 +90,11 @@ void main() {
 
     test('pause type does not resume when not paused by interruption', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.pause,
+        type: .pause,
         isBegin: false,
         isPlaying: false,
-        playbackState: PlaybackInterruptionState.normal,
-        duckingState: DuckingState.normal,
+        playbackState: .normal,
+        duckingState: .normal,
       );
 
       expect(result.resumePlayback, isFalse);
@@ -104,11 +103,11 @@ void main() {
 
     test('unknown type resets state', () {
       final result = resolveInterruptionDecision(
-        type: AudioInterruptionType.unknown,
+        type: .unknown,
         isBegin: false,
         isPlaying: false,
-        playbackState: PlaybackInterruptionState.pausedByInterruption,
-        duckingState: DuckingState.normal,
+        playbackState: .pausedByInterruption,
+        duckingState: .normal,
       );
 
       expect(result.resumePlayback, isFalse);

@@ -31,21 +31,21 @@ InterruptionDecision resolveInterruptionDecision({
 }) {
   if (isBegin) {
     switch (type) {
-      case AudioInterruptionType.duck:
+      case .duck:
         return InterruptionDecision(
           nextPlaybackState: playbackState,
-          nextDuckingState: DuckingState.ducking,
+          nextDuckingState: .ducking,
           pausePlayback: false,
           resumePlayback: false,
           beginDucking: true,
           endDucking: false,
         );
-      case AudioInterruptionType.pause:
-      case AudioInterruptionType.unknown:
+      case .pause:
+      case .unknown:
         final shouldPause = isPlaying;
         return InterruptionDecision(
           nextPlaybackState: shouldPause
-              ? PlaybackInterruptionState.pausedByInterruption
+              ? .pausedByInterruption
               : playbackState,
           nextDuckingState: duckingState,
           pausePlayback: shouldPause,
@@ -57,29 +57,28 @@ InterruptionDecision resolveInterruptionDecision({
   }
 
   switch (type) {
-    case AudioInterruptionType.duck:
+    case .duck:
       return InterruptionDecision(
         nextPlaybackState: playbackState,
-        nextDuckingState: DuckingState.normal,
+        nextDuckingState: .normal,
         pausePlayback: false,
         resumePlayback: false,
         beginDucking: false,
         endDucking: true,
       );
-    case AudioInterruptionType.pause:
-      final shouldResume =
-          playbackState == PlaybackInterruptionState.pausedByInterruption;
+    case .pause:
+      final shouldResume = playbackState == .pausedByInterruption;
       return InterruptionDecision(
-        nextPlaybackState: PlaybackInterruptionState.normal,
+        nextPlaybackState: .normal,
         nextDuckingState: duckingState,
         pausePlayback: false,
         resumePlayback: shouldResume,
         beginDucking: false,
         endDucking: false,
       );
-    case AudioInterruptionType.unknown:
+    case .unknown:
       return InterruptionDecision(
-        nextPlaybackState: PlaybackInterruptionState.normal,
+        nextPlaybackState: .normal,
         nextDuckingState: duckingState,
         pausePlayback: false,
         resumePlayback: false,

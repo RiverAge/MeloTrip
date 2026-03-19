@@ -61,8 +61,7 @@ class AppPlayer extends BaseAudioHandler {
     }
   }
 
-  PlaybackInterruptionState _playbackInterruptionState =
-      PlaybackInterruptionState.normal;
+  PlaybackInterruptionState _playbackInterruptionState = .normal;
   DuckingState _duckingState = .normal;
   Timer? _volumeAnimationTimer;
   double? _volumeBeforeDucking;

@@ -69,7 +69,7 @@ class _AlbumDetailItem extends ConsumerWidget {
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   maxLines: 2,
                 ),
                 Text(
@@ -77,7 +77,7 @@ class _AlbumDetailItem extends ConsumerWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
                 Text(
                   '${album.year ?? ""} · ${album.songCount ?? 0}',
