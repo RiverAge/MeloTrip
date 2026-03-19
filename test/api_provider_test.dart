@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/auth_user/auth_user.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
@@ -129,6 +130,7 @@ void main() {
     final AppErrorEvent? error = container.read(appErrorProvider);
     expect(error, isNotNull);
     expect(error?.message, contains('connection failed'));
+    expect(error?.failureType, AppFailureType.network);
   });
 
   test('apiProvider retries once for transport failures on GET', () async {

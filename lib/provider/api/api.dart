@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -85,11 +86,7 @@ class Api extends _$Api {
     final DioException finalException =
         retryOutcome is DioException ? retryOutcome : exception;
     if (_isTransportFailure(finalException)) {
-      final String fallback =
-          finalException.message ??
-          finalException.error?.toString() ??
-          finalException.type.name;
-      _emitGlobalError(fallback);
+      _emitGlobalError(finalException);
     }
     handler.next(finalException);
   }
@@ -142,7 +139,8 @@ class Api extends _$Api {
     }
   }
 
-  void _emitGlobalError(String message) {
-    ref.read(appErrorProvider.notifier).emit(message);
+  void _emitGlobalError(DioException exception) {
+    final failure = AppFailure.from(exception);
+    ref.read(appErrorProvider.notifier).emitFailure(failure);
   }
 }
