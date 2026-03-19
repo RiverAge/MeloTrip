@@ -38,6 +38,7 @@ Last updated: 2026-03-19
 - [x] Repository Result API naming unified to `try*`.
 - [x] Added repository guard and naming contract tests.
 - [x] Added repository parsing contract test to block hand-written Subsonic map path parsing in repositories.
+- [x] Added page contract test to prevent duplicate `result.isErr` branches inside `AsyncValueBuilder` scopes.
 - [x] Moved lyrics merge flow into repository boundary.
 - [x] Removed direct Dio usage from player scrobble runtime via scrobble repository.
 - [x] Restricted global API error bus to transport failures only.
