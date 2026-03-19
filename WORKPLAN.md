@@ -5,12 +5,12 @@ Last updated: 2026-03-19
 ## Now
 
 - [ ] Unify album failure semantics end-to-end
-  - Status: repository has `tryFetchAlbumListResponse`, but provider boundary still returns raw `List<AlbumEntity>` and paginated flow still relies on thrown exceptions.
-  - Target: expose Result-based read path for album list where needed and remove ambiguous "empty means failure" interpretation.
+  - Status: `albumListProvider` now returns `Result<List<AlbumEntity>, AppFailure>` and read surfaces are disambiguated; paginated album flow still maps Result errors into thrown exceptions for snapshot compatibility.
+  - Target: decide whether paginated snapshots should carry `AppFailure` directly to remove remaining throw-based translation.
 
-- [ ] Eliminate duplicate error handling between global error bus and page-local handling
-  - Status: API interceptor still emits global errors while many pages also handle `Result.isErr` locally.
-  - Target: define one display policy (global-only for transport errors, page-local for business context) and apply consistently.
+- [x] Eliminate duplicate error handling between global error bus and page-local handling
+  - Status: API interceptor now emits global errors only for transport failures (timeout/connection), while business and HTTP response failures are handled in feature context.
+  - Validation: `test/api_provider_test.dart` updated for policy and passing.
 
 ## Next
 
@@ -35,3 +35,4 @@ Last updated: 2026-03-19
 - [x] Added repository guard and naming contract tests.
 - [x] Moved lyrics merge flow into repository boundary.
 - [x] Removed direct Dio usage from player scrobble runtime via scrobble repository.
+- [x] Restricted global API error bus to transport failures only.

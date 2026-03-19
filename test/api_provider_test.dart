@@ -39,7 +39,7 @@ void main() {
   });
 
   test(
-    'apiProvider forwards subsonic response errors to app error bus',
+    'apiProvider does not emit global error for business response failure payload',
     () async {
       final container = ProviderContainer(
         overrides: [
@@ -61,11 +61,11 @@ void main() {
       await api.get('/rest/getAlbumList');
 
       final AppErrorEvent? error = container.read(appErrorProvider);
-      expect(error?.message, 'server boom');
+      expect(error, isNull);
     },
   );
 
-  test('apiProvider forwards subsonic error message from DioException response', () async {
+  test('apiProvider does not emit global error for http response failures', () async {
     final container = ProviderContainer(
       overrides: [
         currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
@@ -92,7 +92,28 @@ void main() {
     );
 
     final AppErrorEvent? error = container.read(appErrorProvider);
-    expect(error?.message, 'request failed');
+    expect(error, isNull);
+  });
+
+  test('apiProvider emits global error for transport failures', () async {
+    final container = ProviderContainer(
+      overrides: [
+        currentUserProvider.overrideWith(FakeCurrentUserLoggedIn.new),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final Dio api = await container.read(apiProvider.future);
+    api.httpClientAdapter = TransportErrorAdapter();
+
+    await expectLater(
+      api.get('/rest/getAlbumList'),
+      throwsA(isA<DioException>()),
+    );
+
+    final AppErrorEvent? error = container.read(appErrorProvider);
+    expect(error, isNotNull);
+    expect(error?.message, contains('connection failed'));
   });
 }
 
@@ -132,6 +153,24 @@ class RecordingAdapter implements HttpClientAdapter {
       headers: <String, List<String>>{
         Headers.contentTypeHeader: <String>[Headers.jsonContentType],
       },
+    );
+  }
+}
+
+class TransportErrorAdapter implements HttpClientAdapter {
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) {
+    throw DioException(
+      requestOptions: options,
+      type: DioExceptionType.connectionError,
+      message: 'connection failed',
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,7 +19,6 @@ class Api extends _$Api {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: _onRequest,
-        onResponse: _onResponse,
         onError: _onError,
       ),
     );
@@ -55,48 +53,24 @@ class Api extends _$Api {
     handler.next(options);
   }
 
-  void _onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    if (response.requestOptions.responseType != ResponseType.stream) {
-      final errorMessage = _extractSubsonicErrorMessage(response.data);
-      if (errorMessage != null) {
-        _emitGlobalError(errorMessage);
-      }
-    }
-
-    handler.next(response);
-  }
-
   void _onError(DioException exception, ErrorInterceptorHandler handler) {
-    final String? responseError = _extractSubsonicErrorMessage(
-      exception.response?.data,
-    );
-    final String? plainResponseError =
-        exception.response?.data is Map<String, dynamic>
-        ? (exception.response?.data as Map<String, dynamic>)['error'] as String?
-        : null;
-    final String? responseMessage = exception.message;
-    final int? statusCode = exception.response?.statusCode;
-
-    _emitGlobalError(
-      responseError ?? plainResponseError ?? responseMessage ?? '$statusCode',
-    );
+    if (_isTransportFailure(exception)) {
+      final String fallback =
+          exception.message ?? exception.error?.toString() ?? exception.type.name;
+      _emitGlobalError(fallback);
+    }
     handler.next(exception);
   }
 
-  String? _extractSubsonicErrorMessage(dynamic payload) {
-    if (payload is! Map<String, dynamic>) {
-      return null;
-    }
-
-    try {
-      final response = SubsonicResponse.fromJson(payload);
-      return response.subsonicResponse?.error?.message;
-    } catch (_) {
-      return null;
-    }
+  bool _isTransportFailure(DioException exception) {
+    return switch (exception.type) {
+      DioExceptionType.connectionTimeout => true,
+      DioExceptionType.sendTimeout => true,
+      DioExceptionType.receiveTimeout => true,
+      DioExceptionType.connectionError => true,
+      DioExceptionType.unknown => true,
+      _ => false,
+    };
   }
 
   void _emitGlobalError(String message) {
