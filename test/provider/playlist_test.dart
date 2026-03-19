@@ -179,7 +179,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistDetailProvider(null).notifier);
-      final result = await notifier.deleteResult();
+      final result = await notifier.delete();
 
       expect(result, isNull);
       expect(mockRepository.deleteCalled, isFalse);
@@ -198,7 +198,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistDetailProvider('123').notifier);
-      final result = await notifier.deleteResult();
+      final result = await notifier.delete();
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);
@@ -215,7 +215,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistDetailProvider(null).notifier);
-      final result = await notifier.modifyResult();
+      final result = await notifier.modify();
 
       expect(result, isNull);
       expect(mockRepository.updateCalled, isFalse);
@@ -231,7 +231,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistDetailProvider('123').notifier);
-      final result = await notifier.modifyResult();
+      final result = await notifier.modify();
 
       expect(result?.isErr, isTrue);
       expect(result?.error, isA<AppFailure>());
@@ -251,7 +251,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistDetailProvider('123').notifier);
-      final result = await notifier.modifyResult();
+      final result = await notifier.modify();
 
       expect(result, isNotNull);
       expect(result?.data?.subsonicResponse?.status, equals('ok'));
@@ -290,11 +290,12 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(playlistDetailProvider('123').notifier);
-      final result = await notifier.modifyResult();
+      final result = await notifier.modify();
 
       expect(result?.isErr, isTrue);
       expect(result?.error, isA<AppFailure>());
     });
   });
 }
+
 

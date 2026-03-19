@@ -32,7 +32,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     if (playlistId == null || songId == null) return;
     final result = await ref
         .read(playlistDetailProvider(playlistId).notifier)
-        .modifyResult(songIdToAdd: songId);
+        .modify(songIdToAdd: songId);
     if (result == null || result.isErr) return;
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,4 +116,5 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     );
   }
 }
+
 

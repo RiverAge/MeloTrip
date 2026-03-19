@@ -19,7 +19,7 @@ class SongDetail extends _$SongDetail {
     return repository.fetchSongDetailResult(id);
   }
 
-  Future<Result<SubsonicResponse, AppFailure>?> toggleFavoriteResult({
+  Future<Result<SubsonicResponse, AppFailure>?> toggleFavorite({
     bool? currentlyStarred,
   }) async {
     final id = songId;
@@ -56,7 +56,7 @@ class SongDetail extends _$SongDetail {
     return result;
   }
 
-  Future<Result<SubsonicResponse, AppFailure>?> updateRatingResult(
+  Future<Result<SubsonicResponse, AppFailure>?> updateRating(
     int? rating,
   ) async {
     final id = songId;
@@ -87,3 +87,4 @@ class SongDetail extends _$SongDetail {
     return result;
   }
 }
+

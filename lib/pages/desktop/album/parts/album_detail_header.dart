@@ -245,7 +245,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                                             album.id,
                                           ).notifier,
                                         )
-                                        .setRatingResult(value);
+                                        .setRating(value);
                                   },
                                 );
                               },
@@ -265,7 +265,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                                             album.id,
                                           ).notifier,
                                         )
-                                        .toggleFavoriteResult();
+                                        .toggleFavorite();
                                   },
                                   icon: Icon(
                                     isFavorite
@@ -335,3 +335,4 @@ class _AlbumMetaRow extends StatelessWidget {
     );
   }
 }
+

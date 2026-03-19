@@ -56,7 +56,7 @@ class _SongTitle extends StatelessWidget {
                             onRating: (rating) {
                               ref
                                   .read(songDetailProvider(song.id).notifier)
-                                  .updateRatingResult(rating);
+                                  .updateRating(rating);
                             },
                             rating: song.userRating,
                           );
@@ -73,3 +73,4 @@ class _SongTitle extends StatelessWidget {
     );
   }
 }
+

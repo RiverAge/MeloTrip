@@ -102,7 +102,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
 
     final result = await ref
         .read(albumDetailProvider(albumId).notifier)
-        .toggleFavoriteResult(currentlyStarred: currentlyStarred);
+        .toggleFavorite(currentlyStarred: currentlyStarred);
 
     if (!mounted) return;
     if (result == null || result.isErr) {
@@ -255,7 +255,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                               widget.album.id,
                                             ).notifier,
                                           )
-                                          .setRatingResult(value);
+                                          .setRating(value);
                                       if (!mounted) return;
                                       if (res == null || res.isErr) {
                                         setState(() {
@@ -426,3 +426,4 @@ class _ActionCircle extends StatelessWidget {
     );
   }
 }
+

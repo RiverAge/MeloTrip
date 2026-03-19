@@ -37,7 +37,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   onRating: (value) {
                     ref
                         .read(songDetailProvider(current?.id).notifier)
-                        .updateRatingResult(value);
+                        .updateRating(value);
                   },
                 ),
               ],
@@ -51,7 +51,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                       ? null
                       : () => ref
                             .read(songDetailProvider(current?.id).notifier)
-                            .toggleFavoriteResult(),
+                            .toggleFavorite(),
                   iconSize: 20,
                   visualDensity: .compact,
                   constraints: const BoxConstraints.tightFor(
@@ -328,3 +328,4 @@ class _AudioOutputOption extends StatelessWidget {
     );
   }
 }
+

@@ -39,7 +39,7 @@ class PlaylistDetail extends _$PlaylistDetail {
     return repository.fetchPlaylistDetailResult(playlistId);
   }
 
-  Future<Result<SubsonicResponse, AppFailure>?> deleteResult() async {
+  Future<Result<SubsonicResponse, AppFailure>?> delete() async {
     final id = playlistId;
     if (id == null) return null;
 
@@ -66,7 +66,7 @@ class PlaylistDetail extends _$PlaylistDetail {
     return result;
   }
 
-  Future<Result<SubsonicResponse, AppFailure>?> modifyResult({
+  Future<Result<SubsonicResponse, AppFailure>?> modify({
     int? songIndexToRemove,
     String? songIdToAdd,
     String? name,

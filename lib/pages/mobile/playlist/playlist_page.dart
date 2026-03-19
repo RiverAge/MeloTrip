@@ -27,7 +27,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     if (playlistId == null) return;
     final result = await ref
         .read(playlistDetailProvider(playlistId).notifier)
-        .deleteResult();
+        .delete();
     if (result == null || result.isErr) return;
     if (!mounted) return;
     Navigator.of(context).pop();
@@ -110,4 +110,5 @@ class _PlaylistPageState extends State<PlaylistPage> {
     );
   }
 }
+
 

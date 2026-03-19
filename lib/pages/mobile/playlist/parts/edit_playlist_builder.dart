@@ -20,7 +20,7 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
     if (playlistId == null) return;
     final result = await ref
         .read(playlistDetailProvider(playlistId).notifier)
-        .modifyResult(
+        .modify(
           name: _nameController.text,
           comment: _commentController.text,
           public: _isPublic,
@@ -130,4 +130,5 @@ class _EditPlaylistBuilderState extends State<_EditPlaylistBuilder> {
     );
   }
 }
+
 

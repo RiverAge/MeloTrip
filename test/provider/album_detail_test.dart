@@ -140,7 +140,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(albumDetailProvider(null).notifier);
-      final result = await notifier.toggleFavoriteResult();
+      final result = await notifier.toggleFavorite();
 
       expect(result, isNull);
       expect(mockRepository.toggleCalled, isFalse);
@@ -160,7 +160,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(albumDetailProvider('123').notifier);
-      final result = await notifier.toggleFavoriteResult();
+      final result = await notifier.toggleFavorite();
 
       expect(result?.isOk, isTrue);
       expect(mockRepository.toggleCalled, isTrue);
@@ -183,7 +183,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(albumDetailProvider(null).notifier);
-      final result = await notifier.setRatingResult(5);
+      final result = await notifier.setRating(5);
 
       expect(result, isNull);
       expect(mockRepository.ratingCalled, isFalse);
@@ -203,7 +203,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(albumDetailProvider('123').notifier);
-      final result = await notifier.setRatingResult(null);
+      final result = await notifier.setRating(null);
 
       expect(result, isNull);
       expect(mockRepository.ratingCalled, isFalse);
@@ -223,7 +223,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(albumDetailProvider('123').notifier);
-      final result = await notifier.setRatingResult(5);
+      final result = await notifier.setRating(5);
 
       expect(result?.isOk, isTrue);
       expect(mockRepository.ratingCalled, isTrue);
@@ -232,3 +232,4 @@ void main() {
     });
   });
 }
+

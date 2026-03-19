@@ -10,7 +10,7 @@ class _PlaylistDetailBuilder extends StatelessWidget {
     if (playlistId == null) return;
     ref
         .read(playlistDetailProvider(playlistId).notifier)
-        .modifyResult(
+        .modify(
           songIndexToRemove: songIndexToRemove,
         );
   }
@@ -126,4 +126,5 @@ class _PlaylistDetailBuilder extends StatelessWidget {
     );
   }
 }
+
 

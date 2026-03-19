@@ -16,7 +16,7 @@ class AlbumDetail extends _$AlbumDetail {
         .fetchAlbumDetailResult(albumId);
   }
 
-  Future<Result<SubsonicResponse, AppFailure>?> toggleFavoriteResult({
+  Future<Result<SubsonicResponse, AppFailure>?> toggleFavorite({
     bool? currentlyStarred,
   }) async {
     final id = albumId;
@@ -52,7 +52,7 @@ class AlbumDetail extends _$AlbumDetail {
     return result;
   }
 
-  Future<Result<SubsonicResponse, AppFailure>?> setRatingResult(
+  Future<Result<SubsonicResponse, AppFailure>?> setRating(
     int? rating,
   ) async {
     final id = albumId;
@@ -80,3 +80,4 @@ class AlbumDetail extends _$AlbumDetail {
     return result;
   }
 }
+

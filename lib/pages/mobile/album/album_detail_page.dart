@@ -86,7 +86,7 @@ class AlbumDetailPage extends StatelessWidget {
             onPressed: () {
               ref
                   .read(albumDetailProvider(albumId).notifier)
-                  .toggleFavoriteResult();
+                  .toggleFavorite();
             },
             icon: album.starred != null
                 ? const Icon(Icons.favorite, color: Colors.red)
@@ -103,7 +103,7 @@ class AlbumDetailPage extends StatelessWidget {
               onUpdateRating: (rating) {
                 ref
                     .read(albumDetailProvider(album.id).notifier)
-                    .setRatingResult(rating);
+                    .setRating(rating);
               },
             );
           }
@@ -144,3 +144,4 @@ class AlbumDetailPage extends StatelessWidget {
     );
   }
 }
+

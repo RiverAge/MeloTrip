@@ -90,7 +90,7 @@ void main() {
     final detail = await container.read(playlistDetailProvider('p1').future);
     expect(detail?.data?.subsonicResponse?.status, 'ok');
     expect(
-      await container.read(playlistDetailProvider(null).notifier).deleteResult(),
+      await container.read(playlistDetailProvider(null).notifier).delete(),
       isNull,
     );
   });
@@ -118,7 +118,7 @@ void main() {
 
     final result = await container
         .read(playlistDetailProvider('p1').notifier)
-        .modifyResult(songIdToAdd: 's1');
+        .modify(songIdToAdd: 's1');
 
     expect(result?.isOk, isTrue);
   });
@@ -129,8 +129,8 @@ void main() {
 
     final songDetail = container.read(songDetailProvider(null).notifier);
 
-    expect(await songDetail.toggleFavoriteResult(), isNull);
-    expect(await songDetail.updateRatingResult(5), isNull);
+    expect(await songDetail.toggleFavorite(), isNull);
+    expect(await songDetail.updateRating(5), isNull);
   });
 
   test('lyrics provider merges best source and skips latn lines', () async {
@@ -258,5 +258,6 @@ void main() {
     expect(state.hasMore, isTrue);
   });
 }
+
 
 
