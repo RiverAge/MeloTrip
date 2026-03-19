@@ -54,6 +54,21 @@ class PlaylistRepository {
     return runGuarded(() => fetchPlaylistDetail(playlistId));
   }
 
+  Future<PlaylistEntity> fetchPlaylistEntityDetail(String playlistId) async {
+    final response = await fetchPlaylistDetail(playlistId);
+    final playlist = response.subsonicResponse?.playlist;
+    if (playlist == null) {
+      throw StateError('Missing playlist payload for /rest/getPlaylist');
+    }
+    return playlist;
+  }
+
+  Future<Result<PlaylistEntity, AppFailure>> tryFetchPlaylistEntityDetail(
+    String playlistId,
+  ) {
+    return runGuarded(() => fetchPlaylistEntityDetail(playlistId));
+  }
+
   Future<SubsonicResponse> createPlaylist(String name) async {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(

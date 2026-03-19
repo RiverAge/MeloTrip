@@ -100,7 +100,7 @@ final class PlaylistDetailProvider
     extends
         $AsyncNotifierProvider<
           PlaylistDetail,
-          Result<SubsonicResponse, AppFailure>?
+          Result<PlaylistEntity, AppFailure>?
         > {
   PlaylistDetailProvider._({
     required PlaylistDetailFamily super.from,
@@ -138,15 +138,15 @@ final class PlaylistDetailProvider
   }
 }
 
-String _$playlistDetailHash() => r'a1c5b5b464d75580cf95298aa14332a7f13d4bcf';
+String _$playlistDetailHash() => r'eed6993acb5d302970c2f74517a2cda8580f44bd';
 
 final class PlaylistDetailFamily extends $Family
     with
         $ClassFamilyOverride<
           PlaylistDetail,
-          AsyncValue<Result<SubsonicResponse, AppFailure>?>,
-          Result<SubsonicResponse, AppFailure>?,
-          FutureOr<Result<SubsonicResponse, AppFailure>?>,
+          AsyncValue<Result<PlaylistEntity, AppFailure>?>,
+          Result<PlaylistEntity, AppFailure>?,
+          FutureOr<Result<PlaylistEntity, AppFailure>?>,
           String?
         > {
   PlaylistDetailFamily._()
@@ -166,28 +166,28 @@ final class PlaylistDetailFamily extends $Family
 }
 
 abstract class _$PlaylistDetail
-    extends $AsyncNotifier<Result<SubsonicResponse, AppFailure>?> {
+    extends $AsyncNotifier<Result<PlaylistEntity, AppFailure>?> {
   late final _$args = ref.$arg as String?;
   String? get playlistId => _$args;
 
-  FutureOr<Result<SubsonicResponse, AppFailure>?> build(String? playlistId);
+  FutureOr<Result<PlaylistEntity, AppFailure>?> build(String? playlistId);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
-              Result<SubsonicResponse, AppFailure>?
+              AsyncValue<Result<PlaylistEntity, AppFailure>?>,
+              Result<PlaylistEntity, AppFailure>?
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<Result<SubsonicResponse, AppFailure>?>,
-                Result<SubsonicResponse, AppFailure>?
+                AsyncValue<Result<PlaylistEntity, AppFailure>?>,
+                Result<PlaylistEntity, AppFailure>?
               >,
-              AsyncValue<Result<SubsonicResponse, AppFailure>?>,
+              AsyncValue<Result<PlaylistEntity, AppFailure>?>,
               Object?,
               Object?
             >;

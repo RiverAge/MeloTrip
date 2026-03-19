@@ -117,7 +117,10 @@ void main() {
 
     test('returns playlist detail from repository', () async {
       final mockResponse = const SubsonicResponse(
-        subsonicResponse: SubsonicResponseClass(status: 'ok'),
+        subsonicResponse: SubsonicResponseClass(
+          status: 'ok',
+          playlist: PlaylistEntity(id: '123', name: 'Playlist 123'),
+        ),
       );
       final mockRepository = _MockPlaylistRepository(mockResponse);
       final container = ProviderContainer(
@@ -131,7 +134,7 @@ void main() {
           await container.read(playlistDetailProvider('123').future);
 
       expect(result, isNotNull);
-      expect(result?.data?.subsonicResponse?.status, equals('ok'));
+      expect(result?.data?.id, equals('123'));
       expect(mockRepository.fetchCalled, isTrue);
     });
   });

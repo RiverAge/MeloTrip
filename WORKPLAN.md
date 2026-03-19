@@ -18,9 +18,9 @@ Last updated: 2026-03-19
   - Status: API now has default timeout, one-shot bounded retry for transport failures on GET, and request correlation id header injection.
   - Validation: `api_provider_test` covers timeout setup, correlation-id injection, and retry behavior.
 
-- [ ] Align album/playlist/folder provider boundaries to orchestration-only style
+- [x] Align album/playlist/folder provider boundaries to orchestration-only style
   - Scope: keep provider focused on state transitions; keep request assembly/response shaping in repository.
-  - Progress: album and folder boundary alignment are complete; playlist list boundary now returns typed entities from repository, while playlist detail remains for a follow-up pass.
+  - Status: playlist list and playlist detail boundaries now return typed entities from repository, with provider focused on orchestration and refresh behavior.
 
 ## Later
 

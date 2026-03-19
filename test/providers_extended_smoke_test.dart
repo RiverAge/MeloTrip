@@ -70,7 +70,10 @@ void main() {
       }
       if (options.path == '/rest/getPlaylist') {
         return {
-          'subsonic-response': {'status': 'ok'},
+          'subsonic-response': {
+            'status': 'ok',
+            'playlist': {'id': 'p1', 'name': 'Playlist 1'},
+          },
         };
       }
       return null;
@@ -88,7 +91,7 @@ void main() {
     expect(await playlistsNotifier.createPlaylist(null), isNull);
 
     final detail = await container.read(playlistDetailProvider('p1').future);
-    expect(detail?.data?.subsonicResponse?.status, 'ok');
+    expect(detail?.data?.id, 'p1');
     expect(
       await container.read(playlistDetailProvider(null).notifier).delete(),
       isNull,

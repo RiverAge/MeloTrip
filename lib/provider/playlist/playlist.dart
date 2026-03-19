@@ -34,10 +34,10 @@ Future<Result<List<PlaylistEntity>, AppFailure>> playlists(Ref ref) async {
 @riverpod
 class PlaylistDetail extends _$PlaylistDetail {
   @override
-  Future<Result<SubsonicResponse, AppFailure>?> build(String? playlistId) async {
+  Future<Result<PlaylistEntity, AppFailure>?> build(String? playlistId) async {
     if (playlistId == null) return null;
     final repository = ref.read(playlistRepositoryProvider);
-    return repository.tryFetchPlaylistDetail(playlistId);
+    return repository.tryFetchPlaylistEntityDetail(playlistId);
   }
 
   Future<Result<SubsonicResponse, AppFailure>?> delete() async {
@@ -60,10 +60,9 @@ class PlaylistDetail extends _$PlaylistDetail {
     if (!ref.mounted) {
       return result;
     }
-    state = result.when(
-      ok: (_) => AsyncData(result),
-      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
-    );
+    if (result.isErr) {
+      state = previous == null ? const AsyncData(null) : AsyncData(previous);
+    }
     return result;
   }
 
@@ -100,10 +99,9 @@ class PlaylistDetail extends _$PlaylistDetail {
     if (!ref.mounted) {
       return result;
     }
-    state = result.when(
-      ok: (_) => AsyncData(result),
-      err: (_) => previous == null ? const AsyncData(null) : AsyncData(previous),
-    );
+    if (result.isErr) {
+      state = previous == null ? const AsyncData(null) : AsyncData(previous);
+    }
     return result;
   }
 }

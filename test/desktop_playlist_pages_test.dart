@@ -6,7 +6,6 @@ import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_page.dart';
 import 'package:melo_trip/provider/auth/auth.dart';
@@ -15,21 +14,16 @@ import 'package:melo_trip/widget/no_data.dart';
 
 import 'test_helpers.dart';
 
-SubsonicResponse _playlistDetailResponse({
+PlaylistEntity _playlistDetail({
   required String id,
   required String name,
   required List<SongEntity> songs,
 }) {
-  return SubsonicResponse(
-    subsonicResponse: SubsonicResponseClass(
-      status: 'ok',
-      playlist: PlaylistEntity(
-        id: id,
-        name: name,
-        songCount: songs.length,
-        entry: songs,
-      ),
-    ),
+  return PlaylistEntity(
+    id: id,
+    name: name,
+    songCount: songs.length,
+    entry: songs,
   );
 }
 
@@ -44,10 +38,10 @@ SongEntity _song({
 class _FakePlaylistDetail extends PlaylistDetail {
   _FakePlaylistDetail(this._value);
 
-  final Result<SubsonicResponse, AppFailure> _value;
+  final Result<PlaylistEntity, AppFailure> _value;
 
   @override
-  Future<Result<SubsonicResponse, AppFailure>?> build(String? _) async => _value;
+  Future<Result<PlaylistEntity, AppFailure>?> build(String? _) async => _value;
 }
 
 void main() {
@@ -97,7 +91,7 @@ void main() {
           playlistDetailProvider('pl-1').overrideWith(
             () => _FakePlaylistDetail(
               Result.ok(
-                _playlistDetailResponse(
+                _playlistDetail(
                   id: 'pl-1',
                   name: 'My Playlist 1',
                   songs: [

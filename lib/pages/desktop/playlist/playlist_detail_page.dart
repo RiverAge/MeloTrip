@@ -32,7 +32,7 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
           if (result.isErr) {
             return const NoData();
           }
-          final playlist = result.data?.subsonicResponse?.playlist;
+          final playlist = result.data;
           final List<SongEntity> songs =
               playlist?.entry ?? const <SongEntity>[];
           if (playlist == null) return const NoData();

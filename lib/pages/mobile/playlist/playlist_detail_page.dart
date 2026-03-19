@@ -35,7 +35,7 @@ class _PlaylistDetailPage extends State<PlaylistDetailPage> {
           if (result.isErr) {
             return const NoData();
           }
-          final playlist = result.data?.subsonicResponse?.playlist;
+          final playlist = result.data;
           if (playlist == null) {
             return const NoData();
           }

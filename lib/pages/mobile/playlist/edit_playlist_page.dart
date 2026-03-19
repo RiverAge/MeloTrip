@@ -22,7 +22,7 @@ class EditPlaylistPage extends StatelessWidget {
         if (result.isErr) {
           return const Center(child: NoData());
         }
-        final playlist = result.data?.subsonicResponse?.playlist;
+        final playlist = result.data;
         if (playlist == null) return const Center(child: NoData());
         return _EditPlaylistBuilder(playlist: playlist);
       },

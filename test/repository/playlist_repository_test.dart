@@ -207,6 +207,35 @@ void main() {
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);
     });
+
+    test('fetchPlaylistEntityDetail returns playlist entity', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'playlist': {'id': 'pl-1', 'name': 'My Playlist'},
+        },
+      });
+
+      final repository = container.read(playlistRepositoryProvider);
+      final result = await repository.fetchPlaylistEntityDetail('pl-1');
+
+      expect(result.id, 'pl-1');
+      expect(result.name, 'My Playlist');
+    });
+
+    test('tryFetchPlaylistEntityDetail returns Result.err for missing playlist', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+        },
+      });
+
+      final repository = container.read(playlistRepositoryProvider);
+      final result = await repository.tryFetchPlaylistEntityDetail('pl-1');
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
+    });
   });
 }
 
