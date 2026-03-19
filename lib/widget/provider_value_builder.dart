@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
+import 'package:melo_trip/helper/app_failure_log.dart';
 import 'package:melo_trip/helper/app_failure_message.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
@@ -34,12 +35,25 @@ class AsyncValueBuilder<T> extends StatelessWidget {
               ? const FixedCenterCircular()
               : loading!(context, ref),
           error: (error, stack) {
-            log('ERR', level: 1, error: error);
-            debugPrintStack(stackTrace: stack);
-            return _Error(error: error);
+            final failure = error is AppFailure ? error : null;
+            if (failure != null) {
+              logAppFailure(
+                failure,
+                scope: 'async_value_builder',
+                error: error,
+                stackTrace: stack,
+              );
+            } else {
+              log('ERR', level: 1, error: error);
+              debugPrintStack(stackTrace: stack);
+            }
+            return _Error(error: error, failure: failure);
           },
           data: (value) {
-            if (value case Result<dynamic, AppFailure>(isErr: true, :final error)) {
+            if (value case Result<dynamic, AppFailure>(
+              isErr: true,
+              :final error,
+            )) {
               return _Error(failure: error);
             }
             if (value == null) {
@@ -61,7 +75,8 @@ class _Error extends StatelessWidget {
 
   String _resolveMessage(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final resolved = failure ?? (error is AppFailure ? error as AppFailure : null);
+    final resolved =
+        failure ?? (error is AppFailure ? error as AppFailure : null);
     return resolveAppFailureMessage(l10n, failure: resolved);
   }
 

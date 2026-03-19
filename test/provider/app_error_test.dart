@@ -67,13 +67,33 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      container.read(appErrorProvider.notifier).emit(
-        'Network failed',
-        failureType: AppFailureType.network,
-      );
+      container
+          .read(appErrorProvider.notifier)
+          .emit('Network failed', failureType: AppFailureType.network);
 
       final result = container.read(appErrorProvider);
       expect(result?.failureType, AppFailureType.network);
+    });
+
+    test('emitFailure stores failure observability fields', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      container
+          .read(appErrorProvider.notifier)
+          .emitFailure(
+            const AppFailure(
+              type: AppFailureType.server,
+              message: 'server failed',
+              endpoint: '/rest/getArtists',
+              requestId: 'req-123',
+            ),
+          );
+
+      final result = container.read(appErrorProvider);
+      expect(result?.failureType, AppFailureType.server);
+      expect(result?.endpoint, '/rest/getArtists');
+      expect(result?.requestId, 'req-123');
     });
   });
 
@@ -83,11 +103,15 @@ void main() {
         id: 42,
         message: 'Test error',
         failureType: AppFailureType.server,
+        endpoint: '/rest/getSong',
+        requestId: 'req-abc',
       );
 
       expect(event.id, equals(42));
       expect(event.message, equals('Test error'));
       expect(event.failureType, AppFailureType.server);
+      expect(event.endpoint, '/rest/getSong');
+      expect(event.requestId, 'req-abc');
     });
   });
 }

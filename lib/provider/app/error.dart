@@ -8,11 +8,15 @@ class AppErrorEvent {
     required this.id,
     required this.message,
     this.failureType,
+    this.endpoint,
+    this.requestId,
   });
 
   final int id;
   final String message;
   final AppFailureType? failureType;
+  final String? endpoint;
+  final String? requestId;
 }
 
 @Riverpod(keepAlive: true)
@@ -22,7 +26,12 @@ class AppErrorNotifier extends _$AppErrorNotifier {
   @override
   AppErrorEvent? build() => null;
 
-  void emit(String message, {AppFailureType? failureType}) {
+  void emit(
+    String message, {
+    AppFailureType? failureType,
+    String? endpoint,
+    String? requestId,
+  }) {
     if (message.isEmpty) {
       return;
     }
@@ -31,10 +40,17 @@ class AppErrorNotifier extends _$AppErrorNotifier {
       id: ++_nextId,
       message: message,
       failureType: failureType,
+      endpoint: endpoint,
+      requestId: requestId,
     );
   }
 
   void emitFailure(AppFailure failure) {
-    emit(failure.message, failureType: failure.type);
+    emit(
+      failure.message,
+      failureType: failure.type,
+      endpoint: failure.endpoint,
+      requestId: failure.requestId,
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:melo_trip/helper/app_failure_log.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/provider/app/error.dart';
@@ -34,10 +35,7 @@ class Api extends _$Api {
 
   void _configureInterceptors(Dio dio) {
     dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: _onRequest,
-        onError: _onError,
-      ),
+      InterceptorsWrapper(onRequest: _onRequest, onError: _onError),
     );
   }
 
@@ -48,7 +46,10 @@ class Api extends _$Api {
     final correlationId = _resolveCorrelationId(options);
     options.headers.putIfAbsent(_correlationIdHeader, () => correlationId);
 
-    options.queryParameters.putIfAbsent('_', () => DateTime.now().toIso8601String());
+    options.queryParameters.putIfAbsent(
+      '_',
+      () => DateTime.now().toIso8601String(),
+    );
     options.queryParameters.putIfAbsent('v', () => subsonicApiVersion);
     options.queryParameters.putIfAbsent('c', () => subsonicClientName);
     options.queryParameters.putIfAbsent('f', () => 'json');
@@ -83,8 +84,9 @@ class Api extends _$Api {
       return;
     }
 
-    final DioException finalException =
-        retryOutcome is DioException ? retryOutcome : exception;
+    final DioException finalException = retryOutcome is DioException
+        ? retryOutcome
+        : exception;
     if (_isTransportFailure(finalException)) {
       _emitGlobalError(finalException);
     }
@@ -141,6 +143,7 @@ class Api extends _$Api {
 
   void _emitGlobalError(DioException exception) {
     final failure = AppFailure.from(exception);
+    logAppFailure(failure, scope: 'api_global_error', error: exception);
     ref.read(appErrorProvider.notifier).emitFailure(failure);
   }
 }

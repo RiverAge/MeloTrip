@@ -25,7 +25,10 @@ void main() {
     test('maps DioException timeout to network AppFailure', () async {
       final result = await runGuarded<int>(() async {
         throw DioException(
-          requestOptions: RequestOptions(path: '/rest/getSong'),
+          requestOptions: RequestOptions(
+            path: '/rest/getSong',
+            extra: {'correlation_id': 'req-guard-1'},
+          ),
           type: DioExceptionType.connectionTimeout,
           message: 'timeout',
         );
@@ -34,6 +37,8 @@ void main() {
       expect(result.isErr, isTrue);
       expect(result.error?.type, AppFailureType.network);
       expect(result.error?.message, contains('timeout'));
+      expect(result.error?.endpoint, '/rest/getSong');
+      expect(result.error?.requestId, 'req-guard-1');
     });
   });
 }
