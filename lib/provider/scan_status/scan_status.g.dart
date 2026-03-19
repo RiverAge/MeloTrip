@@ -9,10 +9,10 @@ part of 'scan_status.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(scanStatusResult)
-final scanStatusResultProvider = ScanStatusResultProvider._();
+@ProviderFor(scanStatus)
+final scanStatusProvider = ScanStatusProvider._();
 
-final class ScanStatusResultProvider
+final class ScanStatusProvider
     extends
         $FunctionalProvider<
           AsyncValue<Result<SubsonicResponse, AppFailure>>,
@@ -22,19 +22,19 @@ final class ScanStatusResultProvider
     with
         $FutureModifier<Result<SubsonicResponse, AppFailure>>,
         $FutureProvider<Result<SubsonicResponse, AppFailure>> {
-  ScanStatusResultProvider._()
+  ScanStatusProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'scanStatusResultProvider',
+        name: r'scanStatusProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$scanStatusResultHash();
+  String debugGetCreateSourceHash() => _$scanStatusHash();
 
   @$internal
   @override
@@ -44,8 +44,8 @@ final class ScanStatusResultProvider
 
   @override
   FutureOr<Result<SubsonicResponse, AppFailure>> create(Ref ref) {
-    return scanStatusResult(ref);
+    return scanStatus(ref);
   }
 }
 
-String _$scanStatusResultHash() => r'207a6e726b41883f42b552e68718f20d7a3616b0';
+String _$scanStatusHash() => r'c55b9aa19754ff6c646392060ce7340d5c9a760f';

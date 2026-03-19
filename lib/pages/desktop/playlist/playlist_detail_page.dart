@@ -25,7 +25,7 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
       child: AsyncValueBuilder(
-        provider: playlistDetailResultProvider(playlistId),
+        provider: playlistDetailProvider(playlistId),
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),
         builder: (context, result, ref) {
@@ -99,3 +99,4 @@ class DesktopPlaylistDetailPage extends ConsumerWidget {
     await player.insertAndPlay(song);
   }
 }
+

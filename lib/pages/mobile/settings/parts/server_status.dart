@@ -26,7 +26,7 @@ class _ServerStatus extends StatelessWidget {
             ),
             Divider(),
             AsyncValueBuilder(
-              provider: scanStatusResultProvider,
+              provider: scanStatusProvider,
               builder: (context, result, ref) {
                 final data = result.data;
                 final scanStatus = data?.subsonicResponse?.scanStatus;
@@ -94,3 +94,4 @@ class _ServerStatus extends StatelessWidget {
     );
   }
 }
+

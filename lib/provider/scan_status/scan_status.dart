@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'scan_status.g.dart';
 
 @riverpod
-Future<Result<SubsonicResponse, AppFailure>> scanStatusResult(Ref ref) async {
+Future<Result<SubsonicResponse, AppFailure>> scanStatus(Ref ref) async {
   final repository = ref.read(scanStatusRepositoryProvider);
   return repository.fetchScanStatusResult();
 }

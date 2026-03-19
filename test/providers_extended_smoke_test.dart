@@ -21,7 +21,7 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    expect(await container.read(playlistDetailResultProvider(null).future), isNull);
+    expect(await container.read(playlistDetailProvider(null).future), isNull);
     expect(await container.read(artistDetailProvider(null).future), isNull);
     expect(await container.read(songDetailProvider(null).future), isNull);
     expect(await container.read(albumDetailProvider(null).future), isNull);
@@ -81,21 +81,21 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    final playlists = await container.read(playlistsResultProvider.future);
+    final playlists = await container.read(playlistsProvider.future);
     expect(playlists.data?.subsonicResponse?.playlists?.playlist?.first.id, 'p1');
 
     final playlistsNotifier = container.read(playlistActionsProvider.notifier);
     expect(await playlistsNotifier.createPlaylist(null), isNull);
 
-    final detail = await container.read(playlistDetailResultProvider('p1').future);
+    final detail = await container.read(playlistDetailProvider('p1').future);
     expect(detail?.data?.subsonicResponse?.status, 'ok');
     expect(
-      await container.read(playlistDetailResultProvider(null).notifier).deleteResult(),
+      await container.read(playlistDetailProvider(null).notifier).deleteResult(),
       isNull,
     );
   });
 
-  test('playlistDetailResultProvider supports songIdToAdd branch', () async {
+  test('playlistDetailProvider supports songIdToAdd branch', () async {
     final adapter = RecordingRouteAdapter((options) {
       if (options.path != '/rest/updatePlaylist') return null;
       expect(options.queryParameters['playlistId'], 'p1');
@@ -110,14 +110,14 @@ void main() {
     );
     addTearDown(container.dispose);
     final subscription = container.listen(
-      playlistDetailResultProvider('p1'),
+      playlistDetailProvider('p1'),
       (_, _) {},
       fireImmediately: true,
     );
     addTearDown(subscription.close);
 
     final result = await container
-        .read(playlistDetailResultProvider('p1').notifier)
+        .read(playlistDetailProvider('p1').notifier)
         .modifyResult(songIdToAdd: 's1');
 
     expect(result?.isOk, isTrue);
@@ -258,3 +258,4 @@ void main() {
     expect(state.hasMore, isTrue);
   });
 }
+

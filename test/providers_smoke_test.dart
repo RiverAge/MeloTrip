@@ -45,25 +45,26 @@ void main() {
     expect(albums.first.name, 'Test Album');
   });
 
-  test('scanStatusResultProvider handles null API payload', () async {
+  test('scanStatusProvider handles null API payload', () async {
     final container = ProviderContainer(
       overrides: [apiProvider.overrideWith(FakeApiNull.new)],
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(scanStatusResultProvider.future);
+    final result = await container.read(scanStatusProvider.future);
     expect(result.isErr, isTrue);
   });
 
-  test('scanStatusResultProvider parses status payload', () async {
+  test('scanStatusProvider parses status payload', () async {
     final container = ProviderContainer(
       overrides: [apiProvider.overrideWith(FakeApiScanStatus.new)],
     );
     addTearDown(container.dispose);
 
-    final result = await container.read(scanStatusResultProvider.future);
+    final result = await container.read(scanStatusProvider.future);
     expect(result.isOk, isTrue);
     expect(result.data?.subsonicResponse?.status, 'ok');
     expect(result.data?.subsonicResponse?.version, '1.2.3');
   });
 }
+

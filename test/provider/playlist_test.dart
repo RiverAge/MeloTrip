@@ -54,7 +54,7 @@ class _MockPlaylistRepository extends PlaylistRepository {
 }
 
 void main() {
-  group('playlistsResultProvider', () {
+  group('playlistsProvider', () {
     test('returns Result.err when repository throws', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
@@ -64,7 +64,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(playlistsResultProvider.future);
+      final result = await container.read(playlistsProvider.future);
 
       expect(result.isErr, isTrue);
       expect(result.error, isA<AppFailure>());
@@ -83,7 +83,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(playlistsResultProvider.future);
+      final result = await container.read(playlistsProvider.future);
 
       expect(result, isNotNull);
       expect(result.data?.subsonicResponse?.status, equals('ok'));
@@ -91,7 +91,7 @@ void main() {
     });
   });
 
-  group('playlistDetailResultProvider', () {
+  group('playlistDetailProvider', () {
     test('returns null when playlistId is null', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
@@ -102,7 +102,7 @@ void main() {
       addTearDown(container.dispose);
 
       final result =
-          await container.read(playlistDetailResultProvider(null).future);
+          await container.read(playlistDetailProvider(null).future);
 
       expect(result, isNull);
       expect(mockRepository.fetchCalled, isFalse);
@@ -121,7 +121,7 @@ void main() {
       addTearDown(container.dispose);
 
       final result =
-          await container.read(playlistDetailResultProvider('123').future);
+          await container.read(playlistDetailProvider('123').future);
 
       expect(result, isNotNull);
       expect(result?.data?.subsonicResponse?.status, equals('ok'));
@@ -168,7 +168,7 @@ void main() {
 
   });
 
-  group('playlistDetailResultProvider notifier', () {
+  group('playlistDetailProvider notifier', () {
     test('deleteResult returns null when playlistId is null', () async {
       final mockRepository = _MockPlaylistRepository(null);
       final container = ProviderContainer(
@@ -178,7 +178,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistDetailResultProvider(null).notifier);
+      final notifier = container.read(playlistDetailProvider(null).notifier);
       final result = await notifier.deleteResult();
 
       expect(result, isNull);
@@ -197,7 +197,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final notifier = container.read(playlistDetailProvider('123').notifier);
       final result = await notifier.deleteResult();
 
       expect(result, isNotNull);
@@ -214,7 +214,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistDetailResultProvider(null).notifier);
+      final notifier = container.read(playlistDetailProvider(null).notifier);
       final result = await notifier.modifyResult();
 
       expect(result, isNull);
@@ -230,7 +230,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final notifier = container.read(playlistDetailProvider('123').notifier);
       final result = await notifier.modifyResult();
 
       expect(result?.isErr, isTrue);
@@ -250,7 +250,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final notifier = container.read(playlistDetailProvider('123').notifier);
       final result = await notifier.modifyResult();
 
       expect(result, isNotNull);
@@ -289,7 +289,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final notifier = container.read(playlistDetailResultProvider('123').notifier);
+      final notifier = container.read(playlistDetailProvider('123').notifier);
       final result = await notifier.modifyResult();
 
       expect(result?.isErr, isTrue);
@@ -297,3 +297,4 @@ void main() {
     });
   });
 }
+

@@ -17,7 +17,7 @@ class EditPlaylistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AsyncValueBuilder(
-      provider: playlistDetailResultProvider(playlistId),
+      provider: playlistDetailProvider(playlistId),
       builder: (context, result, ref) {
         if (result.isErr) {
           return const Center(child: NoData());
@@ -29,3 +29,4 @@ class EditPlaylistPage extends StatelessWidget {
     );
   }
 }
+

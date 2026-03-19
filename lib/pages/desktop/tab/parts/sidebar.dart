@@ -96,7 +96,7 @@ class _DesktopSidebar extends ConsumerWidget {
                   title: l10n.myPlaylist,
                   children: [
                     AsyncValueBuilder(
-                      provider: playlistsResultProvider,
+                      provider: playlistsProvider,
                       loading: (_, _) => const Center(
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
@@ -196,3 +196,4 @@ class _SidebarSection extends StatelessWidget {
     );
   }
 }
+

@@ -30,7 +30,7 @@ class _PlaylistDetailPage extends State<PlaylistDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AsyncValueBuilder(
-        provider: playlistDetailResultProvider(widget.playlistId),
+        provider: playlistDetailProvider(widget.playlistId),
         builder: (context, result, ref) {
           if (result.isErr) {
             return const NoData();
@@ -56,3 +56,4 @@ class _PlaylistDetailPage extends State<PlaylistDetailPage> {
     );
   }
 }
+

@@ -31,7 +31,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     final String? songId = widget.song?.id;
     if (playlistId == null || songId == null) return;
     final result = await ref
-        .read(playlistDetailResultProvider(playlistId).notifier)
+        .read(playlistDetailProvider(playlistId).notifier)
         .modifyResult(songIdToAdd: songId);
     if (result == null || result.isErr) return;
     if (!mounted) return;
@@ -78,7 +78,7 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
         ],
       ),
       body: AsyncValueBuilder(
-        provider: playlistsResultProvider,
+        provider: playlistsProvider,
         builder: (p0, result, ref) {
           if (result.isErr) return const NoData();
           final playlist = result.data?.subsonicResponse?.playlists?.playlist;
@@ -116,3 +116,4 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
     );
   }
 }
+

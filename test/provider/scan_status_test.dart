@@ -22,7 +22,7 @@ class _MockScanStatusRepository extends ScanStatusRepository {
 }
 
 void main() {
-  group('scanStatusResultProvider', () {
+  group('scanStatusProvider', () {
     test('returns Result.err when repository throws', () async {
       final mockRepository = _MockScanStatusRepository(null);
       final container = ProviderContainer(
@@ -32,7 +32,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(scanStatusResultProvider.future);
+      final result = await container.read(scanStatusProvider.future);
 
       expect(result.isErr, isTrue);
       expect(result.error, isA<AppFailure>());
@@ -54,7 +54,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(scanStatusResultProvider.future);
+      final result = await container.read(scanStatusProvider.future);
 
       expect(result, isNotNull);
       expect(result.data?.subsonicResponse?.status, equals('ok'));
@@ -63,3 +63,4 @@ void main() {
     });
   });
 }
+

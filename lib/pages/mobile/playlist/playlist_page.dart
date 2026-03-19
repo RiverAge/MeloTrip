@@ -26,7 +26,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   void _deletePlaylist(String? playlistId, WidgetRef ref) async {
     if (playlistId == null) return;
     final result = await ref
-        .read(playlistDetailResultProvider(playlistId).notifier)
+        .read(playlistDetailProvider(playlistId).notifier)
         .deleteResult();
     if (result == null || result.isErr) return;
     if (!mounted) return;
@@ -65,7 +65,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
         title: Text(AppLocalizations.of(context)!.myPlaylist),
       ),
       body: AsyncValueBuilder(
-        provider: playlistsResultProvider,
+        provider: playlistsProvider,
         builder: (p0, result, ref) {
           if (result.isErr) {
             return const Center(child: NoData());
@@ -110,3 +110,4 @@ class _PlaylistPageState extends State<PlaylistPage> {
     );
   }
 }
+

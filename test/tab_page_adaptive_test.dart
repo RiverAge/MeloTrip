@@ -60,7 +60,7 @@ void main() {
           albumListProvider(
             AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
           ).overrideWith((_) async => const <AlbumEntity>[]),
-          playlistsResultProvider.overrideWith(
+          playlistsProvider.overrideWith(
             (ref) async => playlistsResponse == null
                 ? Result.err(
                     const AppFailure(
@@ -191,3 +191,4 @@ void main() {
     expect(pageRoute.reverseTransitionDuration, Duration.zero);
   });
 }
+

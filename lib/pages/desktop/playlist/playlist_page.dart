@@ -21,7 +21,7 @@ class DesktopPlaylistsPage extends ConsumerWidget {
         title: Text(l10n.myPlaylist),
       ),
       body: AsyncValueBuilder(
-        provider: playlistsResultProvider,
+        provider: playlistsProvider,
         loading: (_, _) => const Center(child: CircularProgressIndicator()),
         empty: (_, _) => const NoData(),
         builder: (context, result, _) {
@@ -95,3 +95,4 @@ class DesktopPlaylistsPage extends ConsumerWidget {
     );
   }
 }
+

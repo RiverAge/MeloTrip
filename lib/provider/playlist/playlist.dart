@@ -18,20 +18,20 @@ class PlaylistActions extends _$PlaylistActions {
     final repository = ref.read(playlistRepositoryProvider);
     final result = await repository.createPlaylistResult(name);
     if (result.isOk) {
-      ref.invalidate(playlistsResultProvider);
+      ref.invalidate(playlistsProvider);
     }
     return result;
   }
 }
 
 @riverpod
-Future<Result<SubsonicResponse, AppFailure>> playlistsResult(Ref ref) async {
+Future<Result<SubsonicResponse, AppFailure>> playlists(Ref ref) async {
   final repository = ref.read(playlistRepositoryProvider);
   return repository.fetchPlaylistsResult();
 }
 
 @riverpod
-class PlaylistDetailResult extends _$PlaylistDetailResult {
+class PlaylistDetail extends _$PlaylistDetail {
   @override
   Future<Result<SubsonicResponse, AppFailure>?> build(String? playlistId) async {
     if (playlistId == null) return null;
@@ -52,7 +52,7 @@ class PlaylistDetailResult extends _$PlaylistDetailResult {
     final result = await repository.deletePlaylistResult(id);
 
     if (result.isOk) {
-      ref.invalidate(playlistsResultProvider);
+      ref.invalidate(playlistsProvider);
       ref.invalidateSelf();
     }
 
@@ -92,7 +92,7 @@ class PlaylistDetailResult extends _$PlaylistDetailResult {
     );
 
     if (result.isOk) {
-      ref.invalidate(playlistsResultProvider);
+      ref.invalidate(playlistsProvider);
       ref.invalidateSelf();
     }
 

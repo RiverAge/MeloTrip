@@ -33,7 +33,7 @@ final class PlaylistActionsProvider
   PlaylistActions create() => PlaylistActions();
 }
 
-String _$playlistActionsHash() => r'80635744a0bfd3f09a08b74d731fbfaa1c33f2d3';
+String _$playlistActionsHash() => r'90bf2fc6a923b274952c89257e50615367c22d82';
 
 abstract class _$PlaylistActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
@@ -53,10 +53,10 @@ abstract class _$PlaylistActions extends $AsyncNotifier<void> {
   }
 }
 
-@ProviderFor(playlistsResult)
-final playlistsResultProvider = PlaylistsResultProvider._();
+@ProviderFor(playlists)
+final playlistsProvider = PlaylistsProvider._();
 
-final class PlaylistsResultProvider
+final class PlaylistsProvider
     extends
         $FunctionalProvider<
           AsyncValue<Result<SubsonicResponse, AppFailure>>,
@@ -66,19 +66,19 @@ final class PlaylistsResultProvider
     with
         $FutureModifier<Result<SubsonicResponse, AppFailure>>,
         $FutureProvider<Result<SubsonicResponse, AppFailure>> {
-  PlaylistsResultProvider._()
+  PlaylistsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'playlistsResultProvider',
+        name: r'playlistsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$playlistsResultHash();
+  String debugGetCreateSourceHash() => _$playlistsHash();
 
   @$internal
   @override
@@ -88,49 +88,49 @@ final class PlaylistsResultProvider
 
   @override
   FutureOr<Result<SubsonicResponse, AppFailure>> create(Ref ref) {
-    return playlistsResult(ref);
+    return playlists(ref);
   }
 }
 
-String _$playlistsResultHash() => r'1b9b6c77f82de8ee9b53ea4ec2c649cc45bf6f42';
+String _$playlistsHash() => r'448da176760f45b0647df2a3ba1c3c247c2117fa';
 
-@ProviderFor(PlaylistDetailResult)
-final playlistDetailResultProvider = PlaylistDetailResultFamily._();
+@ProviderFor(PlaylistDetail)
+final playlistDetailProvider = PlaylistDetailFamily._();
 
-final class PlaylistDetailResultProvider
+final class PlaylistDetailProvider
     extends
         $AsyncNotifierProvider<
-          PlaylistDetailResult,
+          PlaylistDetail,
           Result<SubsonicResponse, AppFailure>?
         > {
-  PlaylistDetailResultProvider._({
-    required PlaylistDetailResultFamily super.from,
+  PlaylistDetailProvider._({
+    required PlaylistDetailFamily super.from,
     required String? super.argument,
   }) : super(
          retry: null,
-         name: r'playlistDetailResultProvider',
+         name: r'playlistDetailProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$playlistDetailResultHash();
+  String debugGetCreateSourceHash() => _$playlistDetailHash();
 
   @override
   String toString() {
-    return r'playlistDetailResultProvider'
+    return r'playlistDetailProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  PlaylistDetailResult create() => PlaylistDetailResult();
+  PlaylistDetail create() => PlaylistDetail();
 
   @override
   bool operator ==(Object other) {
-    return other is PlaylistDetailResultProvider && other.argument == argument;
+    return other is PlaylistDetailProvider && other.argument == argument;
   }
 
   @override
@@ -139,35 +139,34 @@ final class PlaylistDetailResultProvider
   }
 }
 
-String _$playlistDetailResultHash() =>
-    r'eb729e50a01892296c82460b52773c36afd47396';
+String _$playlistDetailHash() => r'a0e68908b511a8bd86d66420b1ca11031df6a56d';
 
-final class PlaylistDetailResultFamily extends $Family
+final class PlaylistDetailFamily extends $Family
     with
         $ClassFamilyOverride<
-          PlaylistDetailResult,
+          PlaylistDetail,
           AsyncValue<Result<SubsonicResponse, AppFailure>?>,
           Result<SubsonicResponse, AppFailure>?,
           FutureOr<Result<SubsonicResponse, AppFailure>?>,
           String?
         > {
-  PlaylistDetailResultFamily._()
+  PlaylistDetailFamily._()
     : super(
         retry: null,
-        name: r'playlistDetailResultProvider',
+        name: r'playlistDetailProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  PlaylistDetailResultProvider call(String? playlistId) =>
-      PlaylistDetailResultProvider._(argument: playlistId, from: this);
+  PlaylistDetailProvider call(String? playlistId) =>
+      PlaylistDetailProvider._(argument: playlistId, from: this);
 
   @override
-  String toString() => r'playlistDetailResultProvider';
+  String toString() => r'playlistDetailProvider';
 }
 
-abstract class _$PlaylistDetailResult
+abstract class _$PlaylistDetail
     extends $AsyncNotifier<Result<SubsonicResponse, AppFailure>?> {
   late final _$args = ref.$arg as String?;
   String? get playlistId => _$args;
