@@ -88,15 +88,16 @@ void main() {
       expect(result.subsonicResponse?.searchResult3?.song, hasLength(1));
     });
 
-    test('fetchSongSearchItems returns empty list for null response', () async {
+    test('fetchSongSearchItems throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(songRepositoryProvider);
-      final result = await repository.fetchSongSearchItems(
-        query: const SongSearchQuery(query: 'test'),
+      await expectLater(
+        repository.fetchSongSearchItems(
+          query: const SongSearchQuery(query: 'test'),
+        ),
+        throwsA(isA<StateError>()),
       );
-
-      expect(result, isEmpty);
     });
 
     test('fetchSongSearchItems returns songs from response', () async {

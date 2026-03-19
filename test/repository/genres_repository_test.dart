@@ -60,13 +60,14 @@ void main() {
       expect(result.subsonicResponse?.genres?.genre, hasLength(2));
     });
 
-    test('fetchGenresItems returns empty list for null response', () async {
+    test('fetchGenresItems throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(genresRepositoryProvider);
-      final result = await repository.fetchGenresItems();
-
-      expect(result, isEmpty);
+      await expectLater(
+        repository.fetchGenresItems(),
+        throwsA(isA<StateError>()),
+      );
     });
 
     test('fetchGenresItems returns genres from response', () async {
@@ -92,13 +93,14 @@ void main() {
       expect(result[2].value, 'Jazz');
     });
 
-    test('fetchGenresResponse returns null for null data', () async {
+    test('fetchGenresResponse throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(genresRepositoryProvider);
-      final result = await repository.fetchGenresResponse();
-
-      expect(result, isNull);
+      await expectLater(
+        repository.fetchGenresResponse(),
+        throwsA(isA<StateError>()),
+      );
     });
   });
 }

@@ -203,7 +203,8 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - For simple read and write state backed by one upstream source, prefer a single `@riverpod class` with `build()` for reads and explicit instance methods for writes.
 - For entity-scoped workflows, use `<Entity>Detail` as the aggregate provider boundary: read (`build`) and write methods (`toggle/update/delete/...`) should live on the same detail notifier by default.
 - Split out separate `Actions` providers only for collection-level operations that are not bound to a single entity instance, such as create/list refresh actions.
-- When a provider talks to repository APIs that can fail, expose a `Result<..., AppFailure>` read path (`...ResultProvider`) and prefer it in new UI code.
+- When a provider talks to repository APIs that can fail, prefer a single Result-based read path directly on the primary provider (for example `Future<Result<..., AppFailure>?> build(...)`).
+- Do not keep dual-track providers for the same data (for example raw `fooProvider` plus `fooResultProvider`). Pick one boundary and keep it consistent.
 - Do not split simple settings flows into multiple controller or reader providers unless the behavior is complex enough to justify the indirection.
 
 ### Subsonic Response Parsing

@@ -74,13 +74,14 @@ void main() {
       expect(result.subsonicResponse?.scanStatus?.scanning, false);
     });
 
-    test('fetchScanStatus returns null for null data', () async {
+    test('fetchScanStatus throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(scanStatusRepositoryProvider);
-      final result = await repository.fetchScanStatus();
-
-      expect(result, isNull);
+      await expectLater(
+        repository.fetchScanStatus(),
+        throwsA(isA<StateError>()),
+      );
     });
   });
 }

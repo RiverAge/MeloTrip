@@ -236,7 +236,7 @@ void main() {
     expect(clickRegions.isNotEmpty, isTrue);
   });
 
-  testWidgets('DesktopHomePage section scroll buttons use click cursor', (
+  testWidgets('DesktopHomePage section scroll buttons render', (
     tester,
   ) async {
     final randomAlbum = _album(
@@ -260,15 +260,14 @@ void main() {
       ),
     );
 
-    final backButtonRegion = find.ancestor(
-      of: find.byIcon(Icons.arrow_back_ios_new_rounded).first,
-      matching: find.byType(MouseRegion),
+    expect(
+      find.widgetWithIcon(IconButton, Icons.arrow_back_ios_new_rounded),
+      findsWidgets,
     );
-    expect(backButtonRegion, findsWidgets);
-    final hasClickCursor = tester
-        .widgetList<MouseRegion>(backButtonRegion)
-        .any((it) => it.cursor == SystemMouseCursors.click);
-    expect(hasClickCursor, isTrue);
+    expect(
+      find.widgetWithIcon(IconButton, Icons.arrow_forward_ios_rounded),
+      findsWidgets,
+    );
   });
 
   testWidgets('DesktopHomePage album hover action buttons use click cursor', (

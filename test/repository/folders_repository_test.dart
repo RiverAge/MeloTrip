@@ -90,13 +90,14 @@ void main() {
       expect(result[0].id, 'folder-1');
     });
 
-    test('fetchFolderIndexes returns empty list for null data', () async {
+    test('fetchFolderIndexes throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(foldersRepositoryProvider);
-      final result = await repository.fetchFolderIndexes();
-
-      expect(result, isEmpty);
+      await expectLater(
+        repository.fetchFolderIndexes(),
+        throwsA(isA<StateError>()),
+      );
     });
 
     test('fetchMusicDirectory sends correct request', () async {
@@ -154,13 +155,14 @@ void main() {
       expect(result[1].duration, 180);
     });
 
-    test('fetchMusicDirectory returns empty list for null data', () async {
+    test('fetchMusicDirectory throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(foldersRepositoryProvider);
-      final result = await repository.fetchMusicDirectory('dir-123');
-
-      expect(result, isEmpty);
+      await expectLater(
+        repository.fetchMusicDirectory('dir-123'),
+        throwsA(isA<StateError>()),
+      );
     });
 
     test('fetchMusicDirectory uses name when title is missing', () async {
