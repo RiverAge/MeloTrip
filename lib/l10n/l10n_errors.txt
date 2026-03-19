@@ -1,9 +1,20 @@
 {
+  "zh": [
+    "globalErrorNetwork",
+    "globalErrorUnauthorized",
+    "globalErrorServer",
+    "globalErrorProtocol"
+  ],
+
   "zh_CN": [
     "playback",
     "shuffle",
     "clearCache",
     "clearCacheSuccess",
+    "globalErrorNetwork",
+    "globalErrorUnauthorized",
+    "globalErrorServer",
+    "globalErrorProtocol",
     "settingsTabAppearance"
   ]
 }

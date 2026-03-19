@@ -29,7 +29,7 @@ Last updated: 2026-03-19
 
 - [ ] Evaluate unified user-facing error mapping
   - Scope: centralize failure-to-message conversion strategy per `AppFailureType`.
-  - Progress: global error event now carries typed `AppFailureType` metadata, enabling UI-level message mapping without changing network layer contracts.
+  - Progress: global snackbar now maps `AppFailureType` to localized user-facing messages, and a contract test prevents rendering raw error payload text directly in app-level listener.
 
 ## Completed
 

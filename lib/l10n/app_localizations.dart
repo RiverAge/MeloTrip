@@ -1269,6 +1269,30 @@ abstract class AppLocalizations {
   /// **'Unknown Error'**
   String get unknownError;
 
+  /// Global snackbar message for transport/network failures
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection failed. Please check your network and try again.'**
+  String get globalErrorNetwork;
+
+  /// Global snackbar message for unauthorized failures
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. Please log in again.'**
+  String get globalErrorUnauthorized;
+
+  /// Global snackbar message for server failures
+  ///
+  /// In en, this message translates to:
+  /// **'Server is temporarily unavailable. Please try again later.'**
+  String get globalErrorServer;
+
+  /// Global snackbar message for protocol/parsing failures
+  ///
+  /// In en, this message translates to:
+  /// **'Response data is invalid. Please try again later.'**
+  String get globalErrorProtocol;
+
   /// Message when an unknown error is encountered during the process
   ///
   /// In en, this message translates to:

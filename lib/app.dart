@@ -7,6 +7,7 @@ import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth_user/theme_seed.dart';
+import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/app/player.dart';
@@ -67,14 +68,21 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  void _showGlobalErrorMessage({required String errorMessage}) {
+  String _resolveGlobalErrorMessage(AppErrorEvent event) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (event.failureType) {
+      AppFailureType.network => l10n.globalErrorNetwork,
+      AppFailureType.unauthorized => l10n.globalErrorUnauthorized,
+      AppFailureType.server => l10n.globalErrorServer,
+      AppFailureType.protocol => l10n.globalErrorProtocol,
+      AppFailureType.unknown || null => l10n.unknownError,
+    };
+  }
+
+  void _showGlobalErrorMessage({required AppErrorEvent event}) {
     _scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
-        content: Text(
-          errorMessage.isEmpty
-              ? AppLocalizations.of(context)!.unknownError
-              : errorMessage,
-        ),
+        content: Text(_resolveGlobalErrorMessage(event)),
       ),
     );
   }
@@ -85,7 +93,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       if (next == null) {
         return;
       }
-      _showGlobalErrorMessage(errorMessage: next.message);
+      _showGlobalErrorMessage(event: next);
     });
 
     final RouteObserver<ModalRoute<void>> observer = ref.watch(

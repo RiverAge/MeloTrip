@@ -957,6 +957,22 @@
    "@unknownError": {
       "description": "Generic error message when an unknown error occurs"
    },
+   "globalErrorNetwork": "Network connection failed. Please check your network and try again.",
+   "@globalErrorNetwork": {
+      "description": "Global snackbar message for transport/network failures"
+   },
+   "globalErrorUnauthorized": "Authentication failed. Please log in again.",
+   "@globalErrorUnauthorized": {
+      "description": "Global snackbar message for unauthorized failures"
+   },
+   "globalErrorServer": "Server is temporarily unavailable. Please try again later.",
+   "@globalErrorServer": {
+      "description": "Global snackbar message for server failures"
+   },
+   "globalErrorProtocol": "Response data is invalid. Please try again later.",
+   "@globalErrorProtocol": {
+      "description": "Global snackbar message for protocol/parsing failures"
+   },
 
    "encounterUnknownError": "Encounter Unknown Error",
    "@encounterUnknownError": {

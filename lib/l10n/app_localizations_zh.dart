@@ -628,6 +628,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unknownError => '未知错误';
 
   @override
+  String get globalErrorNetwork =>
+      'Network connection failed. Please check your network and try again.';
+
+  @override
+  String get globalErrorUnauthorized =>
+      'Authentication failed. Please log in again.';
+
+  @override
+  String get globalErrorServer =>
+      'Server is temporarily unavailable. Please try again later.';
+
+  @override
+  String get globalErrorProtocol =>
+      'Response data is invalid. Please try again later.';
+
+  @override
   String get encounterUnknownError => '遇到未知错误';
 
   @override
