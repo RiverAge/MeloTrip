@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/helper/app_failure_message.dart';
 import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/auth_user/theme_seed.dart';
-import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/app/player.dart';
@@ -70,13 +70,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   String _resolveGlobalErrorMessage(AppErrorEvent event) {
     final l10n = AppLocalizations.of(context)!;
-    return switch (event.failureType) {
-      AppFailureType.network => l10n.globalErrorNetwork,
-      AppFailureType.unauthorized => l10n.globalErrorUnauthorized,
-      AppFailureType.server => l10n.globalErrorServer,
-      AppFailureType.protocol => l10n.globalErrorProtocol,
-      AppFailureType.unknown || null => l10n.unknownError,
-    };
+    return resolveAppFailureMessage(l10n, type: event.failureType);
   }
 
   void _showGlobalErrorMessage({required AppErrorEvent event}) {
