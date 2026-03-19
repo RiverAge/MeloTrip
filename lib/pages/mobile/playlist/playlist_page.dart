@@ -70,8 +70,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
           if (result.isErr) {
             return const Center(child: NoData());
           }
-          final playlist = result.data?.subsonicResponse?.playlists?.playlist;
-          if (playlist == null || playlist.isEmpty) {
+          final playlist = result.data ?? const <PlaylistEntity>[];
+          if (playlist.isEmpty) {
             return const Center(child: NoData());
           }
           return ListView.separated(

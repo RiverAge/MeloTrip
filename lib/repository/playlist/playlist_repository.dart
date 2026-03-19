@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/repository/common/repository_guard.dart';
@@ -23,6 +24,16 @@ class PlaylistRepository {
 
   Future<Result<SubsonicResponse, AppFailure>> tryFetchPlaylists() {
     return runGuarded(fetchPlaylists);
+  }
+
+  Future<List<PlaylistEntity>> fetchPlaylistItems() async {
+    final response = await fetchPlaylists();
+    return response.subsonicResponse?.playlists?.playlist ??
+        const <PlaylistEntity>[];
+  }
+
+  Future<Result<List<PlaylistEntity>, AppFailure>> tryFetchPlaylistItems() {
+    return runGuarded(fetchPlaylistItems);
   }
 
   Future<SubsonicResponse> fetchPlaylistDetail(String playlistId) async {

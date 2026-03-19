@@ -15,15 +15,6 @@ import 'package:melo_trip/widget/no_data.dart';
 
 import 'test_helpers.dart';
 
-SubsonicResponse _playlistsResponse(List<PlaylistEntity> playlists) {
-  return SubsonicResponse(
-    subsonicResponse: SubsonicResponseClass(
-      status: 'ok',
-      playlists: PlaylistsEntity(playlist: playlists),
-    ),
-  );
-}
-
 SubsonicResponse _playlistDetailResponse({
   required String id,
   required String name,
@@ -70,7 +61,7 @@ void main() {
         overrides: [
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           playlistsProvider.overrideWith(
-            (ref) async => Result.ok(_playlistsResponse(const [])),
+            (ref) async => const Result.ok(<PlaylistEntity>[]),
           ),
         ],
         child: MaterialApp(
@@ -94,13 +85,13 @@ void main() {
           currentUserProvider.overrideWith(FakeCurrentUserLoggedOut.new),
           playlistsProvider.overrideWith(
             (ref) async => Result.ok(
-              _playlistsResponse([
+              [
                 const PlaylistEntity(
                   id: 'pl-1',
                   name: 'My Playlist 1',
                   songCount: 2,
                 ),
-              ]),
+              ],
             ),
           ),
           playlistDetailProvider('pl-1').overrideWith(

@@ -81,8 +81,8 @@ class _AddToPlaylistPageState extends State<AddToPlaylistPage> {
         provider: playlistsProvider,
         builder: (p0, result, ref) {
           if (result.isErr) return const NoData();
-          final playlist = result.data?.subsonicResponse?.playlists?.playlist;
-          if (playlist == null || playlist.isEmpty) return const NoData();
+          final playlist = result.data ?? const <PlaylistEntity>[];
+          if (playlist.isEmpty) return const NoData();
           return ListView.separated(
             itemBuilder: (_, index) {
               final item = playlist[index];

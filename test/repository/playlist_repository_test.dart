@@ -176,6 +176,37 @@ void main() {
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);
     });
+
+    test('fetchPlaylistItems returns playlist list from response', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'playlists': {
+            'playlist': [
+              {'id': 'pl-1', 'name': 'Daily'},
+              {'id': 'pl-2', 'name': 'Workout'},
+            ],
+          },
+        },
+      });
+
+      final repository = container.read(playlistRepositoryProvider);
+      final result = await repository.fetchPlaylistItems();
+
+      expect(result, hasLength(2));
+      expect(result.first.id, 'pl-1');
+      expect(result.last.name, 'Workout');
+    });
+
+    test('tryFetchPlaylistItems returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(playlistRepositoryProvider);
+      final result = await repository.tryFetchPlaylistItems();
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
+    });
   });
 }
 

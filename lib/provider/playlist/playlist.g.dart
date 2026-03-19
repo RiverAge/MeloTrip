@@ -59,13 +59,13 @@ final playlistsProvider = PlaylistsProvider._();
 final class PlaylistsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<Result<SubsonicResponse, AppFailure>>,
-          Result<SubsonicResponse, AppFailure>,
-          FutureOr<Result<SubsonicResponse, AppFailure>>
+          AsyncValue<Result<List<PlaylistEntity>, AppFailure>>,
+          Result<List<PlaylistEntity>, AppFailure>,
+          FutureOr<Result<List<PlaylistEntity>, AppFailure>>
         >
     with
-        $FutureModifier<Result<SubsonicResponse, AppFailure>>,
-        $FutureProvider<Result<SubsonicResponse, AppFailure>> {
+        $FutureModifier<Result<List<PlaylistEntity>, AppFailure>>,
+        $FutureProvider<Result<List<PlaylistEntity>, AppFailure>> {
   PlaylistsProvider._()
     : super(
         from: null,
@@ -82,17 +82,16 @@ final class PlaylistsProvider
 
   @$internal
   @override
-  $FutureProviderElement<Result<SubsonicResponse, AppFailure>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<Result<List<PlaylistEntity>, AppFailure>>
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<Result<SubsonicResponse, AppFailure>> create(Ref ref) {
+  FutureOr<Result<List<PlaylistEntity>, AppFailure>> create(Ref ref) {
     return playlists(ref);
   }
 }
 
-String _$playlistsHash() => r'd472fc55008a285f1558e5a32c03b752bc04eb9b';
+String _$playlistsHash() => r'21291b42c42e90da9b773c627b7101d0216142aa';
 
 @ProviderFor(PlaylistDetail)
 final playlistDetailProvider = PlaylistDetailFamily._();

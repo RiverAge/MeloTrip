@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
+import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/repository/playlist/playlist_repository.dart';
@@ -73,7 +74,12 @@ void main() {
 
     test('returns playlists response from repository', () async {
       final mockResponse = const SubsonicResponse(
-        subsonicResponse: SubsonicResponseClass(status: 'ok'),
+        subsonicResponse: SubsonicResponseClass(
+          status: 'ok',
+          playlists: PlaylistsEntity(
+            playlist: [PlaylistEntity(id: 'p1', name: 'Playlist 1')],
+          ),
+        ),
       );
       final mockRepository = _MockPlaylistRepository(mockResponse);
       final container = ProviderContainer(
@@ -86,7 +92,8 @@ void main() {
       final result = await container.read(playlistsProvider.future);
 
       expect(result, isNotNull);
-      expect(result.data?.subsonicResponse?.status, equals('ok'));
+      expect(result.data, hasLength(1));
+      expect(result.data?.first.id, equals('p1'));
       expect(mockRepository.fetchCalled, isTrue);
     });
   });

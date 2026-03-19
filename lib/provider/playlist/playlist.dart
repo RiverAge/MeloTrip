@@ -1,5 +1,6 @@
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/repository/playlist/playlist_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,9 +26,9 @@ class PlaylistActions extends _$PlaylistActions {
 }
 
 @riverpod
-Future<Result<SubsonicResponse, AppFailure>> playlists(Ref ref) async {
+Future<Result<List<PlaylistEntity>, AppFailure>> playlists(Ref ref) async {
   final repository = ref.read(playlistRepositoryProvider);
-  return repository.tryFetchPlaylists();
+  return repository.tryFetchPlaylistItems();
 }
 
 @riverpod

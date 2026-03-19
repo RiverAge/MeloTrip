@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
@@ -28,8 +29,7 @@ class DesktopPlaylistsPage extends ConsumerWidget {
           if (result.isErr) {
             return const NoData();
           }
-          final playlists =
-              result.data?.subsonicResponse?.playlists?.playlist ?? [];
+          final playlists = result.data ?? const <PlaylistEntity>[];
           if (playlists.isEmpty) return const NoData();
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),

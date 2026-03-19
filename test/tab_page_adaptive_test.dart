@@ -6,7 +6,6 @@ import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
-import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/pages/desktop/library/favorites_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
@@ -25,7 +24,7 @@ void main() {
   Future<void> pumpTabPageWithPlaylists(
     WidgetTester tester, {
     required Size size,
-    required SubsonicResponse? playlistsResponse,
+    required List<PlaylistEntity>? playlists,
   }) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = size;
@@ -61,14 +60,14 @@ void main() {
             AlbumListQuery(type: AlbumListType.frequent.name, size: 50),
           ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
           playlistsProvider.overrideWith(
-            (ref) async => playlistsResponse == null
+            (ref) async => playlists == null
                 ? Result.err(
                     const AppFailure(
                       type: AppFailureType.unknown,
                       message: 'No playlist data',
                     ),
                   )
-                : Result.ok(playlistsResponse),
+                : Result.ok(playlists),
           ),
         ],
         child: MaterialApp(
@@ -82,7 +81,7 @@ void main() {
   }
 
   Future<void> pumpTabPage(WidgetTester tester, {required Size size}) async {
-    await pumpTabPageWithPlaylists(tester, size: size, playlistsResponse: null);
+    await pumpTabPageWithPlaylists(tester, size: size, playlists: null);
   }
 
   testWidgets('TabPage shows mobile bottom navigation on narrow screens', (
@@ -128,17 +127,10 @@ void main() {
   testWidgets('Desktop playlist tile navigates to playlist detail page', (
     tester,
   ) async {
-    final data = SubsonicResponse(
-      subsonicResponse: SubsonicResponseClass(
-        playlists: const PlaylistsEntity(
-          playlist: [PlaylistEntity(id: 'playlist-1', name: 'Road Trip')],
-        ),
-      ),
-    );
     await pumpTabPageWithPlaylists(
       tester,
       size: const Size(1440, 960),
-      playlistsResponse: data,
+      playlists: const [PlaylistEntity(id: 'playlist-1', name: 'Road Trip')],
     );
 
     await tester.tap(find.text('Road Trip').first);
@@ -150,17 +142,10 @@ void main() {
   testWidgets('Desktop playlist tile with null id does not navigate', (
     tester,
   ) async {
-    final data = SubsonicResponse(
-      subsonicResponse: SubsonicResponseClass(
-        playlists: const PlaylistsEntity(
-          playlist: [PlaylistEntity(id: null, name: 'Broken Playlist')],
-        ),
-      ),
-    );
     await pumpTabPageWithPlaylists(
       tester,
       size: const Size(1440, 960),
-      playlistsResponse: data,
+      playlists: const [PlaylistEntity(id: null, name: 'Broken Playlist')],
     );
 
     await tester.tap(find.text('Broken Playlist').first);

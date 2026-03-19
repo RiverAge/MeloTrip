@@ -82,7 +82,7 @@ void main() {
     addTearDown(container.dispose);
 
     final playlists = await container.read(playlistsProvider.future);
-    expect(playlists.data?.subsonicResponse?.playlists?.playlist?.first.id, 'p1');
+    expect(playlists.data?.first.id, 'p1');
 
     final playlistsNotifier = container.read(playlistActionsProvider.notifier);
     expect(await playlistsNotifier.createPlaylist(null), isNull);
