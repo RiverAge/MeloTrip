@@ -3,7 +3,7 @@ part of '../playing_page.dart';
 class _MusicControls extends StatelessWidget {
   const _MusicControls();
 
-  SnackBar _buildSnack(String text, Size size) {
+  SnackBar _buildSnack(BuildContext context, String text, Size size) {
     final padding = (size.width - 100) / 2;
     final bottom = (size.height - 50) / 2;
     return SnackBar(
@@ -11,13 +11,15 @@ class _MusicControls extends StatelessWidget {
       content: Text(
         text,
         textAlign: .center,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
       ),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(bottom: bottom, left: padding, right: padding),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       duration: const Duration(seconds: 2),
-      backgroundColor: Colors.black87.withAlpha(178),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.scrim.withValues(alpha: 178 / 255),
     );
   }
 
@@ -101,19 +103,19 @@ class _MusicControls extends StatelessWidget {
                       player.setPlaylistMode(.none);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(
-                        _buildSnack(playModeNoneText, size),
+                        _buildSnack(context, playModeNoneText, size),
                       );
                     } else if (player.playlistMode == .none) {
                       player.setPlaylistMode(.single);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(
-                        _buildSnack(playModeSingleText, size),
+                        _buildSnack(context, playModeSingleText, size),
                       );
                     } else if (player.playlistMode == .single) {
                       player.setPlaylistMode(.loop);
                       messenger.clearSnackBars();
                       messenger.showSnackBar(
-                        _buildSnack(playModeLoopText, size),
+                        _buildSnack(context, playModeLoopText, size),
                       );
                     }
                   },

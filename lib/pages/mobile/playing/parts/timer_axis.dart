@@ -66,13 +66,17 @@ class _TimerAxisState extends State<_TimerAxis> {
               Text(
                 durationFormatter(sCurrent),
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(127),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 127 / 255),
                 ),
               ),
               Text(
                 sTotal == 0 ? '--:--' : durationFormatter(sTotal),
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(127),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 127 / 255),
                 ),
               ),
             ],

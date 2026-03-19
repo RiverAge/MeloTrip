@@ -22,10 +22,7 @@ class _AlbumDetailHeader extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = theme.colorScheme;
-    final bool isDark = theme.brightness == Brightness.dark;
-    final Color headerTextColor = isDark
-        ? colorScheme.onSurface
-        : colorScheme.onPrimary;
+    final Color headerTextColor = colorScheme.onSurface;
     final Color headerSubTextColor = headerTextColor.withValues(alpha: 0.84);
 
     return SliverAppBar(
@@ -56,9 +53,7 @@ class _AlbumDetailHeader extends StatelessWidget {
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
               child: Container(
-                color: colorScheme.scrim.withValues(
-                  alpha: isDark ? 0.32 : 0.44,
-                ),
+                color: colorScheme.scrim.withValues(alpha: 0.38),
               ),
             ),
             DecoratedBox(
@@ -67,9 +62,9 @@ class _AlbumDetailHeader extends StatelessWidget {
                   begin: .topCenter,
                   end: .bottomCenter,
                   colors: <Color>[
-                    colorScheme.scrim.withValues(alpha: isDark ? 0.1 : 0.18),
-                    colorScheme.scrim.withValues(alpha: isDark ? 0.18 : 0.32),
-                    colorScheme.scrim.withValues(alpha: isDark ? 0.28 : 0.46),
+                    colorScheme.scrim.withValues(alpha: 0.14),
+                    colorScheme.scrim.withValues(alpha: 0.25),
+                    colorScheme.scrim.withValues(alpha: 0.38),
                   ],
                 ),
               ),

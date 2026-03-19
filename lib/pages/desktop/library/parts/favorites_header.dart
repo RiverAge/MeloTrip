@@ -87,7 +87,6 @@ class _TypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return InkWell(
       onTap: onTap,
@@ -99,7 +98,7 @@ class _TypeChip extends StatelessWidget {
           color: selected
               ? theme.colorScheme.primary
               : theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: isDark ? 0.3 : 0.5,
+                alpha: 0.4,
               ),
           borderRadius: BorderRadius.circular(20),
         ),

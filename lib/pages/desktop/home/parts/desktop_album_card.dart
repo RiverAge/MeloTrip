@@ -160,17 +160,24 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final overlayBackground = Colors.black.withValues(
-      alpha: isDark ? .52 : .46,
+    final overlayBackground = theme.colorScheme.scrim.withValues(
+      alpha: .48,
     );
-    final overlayForeground = Colors.white.withValues(alpha: .94);
-    final overlayForegroundMuted = Colors.white.withValues(alpha: .82);
-    final mainButtonBackground = Colors.white.withValues(
-      alpha: isDark ? .98 : .94,
+    final overlayForeground = theme.colorScheme.onPrimary.withValues(
+      alpha: .94,
     );
-    final mainButtonForeground = Colors.black.withValues(alpha: .9);
-    final secondaryButtonBackground = Colors.white.withValues(alpha: .24);
+    final overlayForegroundMuted = theme.colorScheme.onPrimary.withValues(
+      alpha: .82,
+    );
+    final mainButtonBackground = theme.colorScheme.surface.withValues(
+      alpha: .96,
+    );
+    final mainButtonForeground = theme.colorScheme.onSurface.withValues(
+      alpha: .9,
+    );
+    final secondaryButtonBackground = theme.colorScheme.surface.withValues(
+      alpha: .24,
+    );
     final isStarred = _optimisticStarred ?? widget.album.starred != null;
     final rating = _optimisticRating ?? widget.album.userRating ?? 0;
     final releaseYear = _buildReleaseYear();
@@ -239,7 +246,7 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                         ? Icons.favorite_rounded
                                         : Icons.favorite_border_rounded,
                                     color: isStarred
-                                        ? Colors.redAccent
+                                        ? theme.colorScheme.error
                                         : overlayForeground,
                                     size: 20,
                                   ),
@@ -273,10 +280,11 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                                       if (!mounted) return;
                                       if (res == null || res.isErr) {
                                         if (res?.error != null) {
-                                          final message = resolveAppFailureMessage(
-                                            l10n,
-                                            failure: res!.error,
-                                          );
+                                          final message =
+                                              resolveAppFailureMessage(
+                                                l10n,
+                                                failure: res!.error,
+                                              );
                                           messenger.showSnackBar(
                                             SnackBar(content: Text(message)),
                                           );
@@ -449,4 +457,3 @@ class _ActionCircle extends StatelessWidget {
     );
   }
 }
-

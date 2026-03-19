@@ -4,11 +4,10 @@ class _DesktopGenreSection extends ConsumerWidget {
   const _DesktopGenreSection();
 
   List<Color> _buildGenrePalette(ThemeData theme) {
-    final isDark = theme.brightness == Brightness.dark;
     final baseHue = HSLColor.fromColor(theme.colorScheme.primary).hue;
-    final saturation = isDark ? .92 : .9;
-    final lightnessA = isDark ? .62 : .42;
-    final lightnessB = isDark ? .68 : .5;
+    const saturation = .9;
+    const lightnessA = .52;
+    const lightnessB = .58;
     const hueStep = 360.0 / 15.0;
     const order = [0, 8, 3, 11, 6, 14, 1, 9, 4, 12, 7, 2, 10, 5, 13];
 

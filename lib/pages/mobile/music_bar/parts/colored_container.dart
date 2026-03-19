@@ -55,10 +55,8 @@ class _ColoredContainerState extends ConsumerState<_ColoredContainer>
                 begin: .topLeft,
                 end: .bottomRight,
                 colors: [
-                  color.withAlpha(
-                    (255 - _animationController.value * 255).toInt(),
-                  ),
-                  color.withAlpha((_animationController.value * 255).toInt()),
+                  color.withValues(alpha: 1 - _animationController.value),
+                  color.withValues(alpha: _animationController.value),
                 ],
                 // Gradient from
               ),

@@ -57,7 +57,6 @@ class _ScrollButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final enabled = onPressed != null;
     return IconButton(
       onPressed: onPressed,
@@ -70,7 +69,7 @@ class _ScrollButton extends StatelessWidget {
       ),
       style: IconButton.styleFrom(
         backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(
-        alpha: enabled ? (isDark ? 0.28 : 0.72) : (isDark ? 0.08 : 0.24),
+          alpha: enabled ? 0.5 : 0.2,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         padding: const EdgeInsets.all(6),

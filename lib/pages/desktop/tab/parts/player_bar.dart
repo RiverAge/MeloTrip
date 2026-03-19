@@ -9,16 +9,13 @@ class _DesktopPlayerBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
     return Container(
       // height: 104,
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? colorScheme.onSurface.withValues(alpha: 0.12)
-                : theme.shadowColor.withValues(alpha: 0.12),
+            color: colorScheme.shadow.withValues(alpha: 0.12),
             blurRadius: 16,
             offset: const Offset(0, -5),
           ),

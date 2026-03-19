@@ -186,14 +186,16 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
                           Positioned.fill(
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.4),
+                                color: theme.colorScheme.scrim.withValues(
+                                  alpha: 0.4,
+                                ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
                                 child: IconButton(
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.play_arrow_rounded,
-                                    color: Colors.white,
+                                    color: theme.colorScheme.onPrimary,
                                   ),
                                   onPressed: () async {
                                     final albumData = await ref.read(

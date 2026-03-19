@@ -71,7 +71,7 @@ class PlayingPage extends StatelessWidget {
                       fontSize: 11,
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withAlpha(127),
+                      ).colorScheme.onSurface.withValues(alpha: 127 / 255),
                     ),
                     textAlign: .left,
                   ),
@@ -93,7 +93,7 @@ class PlayingPage extends StatelessWidget {
                           fontSize: 10,
                           color: Theme.of(
                             context,
-                          ).colorScheme.onSurface.withAlpha(100),
+                          ).colorScheme.onSurface.withValues(alpha: 100 / 255),
                         ),
                       ),
                     ],
@@ -228,4 +228,3 @@ class PlayingPage extends StatelessWidget {
   //     );
   //   }
 }
-
