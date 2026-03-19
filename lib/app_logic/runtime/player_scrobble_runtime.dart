@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
-import 'package:melo_trip/provider/api/api.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/repository/scrobble/player_scrobble_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PlayerScrobbleRuntimeBindings {
@@ -35,6 +34,7 @@ class PlayerScrobbleRuntime {
     if (player == null) {
       return null;
     }
+    final repository = ref.read(playerScrobbleRepositoryProvider);
 
     Timer? nowPlayingTimer;
 
@@ -53,7 +53,6 @@ class PlayerScrobbleRuntime {
 
           final currentSong = queue.songs[queue.index];
           final currentId = currentSong.id;
-          final api = await ref.read(apiProvider.future);
           final now = DateTime.now();
 
           if (_lastStateChangeTime != null && _wasPlaying) {
@@ -65,13 +64,10 @@ class PlayerScrobbleRuntime {
               if (_activeDuration.inSeconds >= 30 &&
                   _activeDuration.inSeconds >= _lastSongDuration! * 0.9) {
                 unawaited(
-                  api.get(
-                    '/rest/scrobble',
-                    queryParameters: {
-                      'id': _lastProcessedId,
-                      'time': now.millisecondsSinceEpoch,
-                      'submission': true,
-                    },
+                  repository.tryScrobble(
+                    songId: _lastProcessedId!,
+                    time: now.millisecondsSinceEpoch,
+                    submission: true,
                   ),
                 );
               }
@@ -81,7 +77,7 @@ class PlayerScrobbleRuntime {
             _lastSongDuration = currentSong.duration?.toDouble();
             _activeDuration = Duration.zero;
             nowPlayingTimer?.cancel();
-            _savePlayQueue(player, api);
+            _savePlayQueue(player, repository);
           }
 
           _lastStateChangeTime = now;
@@ -92,12 +88,9 @@ class PlayerScrobbleRuntime {
               nowPlayingTimer = Timer(const Duration(seconds: 10), () {
                 if (player.playing && _lastProcessedId != null) {
                   unawaited(
-                    api.get(
-                      '/rest/scrobble',
-                      queryParameters: {
-                        'id': _lastProcessedId,
-                        'submission': false,
-                      },
+                    repository.tryScrobble(
+                      songId: _lastProcessedId!,
+                      submission: false,
                     ),
                   );
                 }
@@ -114,16 +107,28 @@ class PlayerScrobbleRuntime {
     );
   }
 
-  void _savePlayQueue(AppPlayer player, Dio api) {
+  void _savePlayQueue(AppPlayer player, PlayerScrobbleRepository repository) {
     final playQueue = player.playQueue;
     if (playQueue.index >= playQueue.songs.length) {
-      unawaited(api.get('/rest/savePlayQueue'));
+      unawaited(
+        repository.trySavePlayQueue(songIds: const <String>[]),
+      );
       return;
     }
 
+    final songIds =
+        playQueue.songs
+            .map((song) => song.id)
+            .whereType<String>()
+            .where((id) => id.isNotEmpty)
+            .toList(growable: false);
     final currentSong = playQueue.songs[playQueue.index];
-    final ids = playQueue.songs.map((e) => 'id=${e.id}').join('&');
-    unawaited(api.get('/rest/savePlayQueue?$ids&current=${currentSong.id}'));
+    unawaited(
+      repository.trySavePlayQueue(
+        songIds: songIds,
+        currentSongId: currentSong.id,
+      ),
+    );
   }
 }
 

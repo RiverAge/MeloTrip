@@ -106,6 +106,18 @@ void main() {
       expect(result[0].id, 'album-1');
       expect(result[1].id, 'album-2');
     });
+
+    test('tryFetchAlbumListResponse returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(albumRepositoryProvider);
+      final result = await repository.tryFetchAlbumListResponse(
+        query: const AlbumListQuery(type: 'newest'),
+      );
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
+    });
   });
 }
 
