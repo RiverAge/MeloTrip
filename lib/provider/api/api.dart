@@ -78,15 +78,17 @@ class Api extends _$Api {
     DioException exception,
     ErrorInterceptorHandler handler,
   ) async {
-    final Object? retryOutcome = await _retryTransportFailureOnce(exception);
-    if (retryOutcome is Response<dynamic>) {
-      handler.resolve(retryOutcome);
+    final retryOutcome = await _retryTransportFailureOnce(exception);
+    if (retryOutcome case _RetryResolved(:final response)) {
+      handler.resolve(response);
       return;
     }
 
-    final DioException finalException = retryOutcome is DioException
-        ? retryOutcome
-        : exception;
+    final DioException finalException = switch (retryOutcome) {
+      _RetryFailed(:final exception) => exception,
+      _RetryResolved() => exception,
+      _RetrySkipped() => exception,
+    };
     if (_isTransportFailure(finalException)) {
       _emitGlobalError(finalException);
     }
@@ -115,12 +117,12 @@ class Api extends _$Api {
     return correlationId;
   }
 
-  Future<Object?> _retryTransportFailureOnce(DioException exception) async {
+  Future<_RetryOutcome> _retryTransportFailureOnce(DioException exception) async {
     if (!_isTransportFailure(exception)) {
-      return null;
+      return const _RetrySkipped();
     }
     if (_dio == null) {
-      return null;
+      return const _RetrySkipped();
     }
 
     final options = exception.requestOptions;
@@ -129,15 +131,16 @@ class Api extends _$Api {
         options.method.toUpperCase() == 'GET' &&
         retryCount < _maxTransportRetryCount;
     if (!shouldRetry) {
-      return null;
+      return const _RetrySkipped();
     }
 
     options.extra[_retryCountExtraKey] = retryCount + 1;
     await Future<void>.delayed(const Duration(milliseconds: 200));
     try {
-      return await _dio!.fetch<dynamic>(options);
+      final response = await _dio!.fetch<Object?>(options);
+      return _RetryResolved(response);
     } on DioException catch (retryException) {
-      return retryException;
+      return _RetryFailed(retryException);
     }
   }
 
@@ -146,4 +149,24 @@ class Api extends _$Api {
     logAppFailure(failure, scope: 'api_global_error', error: exception);
     ref.read(appErrorProvider.notifier).emitFailure(failure);
   }
+}
+
+sealed class _RetryOutcome {
+  const _RetryOutcome();
+}
+
+final class _RetryResolved extends _RetryOutcome {
+  const _RetryResolved(this.response);
+
+  final Response<Object?> response;
+}
+
+final class _RetryFailed extends _RetryOutcome {
+  const _RetryFailed(this.exception);
+
+  final DioException exception;
+}
+
+final class _RetrySkipped extends _RetryOutcome {
+  const _RetrySkipped();
 }

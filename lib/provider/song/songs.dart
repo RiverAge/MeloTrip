@@ -98,7 +98,7 @@ class PaginatedSongList extends _$PaginatedSongList {
 
   Future<void> loadMore() async {
     if (state.isLoading || !state.hasMore) return;
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, clearError: true);
     final result = await _fetchPage(state.offset);
     if (!ref.mounted) return;
     result.when(

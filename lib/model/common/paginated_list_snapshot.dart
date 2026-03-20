@@ -1,18 +1,13 @@
+import 'package:melo_trip/model/common/app_failure.dart';
+
 class PaginatedListFailure {
   const PaginatedListFailure({
     required this.message,
     this.cause,
   });
 
-  factory PaginatedListFailure.from(Object error) {
-    return PaginatedListFailure(
-      message: error.toString(),
-      cause: error,
-    );
-  }
-
   final String message;
-  final Object? cause;
+  final AppFailure? cause;
 }
 
 class PaginatedListSnapshot<T> {
@@ -35,18 +30,15 @@ class PaginatedListSnapshot<T> {
     bool? isLoading,
     bool? hasMore,
     int? offset,
-    Object? error = _sentinel,
+    PaginatedListFailure? error,
+    bool clearError = false,
   }) {
     return PaginatedListSnapshot<T>(
       items: items ?? this.items,
       isLoading: isLoading ?? this.isLoading,
       hasMore: hasMore ?? this.hasMore,
       offset: offset ?? this.offset,
-      error: identical(error, _sentinel)
-          ? this.error
-          : error as PaginatedListFailure?,
+      error: clearError ? null : (error ?? this.error),
     );
   }
 }
-
-const Object _sentinel = Object();
