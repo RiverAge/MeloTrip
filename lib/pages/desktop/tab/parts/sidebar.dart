@@ -14,6 +14,12 @@ class _DesktopSidebar extends ConsumerWidget {
   final ValueChanged<int> onSelected;
   final ValueChanged<String> onPlaylistSelected;
   final AppLocalizations l10n;
+
+  double _sidebarWidth(BuildContext context) {
+    final double screenWidth = MediaQuery.sizeOf(context).width;
+    return (screenWidth * 0.18).clamp(220.0, 300.0);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -66,7 +72,7 @@ class _DesktopSidebar extends ConsumerWidget {
     return AnimatedContainer(
       duration: DesktopMotionTokens.slow,
       curve: DesktopMotionTokens.standardCurve,
-      width: 260,
+      width: _sidebarWidth(context),
       color: theme.colorScheme.surfaceContainer,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       child: Column(
@@ -191,4 +197,3 @@ class _SidebarSection extends StatelessWidget {
     );
   }
 }
-

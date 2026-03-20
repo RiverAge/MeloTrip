@@ -118,50 +118,59 @@ class _MiniAlbumCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(right: 20),
-      child: SizedBox(
-        width: 150,
-        child: Column(
-          crossAxisAlignment: .start,
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: ArtworkImage(
-                id: album.id,
-                size: 300,
-                width: 150,
-                height: 150,
-                fit: .cover,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              album.name ?? '',
-              maxLines: 1,
-              overflow: .ellipsis,
-              style: TextStyle(
-                fontWeight: .bold,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              album.artist ?? '',
-              maxLines: 1,
-              overflow: .ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            Text(
-              '${album.year ?? ""}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontSize: 10,
-                color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.7,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double cardWidth =
+              (constraints.maxHeight.isFinite
+                      ? constraints.maxHeight * 0.72
+                      : 150.0)
+                  .clamp(120.0, 180.0);
+          return SizedBox(
+            width: cardWidth,
+            child: Column(
+              crossAxisAlignment: .start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: ArtworkImage(
+                    id: album.id,
+                    size: 300,
+                    width: cardWidth,
+                    height: cardWidth,
+                    fit: .cover,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                Text(
+                  album.name ?? '',
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: TextStyle(
+                    fontWeight: .bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  album.artist ?? '',
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  '${album.year ?? ""}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 10,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.7,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
