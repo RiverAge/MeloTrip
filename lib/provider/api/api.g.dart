@@ -32,7 +32,7 @@ final class ApiProvider extends $AsyncNotifierProvider<Api, Dio> {
   Api create() => Api();
 }
 
-String _$apiHash() => r'733d311fa50797bfac72f64fe038df730a9e8d7b';
+String _$apiHash() => r'bac20f0c19285c3be5c0ba30eef4e61a27369f1d';
 
 abstract class _$Api extends $AsyncNotifier<Dio> {
   FutureOr<Dio> build();

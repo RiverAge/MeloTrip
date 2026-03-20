@@ -101,10 +101,10 @@ class DesktopLyricsSettings extends _$DesktopLyricsSettings {
     );
   }
 
-  Map<String, Object> _encodeConfig(DesktopLyricsConfig config) {
+  Map<String, dynamic> _encodeConfig(DesktopLyricsConfig config) {
     final Color backgroundColor =
         config.background.backgroundColor ?? const Color(0x7A220A35);
-    return <String, Object>{
+    return <String, dynamic>{
       'interactionEnabled': config.interaction.enabled,
       'clickThrough': config.interaction.clickThrough,
       'fontSize': config.text.fontSize,

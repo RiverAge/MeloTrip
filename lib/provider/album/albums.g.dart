@@ -65,7 +65,7 @@ final class PaginatedAlbumListProvider
 }
 
 String _$paginatedAlbumListHash() =>
-    r'4cb4cc585f97ef3179d33842214f2321a0876afd';
+    r'fbaf7f1789fcd1d4ff93d3132c778f4fb17b9453';
 
 final class PaginatedAlbumListFamily extends $Family
     with

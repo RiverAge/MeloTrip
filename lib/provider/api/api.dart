@@ -137,7 +137,7 @@ class Api extends _$Api {
     options.extra[_retryCountExtraKey] = retryCount + 1;
     await Future<void>.delayed(const Duration(milliseconds: 200));
     try {
-      final response = await _dio!.fetch<Object?>(options);
+      final response = await _dio!.fetch<Map<String, dynamic>>(options);
       return _RetryResolved(response);
     } on DioException catch (retryException) {
       return _RetryFailed(retryException);
@@ -158,7 +158,7 @@ sealed class _RetryOutcome {
 final class _RetryResolved extends _RetryOutcome {
   const _RetryResolved(this.response);
 
-  final Response<Object?> response;
+  final Response<Map<String, dynamic>> response;
 }
 
 final class _RetryFailed extends _RetryOutcome {

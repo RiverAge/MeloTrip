@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:melo_trip/model/update/app_update_info.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:update_installer/update_installer.dart';
 
-part 'app_update_models.dart';
+export 'package:melo_trip/model/update/app_update_info.dart';
 
 class AppUpdateService {
   AppUpdateService({

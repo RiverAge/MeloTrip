@@ -214,6 +214,7 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 ### Typed Contracts (No Object)
 
 - Do not use bare `Object` or `Object?` as business-domain contract types in providers, repositories, models, or public method signatures.
+- JSON and transport boundaries may use `Map<String, dynamic>` (or framework-required `dynamic`) for decode/interop, but the data must be converted to typed domain models before crossing business boundaries.
 - `catch (e)` may temporarily receive `Object`, but it must be converted at the boundary into a typed failure model before being exposed upstream.
 - Do not expose `Object`-typed fields for user-facing state or error payloads. Prefer typed failures such as `AppFailure` and feature-specific failure models.
 - If a legacy `Object` contract cannot be removed immediately, document the blocker and a concrete follow-up plan in the handoff.

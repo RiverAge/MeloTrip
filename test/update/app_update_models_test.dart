@@ -23,7 +23,7 @@ void main() {
       expect(info.changelog, contains('Bug fixes'));
     });
 
-    test('fromJson handles string numbers', () {
+    test('fromJson throws for string numbers', () {
       final json = {
         'versionName': '1.0.0',
         'versionCode': '100',
@@ -33,19 +33,13 @@ void main() {
         'changelog': '',
       };
 
-      final info = AppUpdateInfo.fromJson(json);
-      expect(info.versionCode, equals(100));
-      expect(info.fileSize, equals(1024));
+      expect(() => AppUpdateInfo.fromJson(json), throwsA(isA<TypeError>()));
     });
 
-    test('fromJson handles null values', () {
+    test('fromJson throws for missing required values', () {
       final json = <String, dynamic>{};
-      final info = AppUpdateInfo.fromJson(json);
-      
-      expect(info.versionName, equals(''));
-      expect(info.versionCode, equals(0));
-      expect(info.sha256, equals(''));
-      expect(info.fileSize, equals(0));
+
+      expect(() => AppUpdateInfo.fromJson(json), throwsA(isA<TypeError>()));
     });
   });
 

@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 
 void main() {
-  test('AppUpdateInfo.fromJson parses mixed numeric types', () {
+  test('AppUpdateInfo.fromJson parses strict numeric types', () {
     final info = AppUpdateInfo.fromJson({
       'versionName': '1.2.3',
-      'versionCode': '42',
+      'versionCode': 42,
       'sha256': 'abc',
-      'fileSize': 1024.0,
+      'fileSize': 1024,
       'downloadUrl': 'https://example.com/app.apk',
       'changelog': 'fixes',
     });
