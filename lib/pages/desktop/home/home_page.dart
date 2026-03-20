@@ -21,6 +21,7 @@ class DesktopHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final trailingSpacing = MediaQuery.paddingOf(context).bottom + 96;
     return CustomScrollView(
       slivers: [
         const SliverPadding(
@@ -46,7 +47,7 @@ class DesktopHomePage extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
           sliver: _DesktopAlbumSection(title: l10n.mostPlayed, type: .frequent),
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        SliverToBoxAdapter(child: SizedBox(height: trailingSpacing)),
       ],
     );
   }

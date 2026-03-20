@@ -79,6 +79,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
 
   @override
   Widget build(BuildContext context) {
+    final trailingSpacing = MediaQuery.paddingOf(context).bottom + 96;
     return CustomScrollView(
       controller: _scrollController,
       slivers: <Widget>[
@@ -96,7 +97,7 @@ class _AlbumDetailContentState extends State<_AlbumDetailContent> {
           onPlaySong: _playSong,
         ),
         _AlbumRecommendationsSection(album: widget.album),
-        const SliverToBoxAdapter(child: SizedBox(height: 120)),
+        SliverToBoxAdapter(child: SizedBox(height: trailingSpacing)),
       ],
     );
   }

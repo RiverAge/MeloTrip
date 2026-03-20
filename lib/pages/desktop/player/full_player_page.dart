@@ -19,45 +19,41 @@ class DesktopFullPlayerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: PlayQueueBuilder(
-        builder: (context, playQueue, _) {
-          final current =
-              playQueue.index < 0 || playQueue.index >= playQueue.songs.length
-              ? null
-              : playQueue.songs[playQueue.index];
+    return PlayQueueBuilder(
+      builder: (context, playQueue, _) {
+        final current =
+            playQueue.index < 0 || playQueue.index >= playQueue.songs.length
+            ? null
+            : playQueue.songs[playQueue.index];
 
-          if (current == null) {
-            return Center(
-              child: Text(AppLocalizations.of(context)!.noSongPlaying),
-            );
-          }
-
-          return ClipRect(
-            // BackdropFilter 必须被明确裁剪到当前全屏播放器面板内，
-            // 否则即使页面通过位移动画移出屏幕，模糊效果仍可能泄漏到整屏。
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                PlaybackArtworkBackground(
-                  artworkId: 'mf-${current.id}',
-                  size: 2200,
-                  fit: .cover,
-                ),
-                const PlaybackBlurOverlay(
-                  blurSigma: 30,
-                  surfaceAlpha: 0.34,
-                  useVignette: true,
-                ),
-
-                _buildSafeArea(context, current),
-              ],
-            ),
+        if (current == null) {
+          return Center(
+            child: Text(AppLocalizations.of(context)!.noSongPlaying),
           );
-        },
-      ),
+        }
+
+        return ClipRect(
+          // BackdropFilter 必须被明确裁剪到当前全屏播放器面板内，
+          // 否则即使页面通过位移动画移出屏幕，模糊效果仍可能泄漏到整屏。
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              PlaybackArtworkBackground(
+                artworkId: 'mf-${current.id}',
+                size: 2200,
+                fit: .cover,
+              ),
+              const PlaybackBlurOverlay(
+                blurSigma: 30,
+                surfaceAlpha: 0.34,
+                useVignette: true,
+              ),
+
+              _buildSafeArea(context, current),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -185,7 +181,10 @@ class DesktopFullPlayerPage extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: isNarrow ? 40 : 100),
+                      SizedBox(
+                        width: (constraints.maxWidth * (isNarrow ? 0.05 : 0.08))
+                            .clamp(24.0, 96.0),
+                      ),
                       Expanded(
                         flex: isNarrow ? 3 : 6,
                         child: _DesktopLyrics(songId: current.id),
@@ -196,7 +195,7 @@ class DesktopFullPlayerPage extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 60),
+          SizedBox(height: MediaQuery.paddingOf(context).bottom + 24),
         ],
       ),
     );

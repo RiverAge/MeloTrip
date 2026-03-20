@@ -134,35 +134,47 @@ class _AlbumRecommendationsSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              height: 240,
-              child: AsyncValueBuilder(
-                provider: albumListProvider(
-                  AlbumListQuery(
-                    type: hasGenre ? 'byGenre' : AlbumListType.random.name,
-                    genre: hasGenre ? genre : null,
-                    size: 20,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final listHeight = (constraints.maxWidth * 0.18).clamp(
+                  180.0,
+                  260.0,
+                );
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: listHeight,
+                    maxHeight: listHeight,
                   ),
-                ),
-                builder: (context, data, _) {
-                  if (data.isErr) {
-                    return const SizedBox.shrink();
-                  }
-                  final List<AlbumEntity> albums = (data.data ?? const <AlbumEntity>[])
-                      .where((AlbumEntity item) => item.id != album.id)
-                      .toList();
-                  if (albums.isEmpty) {
-                    return const SizedBox.shrink();
-                  }
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: albums.length,
-                    itemBuilder: (_, index) {
-                      return _MiniAlbumCard(album: albums[index]);
+                  child: AsyncValueBuilder(
+                    provider: albumListProvider(
+                      AlbumListQuery(
+                        type: hasGenre ? 'byGenre' : AlbumListType.random.name,
+                        genre: hasGenre ? genre : null,
+                        size: 20,
+                      ),
+                    ),
+                    builder: (context, data, _) {
+                      if (data.isErr) {
+                        return const SizedBox.shrink();
+                      }
+                      final List<AlbumEntity> albums =
+                          (data.data ?? const <AlbumEntity>[])
+                              .where((AlbumEntity item) => item.id != album.id)
+                              .toList();
+                      if (albums.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: albums.length,
+                        itemBuilder: (_, index) {
+                          return _MiniAlbumCard(album: albums[index]);
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ],
         ),
