@@ -32,6 +32,8 @@ class _SearchResultListV2 extends StatelessWidget {
         ? titleMatchedSongs
         : songs.take(5).toList();
 
+    final bottomSpacing = MediaQuery.paddingOf(context).bottom + 56;
+
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
@@ -55,7 +57,7 @@ class _SearchResultListV2 extends StatelessWidget {
           ...displaySongs.map((song) => _SongTileV2(song: song)),
         ],
 
-        const SizedBox(height: 100),
+        SizedBox(height: bottomSpacing),
       ],
     );
   }

@@ -69,219 +69,230 @@ class _AlbumDetailHeader extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(40, 80, 40, 40),
-              child: Row(
-                crossAxisAlignment: .end,
-                children: <Widget>[
-                  Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: theme.shadowColor.withValues(alpha: 0.3),
-                          blurRadius: 40,
-                          offset: const Offset(0, 15),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: ArtworkImage(id: album.id, size: 600),
-                    ),
-                  ),
-                  const SizedBox(width: 40),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      mainAxisAlignment: .end,
-                      mainAxisSize: .min,
-                      children: <Widget>[
-                        Text(
-                          l10n.album,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: headerSubTextColor,
-                            fontWeight: .bold,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final double coverSize = (constraints.maxHeight * 0.52).clamp(
+                  160.0,
+                  220.0,
+                );
+                final double coverGap = (coverSize * 0.2).clamp(20.0, 40.0);
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 80, 40, 40),
+                  child: Row(
+                    crossAxisAlignment: .end,
+                    children: <Widget>[
+                      SizedBox(
+                        width: coverSize,
+                        height: coverSize,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                color: theme.shadowColor.withValues(alpha: 0.3),
+                                blurRadius: 40,
+                                offset: const Offset(0, 15),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: ArtworkImage(id: album.id, size: 600),
                           ),
                         ),
-                        const SizedBox(height: 6),
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxHeight: 110),
-                          child: Text(
-                            album.name ?? '-',
-                            maxLines: 2,
-                            overflow: .ellipsis,
-                            style: theme.textTheme.displaySmall?.copyWith(
-                              color: headerTextColor,
-                              fontWeight: .w900,
-                              letterSpacing: -1.0,
-                              fontSize: 34,
-                              height: 1.08,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _AlbumMetaRow(
-                          album: album,
-                          songs: songs,
-                          contentColor: headerSubTextColor,
-                          formatTotalDuration: formatTotalDuration,
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          album.artist ?? '-',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: headerTextColor,
-                            fontWeight: .w600,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
+                      ),
+                      SizedBox(width: coverGap),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          mainAxisAlignment: .end,
+                          mainAxisSize: .min,
                           children: <Widget>[
-                            Consumer(
-                              builder: (context, ref, _) {
-                                return FilledButton.icon(
-                                  onPressed: songs.isEmpty
-                                      ? null
-                                      : () => onPlayAlbum(ref),
-                                  icon: const Icon(
-                                    Icons.play_arrow_rounded,
-                                    size: 24,
-                                  ),
-                                  label: Text(l10n.play),
-                                  style: FilledButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 12,
-                                    ),
-                                    backgroundColor: colorScheme.primary,
-                                    foregroundColor: colorScheme.onPrimary,
-                                  ),
-                                );
-                              },
+                            Text(
+                              l10n.album,
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: headerSubTextColor,
+                                fontWeight: .bold,
+                              ),
                             ),
-                            const SizedBox(width: 12),
-                            AsyncValueBuilder(
-                              provider: appPlayerHandlerProvider,
-                              loading: (_, _) => _HeaderOutlineButton(
-                                icon: Icons.shuffle_rounded,
-                                label: l10n.shuffleOn,
-                                textColor: headerTextColor,
-                                borderColor: headerTextColor.withValues(
-                                  alpha: 0.35,
+                            const SizedBox(height: 6),
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 110),
+                              child: Text(
+                                album.name ?? '-',
+                                maxLines: 2,
+                                overflow: .ellipsis,
+                                style: theme.textTheme.displaySmall?.copyWith(
+                                  color: headerTextColor,
+                                  fontWeight: .w900,
+                                  letterSpacing: -1.0,
+                                  fontSize: 34,
+                                  height: 1.08,
                                 ),
                               ),
-                              builder: (context, player, _) {
-                                return AsyncStreamBuilder(
-                                  provider: player.shuffleStream,
-                                  builder: (context, shuffleEnabled) {
+                            ),
+                            const SizedBox(height: 12),
+                            _AlbumMetaRow(
+                              album: album,
+                              songs: songs,
+                              contentColor: headerSubTextColor,
+                              formatTotalDuration: formatTotalDuration,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              album.artist ?? '-',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: headerTextColor,
+                                fontWeight: .w600,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: <Widget>[
+                                Consumer(
+                                  builder: (context, ref, _) {
+                                    return FilledButton.icon(
+                                      onPressed: songs.isEmpty
+                                          ? null
+                                          : () => onPlayAlbum(ref),
+                                      icon: const Icon(
+                                        Icons.play_arrow_rounded,
+                                        size: 24,
+                                      ),
+                                      label: Text(l10n.play),
+                                      style: FilledButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                        backgroundColor: colorScheme.primary,
+                                        foregroundColor: colorScheme.onPrimary,
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 12),
+                                AsyncValueBuilder(
+                                  provider: appPlayerHandlerProvider,
+                                  loading: (_, _) => _HeaderOutlineButton(
+                                    icon: Icons.shuffle_rounded,
+                                    label: l10n.shuffleOn,
+                                    textColor: headerTextColor,
+                                    borderColor: headerTextColor.withValues(
+                                      alpha: 0.35,
+                                    ),
+                                  ),
+                                  builder: (context, player, _) {
+                                    return AsyncStreamBuilder(
+                                      provider: player.shuffleStream,
+                                      builder: (context, shuffleEnabled) {
+                                        return _HeaderOutlineButton(
+                                          icon: shuffleEnabled
+                                              ? Icons.shuffle_on_rounded
+                                              : Icons.shuffle_rounded,
+                                          label: shuffleEnabled
+                                              ? l10n.shuffleOn
+                                              : l10n.shuffleOff,
+                                          textColor: headerTextColor,
+                                          borderColor: headerTextColor
+                                              .withValues(alpha: 0.35),
+                                          onPressed: () =>
+                                              player.setShuffleModeEnabled(
+                                                !shuffleEnabled,
+                                              ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 12),
+                                Consumer(
+                                  builder: (context, ref, _) {
                                     return _HeaderOutlineButton(
-                                      icon: shuffleEnabled
-                                          ? Icons.shuffle_on_rounded
-                                          : Icons.shuffle_rounded,
-                                      label: shuffleEnabled
-                                          ? l10n.shuffleOn
-                                          : l10n.shuffleOff,
+                                      icon: Icons.playlist_play_rounded,
+                                      label: l10n.addToPlayQueue,
                                       textColor: headerTextColor,
                                       borderColor: headerTextColor.withValues(
                                         alpha: 0.35,
                                       ),
-                                      onPressed: () =>
-                                          player.setShuffleModeEnabled(
-                                            !shuffleEnabled,
-                                          ),
+                                      onPressed: songs.isEmpty
+                                          ? null
+                                          : () async {
+                                              await onAddToQueue(ref);
+                                              if (!context.mounted) {
+                                                return;
+                                              }
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    l10n.addToPlayQueue,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                     );
                                   },
-                                );
-                              },
-                            ),
-                            const SizedBox(width: 12),
-                            Consumer(
-                              builder: (context, ref, _) {
-                                return _HeaderOutlineButton(
-                                  icon: Icons.playlist_play_rounded,
-                                  label: l10n.addToPlayQueue,
-                                  textColor: headerTextColor,
-                                  borderColor: headerTextColor.withValues(
-                                    alpha: 0.35,
-                                  ),
-                                  onPressed: songs.isEmpty
-                                      ? null
-                                      : () async {
-                                          await onAddToQueue(ref);
-                                          if (!context.mounted) {
-                                            return;
-                                          }
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                l10n.addToPlayQueue,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                );
-                              },
-                            ),
-                            const Spacer(),
-                            Consumer(
-                              builder: (context, ref, _) {
-                                return Rating(
-                                  rating: album.userRating ?? 0,
-                                  color: headerSubTextColor,
-                                  onRating: (value) {
-                                    ref
-                                        .read(
-                                          albumDetailProvider(
-                                            album.id,
-                                          ).notifier,
-                                        )
-                                        .setRating(value);
+                                ),
+                                const Spacer(),
+                                Consumer(
+                                  builder: (context, ref, _) {
+                                    return Rating(
+                                      rating: album.userRating ?? 0,
+                                      color: headerSubTextColor,
+                                      onRating: (value) {
+                                        ref
+                                            .read(
+                                              albumDetailProvider(
+                                                album.id,
+                                              ).notifier,
+                                            )
+                                            .setRating(value);
+                                      },
+                                    );
                                   },
-                                );
-                              },
-                            ),
-                            const SizedBox(width: 16),
-                            Consumer(
-                              builder: (context, ref, _) {
-                                final bool isFavorite = album.starred != null;
-                                return IconButton(
-                                  tooltip: isFavorite
-                                      ? l10n.unfavorite
-                                      : l10n.favorite,
-                                  onPressed: () async {
-                                    await ref
-                                        .read(
-                                          albumDetailProvider(
-                                            album.id,
-                                          ).notifier,
-                                        )
-                                        .toggleFavorite();
+                                ),
+                                const SizedBox(width: 16),
+                                Consumer(
+                                  builder: (context, ref, _) {
+                                    final bool isFavorite =
+                                        album.starred != null;
+                                    return IconButton(
+                                      tooltip: isFavorite
+                                          ? l10n.unfavorite
+                                          : l10n.favorite,
+                                      onPressed: () async {
+                                        await ref
+                                            .read(
+                                              albumDetailProvider(
+                                                album.id,
+                                              ).notifier,
+                                            )
+                                            .toggleFavorite();
+                                      },
+                                      icon: Icon(
+                                        isFavorite
+                                            ? Icons.favorite_rounded
+                                            : Icons.favorite_border_rounded,
+                                        size: 20,
+                                        color: isFavorite
+                                            ? colorScheme.error
+                                            : headerSubTextColor,
+                                      ),
+                                    );
                                   },
-                                  icon: Icon(
-                                    isFavorite
-                                        ? Icons.favorite_rounded
-                                        : Icons.favorite_border_rounded,
-                                    size: 20,
-                                    color: isFavorite
-                                        ? colorScheme.error
-                                        : headerSubTextColor,
-                                  ),
-                                );
-                              },
+                                ),
+                                const SizedBox(width: 8),
+                              ],
                             ),
-                            const SizedBox(width: 8),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -330,4 +341,3 @@ class _AlbumMetaRow extends StatelessWidget {
     );
   }
 }
-

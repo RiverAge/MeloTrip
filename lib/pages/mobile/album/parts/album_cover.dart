@@ -7,9 +7,11 @@ class _AlbumCover extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final double coverSize = (MediaQuery.sizeOf(context).shortestSide * 0.52)
+        .clamp(160.0, 240.0);
     return Container(
-      width: 200,
-      height: 200,
+      width: coverSize,
+      height: coverSize,
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),

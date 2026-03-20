@@ -54,12 +54,14 @@ class _RotateCoverState extends ConsumerState<_RotateCover>
           }
 
           final current = playQueue.songs[playQueue.index];
+          final double coverSize = (MediaQuery.sizeOf(context).width * 0.72)
+              .clamp(220.0, 320.0);
           return ClipOval(
             child: ArtworkImage(
               id: 'mf-${current.id}',
               fit: .cover,
-              width: 300,
-              height: 300,
+              width: coverSize,
+              height: coverSize,
               size: 300,
             ),
           );

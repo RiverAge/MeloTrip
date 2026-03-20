@@ -23,93 +23,102 @@ class PlaylistHeader extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
-      child: Row(
-        crossAxisAlignment: .end,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: ArtworkImage(
-              id: playlist.id,
-              width: 160,
-              height: 160,
-              fit: .cover,
-              size: 400,
-            ),
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: .start,
-              mainAxisAlignment: .end,
-              children: [
-                Text(
-                  l10n.playlist,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.7,
-                    ),
-                  ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double coverSize = (constraints.maxWidth * 0.16).clamp(
+            120.0,
+            180.0,
+          );
+          final double coverGap = (coverSize * 0.15).clamp(16.0, 28.0);
+          return Row(
+            crossAxisAlignment: .end,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: ArtworkImage(
+                  id: playlist.id,
+                  width: coverSize,
+                  height: coverSize,
+                  fit: .cover,
+                  size: 400,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  playlist.name ?? '-',
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    fontWeight: .w900,
-                    letterSpacing: -0.5,
-                  ),
-                  maxLines: 2,
-                  overflow: .ellipsis,
-                ),
-                const SizedBox(height: 16),
-                Row(
+              ),
+              SizedBox(width: coverGap),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  mainAxisAlignment: .end,
                   children: [
-                    FilledButton.icon(
-                      onPressed: songs.isEmpty ? null : onPlayAll,
-                      icon: const Icon(Icons.play_arrow_rounded, size: 20),
-                      label: Text(l10n.play),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
+                    Text(
+                      l10n.playlist,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.7,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    OutlinedButton.icon(
-                      onPressed: songs.isEmpty ? null : onPlayNext,
-                      icon: const Icon(Icons.redo_rounded, size: 18),
-                      label: Text(l10n.playAddToNext),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        side: BorderSide(
-                          color: theme.colorScheme.outlineVariant,
-                        ),
+                    const SizedBox(height: 4),
+                    Text(
+                      playlist.name ?? '-',
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        fontWeight: .w900,
+                        letterSpacing: -0.5,
                       ),
+                      maxLines: 2,
+                      overflow: .ellipsis,
                     ),
-                    const SizedBox(width: 10),
-                    OutlinedButton.icon(
-                      onPressed: songs.isEmpty ? null : onPlayLast,
-                      icon: const Icon(Icons.skip_next_rounded, size: 18),
-                      label: Text(l10n.playAddToLast),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        FilledButton.icon(
+                          onPressed: songs.isEmpty ? null : onPlayAll,
+                          icon: const Icon(Icons.play_arrow_rounded, size: 20),
+                          label: Text(l10n.play),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                          ),
                         ),
-                        side: BorderSide(
-                          color: theme.colorScheme.outlineVariant,
+                        const SizedBox(width: 10),
+                        OutlinedButton.icon(
+                          onPressed: songs.isEmpty ? null : onPlayNext,
+                          icon: const Icon(Icons.redo_rounded, size: 18),
+                          label: Text(l10n.playAddToNext),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            side: BorderSide(
+                              color: theme.colorScheme.outlineVariant,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 10),
+                        OutlinedButton.icon(
+                          onPressed: songs.isEmpty ? null : onPlayLast,
+                          icon: const Icon(Icons.skip_next_rounded, size: 18),
+                          label: Text(l10n.playAddToLast),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            side: BorderSide(
+                              color: theme.colorScheme.outlineVariant,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

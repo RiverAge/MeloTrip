@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage>
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final trailingSpacing = MediaQuery.paddingOf(context).bottom + 72;
 
     return Scaffold(
       body: CustomScrollView(
@@ -104,7 +105,7 @@ class _HomePageState extends State<HomePage>
               ),
               // const SizedBox(height: 16),
               const EndofData(),
-              const SizedBox(height: 120),
+              SizedBox(height: trailingSpacing),
             ]),
           ),
         ],

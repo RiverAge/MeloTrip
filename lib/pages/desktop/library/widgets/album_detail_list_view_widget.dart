@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/album/album_detail.dart';
@@ -45,6 +46,13 @@ class _AlbumDetailItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final String yearText = (album.year?.toString() ?? '').trim();
+    final String summary = <String>[
+      if (yearText.isNotEmpty) yearText,
+      '${album.songCount ?? 0} ${l10n.songCountUnit}',
+    ].join(' · ');
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 48),
       child: Row(
@@ -83,7 +91,7 @@ class _AlbumDetailItem extends ConsumerWidget {
                     overflow: .ellipsis,
                   ),
                   Text(
-                    '${album.year ?? ""} 路 ${album.songCount ?? 0}',
+                    summary,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
                     ),
