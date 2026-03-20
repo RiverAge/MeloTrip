@@ -239,7 +239,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   color: colorScheme.onPrimary,
                   fontWeight: FontWeight.w900,
                   letterSpacing: -1.2,
-                  fontSize: compact ? 34 : 48,
+                  fontSize: compact ? 30 : 42,
                 ),
               ),
             ),
