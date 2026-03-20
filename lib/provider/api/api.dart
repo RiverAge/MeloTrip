@@ -30,6 +30,9 @@ class Api extends _$Api {
     );
     _configureInterceptors(dio);
     _dio = dio;
+    ref.onDispose(() {
+      _dio = null;
+    });
     return dio;
   }
 
@@ -54,7 +57,16 @@ class Api extends _$Api {
     options.queryParameters.putIfAbsent('c', () => subsonicClientName);
     options.queryParameters.putIfAbsent('f', () => 'json');
 
+    if (!ref.mounted) {
+      handler.next(options);
+      return;
+    }
+
     final auth = await ref.read(sessionAuthProvider.future);
+    if (!ref.mounted) {
+      handler.next(options);
+      return;
+    }
     final token = auth?.token;
     final host = auth?.host;
     final hasExplicitAuth =
@@ -117,7 +129,9 @@ class Api extends _$Api {
     return correlationId;
   }
 
-  Future<_RetryOutcome> _retryTransportFailureOnce(DioException exception) async {
+  Future<_RetryOutcome> _retryTransportFailureOnce(
+    DioException exception,
+  ) async {
     if (!_isTransportFailure(exception)) {
       return const _RetrySkipped();
     }
@@ -145,6 +159,9 @@ class Api extends _$Api {
   }
 
   void _emitGlobalError(DioException exception) {
+    if (!ref.mounted) {
+      return;
+    }
     final failure = AppFailure.from(exception);
     logAppFailure(failure, scope: 'api_global_error', error: exception);
     ref.read(appErrorProvider.notifier).emitFailure(failure);
