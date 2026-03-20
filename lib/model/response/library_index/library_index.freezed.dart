@@ -560,7 +560,7 @@ as List<ArtistEntity>?,
 /// @nodoc
 mixin _$IndexesEntity {
 
- String? get lastModified; List<ArtistIndexBucketEntity>? get index;
+ int? get lastModified; List<ArtistIndexBucketEntity>? get index;
 /// Create a copy of IndexesEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -593,7 +593,7 @@ abstract mixin class $IndexesEntityCopyWith<$Res>  {
   factory $IndexesEntityCopyWith(IndexesEntity value, $Res Function(IndexesEntity) _then) = _$IndexesEntityCopyWithImpl;
 @useResult
 $Res call({
- String? lastModified, List<ArtistIndexBucketEntity>? index
+ int? lastModified, List<ArtistIndexBucketEntity>? index
 });
 
 
@@ -613,7 +613,7 @@ class _$IndexesEntityCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? lastModified = freezed,Object? index = freezed,}) {
   return _then(_self.copyWith(
 lastModified: freezed == lastModified ? _self.lastModified : lastModified // ignore: cast_nullable_to_non_nullable
-as String?,index: freezed == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
+as int?,index: freezed == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as List<ArtistIndexBucketEntity>?,
   ));
 }
@@ -699,7 +699,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? lastModified,  List<ArtistIndexBucketEntity>? index)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? lastModified,  List<ArtistIndexBucketEntity>? index)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IndexesEntity() when $default != null:
 return $default(_that.lastModified,_that.index);case _:
@@ -720,7 +720,7 @@ return $default(_that.lastModified,_that.index);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? lastModified,  List<ArtistIndexBucketEntity>? index)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? lastModified,  List<ArtistIndexBucketEntity>? index)  $default,) {final _that = this;
 switch (_that) {
 case _IndexesEntity():
 return $default(_that.lastModified,_that.index);case _:
@@ -740,7 +740,7 @@ return $default(_that.lastModified,_that.index);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? lastModified,  List<ArtistIndexBucketEntity>? index)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? lastModified,  List<ArtistIndexBucketEntity>? index)?  $default,) {final _that = this;
 switch (_that) {
 case _IndexesEntity() when $default != null:
 return $default(_that.lastModified,_that.index);case _:
@@ -758,7 +758,7 @@ class _IndexesEntity implements IndexesEntity {
   const _IndexesEntity({this.lastModified, final  List<ArtistIndexBucketEntity>? index}): _index = index;
   factory _IndexesEntity.fromJson(Map<String, dynamic> json) => _$IndexesEntityFromJson(json);
 
-@override final  String? lastModified;
+@override final  int? lastModified;
  final  List<ArtistIndexBucketEntity>? _index;
 @override List<ArtistIndexBucketEntity>? get index {
   final value = _index;
@@ -802,7 +802,7 @@ abstract mixin class _$IndexesEntityCopyWith<$Res> implements $IndexesEntityCopy
   factory _$IndexesEntityCopyWith(_IndexesEntity value, $Res Function(_IndexesEntity) _then) = __$IndexesEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String? lastModified, List<ArtistIndexBucketEntity>? index
+ int? lastModified, List<ArtistIndexBucketEntity>? index
 });
 
 
@@ -822,7 +822,7 @@ class __$IndexesEntityCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? lastModified = freezed,Object? index = freezed,}) {
   return _then(_IndexesEntity(
 lastModified: freezed == lastModified ? _self.lastModified : lastModified // ignore: cast_nullable_to_non_nullable
-as String?,index: freezed == index ? _self._index : index // ignore: cast_nullable_to_non_nullable
+as int?,index: freezed == index ? _self._index : index // ignore: cast_nullable_to_non_nullable
 as List<ArtistIndexBucketEntity>?,
   ));
 }

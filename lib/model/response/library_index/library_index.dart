@@ -27,7 +27,7 @@ abstract class ArtistIndexBucketEntity with _$ArtistIndexBucketEntity {
 @freezed
 abstract class IndexesEntity with _$IndexesEntity {
   const factory IndexesEntity({
-    String? lastModified,
+    int? lastModified,
     List<ArtistIndexBucketEntity>? index,
   }) = _IndexesEntity;
 

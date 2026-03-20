@@ -33,7 +33,7 @@ Map<String, dynamic> _$ArtistIndexBucketEntityToJson(
 
 _IndexesEntity _$IndexesEntityFromJson(Map<String, dynamic> json) =>
     _IndexesEntity(
-      lastModified: json['lastModified'] as String?,
+      lastModified: (json['lastModified'] as num?)?.toInt(),
       index: (json['index'] as List<dynamic>?)
           ?.map(
             (e) => ArtistIndexBucketEntity.fromJson(e as Map<String, dynamic>),

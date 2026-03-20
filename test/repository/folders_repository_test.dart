@@ -45,6 +45,7 @@ void main() {
         'subsonic-response': {
           'status': 'ok',
           'indexes': {
+            'lastModified': 1742438164,
             'index': [
               {
                 'name': 'A',
