@@ -68,23 +68,33 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          SongPageHeader(
-            title: l10n.song,
-            count: state.items.length,
-          ),
+          SongPageHeader(title: l10n.song, count: state.items.length),
           const SongPageToolbar(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             child: Row(
               children: [
-                SizedBox(width: 30, child: Text('#', style: headerStyle)),
+                Expanded(
+                  child: Align(
+                    alignment: .centerLeft,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 40),
+                      child: Text('#', style: headerStyle),
+                    ),
+                  ),
+                ),
                 Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
-                SizedBox(
-                  width: 60,
-                  child: Icon(
-                    Icons.access_time_rounded,
-                    size: 14,
-                    color: headerColor,
+                Expanded(
+                  child: Align(
+                    alignment: .centerLeft,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 72),
+                      child: Icon(
+                        Icons.access_time_rounded,
+                        size: 14,
+                        color: headerColor,
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(flex: 3, child: Text(l10n.album, style: headerStyle)),
@@ -92,11 +102,21 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
                   flex: 2,
                   child: Text(l10n.songMetaGenre, style: headerStyle),
                 ),
-                SizedBox(
-                  width: 60,
-                  child: Text(l10n.songMetaYear, style: headerStyle),
+                Expanded(
+                  child: Align(
+                    alignment: .centerLeft,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 72),
+                      child: Text(
+                        l10n.songMetaYear,
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                        style: headerStyle,
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(width: 30),
+                const SizedBox.square(dimension: 16),
               ],
             ),
           ),

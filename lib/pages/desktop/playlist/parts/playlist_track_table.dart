@@ -21,12 +21,19 @@ class PlaylistTrackRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
         child: Row(
           children: [
-            SizedBox(
-              width: 40,
-              child: Text(
-                '$index',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+            Expanded(
+              child: Align(
+                alignment: .centerLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 40),
+                  child: Text(
+                    '$index',
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -71,11 +78,18 @@ class PlaylistTrackRow extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              width: 60,
-              child: Text(
-                _formatSec(song.duration ?? 0),
-                style: theme.textTheme.bodySmall,
+            Expanded(
+              child: Align(
+                alignment: .centerLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 72),
+                  child: Text(
+                    _formatSec(song.duration ?? 0),
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -96,11 +110,18 @@ class PlaylistTrackRow extends StatelessWidget {
                 style: theme.textTheme.bodySmall,
               ),
             ),
-            SizedBox(
-              width: 60,
-              child: Text(
-                '${song.year ?? ''}',
-                style: theme.textTheme.bodySmall,
+            Expanded(
+              child: Align(
+                alignment: .centerLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 72),
+                  child: Text(
+                    '${song.year ?? ''}',
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
               ),
             ),
             Icon(

@@ -32,11 +32,29 @@ class ArtistTableView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           child: Row(
             children: [
-              const SizedBox(width: 56),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 56),
+                    child: const SizedBox.shrink(),
+                  ),
+                ),
+              ),
               Expanded(flex: 5, child: Text(l10n.name, style: headerStyle)),
-              SizedBox(
-                width: 120,
-                child: Text(l10n.albumCount, style: headerStyle),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 120),
+                    child: Text(
+                      l10n.albumCount,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: headerStyle,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -53,7 +71,9 @@ class ArtistTableView extends StatelessWidget {
               if (index >= artists.length) {
                 return const Padding(
                   padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  child: Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
                 );
               }
               return ArtistTableRow(
@@ -111,8 +131,9 @@ class _ArtistTableRowState extends State<ArtistTableRow> {
                             .withValues(alpha: 0.5),
                         child: Icon(
                           Icons.person_rounded,
-                          color: theme.colorScheme.onSurfaceVariant
-                              .withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       )
                     : ArtworkImage(
@@ -135,13 +156,20 @@ class _ArtistTableRowState extends State<ArtistTableRow> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 120,
-                child: Text(
-                  '',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.78,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 120),
+                    child: Text(
+                      '',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.78,
+                        ),
+                      ),
                     ),
                   ),
                 ),

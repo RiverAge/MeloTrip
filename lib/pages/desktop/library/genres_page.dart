@@ -13,9 +13,7 @@ class DesktopGenresPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Material(
-      color: Theme.of(context).colorScheme.surface.withValues(
-        alpha: 0,
-      ),
+      color: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       child: Column(
         crossAxisAlignment: .start,
         children: [
@@ -102,25 +100,47 @@ class _GenreTable extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           child: Row(
             children: [
-              SizedBox(width: 30, child: Text('#', style: headerStyle)),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 40),
+                    child: Text('#', style: headerStyle),
+                  ),
+                ),
+              ),
               Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
-              SizedBox(
-                width: 100,
-                child: Text(
-                  l10n.albumHeaderSongs,
-                  style: headerStyle,
-                  textAlign: .right,
+              Expanded(
+                child: Align(
+                  alignment: .centerRight,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 120),
+                    child: Text(
+                      l10n.albumHeaderSongs,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: headerStyle,
+                      textAlign: .right,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(
-                width: 100,
-                child: Text(
-                  l10n.albumCount,
-                  style: headerStyle,
-                  textAlign: .right,
+              Expanded(
+                child: Align(
+                  alignment: .centerRight,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 120),
+                    child: Text(
+                      l10n.albumCount,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: headerStyle,
+                      textAlign: .right,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(width: 30),
+              const SizedBox.square(dimension: 16),
             ],
           ),
         ),
@@ -162,45 +182,66 @@ class _GenreRow extends StatelessWidget {
       onTap: genreValue == null || genreValue.isEmpty
           ? null
           : () {
-              Navigator.of(context).pushNamed(
-                '/genre_detail',
-                arguments: genre,
-              );
+              Navigator.of(
+                context,
+              ).pushNamed('/genre_detail', arguments: genre);
             },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         child: Row(
           children: [
-            SizedBox(
-              width: 30,
-              child: Text('$index', style: theme.textTheme.bodySmall),
+            Expanded(
+              child: Align(
+                alignment: .centerLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 40),
+                  child: Text(
+                    '$index',
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+              ),
             ),
             Expanded(
               flex: 4,
               child: Text(
                 genre.value ?? '-',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: .bold,
+                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: .bold),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: .centerRight,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 120),
+                  child: Text(
+                    '${genre.songCount ?? 0}',
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodySmall,
+                    textAlign: .right,
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              width: 100,
-              child: Text(
-                '${genre.songCount ?? 0}',
-                style: theme.textTheme.bodySmall,
-                textAlign: .right,
+            Expanded(
+              child: Align(
+                alignment: .centerRight,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 120),
+                  child: Text(
+                    '${genre.albumCount ?? 0}',
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodySmall,
+                    textAlign: .right,
+                  ),
+                ),
               ),
             ),
-            SizedBox(
-              width: 100,
-              child: Text(
-                '${genre.albumCount ?? 0}',
-                style: theme.textTheme.bodySmall,
-                textAlign: .right,
-              ),
-            ),
-            const SizedBox(width: 30),
+            const SizedBox.square(dimension: 16),
           ],
         ),
       ),

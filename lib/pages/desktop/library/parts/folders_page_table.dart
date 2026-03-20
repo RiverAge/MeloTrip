@@ -9,7 +9,9 @@ class _FolderTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: .7);
+    final headerColor = theme.colorScheme.onSurfaceVariant.withValues(
+      alpha: .7,
+    );
     final headerStyle = const TextStyle(
       fontSize: 11,
       fontWeight: FontWeight.bold,
@@ -22,14 +24,27 @@ class _FolderTable extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(32, 16, 32, 12),
           child: Row(
             children: [
-              SizedBox(width: 30, child: Text('#', style: headerStyle)),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 40),
+                    child: Text('#', style: headerStyle),
+                  ),
+                ),
+              ),
               Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
-              SizedBox(
-                width: 60,
-                child: Icon(
-                  Icons.access_time_rounded,
-                  size: 14,
-                  color: headerColor,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 72),
+                    child: Icon(
+                      Icons.access_time_rounded,
+                      size: 14,
+                      color: headerColor,
+                    ),
+                  ),
                 ),
               ),
               Expanded(flex: 3, child: Text(l10n.album, style: headerStyle)),
@@ -37,11 +52,21 @@ class _FolderTable extends StatelessWidget {
                 flex: 2,
                 child: Text(l10n.songMetaGenre, style: headerStyle),
               ),
-              SizedBox(
-                width: 60,
-                child: Text(l10n.songMetaYear, style: headerStyle),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 72),
+                    child: Text(
+                      l10n.songMetaYear,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: headerStyle,
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 30),
+              const SizedBox.square(dimension: 16),
             ],
           ),
         ),
@@ -85,7 +110,10 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
   bool _isHovered = false;
 
   Future<void> _playEntry(FolderIndexEntry entry) async {
-    final songs = widget.allEntries.where((e) => !e.isDir).map((e) => e.toSong()).toList();
+    final songs = widget.allEntries
+        .where((e) => !e.isDir)
+        .map((e) => e.toSong())
+        .toList();
     final player = await ref.read(appPlayerHandlerProvider.future);
     if (player == null) {
       return;
@@ -117,12 +145,19 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
           child: Row(
             children: [
-              SizedBox(
-                width: 30,
-                child: Text(
-                  '${widget.index}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 40),
+                    child: Text(
+                      '${widget.index}',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -133,7 +168,9 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
                     if (entry.isDir)
                       Icon(
                         Icons.folder_rounded,
-                        color: theme.colorScheme.secondary.withValues(alpha: .85),
+                        color: theme.colorScheme.secondary.withValues(
+                          alpha: .85,
+                        ),
                         size: 20,
                       )
                     else
@@ -148,12 +185,19 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
                 ),
               ),
               const SizedBox(width: 12),
-              SizedBox(
-                width: 60,
-                child: Text(
-                  durationFormatter(entry.duration),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 72),
+                    child: Text(
+                      durationFormatter(entry.duration),
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -162,7 +206,7 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
                 child: Text(
                   entry.album ?? '',
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -173,22 +217,29 @@ class _FolderEntryRowState extends ConsumerState<_FolderEntryRow> {
                 child: Text(
                   entry.genre ?? '',
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
-              SizedBox(
-                width: 60,
-                child: Text(
-                  entry.year?.toString() ?? '',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 72),
+                    child: Text(
+                      entry.year?.toString() ?? '',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 30),
+              const SizedBox.square(dimension: 16),
             ],
           ),
         ),
@@ -267,7 +318,7 @@ class _FolderEntryTitle extends StatelessWidget {
         Text(
           entry.name,
           maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          overflow: .ellipsis,
           style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -276,7 +327,7 @@ class _FolderEntryTitle extends StatelessWidget {
           Text(
             entry.artist!,
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
               fontSize: 11,

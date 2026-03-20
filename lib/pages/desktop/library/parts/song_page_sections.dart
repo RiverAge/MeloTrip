@@ -7,11 +7,7 @@ const TextStyle kSongTableHeaderStyle = TextStyle(
 );
 
 class SongPageHeader extends StatelessWidget {
-  const SongPageHeader({
-    required this.title,
-    required this.count,
-    super.key,
-  });
+  const SongPageHeader({required this.title, required this.count, super.key});
 
   final String title;
   final int count;
@@ -122,12 +118,19 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
               final ultraCompact = constraints.maxWidth < 560;
               return Row(
                 children: [
-                  SizedBox(
-                    width: 30,
-                    child: Text(
-                      '${widget.index}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                  Expanded(
+                    child: Align(
+                      alignment: .centerLeft,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 40),
+                        child: Text(
+                          '${widget.index}',
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -160,7 +163,8 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
                                     child: Center(
                                       child: Icon(
                                         Icons.play_arrow_rounded,
-                                        color: theme.colorScheme.onInverseSurface,
+                                        color:
+                                            theme.colorScheme.onInverseSurface,
                                         size: 18,
                                       ),
                                     ),
@@ -197,11 +201,18 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 60,
-                    child: Text(
-                      _formatDuration(song.duration),
-                      style: theme.textTheme.bodySmall,
+                  Expanded(
+                    child: Align(
+                      alignment: .centerLeft,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 72),
+                        child: Text(
+                          _formatDuration(song.duration),
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -222,11 +233,18 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
-                  SizedBox(
-                    width: 60,
-                    child: Text(
-                      '${song.year ?? ''}',
-                      style: theme.textTheme.bodySmall,
+                  Expanded(
+                    child: Align(
+                      alignment: .centerLeft,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 72),
+                        child: Text(
+                          '${song.year ?? ''}',
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
                     ),
                   ),
                   IconButton(
@@ -261,4 +279,3 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
     return '$m:$s';
   }
 }
-

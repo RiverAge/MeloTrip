@@ -76,25 +76,48 @@ class AlbumTableView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           child: Row(
             children: [
-              SizedBox(width: 30, child: Text('#', style: headerStyle)),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 40),
+                    child: Text('#', style: headerStyle),
+                  ),
+                ),
+              ),
               Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
-              SizedBox(
-                width: 80,
-                child: Icon(
-                  Icons.access_time_rounded,
-                  size: 14,
-                  color: headerColor,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 88),
+                    child: Icon(
+                      Icons.access_time_rounded,
+                      size: 14,
+                      color: headerColor,
+                    ),
+                  ),
                 ),
               ),
               Expanded(
                 flex: 3,
                 child: Text(l10n.songMetaGenre, style: headerStyle),
               ),
-              SizedBox(
-                width: 80,
-                child: Text(l10n.songMetaYear, style: headerStyle),
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 88),
+                    child: Text(
+                      l10n.songMetaYear,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: headerStyle,
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 30),
+              const SizedBox.square(dimension: 16),
             ],
           ),
         ),
@@ -157,12 +180,19 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
           child: Row(
             children: [
-              SizedBox(
-                width: 30,
-                child: Text(
-                  '${widget.index}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 40),
+                    child: Text(
+                      '${widget.index}',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -237,7 +267,7 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
                           Text(
                             album.name ?? '-',
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -245,7 +275,7 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
                           Text(
                             album.artist ?? '-',
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant
                                   .withValues(alpha: 0.7),
@@ -257,11 +287,18 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 80,
-                child: Text(
-                  _formatTotalDuration(album.duration),
-                  style: theme.textTheme.bodySmall,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 88),
+                    child: Text(
+                      _formatTotalDuration(album.duration),
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
                 ),
               ),
               Expanded(
@@ -269,15 +306,22 @@ class _AlbumTableRowState extends ConsumerState<_AlbumTableRow> {
                 child: Text(
                   album.genre ?? '-',
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: theme.textTheme.bodySmall,
                 ),
               ),
-              SizedBox(
-                width: 80,
-                child: Text(
-                  '${album.year ?? ""}',
-                  style: theme.textTheme.bodySmall,
+              Expanded(
+                child: Align(
+                  alignment: .centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 88),
+                    child: Text(
+                      '${album.year ?? ""}',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
                 ),
               ),
               Icon(

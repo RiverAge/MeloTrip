@@ -54,9 +54,11 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                             .toggleFavorite(),
                   iconSize: 20,
                   visualDensity: .compact,
-                  constraints: const BoxConstraints.tightFor(
-                    width: 34,
-                    height: 34,
+                  constraints: const BoxConstraints(
+                    minWidth: 34,
+                    minHeight: 34,
+                    maxWidth: 40,
+                    maxHeight: 40,
                   ),
                   padding: EdgeInsets.zero,
                   tooltip: isStarred ? l10n.unfavorite : l10n.favorite,
@@ -131,7 +133,12 @@ class _DesktopAudioOutputDeviceButton extends StatelessWidget {
               ),
               visualDensity: .compact,
               iconSize: 18,
-              constraints: const BoxConstraints.tightFor(width: 34, height: 34),
+              constraints: const BoxConstraints(
+                minWidth: 34,
+                minHeight: 34,
+                maxWidth: 40,
+                maxHeight: 40,
+              ),
               padding: EdgeInsets.zero,
               style: IconButton.styleFrom(
                 backgroundColor: theme.colorScheme.surfaceContainerHighest
@@ -187,7 +194,7 @@ class _DesktopAudioOutputDeviceButton extends StatelessWidget {
                   child: Text(
                     '${l10n.audioOutputDeviceCurrent}: ${_deviceLabel(l10n, selected)}',
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(
                         alpha: 0.82,
@@ -306,7 +313,7 @@ class _AudioOutputOption extends StatelessWidget {
                   child: Text(
                     label,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: selected
                           ? theme.colorScheme.onPrimaryContainer
@@ -328,4 +335,3 @@ class _AudioOutputOption extends StatelessWidget {
     );
   }
 }
-

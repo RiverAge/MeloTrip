@@ -181,14 +181,29 @@ class PlaylistTrackTableHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
       child: Row(
         children: [
-          SizedBox(width: 40, child: Text('#', style: headerStyle)),
+          Expanded(
+            child: Align(
+              alignment: .centerLeft,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 40),
+                child: Text('#', style: headerStyle),
+              ),
+            ),
+          ),
           Expanded(flex: 4, child: Text(l10n.title, style: headerStyle)),
-          SizedBox(
-            width: 60,
-            child: Icon(
-              Icons.access_time_rounded,
-              size: 14,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          Expanded(
+            child: Align(
+              alignment: .centerLeft,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 72),
+                child: Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
+              ),
             ),
           ),
           Expanded(flex: 3, child: Text(l10n.album, style: headerStyle)),
@@ -196,11 +211,21 @@ class PlaylistTrackTableHeader extends StatelessWidget {
             flex: 2,
             child: Text(l10n.songMetaGenre, style: headerStyle),
           ),
-          SizedBox(
-            width: 60,
-            child: Text(l10n.songMetaYear, style: headerStyle),
+          Expanded(
+            child: Align(
+              alignment: .centerLeft,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 72),
+                child: Text(
+                  l10n.songMetaYear,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: headerStyle,
+                ),
+              ),
+            ),
           ),
-          const SizedBox(width: 30),
+          const SizedBox.square(dimension: 16),
         ],
       ),
     );
