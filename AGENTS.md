@@ -211,6 +211,13 @@ color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
 - Keep dual-form semantics explicit: non-`try` repository methods are allowed to throw (typed failures), while `try*` methods must wrap failures into `Result.err`.
 - Do not split simple settings flows into multiple controller or reader providers unless the behavior is complex enough to justify the indirection.
 
+### Typed Contracts (No Object)
+
+- Do not use bare `Object` or `Object?` as business-domain contract types in providers, repositories, models, or public method signatures.
+- `catch (e)` may temporarily receive `Object`, but it must be converted at the boundary into a typed failure model before being exposed upstream.
+- Do not expose `Object`-typed fields for user-facing state or error payloads. Prefer typed failures such as `AppFailure` and feature-specific failure models.
+- If a legacy `Object` contract cannot be removed immediately, document the blocker and a concrete follow-up plan in the handoff.
+
 ### Subsonic Response Parsing
 
 - For Subsonic REST responses, repositories must deserialize through typed models in `lib/model/response/...` (typically via `SubsonicResponse.fromJson`).
