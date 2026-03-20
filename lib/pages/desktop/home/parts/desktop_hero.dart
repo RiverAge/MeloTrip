@@ -45,6 +45,8 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
         return LayoutBuilder(
           builder: (context, constraints) {
             final heroHeight = _heroHeight(context, constraints);
+            final double coverSize = (heroHeight * 0.64).clamp(140.0, 200.0);
+            final double coverGap = (heroHeight * 0.14).clamp(20.0, 40.0);
             return ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: heroHeight,
@@ -82,30 +84,31 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                             ),
                             child: Row(
                               children: [
-                                Container(
-                                  width: 180,
-                                  height: 180,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: theme.shadowColor.withValues(
-                                          alpha: .4,
+                                SizedBox.square(
+                                  dimension: coverSize,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: theme.shadowColor.withValues(
+                                            alpha: .4,
+                                          ),
+                                          blurRadius: 30,
+                                          offset: const Offset(0, 10),
                                         ),
-                                        blurRadius: 30,
-                                        offset: const Offset(0, 10),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: ArtworkImage(
+                                        id: album.id,
+                                        size: 500,
                                       ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: ArtworkImage(
-                                      id: album.id,
-                                      size: 500,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 40),
+                                SizedBox(width: coverGap),
                                 Expanded(
                                   child: Column(
                                     mainAxisAlignment: .center,

@@ -73,13 +73,19 @@ class _Albums extends StatelessWidget {
   }
 
   Widget _buildHorizontal(BuildContext context, List<AlbumEntity> albums) {
+    final double listHeight = (MediaQuery.sizeOf(context).width * 0.48).clamp(
+      168.0,
+      220.0,
+    );
+    final double cardWidth = (listHeight * 0.7).clamp(120.0, 160.0);
     return SizedBox(
-      height: 200,
+      height: listHeight,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
         itemCount: albums.length,
-        itemBuilder: (_, idx) => _cardItem(context, albums[idx], width: 140),
+        itemBuilder: (_, idx) =>
+            _cardItem(context, albums[idx], width: cardWidth),
       ),
     );
   }
@@ -124,7 +130,7 @@ class _Albums extends StatelessWidget {
         child: Container(
           width: width,
           padding: const EdgeInsets.all(4),
-            child: Column(
+          child: Column(
             crossAxisAlignment: .start,
             children: [
               AspectRatio(
@@ -142,11 +148,7 @@ class _Albums extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: ArtworkImage(
-                      fit: .cover,
-                      id: album.id,
-                      size: 300,
-                    ),
+                    child: ArtworkImage(fit: .cover, id: album.id, size: 300),
                   ),
                 ),
               ),
@@ -208,10 +210,7 @@ class _Albums extends StatelessWidget {
                 children: [
                   Text(
                     album.name ?? '',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: .w600,
-                    ),
+                    style: const TextStyle(fontSize: 15, fontWeight: .w600),
                     maxLines: 1,
                     overflow: .ellipsis,
                   ),
