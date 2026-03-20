@@ -50,42 +50,46 @@ class _AlbumDetailItem extends ConsumerWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 240,
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: ArtworkImage(
-                    id: album.id,
-                    size: 500,
-                    width: 240,
-                    height: 240,
+          Flexible(
+            flex: 3,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 280),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: ArtworkImage(id: album.id, size: 500),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  album.name ?? '-',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 16),
+                  Text(
+                    album.name ?? '-',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: .bold,
+                    ),
+                    textAlign: .center,
+                    maxLines: 2,
+                    overflow: .ellipsis,
                   ),
-                  textAlign: .center,
-                  maxLines: 2,
-                ),
-                Text(
-                  album.artist ?? '-',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                  Text(
+                    album.artist ?? '-',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: .center,
+                    maxLines: 1,
+                    overflow: .ellipsis,
                   ),
-                  textAlign: .center,
-                ),
-                Text(
-                  '${album.year ?? ""} · ${album.songCount ?? 0}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.outline,
+                  Text(
+                    '${album.year ?? ""} 路 ${album.songCount ?? 0}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 48),
@@ -129,8 +133,8 @@ class _DetailTrackRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Row(
         children: [
-          SizedBox(
-            width: 40,
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 32, maxWidth: 40),
             child: Text(
               index.toString().padLeft(2, '0'),
               style: theme.textTheme.bodySmall?.copyWith(

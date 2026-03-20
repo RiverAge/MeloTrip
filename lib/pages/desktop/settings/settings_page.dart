@@ -29,6 +29,8 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
     final List<String> tabTitles = _tabTitles(l10n);
+    final double glowSize = (MediaQuery.sizeOf(context).shortestSide * 0.45)
+        .clamp(220.0, 420.0);
 
     return DefaultTabController(
       length: tabTitles.length,
@@ -63,7 +65,7 @@ class _DesktopSettingsPageState extends ConsumerState<DesktopSettingsPage> {
                         ],
                       ),
                     ),
-                    child: const SizedBox(width: 360, height: 360),
+                    child: SizedBox.square(dimension: glowSize),
                   ),
                 ),
               ),
