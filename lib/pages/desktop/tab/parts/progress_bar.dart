@@ -5,6 +5,29 @@ class _DesktopProgressBar extends StatelessWidget {
 
   final AppPlayer player;
 
+  double _timeLabelWidth(
+    BuildContext context, {
+    required String current,
+    required String total,
+  }) {
+    final style = const TextStyle(fontSize: 11);
+    final textDirection = Directionality.of(context);
+    final currentPainter = TextPainter(
+      text: TextSpan(text: current, style: style),
+      textDirection: textDirection,
+      maxLines: 1,
+    )..layout();
+    final totalPainter = TextPainter(
+      text: TextSpan(text: total, style: style),
+      textDirection: textDirection,
+      maxLines: 1,
+    )..layout();
+    return (currentPainter.width > totalPainter.width
+            ? currentPainter.width
+            : totalPainter.width) +
+        6;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AsyncStreamBuilder(
@@ -20,12 +43,19 @@ class _DesktopProgressBar extends StatelessWidget {
                 .toDouble()
                 .clamp(0, maxSec <= 0 ? 0 : maxSec)
                 .toDouble();
+            final currentText = durationFormatter(position.inSeconds);
+            final totalText = durationFormatter(duration?.inSeconds ?? 0);
+            final timeLabelWidth = _timeLabelWidth(
+              context,
+              current: currentText,
+              total: totalText,
+            );
             return Row(
               children: [
-                SizedBox(
-                  width: 46,
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: timeLabelWidth),
                   child: Text(
-                    durationFormatter(position.inSeconds),
+                    currentText,
                     style: const TextStyle(fontSize: 11),
                   ),
                 ),
@@ -52,10 +82,10 @@ class _DesktopProgressBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 46,
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: timeLabelWidth),
                   child: Text(
-                    durationFormatter(duration?.inSeconds ?? 0),
+                    totalText,
                     style: const TextStyle(fontSize: 11),
                     textAlign: .right,
                   ),
