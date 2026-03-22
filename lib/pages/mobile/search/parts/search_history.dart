@@ -21,9 +21,11 @@ class _SearchHistory extends StatelessWidget {
                   builder: (context, ref, child) {
                     return IconButton(
                       onPressed: () {
-                        ref.read(userSessionProvider.notifier).setConfiguration(
-                          recentSearches: const ValueUpdater<String>(''),
-                        );
+                        ref
+                            .read(userSessionProvider.notifier)
+                            .setConfiguration(
+                              recentSearches: const ValueUpdater<String>(''),
+                            );
                       },
                       icon: const Icon(Icons.delete),
                     );
@@ -31,26 +33,31 @@ class _SearchHistory extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              width: double.infinity,
+            Align(
+              alignment: .centerLeft,
               child: AsyncValueBuilder(
                 provider: sessionConfigProvider,
                 empty: (context, ref) => const SizedBox.shrink(),
                 builder: (context, config, ref) {
                   final effectiveSearches = config.recentSearches;
-                  if (effectiveSearches == null) return SizedBox.shrink();
+                  if (effectiveSearches == null) return const SizedBox.shrink();
+
+                  final searchItems = effectiveSearches
+                      .split(',')
+                      .map((it) => it.trim())
+                      .where((it) => it.isNotEmpty)
+                      .toList();
+                  if (searchItems.isEmpty) return const SizedBox.shrink();
+
                   return Wrap(
-                    spacing: 10.0,
-                    runSpacing: 5.0,
+                    spacing: 10,
+                    runSpacing: 5,
                     alignment: .start,
                     runAlignment: .center,
-                    children: effectiveSearches
-                        .split(',')
+                    children: searchItems
                         .map(
-                          (e) => InkWell(
-                            onTap: () {
-                              onTap(e);
-                            },
+                          (item) => InkWell(
+                            onTap: () => onTap(item),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 5,
@@ -58,9 +65,9 @@ class _SearchHistory extends StatelessWidget {
                               ),
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withValues(alpha: 0.1),
+                              ).colorScheme.onSurface.withValues(alpha: .1),
                               child: Text(
-                                e,
+                                item,
                                 style: TextStyle(
                                   color: Theme.of(
                                     context,
