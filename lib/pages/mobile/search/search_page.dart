@@ -78,11 +78,14 @@ class _SearchPageState extends State<SearchPage> {
                   provider: searchByQueryProvider(_controller.text),
                   builder: (context, result, _) {
                     final songs =
-                        result.data?.subsonicResponse?.searchResult3?.song ?? [];
+                        result.data?.subsonicResponse?.searchResult3?.song ??
+                        [];
                     final albums =
-                        result.data?.subsonicResponse?.searchResult3?.album ?? [];
+                        result.data?.subsonicResponse?.searchResult3?.album ??
+                        [];
                     final artists =
-                        result.data?.subsonicResponse?.searchResult3?.artist ?? [];
+                        result.data?.subsonicResponse?.searchResult3?.artist ??
+                        [];
                     if (songs.isEmpty && albums.isEmpty && artists.isEmpty) {
                       return const Padding(
                         padding: EdgeInsets.only(top: 20.0),
@@ -104,31 +107,22 @@ class _SearchPageState extends State<SearchPage> {
                               ListView.separated(
                                 itemBuilder: (_, index) =>
                                     _SongItem(song: songs[index]),
-                                separatorBuilder: (_, index) => const Divider(
-                                  indent: 0,
-                                  endIndent: 0,
-                                  height: 0,
-                                ),
+                                separatorBuilder: (_, _) =>
+                                    const Divider(indent: 0, endIndent: 0),
                                 itemCount: songs.length,
                               ),
                               ListView.separated(
                                 itemBuilder: (_, index) =>
                                     _AlbumItem(album: albums[index]),
-                                separatorBuilder: (_, index) => const Divider(
-                                  indent: 0,
-                                  endIndent: 0,
-                                  height: 0,
-                                ),
+                                separatorBuilder: (_, _) =>
+                                    const Divider(indent: 0, endIndent: 0),
                                 itemCount: albums.length,
                               ),
                               ListView.separated(
                                 itemBuilder: (_, index) =>
                                     _ArtistItem(artist: artists[index]),
-                                separatorBuilder: (_, index) => const Divider(
-                                  indent: 0,
-                                  endIndent: 0,
-                                  height: 0,
-                                ),
+                                separatorBuilder: (_, _) =>
+                                    const Divider(indent: 0, endIndent: 0),
                                 itemCount: artists.length,
                               ),
                             ],
@@ -143,4 +137,3 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-
