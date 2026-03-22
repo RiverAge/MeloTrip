@@ -73,19 +73,24 @@ class _Albums extends StatelessWidget {
   }
 
   Widget _buildHorizontal(BuildContext context, List<AlbumEntity> albums) {
-    final double listHeight = (MediaQuery.sizeOf(context).width * 0.48).clamp(
+    final listHeight = (MediaQuery.sizeOf(context).width * .48).clamp(
       168.0,
       220.0,
     );
-    final double cardWidth = (listHeight * 0.7).clamp(120.0, 160.0);
+    final cardMaxWidth = (listHeight * .7).clamp(120.0, 160.0);
     return SizedBox(
       height: listHeight,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
         itemCount: albums.length,
-        itemBuilder: (_, idx) =>
-            _cardItem(context, albums[idx], width: cardWidth),
+        itemBuilder: (_, idx) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: cardMaxWidth),
+            child: _cardItem(context, albums[idx]),
+          ),
+        ),
       ),
     );
   }
@@ -118,65 +123,59 @@ class _Albums extends StatelessWidget {
     );
   }
 
-  Widget _cardItem(BuildContext context, AlbumEntity album, {double? width}) {
+  Widget _cardItem(BuildContext context, AlbumEntity album) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width == null ? 0 : 4),
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AlbumDetailPage(albumId: album.id)),
-        ),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: width,
-          padding: const EdgeInsets.all(4),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: ArtworkImage(fit: .cover, id: album.id, size: 300),
-                  ),
+    return InkWell(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => AlbumDetailPage(albumId: album.id)),
+      ),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: ArtworkImage(fit: .cover, id: album.id, size: 300),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                album.name ?? '',
-                maxLines: 1,
-                overflow: .ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: .bold,
-                  height: 1.2,
-                ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              album.name ?? '',
+              maxLines: 1,
+              overflow: .ellipsis,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: .bold,
+                height: 1.2,
               ),
-              const SizedBox(height: 2),
-              Text(
-                album.artist ?? '',
-                maxLines: 1,
-                overflow: .ellipsis,
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.7,
-                  ),
-                  fontSize: 12,
-                ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              album.artist ?? '',
+              maxLines: 1,
+              overflow: .ellipsis,
+              style: TextStyle(
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .7),
+                fontSize: 12,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

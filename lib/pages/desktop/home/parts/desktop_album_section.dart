@@ -5,10 +5,11 @@ class _DesktopAlbumSection extends ConsumerStatefulWidget {
 
   static const int _fetchSize = 50;
 
-  static const _cardWidth = 160.0;
-  static const _cardGap = 18.0;
+  static const _minCardWidth = 136.0;
+  static const _maxCardWidth = 188.0;
+  static const _minCardGap = 12.0;
+  static const _maxCardGap = 20.0;
   static const _metaBlockHeight = 52.0;
-  static const _cardHeight = _cardWidth + _metaBlockHeight;
 
   final String title;
   final AlbumListType type;
@@ -86,58 +87,70 @@ class _DesktopAlbumSectionState extends ConsumerState<_DesktopAlbumSection> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          _SectionHeader(
-            title: widget.title,
-            onScrollBack: _canScrollBack ? _onScrollBack : null,
-            onScrollForward: _canScrollForward ? _onScrollForward : null,
-          ),
-          SizedBox(
-            height: _DesktopAlbumSection._cardHeight,
-            child: AsyncValueBuilder(
-              provider: albumListProvider(
-                AlbumListQuery(
-                  type: widget.type.name,
-                  size: _DesktopAlbumSection._fetchSize,
-                ),
-              ),
-              loading: (_, _) => const Center(
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              empty: (_, _) => const SizedBox.shrink(),
-              builder: (context, data, _) {
-                if (data.isErr) return const SizedBox.shrink();
-                final albums = data.data ?? const [];
-                if (albums.isEmpty) return const SizedBox.shrink();
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final cardWidth = (constraints.maxWidth * .15).clamp(
+            _DesktopAlbumSection._minCardWidth,
+            _DesktopAlbumSection._maxCardWidth,
+          );
+          final cardGap = (cardWidth * .1).clamp(
+            _DesktopAlbumSection._minCardGap,
+            _DesktopAlbumSection._maxCardGap,
+          );
+          final cardHeight = cardWidth + _DesktopAlbumSection._metaBlockHeight;
 
-                // Trigger scroll state update once the list is built
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) _onScrollUpdate();
-                });
+          return Column(
+            crossAxisAlignment: .start,
+            children: [
+              _SectionHeader(
+                title: widget.title,
+                onScrollBack: _canScrollBack ? _onScrollBack : null,
+                onScrollForward: _canScrollForward ? _onScrollForward : null,
+              ),
+              SizedBox(
+                height: cardHeight,
+                child: AsyncValueBuilder(
+                  provider: albumListProvider(
+                    AlbumListQuery(
+                      type: widget.type.name,
+                      size: _DesktopAlbumSection._fetchSize,
+                    ),
+                  ),
+                  loading: (_, _) => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  empty: (_, _) => const SizedBox.shrink(),
+                  builder: (context, data, _) {
+                    if (data.isErr) return const SizedBox.shrink();
+                    final albums = data.data ?? const [];
+                    if (albums.isEmpty) return const SizedBox.shrink();
 
-                return ListView.builder(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: albums.length,
-                  itemBuilder: (_, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        right: _DesktopAlbumSection._cardGap,
-                      ),
-                      child: SizedBox(
-                        width: _DesktopAlbumSection._cardWidth,
-                        child: DesktopAlbumCard(album: albums[index]),
-                      ),
+                    // Trigger scroll state update once the list is built
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted) _onScrollUpdate();
+                    });
+
+                    return ListView.builder(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: albums.length,
+                      itemBuilder: (_, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: cardGap),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: cardWidth),
+                            child: DesktopAlbumCard(album: albums[index]),
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
