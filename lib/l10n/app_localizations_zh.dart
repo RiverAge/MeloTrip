@@ -731,6 +731,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fontWeightW700 => 'w700';
+
+  @override
+  String get windowTitleApp => 'MeloTrip';
+
+  @override
+  String get windowMinimize => 'Minimize';
+
+  @override
+  String get windowMaximize => 'Maximize';
+
+  @override
+  String get windowRestore => 'Restore';
+
+  @override
+  String get windowClose => 'Close';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).

@@ -1107,5 +1107,25 @@
    "fontWeightW700": "w700",
    "@fontWeightW700": {
      "description": "Font weight option w700"
+   },
+   "windowTitleApp": "MeloTrip",
+   "@windowTitleApp": {
+      "description": "Desktop custom title bar app title"
+   },
+   "windowMinimize": "Minimize",
+   "@windowMinimize": {
+      "description": "Tooltip for minimize window action"
+   },
+   "windowMaximize": "Maximize",
+   "@windowMaximize": {
+      "description": "Tooltip for maximize window action"
+   },
+   "windowRestore": "Restore",
+   "@windowRestore": {
+      "description": "Tooltip for restore window action"
+   },
+   "windowClose": "Close",
+   "@windowClose": {
+      "description": "Tooltip for close window action"
    }
 }

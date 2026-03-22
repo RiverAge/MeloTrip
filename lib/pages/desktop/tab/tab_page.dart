@@ -23,9 +23,11 @@ import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
+import 'package:melo_trip/pages/desktop/shared/desktop_window_title_bar.dart';
 import 'package:melo_trip/pages/desktop/tab/parts/search_command_palette.dart';
 import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/desktop/window_title_bar_client.dart';
 import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/scan_status/scan_status.dart';
@@ -34,6 +36,7 @@ import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/rating.dart';
+import 'package:window_title_bar/window_title_bar.dart';
 
 part 'parts/sidebar.dart';
 part 'parts/sidebar_search_button.dart';
@@ -64,6 +67,7 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
   int _desktopIndex = 0;
   String? _selectedPlaylistId;
   bool _showFullPlayer = false;
+  bool _didInitCustomTitleBar = false;
 
   late AnimationController _controller;
   late Animation<double> _slideAnimation;
@@ -87,9 +91,29 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didInitCustomTitleBar) {
+      return;
+    }
+    _didInitCustomTitleBar = true;
+    unawaited(_initCustomTitleBar());
+  }
+
+  @override
   void dispose() {
+    final windowTitleBar = ref.read(windowTitleBarClientProvider);
+    unawaited(windowTitleBar.apply(const WindowTitleBarConfig(enabled: false)));
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _initCustomTitleBar() async {
+    final l10n = AppLocalizations.of(context)!;
+    final windowTitleBar = ref.read(windowTitleBarClientProvider);
+    await windowTitleBar.apply(
+      WindowTitleBarConfig(enabled: true, title: l10n.windowTitleApp),
+    );
   }
 
   void _setDesktopTab(int index) {
@@ -204,10 +228,20 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    return _buildLargeScaffold(
-      key: const ValueKey<String>('desktop-layout'),
-      l10n: l10n,
-      currentIndex: _desktopIndex,
+    final windowTitleBar = ref.watch(windowTitleBarClientProvider);
+    return StreamBuilder<WindowTitleBarStateSnapshot>(
+      stream: windowTitleBar.stateStream,
+      initialData: windowTitleBar.state,
+      builder: (context, snapshot) {
+        final customTitleBarEnabled =
+            (snapshot.data ?? windowTitleBar.state).enabled;
+        return _buildLargeScaffold(
+          key: const ValueKey<String>('desktop-layout'),
+          l10n: l10n,
+          currentIndex: _desktopIndex,
+          customTitleBarEnabled: customTitleBarEnabled,
+        );
+      },
     );
   }
 
@@ -215,15 +249,17 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
     required Key key,
     required AppLocalizations l10n,
     required int currentIndex,
+    required bool customTitleBarEnabled,
   }) {
     return Scaffold(
       key: key,
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
-        top: true,
+        top: !customTitleBarEnabled,
         bottom: false,
         child: Column(
           children: <Widget>[
+            if (customTitleBarEnabled) const DesktopWindowTitleBar(),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
