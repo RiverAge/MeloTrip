@@ -15,6 +15,8 @@ import 'package:melo_trip/provider/favorite/favorite.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/rating.dart';
 
+part 'desktop_album_card_hover_overlay.dart';
+
 class DesktopAlbumCard extends ConsumerStatefulWidget {
   const DesktopAlbumCard({
     super.key,
@@ -157,12 +159,31 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
     }
   }
 
+  Future<void> _setAlbumRating(int value) async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() {
+      _optimisticRating = value;
+    });
+    final res = await ref
+        .read(albumDetailProvider(widget.album.id).notifier)
+        .setRating(value);
+    if (!mounted) return;
+    if (res == null || res.isErr) {
+      if (res?.error != null) {
+        final message = resolveAppFailureMessage(l10n, failure: res!.error);
+        messenger.showSnackBar(SnackBar(content: Text(message)));
+      }
+      setState(() {
+        _optimisticRating = widget.album.userRating;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final overlayBackground = theme.colorScheme.scrim.withValues(
-      alpha: .48,
-    );
+    final overlayBackground = theme.colorScheme.scrim.withValues(alpha: .48);
     final overlayForeground = theme.colorScheme.onPrimary.withValues(
       alpha: .94,
     );
@@ -226,127 +247,22 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
                   AnimatedOpacity(
                     opacity: _isHovering ? 1.0 : 0.0,
                     duration: DesktopMotionTokens.medium,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: overlayBackground,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: ScaleTransition(
-                        scale: _scaleAnimation,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: .spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: _toggleFavorite,
-                                  icon: Icon(
-                                    isStarred
-                                        ? Icons.favorite_rounded
-                                        : Icons.favorite_border_rounded,
-                                    color: isStarred
-                                        ? theme.colorScheme.error
-                                        : overlayForeground,
-                                    size: 20,
-                                  ),
-                                  visualDensity: .compact,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                                GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {},
-                                  child: Rating(
-                                    rating: rating,
-                                    color: overlayForeground,
-                                    onRating: (value) async {
-                                      final l10n = AppLocalizations.of(
-                                        context,
-                                      )!;
-                                      final messenger = ScaffoldMessenger.of(
-                                        context,
-                                      );
-                                      setState(() {
-                                        _optimisticRating = value;
-                                      });
-                                      final res = await ref
-                                          .read(
-                                            albumDetailProvider(
-                                              widget.album.id,
-                                            ).notifier,
-                                          )
-                                          .setRating(value);
-                                      if (!mounted) return;
-                                      if (res == null || res.isErr) {
-                                        if (res?.error != null) {
-                                          final message =
-                                              resolveAppFailureMessage(
-                                                l10n,
-                                                failure: res!.error,
-                                              );
-                                          messenger.showSnackBar(
-                                            SnackBar(content: Text(message)),
-                                          );
-                                        }
-                                        setState(() {
-                                          _optimisticRating =
-                                              widget.album.userRating;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Row(
-                              mainAxisAlignment: .center,
-                              children: [
-                                _ActionCircle(
-                                  onPressed: _playAlbumShuffled,
-                                  icon: Icons.shuffle_rounded,
-                                  size: 28,
-                                  background: secondaryButtonBackground,
-                                  foreground: overlayForeground,
-                                ),
-                                const SizedBox(width: 12),
-                                _ActionCircle(
-                                  onPressed: _playAlbum,
-                                  icon: Icons.play_arrow_rounded,
-                                  size: 42,
-                                  background: mainButtonBackground,
-                                  foreground: mainButtonForeground,
-                                ),
-                                const SizedBox(width: 12),
-                                _ActionCircle(
-                                  onPressed: _addAlbumToQueue,
-                                  icon: Icons.skip_next_rounded,
-                                  size: 28,
-                                  background: secondaryButtonBackground,
-                                  foreground: overlayForeground,
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Row(
-                              mainAxisAlignment: .spaceBetween,
-                              children: [
-                                Icon(
-                                  Icons.expand_more_rounded,
-                                  color: overlayForegroundMuted,
-                                  size: 20,
-                                ),
-                                Icon(
-                                  Icons.more_horiz_rounded,
-                                  color: overlayForegroundMuted,
-                                  size: 20,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: _AlbumHoverOverlay(
+                      theme: theme,
+                      scaleAnimation: _scaleAnimation,
+                      overlayBackground: overlayBackground,
+                      overlayForeground: overlayForeground,
+                      overlayForegroundMuted: overlayForegroundMuted,
+                      mainButtonBackground: mainButtonBackground,
+                      mainButtonForeground: mainButtonForeground,
+                      secondaryButtonBackground: secondaryButtonBackground,
+                      isStarred: isStarred,
+                      rating: rating,
+                      onToggleFavorite: _toggleFavorite,
+                      onSetRating: _setAlbumRating,
+                      onPlayAlbumShuffled: _playAlbumShuffled,
+                      onPlayAlbum: _playAlbum,
+                      onAddAlbumToQueue: _addAlbumToQueue,
                     ),
                   ),
                 ],
@@ -419,41 +335,5 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
       ReleaseDate(:final year?) => '$year',
       _ => widget.album.year?.toString(),
     };
-  }
-}
-
-class _ActionCircle extends StatelessWidget {
-  const _ActionCircle({
-    required this.onPressed,
-    required this.icon,
-    required this.background,
-    required this.foreground,
-    this.size = 32,
-  });
-
-  final VoidCallback onPressed;
-  final IconData icon;
-  final Color background;
-  final Color foreground;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: background,
-      shape: const CircleBorder(),
-      clipBehavior: Clip.antiAlias,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: InkWell(
-          onTap: onPressed,
-          child: SizedBox(
-            width: size,
-            height: size,
-            child: Icon(icon, size: size * 0.6, color: foreground),
-          ),
-        ),
-      ),
-    );
   }
 }
