@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/mobile/playing/playing_page.dart';
 import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
@@ -72,7 +73,9 @@ class _MusicBarState extends State<MusicBar> {
                       child: Image.asset('images/navidrome.png'),
                     ),
                     title: const Text('MeloTrip'),
-                    subtitle: const Text('Elevate with the Symphony'),
+                    subtitle: Text(
+                      AppLocalizations.of(context)!.musicBarTagline,
+                    ),
                   );
                 }
                 final current = playQueue.songs[playQueue.index];

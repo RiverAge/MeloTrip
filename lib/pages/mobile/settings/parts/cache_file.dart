@@ -13,9 +13,10 @@ class _CacheFileState extends State<_CacheFile> {
       loading: (_, _) => Text(AppLocalizations.of(context)!.calculating),
       provider: cachedFileSizeProvider,
       builder: (_, data, ref) {
+        final int sizeInBytes = data.toInt();
         return Row(
           mainAxisSize: .min,
-          children: [Text('${(data / 1024 / 1024).toInt()}M')],
+          children: [Text(fileSizeFormatter(sizeInBytes))],
         );
       },
     );

@@ -258,6 +258,10 @@
    "@searchHint": {
      "description": "Search hint text for search bar"
    },
+   "musicBarTagline": "Elevate with the Symphony",
+   "@musicBarTagline": {
+     "description": "Idle subtitle shown in the mobile music bar"
+   },
 
    "searchHistory": "Search History",
    "@searchHistory": {

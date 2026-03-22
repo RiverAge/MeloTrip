@@ -435,6 +435,12 @@ abstract class AppLocalizations {
   /// **'Search for songs, artists or albums...'**
   String get searchHint;
 
+  /// Idle subtitle shown in the mobile music bar
+  ///
+  /// In en, this message translates to:
+  /// **'Elevate with the Symphony'**
+  String get musicBarTagline;
+
   /// Title of search history page
   ///
   /// In en, this message translates to:

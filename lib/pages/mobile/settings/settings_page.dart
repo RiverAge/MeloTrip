@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/pages/mobile/favorite/favorite_page.dart';
 import 'package:melo_trip/pages/mobile/playlist/playlist_page.dart';
@@ -230,5 +231,4 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
       ),
     );
   }
-
 }

@@ -179,6 +179,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search for songs, artists or albums...';
 
   @override
+  String get musicBarTagline => 'Elevate with the Symphony';
+
+  @override
   String get searchHistory => 'Search History';
 
   @override

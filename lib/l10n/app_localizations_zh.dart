@@ -179,6 +179,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchHint => '搜索歌曲、艺术家或专辑...';
 
   @override
+  String get musicBarTagline => '与旋律同行';
+
+  @override
   String get searchHistory => '搜索历史';
 
   @override
