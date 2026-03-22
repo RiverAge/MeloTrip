@@ -9,6 +9,9 @@ import 'package:melo_trip/provider/desktop/desktop_lyrics_client.dart';
 import 'package:melo_trip/provider/user_config/desktop_lyrics_settings_provider.dart';
 
 part 'lyrics_settings_sections.dart';
+part 'lyrics_settings_section_interaction.dart';
+part 'lyrics_settings_section_text.dart';
+part 'lyrics_settings_section_visual.dart';
 
 class DesktopLyricsSettingsTab extends ConsumerStatefulWidget {
   const DesktopLyricsSettingsTab({this.onApplyConfig, super.key});
