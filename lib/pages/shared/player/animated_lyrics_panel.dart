@@ -103,16 +103,17 @@ class _AnimatedLyricsPanelState extends ConsumerState<AnimatedLyricsPanel> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final edgeFadeColor = colorScheme.scrim;
     return LayoutBuilder(
       builder: (context, constraints) => ShaderMask(
         shaderCallback: (bounds) => LinearGradient(
           begin: .topCenter,
           end: .bottomCenter,
-          colors: const [
-            Colors.transparent,
-            Colors.black,
-            Colors.black,
-            Colors.transparent,
+          colors: [
+            edgeFadeColor.withValues(alpha: 0),
+            edgeFadeColor,
+            edgeFadeColor,
+            edgeFadeColor.withValues(alpha: 0),
           ],
           stops: [0, widget.edgeFadeTopStop, widget.edgeFadeBottomStop, 1],
         ).createShader(bounds),

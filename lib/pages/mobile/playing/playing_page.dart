@@ -145,8 +145,12 @@ class PlayingPage extends StatelessWidget {
                         begin: .topCenter,
                         end: .bottomCenter,
                         colors: [
-                          Colors.black.withValues(alpha: 0.35),
-                          Colors.black.withValues(alpha: 0.18),
+                          Theme.of(
+                            context,
+                          ).colorScheme.scrim.withValues(alpha: 0.35),
+                          Theme.of(
+                            context,
+                          ).colorScheme.scrim.withValues(alpha: 0.18),
                           Colors.transparent,
                         ],
                       ),

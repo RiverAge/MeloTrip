@@ -87,7 +87,10 @@ class AlbumDetailPage extends StatelessWidget {
               ref.read(albumDetailProvider(albumId).notifier).toggleFavorite();
             },
             icon: album.starred != null
-                ? const Icon(Icons.favorite, color: Colors.red)
+                ? Icon(
+                    Icons.favorite,
+                    color: Theme.of(context).colorScheme.error,
+                  )
                 : const Icon(Icons.favorite_outline),
           ),
         ],

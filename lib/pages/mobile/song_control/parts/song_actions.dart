@@ -84,7 +84,9 @@ class _SongActions extends StatelessWidget {
                         onPressed: onToggleFavorite,
                         icon: Icon(
                           isStarred ? Icons.favorite : Icons.favorite_outline,
-                          color: isStarred ? Colors.red : null,
+                          color: isStarred
+                              ? Theme.of(context).colorScheme.error
+                              : null,
                         ),
                       ),
                       Text(
