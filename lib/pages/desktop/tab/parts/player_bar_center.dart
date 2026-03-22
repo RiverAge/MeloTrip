@@ -134,9 +134,12 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        SizedBox(
-          width: (MediaQuery.sizeOf(context).width * 0.4).clamp(300, 600),
-          child: _DesktopProgressBar(player: player),
+        FractionallySizedBox(
+          widthFactor: .4,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: _DesktopProgressBar(player: player),
+          ),
         ),
       ],
     );
