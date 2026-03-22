@@ -22,55 +22,57 @@ class _SearchHeaderV2 extends StatefulWidget {
 class _SearchHeaderV2State extends State<_SearchHeaderV2> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 40),
+      child: Container(
         decoration: BoxDecoration(
           color: Theme.of(
             context,
           ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(10),
         ),
-      child: TextField(
-        controller: widget.controller,
-        focusNode: widget.focusNode,
-        onChanged: widget.onChanged,
-        onSubmitted: (val) {
-          widget.focusNode.unfocus();
-          widget.onSubmitted(val);
-        },
-        textAlignVertical: TextAlignVertical.center,
-        textInputAction: .search,
-        style: Theme.of(context).textTheme.bodyLarge,
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-          hintText: AppLocalizations.of(context)!.searchHint,
-          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+        child: TextField(
+          controller: widget.controller,
+          focusNode: widget.focusNode,
+          onChanged: widget.onChanged,
+          onSubmitted: (val) {
+            widget.focusNode.unfocus();
+            widget.onSubmitted(val);
+          },
+          textAlignVertical: TextAlignVertical.center,
+          textInputAction: .search,
+          style: Theme.of(context).textTheme.bodyLarge,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: EdgeInsets.zero,
+            hintText: AppLocalizations.of(context)!.searchHint,
+            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            prefixIcon: Icon(
+              Icons.search,
+              size: 20,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            suffixIcon: ValueListenableBuilder(
+              valueListenable: widget.controller,
+              builder: (context, value, child) {
+                if (value.text.isEmpty) return const SizedBox.shrink();
+                return IconButton(
+                  onPressed: () {
+                    widget.controller.clear();
+                    widget.onChanged?.call('');
+                  },
+                  icon: const Icon(Icons.close, size: 18),
+                );
+              },
+            ),
+            border: .none,
+            enabledBorder: .none,
+            focusedBorder: .none,
           ),
-          prefixIcon: Icon(
-            Icons.search,
-            size: 20,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          suffixIcon: ValueListenableBuilder(
-            valueListenable: widget.controller,
-            builder: (context, value, child) {
-              if (value.text.isEmpty) return const SizedBox.shrink();
-              return IconButton(
-                onPressed: () {
-                  widget.controller.clear();
-                  widget.onChanged?.call('');
-                },
-                icon: const Icon(Icons.close, size: 18),
-              );
-            },
-          ),
-          border: .none,
-          enabledBorder: .none,
-          focusedBorder: .none,
         ),
       ),
     );
