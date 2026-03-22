@@ -5,6 +5,9 @@ import 'package:melo_trip/pages/shared/initial/initial_page.dart';
 import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/fixed_center_circular.dart';
 
+part 'parts/login_background.dart';
+part 'parts/login_form_controls.dart';
+
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -47,11 +50,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       _loading = true;
     });
     try {
-      final data = await ref.read(userSessionProvider.notifier).login(
-        host: host,
-        username: _unameController.text,
-        password: _pwdController.text,
-      );
+      final data = await ref
+          .read(userSessionProvider.notifier)
+          .login(
+            host: host,
+            username: _unameController.text,
+            password: _pwdController.text,
+          );
       if (!mounted) return;
       if (data == null) {
         messenger.showSnackBar(
@@ -271,19 +276,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildTextField(
+        _LoginTextField(
           controller: _hostController,
           hint: l10n.loginInputHostHint,
           icon: Icons.dns_rounded,
         ),
         const SizedBox(height: 16),
-        _buildTextField(
+        _LoginTextField(
           controller: _unameController,
           hint: l10n.loginInputUserHint,
           icon: Icons.person_rounded,
         ),
         const SizedBox(height: 16),
-        _buildTextField(
+        _LoginTextField(
           controller: _pwdController,
           hint: l10n.loginInputPasswordHint,
           icon: Icons.lock_rounded,
@@ -292,178 +297,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           onSubmitted: _loading ? null : (_) => _onLogin(),
         ),
         const SizedBox(height: 32),
-        _buildLoginButton(context, l10n),
+        _LoginButton(loading: _loading, label: l10n.login, onPressed: _onLogin),
       ],
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hint,
-    required IconData icon,
-    bool obscureText = false,
-    TextInputAction action = TextInputAction.next,
-    void Function(String)? onSubmitted,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      textInputAction: action,
-      onSubmitted: onSubmitted,
-      style: TextStyle(color: colorScheme.onSurface, fontSize: 15),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(
-          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-        ),
-        prefixIcon: Icon(
-          icon,
-          size: 20,
-          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
-        ),
-        filled: true,
-        fillColor: colorScheme.surface.withValues(alpha: 0.7),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.28),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.28),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-            width: 1.5,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoginButton(BuildContext context, AppLocalizations l10n) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      width: double.infinity,
-      height: 52,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            colorScheme.primary.withValues(alpha: 0.95),
-            colorScheme.primary,
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: _loading ? null : _onLogin,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          foregroundColor: colorScheme.onPrimary,
-          shadowColor: Colors.transparent,
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: _loading
-            ? FixedCenterCircular(size: 20, color: colorScheme.onPrimary)
-            : Text(
-                l10n.login,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.0,
-                ),
-              ),
-      ),
-    );
-  }
-}
-
-class _LoginBackground extends StatelessWidget {
-  const _LoginBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.surfaceContainerLow,
-            Color.lerp(colorScheme.surface, colorScheme.primary, 0.05)!,
-            colorScheme.surfaceContainerHigh,
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -100,
-            right: -100,
-            child: _GlowShape(
-              size: 400,
-              color: colorScheme.primary.withValues(alpha: 0.12),
-            ),
-          ),
-          Positioned(
-            bottom: -50,
-            left: -50,
-            child: _GlowShape(
-              size: 300,
-              color: colorScheme.primary.withValues(alpha: 0.08),
-            ),
-          ),
-          Positioned(
-            top: 200,
-            left: 100,
-            child: _GlowShape(
-              size: 150,
-              color: colorScheme.secondary.withValues(alpha: 0.05),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GlowShape extends StatelessWidget {
-  final double size;
-  final Color color;
-
-  const _GlowShape({required this.size, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: color, blurRadius: 100, spreadRadius: 50)],
-      ),
     );
   }
 }
