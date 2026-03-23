@@ -48,15 +48,9 @@ class _DesktopPlayerBar extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: Align(
-                      alignment: .center,
-                      child: _DesktopPlayerBarCenter(
-                        player: player,
-                        colorScheme: colorScheme,
-                      ),
-                    ),
+                  _DesktopPlayerBarCenter(
+                    player: player,
+                    colorScheme: colorScheme,
                   ),
                   const SizedBox(width: 16),
                   Expanded(

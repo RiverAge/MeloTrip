@@ -1,18 +1,5 @@
 {
-  "zh": [
-    "windowTitleApp",
-    "windowMinimize",
-    "windowMaximize",
-    "windowRestore",
-    "windowClose"
-  ],
-
   "zh_CN": [
-    "musicBarTagline",
-    "windowTitleApp",
-    "windowMinimize",
-    "windowMaximize",
-    "windowRestore",
-    "windowClose"
+    "musicBarTagline"
   ]
 }

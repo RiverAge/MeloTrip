@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_lyrics
   media_kit_libs_windows_audio
   update_installer
-  window_title_bar
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

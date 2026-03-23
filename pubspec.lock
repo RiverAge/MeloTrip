@@ -1185,13 +1185,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
-  window_title_bar:
-    dependency: "direct main"
-    description:
-      path: "plugins/window_title_bar"
-      relative: true
-    source: path
-    version: "0.0.1"
   xdg_directories:
     dependency: transitive
     description:

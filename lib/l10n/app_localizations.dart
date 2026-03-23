@@ -1466,36 +1466,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'w700'**
   String get fontWeightW700;
-
-  /// Desktop custom title bar app title
-  ///
-  /// In en, this message translates to:
-  /// **'MeloTrip'**
-  String get windowTitleApp;
-
-  /// Tooltip for minimize window action
-  ///
-  /// In en, this message translates to:
-  /// **'Minimize'**
-  String get windowMinimize;
-
-  /// Tooltip for maximize window action
-  ///
-  /// In en, this message translates to:
-  /// **'Maximize'**
-  String get windowMaximize;
-
-  /// Tooltip for restore window action
-  ///
-  /// In en, this message translates to:
-  /// **'Restore'**
-  String get windowRestore;
-
-  /// Tooltip for close window action
-  ///
-  /// In en, this message translates to:
-  /// **'Close'**
-  String get windowClose;
 }
 
 class _AppLocalizationsDelegate
