@@ -1,8 +1,10 @@
 part of '../player.dart';
 
 extension PlayerMediaItem on AppPlayer {
-  void _syncMediaItem(PlayQueue playQueue) {
-    mediaItem.add(buildMediaItemFromPlayQueue(playQueue: playQueue));
+  void _syncMediaItem(PlayQueue playQueue, {Uri? artUri}) {
+    mediaItem.add(
+      buildMediaItemFromPlayQueue(playQueue: playQueue, artUri: artUri),
+    );
   }
 
   void _updateCurrentMediaItemButton({Duration? position}) {
@@ -34,7 +36,10 @@ extension PlayerMediaItem on AppPlayer {
   }
 }
 
-MediaItem buildMediaItemFromPlayQueue({required PlayQueue playQueue}) {
+MediaItem buildMediaItemFromPlayQueue({
+  required PlayQueue playQueue,
+  Uri? artUri,
+}) {
   if (playQueue.index < 0 || playQueue.index >= playQueue.songs.length) {
     return const MediaItem(
       id: '-1',
@@ -53,6 +58,7 @@ MediaItem buildMediaItemFromPlayQueue({required PlayQueue playQueue}) {
     album: song.album,
     title: song.title ?? '',
     artist: song.artist,
+    artUri: artUri,
     duration: durationValue != null
         ? Duration(seconds: durationValue)
         : Duration.zero,

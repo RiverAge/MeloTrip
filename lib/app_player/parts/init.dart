@@ -28,8 +28,15 @@ extension PlayerInit on AppPlayer {
         songs: playlist.medias.map(readMediaSong).toList(),
         index: playlist.index,
       );
+      final currentMedia = (playlist.index >= 0 &&
+              playlist.index < playlist.medias.length)
+          ? playlist.medias[playlist.index]
+          : null;
+      final artUri = currentMedia == null
+          ? null
+          : readMediaArtUri(currentMedia);
       _playQueueSubject.add(playQueue);
-      _syncMediaItem(playQueue);
+      _syncMediaItem(playQueue, artUri: artUri);
       _updateCurrentMediaItemButton();
     });
 

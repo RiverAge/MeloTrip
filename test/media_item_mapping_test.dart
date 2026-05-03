@@ -41,6 +41,7 @@ void main() {
         songs: [song(id: '2', title: 'B', duration: 90)],
         index: 0,
       ),
+      artUri: Uri.parse('https://proxy.example/rest/getCoverArt?id=2'),
     );
 
     expect(item.id, '2');
@@ -48,5 +49,6 @@ void main() {
     expect(item.album, 'Album');
     expect(item.artist, 'Artist');
     expect(item.duration, const Duration(seconds: 90));
+    expect(item.artUri, Uri.parse('https://proxy.example/rest/getCoverArt?id=2'));
   });
 }
