@@ -29,9 +29,7 @@ extension PlayerState on AppPlayer {
   // }
 
   PlayQueue get playQueue => PlayQueue(
-    songs: _player.state.playlist.medias
-        .map((s) => s.extras?['song'] as SongEntity? ?? SongEntity())
-        .toList(),
+    songs: _player.state.playlist.medias.map(readMediaSong).toList(),
     index: _player.state.playlist.index,
   );
 }

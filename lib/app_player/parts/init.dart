@@ -25,11 +25,7 @@ extension PlayerInit on AppPlayer {
 
     _player.stream.playlist.listen((playlist) {
       final playQueue = PlayQueue(
-        songs: playlist.medias
-            .map(
-              (media) => media.extras?['song'] as SongEntity? ?? SongEntity(),
-            )
-            .toList(),
+        songs: playlist.medias.map(readMediaSong).toList(),
         index: playlist.index,
       );
       _playQueueSubject.add(playQueue);

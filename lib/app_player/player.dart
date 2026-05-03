@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:media_kit/media_kit.dart';
+import 'package:melo_trip/app_player/media_extras_codec.dart';
 import 'package:melo_trip/app_player/command_serializer.dart';
 import 'package:melo_trip/app_player/interruption_state.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
