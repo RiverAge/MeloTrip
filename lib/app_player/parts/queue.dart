@@ -49,6 +49,7 @@ extension PlayerQueue on AppPlayer {
       final index = await _insertToNextInternal(song);
       if (index < 0) return;
       await _player.jump(index);
+      await _activateAudioSessionForPlayback();
       await _player.play();
     });
   }

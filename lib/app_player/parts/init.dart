@@ -62,99 +62,279 @@ extension PlayerInit on AppPlayer {
       pause();
     });
     _interruptionEventSubscription = session.interruptionEventStream.listen(
-      handleInterruptionEvent,
+      (event) {
+        // Process event synchronously for state, enqueue side effects
+        _handleInterruptionEvent(event);
+      },
     );
   }
 
-  void handleInterruptionEvent(AudioInterruptionEvent event) {
+  /// Handles an interruption event.
+  /// State is updated synchronously immediately.
+  /// Side effects are enqueued to the serializer for ordered execution.
+  void _handleInterruptionEvent(AudioInterruptionEvent event) {
+    log(
+      '[AppPlayer][Interruption] event begin=${event.begin} type=${event.type} '
+      'playing=$playing volume=$volume ducking=${_duckVolumeState.duckingState} '
+      'playbackState=$_playbackInterruptionState',
+    );
+
     final decision = resolveInterruptionDecision(
       type: event.type,
       isBegin: event.begin,
       isPlaying: playing,
       playbackState: _playbackInterruptionState,
-      duckingState: _duckingState,
+      duckingState: _duckVolumeState.duckingState,
     );
 
-    if (decision.beginDucking) {
-      _handleDuckingBegin();
-    }
-    if (decision.endDucking) {
-      _handleDuckingEnd();
-    }
-    if (decision.pausePlayback) {
-      pause();
-    }
-    if (decision.resumePlayback) {
-      play();
-    }
+    log(
+      '[AppPlayer][Interruption] decision beginDucking=${decision.beginDucking} '
+      'endDucking=${decision.endDucking} endDuckingImmediately=${decision.endDuckingImmediately} '
+      'pausePlayback=${decision.pausePlayback} '
+      'resumePlayback=${decision.resumePlayback} '
+      'nextDucking=${decision.nextDuckingState} '
+      'nextPlayback=${decision.nextPlaybackState}',
+    );
 
+    // SYNCHRONOUS state updates - happen immediately before any side effects.
+    // This ensures rapid consecutive events see correct state.
     _playbackInterruptionState = decision.nextPlaybackState;
-    _duckingState = decision.nextDuckingState;
-  }
 
-  void _handleDuckingBegin() {
-    _duckingTimeout?.cancel();
-    if (_duckingState == .normal) {
-      _volumeBeforeDucking = volume;
-    }
-    _duckingState = .ducking;
-    _animateVolume(volume / 2);
+    // SYNCHRONOUS duck state computation and update.
+    final duckActions = _computeDuckActions(decision);
 
-    _duckingTimeout = Timer(const Duration(seconds: 30), () {
-      if (_duckingState == .ducking) {
-        _restoreVolumeAfterDucking();
+    // Enqueue side effects to serializer for ordered execution.
+    // This ensures side effects from multiple events execute in order.
+    // pause() and play() go through _commandSerializer, ensuring all player
+    // operations are serialized through the same queue.
+    _interruptionSerializer.run(() async {
+      try {
+        await _executeDuckActions(duckActions);
+
+        if (decision.pausePlayback) {
+          await pause();
+        }
+        if (decision.resumePlayback) {
+          await play();
+        }
+      } catch (error, stackTrace) {
+        log(
+          '[AppPlayer][Interruption] error in side effect: $error\n$stackTrace',
+        );
       }
     });
   }
 
-  void _handleDuckingEnd() {
-    _duckingTimeout?.cancel();
-    _restoreVolumeAfterDucking();
+  /// Computes duck actions and updates duck state synchronously.
+  /// Returns actions that need async execution.
+  List<_DuckAsyncAction> _computeDuckActions(InterruptionDecision decision) {
+    final actions = <_DuckAsyncAction>[];
+
+    if (decision.beginDucking) {
+      final action = handleDuckingBegin(
+        state: _duckVolumeState,
+        currentVolume: volume,
+      );
+      _duckVolumeState = action.nextState;
+      actions.add(_DuckAsyncAction.beginDuck(action));
+    } else if (decision.endDucking) {
+      final action = handleDuckingEnd(
+        state: _duckVolumeState,
+        currentVolume: volume,
+      );
+      _duckVolumeState = action.nextState;
+      actions.add(_DuckAsyncAction.endDuck(action));
+    } else if (decision.endDuckingImmediately) {
+      final action = handleDuckingEndImmediately(
+        state: _duckVolumeState,
+        currentVolume: volume,
+      );
+      _duckVolumeState = action.nextState;
+      actions.add(_DuckAsyncAction.endDuckImmediately(action));
+    } else {
+      // For non-duck events, update duckingState from decision if needed
+      _duckVolumeState = _duckVolumeState.copyWith(
+        duckingState: decision.nextDuckingState,
+      );
+    }
+
+    return actions;
   }
 
-  void _restoreVolumeAfterDucking() {
-    final originalVolume = _volumeBeforeDucking;
-    if (originalVolume == null) {
-      _duckingState = .normal;
+  /// Executes async duck actions (volume animations, setVolume calls).
+  Future<void> _executeDuckActions(List<_DuckAsyncAction> actions) async {
+    for (final action in actions) {
+      switch (action.type) {
+        case _DuckActionType.beginDuck:
+          await _executeDuckingBegin(action.duckAction!);
+        case _DuckActionType.endDuck:
+          await _executeDuckingEnd(action.duckAction!);
+        case _DuckActionType.endDuckImmediately:
+          await _executeDuckingEndImmediately(action.duckAction!);
+      }
+    }
+  }
+
+  /// Executes duck begin side effects (volume animation, timeout).
+  Future<void> _executeDuckingBegin(DuckAction action) async {
+    log(
+      '[AppPlayer][Interruption] _executeDuckingBegin '
+      'volumeBeforeDucking=${action.nextState.volumeBeforeDucking} '
+      'targetVolume=${action.targetVolume}',
+    );
+
+    _duckingTimeout?.cancel();
+
+    // Execute volume change (fire-and-forget animation, don't await)
+    if (action.shouldAnimate) {
+      _startVolumeAnimation(
+        targetVolume: action.targetVolume,
+        onComplete: () {
+          log('[AppPlayer][Interruption] duck animation complete');
+        },
+      );
+    } else {
+      await setVolume(action.targetVolume);
+    }
+
+    // Set timeout for safety
+    _duckingTimeout = Timer(const Duration(seconds: 30), () {
+      if (_duckVolumeState.duckingState == DuckingState.ducking) {
+        _startVolumeRestoreAnimation();
+      }
+    });
+  }
+
+  /// Executes duck end side effects (restore animation).
+  /// Does NOT block the event handler - animation runs independently.
+  Future<void> _executeDuckingEnd(DuckAction action) async {
+    log(
+      '[AppPlayer][Interruption] _executeDuckingEnd '
+      'targetVolume=${action.targetVolume}',
+    );
+
+    _duckingTimeout?.cancel();
+
+    if (action.nextState.duckingState == DuckingState.normal) {
+      // No original volume recorded, nothing to restore
       return;
     }
-    _animateVolume(originalVolume).then((_) {
-      if (_volumeBeforeDucking == originalVolume) {
-        _volumeBeforeDucking = null;
-        _duckingState = .normal;
-      }
-    });
+
+    // Start restore animation (fire-and-forget, don't await)
+    _startVolumeRestoreAnimation();
   }
 
-  Future<void> _animateVolume(double target) {
-    final completer = Completer<void>();
-    _volumeAnimationTimer?.cancel();
+  /// Executes immediate duck end side effects (synchronous volume restore).
+  /// This MUST be awaited to ensure volume is restored before pause.
+  Future<void> _executeDuckingEndImmediately(DuckAction action) async {
+    log(
+      '[AppPlayer][Interruption] _executeDuckingEndImmediately '
+      'restoring volume to ${action.targetVolume}',
+    );
+
+    _duckingTimeout?.cancel();
+    _cancelVolumeAnimation();
+
+    // Execute volume change immediately (must await)
+    await setVolume(action.targetVolume);
+  }
+
+  /// Starts volume restore animation (fire-and-forget).
+  /// Animation completion will check state and clear volumeBeforeDucking.
+  void _startVolumeRestoreAnimation() {
+    final targetVolume = _duckVolumeState.volumeBeforeDucking;
+    if (targetVolume == null) {
+      return;
+    }
+
+    _startVolumeAnimation(
+      targetVolume: targetVolume,
+      onComplete: () {
+        // Check if we should complete the restore
+        // This runs asynchronously after animation completes
+        final newState = handleRestoreComplete(state: _duckVolumeState);
+        if (newState != _duckVolumeState) {
+          _duckVolumeState = newState;
+          log(
+            '[AppPlayer][Interruption] restore animation complete, '
+            'cleared volumeBeforeDucking, ducking=${_duckVolumeState.duckingState}',
+          );
+        } else {
+          log(
+            '[AppPlayer][Interruption] restore animation complete, '
+            'skip clear (duckingState=${_duckVolumeState.duckingState})',
+          );
+        }
+      },
+    );
+  }
+
+  /// Starts a volume animation (fire-and-forget).
+  /// Returns immediately; animation runs in background via timer.
+  void _startVolumeAnimation({
+    required double targetVolume,
+    required void Function() onComplete,
+  }) {
+    // Cancel any existing animation
+    _cancelVolumeAnimation();
 
     final startVolume = volume;
     const animationDuration = Duration(milliseconds: 300);
     const steps = 20;
 
-    if ((target - startVolume).abs() < 0.01) {
-      setVolume(target);
-      completer.complete();
-      return completer.future;
+    log(
+      '[AppPlayer][Interruption] _startVolumeAnimation start '
+      'startVolume=$startVolume targetVolume=$targetVolume',
+    );
+
+    if ((targetVolume - startVolume).abs() < 0.01) {
+      log(
+        '[AppPlayer][Interruption] _startVolumeAnimation diff<0.01, '
+        'setVolume directly to $targetVolume',
+      );
+      setVolume(targetVolume);
+      onComplete();
+      return;
     }
 
-    final stepValue = (target - startVolume) / steps;
+    final stepValue = (targetVolume - startVolume) / steps;
     final stepDuration = animationDuration ~/ steps;
 
     var currentStep = 0;
     _volumeAnimationTimer = Timer.periodic(stepDuration, (timer) {
       currentStep++;
       if (currentStep >= steps) {
-        setVolume(target);
+        setVolume(targetVolume);
         timer.cancel();
-        completer.complete();
+        log(
+          '[AppPlayer][Interruption] _startVolumeAnimation done '
+          'finalTarget=$targetVolume',
+        );
+        onComplete();
       } else {
         setVolume(startVolume + stepValue * currentStep);
       }
     });
-
-    return completer.future;
   }
+
+  /// Cancels any ongoing volume animation.
+  void _cancelVolumeAnimation() {
+    _volumeAnimationTimer?.cancel();
+    _volumeAnimationTimer = null;
+  }
+}
+
+/// Represents an async action to execute for duck handling.
+enum _DuckActionType { beginDuck, endDuck, endDuckImmediately }
+
+class _DuckAsyncAction {
+  const _DuckAsyncAction.beginDuck(this.duckAction)
+      : type = _DuckActionType.beginDuck;
+  const _DuckAsyncAction.endDuck(this.duckAction)
+      : type = _DuckActionType.endDuck;
+  const _DuckAsyncAction.endDuckImmediately(this.duckAction)
+      : type = _DuckActionType.endDuckImmediately;
+
+  final _DuckActionType type;
+  final DuckAction? duckAction;
 }

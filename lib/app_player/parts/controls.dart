@@ -8,16 +8,7 @@ extension PlayerControls on AppPlayer {
       _runSerialized(() => _player.setPlaylistMode(loopMode));
 
   Future<void> playOrPause() => _runSerialized(() async {
-    final session = await AudioSession.instance;
-    await session.setActive(
-      true,
-      androidAudioFocusGainType: .gain,
-      androidAudioAttributes: const AndroidAudioAttributes(
-        contentType: .music,
-        usage: .media,
-      ),
-      androidWillPauseWhenDucked: true,
-    );
+    await _activateAudioSessionForPlayback();
     await _player.playOrPause();
   });
 

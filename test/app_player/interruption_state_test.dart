@@ -14,8 +14,38 @@ void main() {
 
       expect(result.beginDucking, isTrue);
       expect(result.endDucking, isFalse);
+      expect(result.endDuckingImmediately, isFalse);
       expect(result.pausePlayback, isFalse);
       expect(result.resumePlayback, isFalse);
+      expect(result.nextDuckingState, equals(DuckingState.ducking));
+    });
+
+    test('duck type begins ducking even when already ducking (idempotent)', () {
+      final result = resolveInterruptionDecision(
+        type: .duck,
+        isBegin: true,
+        isPlaying: true,
+        playbackState: .normal,
+        duckingState: .ducking,
+      );
+
+      // Should still signal beginDucking so the handler can react,
+      // but the handler should preserve original volume.
+      expect(result.beginDucking, isTrue);
+      expect(result.nextDuckingState, equals(DuckingState.ducking));
+    });
+
+    test('duck type begins ducking even when restoring', () {
+      final result = resolveInterruptionDecision(
+        type: .duck,
+        isBegin: true,
+        isPlaying: true,
+        playbackState: .normal,
+        duckingState: .restoring,
+      );
+
+      // Should signal beginDucking to interrupt the restore animation
+      expect(result.beginDucking, isTrue);
       expect(result.nextDuckingState, equals(DuckingState.ducking));
     });
 
@@ -30,6 +60,7 @@ void main() {
 
       expect(result.pausePlayback, isTrue);
       expect(result.resumePlayback, isFalse);
+      expect(result.endDuckingImmediately, isFalse);
       expect(result.nextPlaybackState, equals(PlaybackInterruptionState.pausedByInterruption));
     });
 
@@ -60,8 +91,67 @@ void main() {
     });
   });
 
+  group('resolveInterruptionDecision - mixed duck + pause scenarios', () {
+    test('pause begin while ducking ends ducking immediately', () {
+      final result = resolveInterruptionDecision(
+        type: .pause,
+        isBegin: true,
+        isPlaying: true,
+        playbackState: .normal,
+        duckingState: .ducking,
+      );
+
+      expect(result.pausePlayback, isTrue);
+      expect(result.endDuckingImmediately, isTrue);
+      expect(result.beginDucking, isFalse);
+      expect(result.endDucking, isFalse);
+      expect(result.nextDuckingState, DuckingState.normal);
+    });
+
+    test('pause begin while restoring ends ducking immediately', () {
+      final result = resolveInterruptionDecision(
+        type: .pause,
+        isBegin: true,
+        isPlaying: true,
+        playbackState: .normal,
+        duckingState: .restoring,
+      );
+
+      expect(result.pausePlayback, isTrue);
+      expect(result.endDuckingImmediately, isTrue);
+      expect(result.nextDuckingState, DuckingState.normal);
+    });
+
+    test('unknown begin while ducking ends ducking immediately', () {
+      final result = resolveInterruptionDecision(
+        type: .unknown,
+        isBegin: true,
+        isPlaying: true,
+        playbackState: .normal,
+        duckingState: .ducking,
+      );
+
+      expect(result.pausePlayback, isTrue);
+      expect(result.endDuckingImmediately, isTrue);
+      expect(result.nextDuckingState, DuckingState.normal);
+    });
+
+    test('pause begin while normal does not end ducking', () {
+      final result = resolveInterruptionDecision(
+        type: .pause,
+        isBegin: true,
+        isPlaying: true,
+        playbackState: .normal,
+        duckingState: .normal,
+      );
+
+      expect(result.pausePlayback, isTrue);
+      expect(result.endDuckingImmediately, isFalse);
+    });
+  });
+
   group('resolveInterruptionDecision - end interruption', () {
-    test('duck type ends ducking', () {
+    test('duck type ends ducking from ducking state', () {
       final result = resolveInterruptionDecision(
         type: .duck,
         isBegin: false,
@@ -72,6 +162,20 @@ void main() {
 
       expect(result.endDucking, isTrue);
       expect(result.beginDucking, isFalse);
+      expect(result.endDuckingImmediately, isFalse);
+      expect(result.nextDuckingState, equals(DuckingState.normal));
+    });
+
+    test('duck type ends ducking from restoring state', () {
+      final result = resolveInterruptionDecision(
+        type: .duck,
+        isBegin: false,
+        isPlaying: false,
+        playbackState: .normal,
+        duckingState: .restoring,
+      );
+
+      expect(result.endDucking, isTrue);
       expect(result.nextDuckingState, equals(DuckingState.normal));
     });
 
@@ -101,17 +205,41 @@ void main() {
       expect(result.nextPlaybackState, equals(PlaybackInterruptionState.normal));
     });
 
-    test('unknown type resets state', () {
+    test('pause end preserves ducking state', () {
+      // If ducking was somehow still active, pause end should preserve it
+      final result = resolveInterruptionDecision(
+        type: .pause,
+        isBegin: false,
+        isPlaying: false,
+        playbackState: .pausedByInterruption,
+        duckingState: .ducking,
+      );
+
+      expect(result.resumePlayback, isTrue);
+      expect(result.nextDuckingState, DuckingState.ducking);
+    });
+
+    test('unknown type resets playback state but preserves ducking', () {
       final result = resolveInterruptionDecision(
         type: .unknown,
         isBegin: false,
         isPlaying: false,
         playbackState: .pausedByInterruption,
-        duckingState: .normal,
+        duckingState: .ducking,
       );
 
       expect(result.resumePlayback, isFalse);
       expect(result.nextPlaybackState, equals(PlaybackInterruptionState.normal));
+      expect(result.nextDuckingState, DuckingState.ducking);
+    });
+  });
+
+  group('DuckingState enum', () {
+    test('has normal, ducking, and restoring values', () {
+      expect(DuckingState.values, contains(DuckingState.normal));
+      expect(DuckingState.values, contains(DuckingState.ducking));
+      expect(DuckingState.values, contains(DuckingState.restoring));
+      expect(DuckingState.values.length, equals(3));
     });
   });
 }

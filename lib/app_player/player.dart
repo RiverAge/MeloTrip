@@ -6,6 +6,8 @@ import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:media_kit/media_kit.dart';
 import 'package:melo_trip/app_player/media_extras_codec.dart';
 import 'package:melo_trip/app_player/command_serializer.dart';
+import 'package:melo_trip/app_player/duck_volume_state_machine.dart';
+import 'package:melo_trip/app_player/interruption_side_effect_serializer.dart';
 import 'package:melo_trip/app_player/interruption_state.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -63,21 +65,37 @@ class AppPlayer extends BaseAudioHandler {
   }
 
   PlaybackInterruptionState _playbackInterruptionState = .normal;
-  DuckingState _duckingState = .normal;
+  DuckVolumeState _duckVolumeState = const DuckVolumeState(
+    duckingState: DuckingState.normal,
+    volumeBeforeDucking: null,
+  );
   Timer? _volumeAnimationTimer;
-  double? _volumeBeforeDucking;
   Timer? _duckingTimeout;
   final _commandSerializer = AppPlayerCommandSerializer();
+  final _interruptionSerializer = InterruptionSideEffectSerializer();
 
   Future<T> _runSerialized<T>(Future<T> Function() action) {
     return _commandSerializer.run(action);
   }
 
+  /// Activates the audio session for music playback.
+  /// All playback entry points should call this before starting playback.
+  Future<void> _activateAudioSessionForPlayback() async {
+    final session = await AudioSession.instance;
+    await session.setActive(
+      true,
+      androidAudioFocusGainType: .gain,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: .music,
+        usage: .media,
+      ),
+    );
+  }
+
   @override
   Future<void> play() {
     return _runSerialized(() async {
-      final session = await AudioSession.instance;
-      await session.setActive(true);
+      await _activateAudioSessionForPlayback();
       await _player.play();
     });
   }
