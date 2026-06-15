@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:melo_trip/model/update/app_update_info.dart';
+import 'package:melo_trip/update/github_release_parser.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -15,12 +16,14 @@ export 'package:melo_trip/model/update/app_update_info.dart';
 
 class AppUpdateService {
   AppUpdateService({
-    this.checkUrl = 'https://melotrip.587626.xyz/check',
+    this.checkUrl =
+        'https://api.github.com/repos/RiverAge/MeloTrip/releases/latest',
     UpdateInstallerGateway? installerGateway,
   }) : _installerGateway = installerGateway ?? UpdateInstallerGateway.auto();
 
   final String checkUrl;
   final UpdateInstallerGateway _installerGateway;
+  final GitHubReleaseParser _releaseParser = GitHubReleaseParser();
 
   bool get isInstallSupported => _installerGateway.isSupported;
 
@@ -112,19 +115,31 @@ class AppUpdateService {
       options: Options(
         headers: <String, String>{
           'User-Agent': 'MeloTrip-App',
-          'Accept': 'application/json',
-          'X-MeloTrip-Platform': _currentPlatformName(),
-          'X-MeloTrip-Package-Type': expectedPackageType,
+          'Accept': 'application/vnd.github.v3+json',
         },
       ),
     );
 
     final payload = response.data;
     if (payload == null) {
-      throw StateError('Empty update response.');
+      throw StateError('Empty GitHub Release response.');
     }
 
-    final remote = AppUpdateInfo.fromJson(payload);
+    final parsedInfo = _releaseParser.parseRelease(
+      releaseJson: payload,
+      platform: _currentPlatformName(),
+      packageType: expectedPackageType,
+    );
+
+    final remote = AppUpdateInfo(
+      versionName: parsedInfo.versionName,
+      versionCode: parsedInfo.versionCode,
+      sha256: parsedInfo.sha256,
+      fileSize: parsedInfo.fileSize,
+      downloadUrl: parsedInfo.downloadUrl,
+      changelog: parsedInfo.changelog,
+    );
+
     if (remote.versionCode <= 0 || remote.downloadUrl.isEmpty) {
       throw StateError('Invalid update payload.');
     }

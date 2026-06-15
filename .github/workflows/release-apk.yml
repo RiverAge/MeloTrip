@@ -62,7 +62,7 @@ jobs:
           cp "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" \
              "build/app/outputs/flutter-apk/app-release.apk"
 
-      - name: Generate release metadata block
+      - name: Generate Android metadata fragment
         shell: bash
         run: |
           set -euo pipefail
@@ -78,13 +78,12 @@ jobs:
           sha256="$(sha256sum "$apk_path" | awk '{print $1}')"
           size="$(stat -c%s "$apk_path")"
 
-          cat > release-body.md <<EOF
-          <!-- METADATA
-          Version: ${version_core}
-          Build: ${build_number}
-          SHA256: ${sha256}
-          Size: ${size}
-          METADATA -->
+          cat > android-metadata.txt <<EOF
+          versionName=${version_core}
+          versionCode=${build_number}
+          asset.android.apk=app-release.apk
+          sha256.android.apk=${sha256}
+          size.android.apk=${size}
           EOF
 
       - name: Upload Android artifacts
@@ -93,7 +92,7 @@ jobs:
           name: android-artifacts
           path: |
             build/app/outputs/flutter-apk/*.apk
-            release-body.md
+            android-metadata.txt
 
   build-windows:
     runs-on: windows-latest
@@ -114,16 +113,32 @@ jobs:
 
       - name: Build Windows release
         run: flutter build windows --release
+
       - name: Pack Windows bundle
         shell: pwsh
         run: |
           Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath "melotrip-windows-x64.zip"
 
+      - name: Generate Windows metadata fragment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256="$(sha256sum melotrip-windows-x64.zip | awk '{print $1}')"
+          size="$(stat -c%s melotrip-windows-x64.zip)"
+
+          cat > windows-metadata.txt <<EOF
+          asset.windows.zip=melotrip-windows-x64.zip
+          sha256.windows.zip=${sha256}
+          size.windows.zip=${size}
+          EOF
+
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-artifacts
-          path: melotrip-windows-x64.zip
+          path: |
+            melotrip-windows-x64.zip
+            windows-metadata.txt
 
   build-linux:
     runs-on: ubuntu-latest
@@ -161,11 +176,26 @@ jobs:
         run: |
           tar -C build/linux/x64/release -czf melotrip-linux-x64.tar.gz bundle
 
+      - name: Generate Linux metadata fragment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256="$(sha256sum melotrip-linux-x64.tar.gz | awk '{print $1}')"
+          size="$(stat -c%s melotrip-linux-x64.tar.gz)"
+
+          cat > linux-metadata.txt <<EOF
+          asset.linux.tar.gz=melotrip-linux-x64.tar.gz
+          sha256.linux.tar.gz=${sha256}
+          size.linux.tar.gz=${size}
+          EOF
+
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-artifacts
-          path: melotrip-linux-x64.tar.gz
+          path: |
+            melotrip-linux-x64.tar.gz
+            linux-metadata.txt
 
   build-macos:
     runs-on: macos-latest
@@ -193,11 +223,26 @@ jobs:
           cd build/macos/Build/Products/Release
           zip -r ../../../../../melotrip-macos.zip MeloTrip.app
 
+      - name: Generate macOS metadata fragment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256="$(shasum -a 256 melotrip-macos.zip | awk '{print $1}')"
+          size="$(stat -f%z melotrip-macos.zip)"
+
+          cat > macos-metadata.txt <<EOF
+          asset.macos.zip=melotrip-macos.zip
+          sha256.macos.zip=${sha256}
+          size.macos.zip=${size}
+          EOF
+
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-artifacts
-          path: melotrip-macos.zip
+          path: |
+            melotrip-macos.zip
+            macos-metadata.txt
 
   publish-release:
     needs:
@@ -221,9 +266,39 @@ jobs:
           find dist -type f -name "*.zip" -exec cp {} release-files/ \;
           find dist -type f -name "*.tar.gz" -exec cp {} release-files/ \;
 
+      - name: Generate release body with metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Collect metadata fragments
+          android_meta="$(cat dist/android-artifacts/android-metadata.txt 2>/dev/null || true)"
+          windows_meta="$(cat dist/windows-artifacts/windows-metadata.txt 2>/dev/null || true)"
+          linux_meta="$(cat dist/linux-artifacts/linux-metadata.txt 2>/dev/null || true)"
+          macos_meta="$(cat dist/macos-artifacts/macos-metadata.txt 2>/dev/null || true)"
+
+          # Extract version info from Android metadata (authoritative source)
+          versionName="$(echo "$android_meta" | grep '^versionName=' | cut -d= -f2)"
+          versionCode="$(echo "$android_meta" | grep '^versionCode=' | cut -d= -f2)"
+
+          # Build the metadata block
+          cat > release-body.md <<EOF
+          <!-- MELOTRIP_UPDATE_METADATA
+          versionName=${versionName}
+          versionCode=${versionCode}
+          ${android_meta}
+          ${windows_meta}
+          ${linux_meta}
+          ${macos_meta}
+          MELOTRIP_UPDATE_METADATA -->
+
+          ## What's Changed
+
+          EOF
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: release-files/*
-          body_path: dist/android-artifacts/release-body.md
+          body_path: release-body.md
           generate_release_notes: true
