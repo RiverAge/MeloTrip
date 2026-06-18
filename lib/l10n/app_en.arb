@@ -1107,5 +1107,85 @@
    "fontWeightW700": "w700",
    "@fontWeightW700": {
      "description": "Font weight option w700"
+   },
+
+   "similarSongs": "Similar",
+   "@similarSongs": {
+     "description": "Button text for viewing similar songs"
+   },
+   "similarSongsTitle": "Similar to \"{title}\"",
+   "@similarSongsTitle": {
+     "description": "Title for similar songs page",
+     "placeholders": {
+        "title": {
+           "type": "String",
+           "example": "My Song"
+        }
+     }
+   },
+   "noSimilarSongsFound": "No similar songs found",
+   "@noSimilarSongsFound": {
+     "description": "Message when no similar songs are found"
+   },
+   "sonicPathTitle": "Sonic Path",
+   "@sonicPathTitle": {
+     "description": "Title for sonic path page"
+   },
+   "fromSong": "From",
+   "@fromSong": {
+     "description": "Label for source song in sonic path"
+   },
+   "toSong": "To",
+   "@toSong": {
+     "description": "Label for destination song in sonic path"
+   },
+   "generatePath": "Generate Path",
+   "@generatePath": {
+     "description": "Button to generate sonic path"
+   },
+   "recommendations": "For You",
+   "@recommendations": {
+     "description": "Title for recommendations section"
+   },
+   "startRadio": "Radio",
+   "@startRadio": {
+     "description": "Button to start radio mode"
+   },
+   "radioPlaying": "Radio Mode",
+   "@radioPlaying": {
+     "description": "Indicator that radio mode is active"
+   },
+   "playSimilarQueue": "Play Similar",
+   "@playSimilarQueue": {
+     "description": "Button to play similar songs queue"
+   },
+   "sonicPath": "Sonic Path",
+   "@sonicPath": {
+     "description": "Sonic path feature name"
+   },
+   "selectStartSong": "Select start song",
+   "@selectStartSong": {
+     "description": "Hint for selecting start song in sonic path"
+   },
+   "selectEndSong": "Select end song",
+   "@selectEndSong": {
+     "description": "Hint for selecting end song in sonic path"
+   },
+   "similarRadio": "Similar Radio",
+   "@similarRadio": {
+     "description": "Similar radio feature name"
+   },
+   "startSimilarRadio": "Start Similar Radio",
+   "@startSimilarRadio": {
+     "description": "Button to start similar radio from current song"
+   },
+   "noSongsFoundForRadio": "No similar songs found for radio",
+   "@noSongsFoundForRadio": {
+     "description": "Message when no similar songs are found to start radio"
+   },
+
+   "similarArtists": "Similar Artists",
+   "@similarArtists": {
+     "description": "Title for similar artists section on artist detail page"
    }
 }

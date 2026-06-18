@@ -119,9 +119,15 @@ void main() {
       expect(mockAdapter.lastRequest?.path, '/rest/updatePlaylist');
       expect(mockAdapter.lastRequest?.queryParameters['playlistId'], 'pl-123');
       expect(mockAdapter.lastRequest?.queryParameters['songIndexToRemove'], 2);
-      expect(mockAdapter.lastRequest?.queryParameters['songIdToAdd'], 'song-456');
+      expect(
+        mockAdapter.lastRequest?.queryParameters['songIdToAdd'],
+        'song-456',
+      );
       expect(mockAdapter.lastRequest?.queryParameters['name'], 'Updated Name');
-      expect(mockAdapter.lastRequest?.queryParameters['comment'], 'Updated comment');
+      expect(
+        mockAdapter.lastRequest?.queryParameters['comment'],
+        'Updated comment',
+      );
       expect(mockAdapter.lastRequest?.queryParameters['public'], true);
     });
 
@@ -131,15 +137,20 @@ void main() {
       });
 
       final repository = container.read(playlistRepositoryProvider);
-      await repository.updatePlaylist(
-        playlistId: 'pl-123',
-        name: 'New Name',
-      );
+      await repository.updatePlaylist(playlistId: 'pl-123', name: 'New Name');
 
       expect(mockAdapter.lastRequest?.queryParameters['playlistId'], 'pl-123');
       expect(mockAdapter.lastRequest?.queryParameters['name'], 'New Name');
-      expect(mockAdapter.lastRequest?.queryParameters.containsKey('songIndexToRemove'), isFalse);
-      expect(mockAdapter.lastRequest?.queryParameters.containsKey('songIdToAdd'), isFalse);
+      expect(
+        mockAdapter.lastRequest?.queryParameters.containsKey(
+          'songIndexToRemove',
+        ),
+        isFalse,
+      );
+      expect(
+        mockAdapter.lastRequest?.queryParameters.containsKey('songIdToAdd'),
+        isFalse,
+      );
     });
 
     test('updatePlaylist throws for failed status', () async {
@@ -198,15 +209,18 @@ void main() {
       expect(result.last.name, 'Workout');
     });
 
-    test('tryFetchPlaylistItems returns Result.err for empty payload', () async {
-      mockAdapter.setResponse(null);
+    test(
+      'tryFetchPlaylistItems returns Result.err for empty payload',
+      () async {
+        mockAdapter.setResponse(null);
 
-      final repository = container.read(playlistRepositoryProvider);
-      final result = await repository.tryFetchPlaylistItems();
+        final repository = container.read(playlistRepositoryProvider);
+        final result = await repository.tryFetchPlaylistItems();
 
-      expect(result.isErr, isTrue);
-      expect(result.error, isNotNull);
-    });
+        expect(result.isErr, isTrue);
+        expect(result.error, isNotNull);
+      },
+    );
 
     test('fetchPlaylistEntityDetail returns playlist entity', () async {
       mockAdapter.setResponse({
@@ -223,19 +237,20 @@ void main() {
       expect(result.name, 'My Playlist');
     });
 
-    test('tryFetchPlaylistEntityDetail returns Result.err for missing playlist', () async {
-      mockAdapter.setResponse({
-        'subsonic-response': {
-          'status': 'ok',
-        },
-      });
+    test(
+      'tryFetchPlaylistEntityDetail returns Result.err for missing playlist',
+      () async {
+        mockAdapter.setResponse({
+          'subsonic-response': {'status': 'ok'},
+        });
 
-      final repository = container.read(playlistRepositoryProvider);
-      final result = await repository.tryFetchPlaylistEntityDetail('pl-1');
+        final repository = container.read(playlistRepositoryProvider);
+        final result = await repository.tryFetchPlaylistEntityDetail('pl-1');
 
-      expect(result.isErr, isTrue);
-      expect(result.error, isNotNull);
-    });
+        expect(result.isErr, isTrue);
+        expect(result.error, isNotNull);
+      },
+    );
   });
 }
 
@@ -267,13 +282,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

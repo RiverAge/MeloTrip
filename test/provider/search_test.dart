@@ -50,9 +50,7 @@ void main() {
     test('returns null when query is empty', () async {
       final mockRepository = _MockSongRepository(null);
       final container = ProviderContainer(
-        overrides: [
-          songRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [songRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -68,9 +66,7 @@ void main() {
       );
       final mockRepository = _MockSongRepository(mockResponse);
       final container = ProviderContainer(
-        overrides: [
-          songRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [songRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -86,9 +82,7 @@ void main() {
     test('returns Result.err when repository throws', () async {
       final mockRepository = _MockSongRepository(null);
       final container = ProviderContainer(
-        overrides: [
-          songRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [songRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -104,9 +98,7 @@ void main() {
     test('returns null when query is empty', () async {
       final mockRepository = _MockSongRepository(null);
       final container = ProviderContainer(
-        overrides: [
-          songRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [songRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -118,4 +110,3 @@ void main() {
     });
   });
 }
-

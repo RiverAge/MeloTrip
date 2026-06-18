@@ -25,6 +25,7 @@ class _MusicControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = Theme.of(context).colorScheme.onSurfaceVariant;
     return AsyncValueBuilder(
       provider: appPlayerHandlerProvider,
@@ -69,7 +70,7 @@ class _MusicControls extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        AppLocalizations.of(context)!.lyricsSource(sourceLabel),
+                        l10n.lyricsSource(sourceLabel),
                         style: TextStyle(
                           height: 1.0,
                           fontSize: 12,
@@ -90,15 +91,9 @@ class _MusicControls extends StatelessWidget {
                   onPressed: () {
                     final messenger = ScaffoldMessenger.of(context);
                     final size = MediaQuery.sizeOf(context);
-                    final playModeNoneText = AppLocalizations.of(
-                      context,
-                    )!.playModeNone;
-                    final playModeLoopText = AppLocalizations.of(
-                      context,
-                    )!.playModeLoop;
-                    final playModeSingleText = AppLocalizations.of(
-                      context,
-                    )!.playModeSingle;
+                    final playModeNoneText = l10n.playModeNone;
+                    final playModeLoopText = l10n.playModeLoop;
+                    final playModeSingleText = l10n.playModeSingle;
                     if (player.playlistMode == .loop) {
                       player.setPlaylistMode(.none);
                       messenger.clearSnackBars();
@@ -131,6 +126,44 @@ class _MusicControls extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 30),
+                // Similar Radio button
+                IconButton(
+                  onPressed: current != null
+                      ? () async {
+                          final radioQueueNotifier = ref.read(
+                            radioQueueProvider.notifier,
+                          );
+                          await radioQueueNotifier.startRadio(current);
+                          final radioQueue = ref.read(radioQueueProvider);
+                          if (radioQueue.isNotEmpty) {
+                            await player.setPlaylist(
+                              songs: radioQueue,
+                              initialId: radioQueue.first.id,
+                            );
+                            await player.play();
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.radioPlaying),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.noSongsFoundForRadio),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      : null,
+                  icon: const Icon(Icons.radio_outlined),
+                  tooltip: l10n.similarRadio,
+                ),
                 IconButton(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(

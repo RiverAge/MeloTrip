@@ -95,7 +95,11 @@ void main() {
                   ),
                 ],
                 artists: const <ArtistEntity>[
-                  ArtistEntity(id: 'ar1', name: 'Search Artist 1', albumCount: 3),
+                  ArtistEntity(
+                    id: 'ar1',
+                    name: 'Search Artist 1',
+                    albumCount: 3,
+                  ),
                 ],
               ),
             ),
@@ -115,4 +119,3 @@ void main() {
     expect(find.text('Search Artist 1'), findsWidgets);
   });
 }
-

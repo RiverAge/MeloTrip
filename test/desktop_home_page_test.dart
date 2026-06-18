@@ -236,9 +236,7 @@ void main() {
     expect(clickRegions.isNotEmpty, isTrue);
   });
 
-  testWidgets('DesktopHomePage section scroll buttons render', (
-    tester,
-  ) async {
+  testWidgets('DesktopHomePage section scroll buttons render', (tester) async {
     final randomAlbum = _album(
       id: 'album-1',
       name: 'Hero Album',

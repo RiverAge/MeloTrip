@@ -188,7 +188,10 @@ class _MockSongRepository extends SongRepository {
     required SongSearchQuery query,
     CancelToken? cancelToken,
   }) async {
-    final items = await fetchSongSearchItems(query: query, cancelToken: cancelToken);
+    final items = await fetchSongSearchItems(
+      query: query,
+      cancelToken: cancelToken,
+    );
     return Result.ok(items);
   }
 }

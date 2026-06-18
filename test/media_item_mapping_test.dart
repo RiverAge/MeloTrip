@@ -49,6 +49,9 @@ void main() {
     expect(item.album, 'Album');
     expect(item.artist, 'Artist');
     expect(item.duration, const Duration(seconds: 90));
-    expect(item.artUri, Uri.parse('https://proxy.example/rest/getCoverArt?id=2'));
+    expect(
+      item.artUri,
+      Uri.parse('https://proxy.example/rest/getCoverArt?id=2'),
+    );
   });
 }

@@ -39,10 +39,7 @@ void main() {
     });
 
     test('fromJson handles partial data', () {
-      final json = {
-        'id': '123',
-        'title': 'Test Song',
-      };
+      final json = {'id': '123', 'title': 'Test Song'};
 
       final song = SongEntity.fromJson(json);
 
@@ -71,10 +68,7 @@ void main() {
     });
 
     test('copyWith creates modified copy', () {
-      final original = const SongEntity(
-        id: '123',
-        title: 'Original',
-      );
+      final original = const SongEntity(id: '123', title: 'Original');
 
       final modified = original.copyWith(title: 'Modified');
 

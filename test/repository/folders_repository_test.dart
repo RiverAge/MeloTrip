@@ -123,11 +123,7 @@ void main() {
           'directory': {
             'id': 'dir-123',
             'child': [
-              {
-                'id': 'child-1',
-                'title': 'Subfolder',
-                'isDir': true,
-              },
+              {'id': 'child-1', 'title': 'Subfolder', 'isDir': true},
               {
                 'id': 'child-2',
                 'title': 'Song Title',
@@ -205,15 +201,18 @@ void main() {
       expect(result.first.isDir, isTrue);
     });
 
-    test('tryFetchFolderIndexes returns Result.err for empty payload', () async {
-      mockAdapter.setResponse(null);
+    test(
+      'tryFetchFolderIndexes returns Result.err for empty payload',
+      () async {
+        mockAdapter.setResponse(null);
 
-      final repository = container.read(foldersRepositoryProvider);
-      final result = await repository.tryFetchFolderIndexes();
+        final repository = container.read(foldersRepositoryProvider);
+        final result = await repository.tryFetchFolderIndexes();
 
-      expect(result.isErr, isTrue);
-      expect(result.error, isNotNull);
-    });
+        expect(result.isErr, isTrue);
+        expect(result.error, isNotNull);
+      },
+    );
   });
 }
 
@@ -245,13 +244,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

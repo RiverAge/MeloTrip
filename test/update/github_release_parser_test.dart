@@ -55,10 +55,7 @@ MELOTRIP_UPDATE_METADATA -->
         expect(info.versionCode, equals(11));
         expect(info.sha256, equals('abc123def456'));
         expect(info.fileSize, equals(1048576));
-        expect(
-          info.downloadUrl,
-          contains('app-release.apk'),
-        );
+        expect(info.downloadUrl, contains('app-release.apk'));
         expect(info.changelog, contains('Bug fixes'));
         expect(info.changelog, isNot(contains('MELOTRIP_UPDATE_METADATA')));
       });
@@ -229,10 +226,7 @@ MELOTRIP_UPDATE_METADATA -->
       });
 
       test('throws when release has no tag_name', () {
-        final releaseJson = {
-          'body': '',
-          'assets': [],
-        };
+        final releaseJson = {'body': '', 'assets': []};
 
         expect(
           () => parser.parseRelease(
@@ -409,7 +403,8 @@ MELOTRIP_UPDATE_METADATA -->
           'assets': [
             {
               'name': 'melotrip-windows-x64.zip',
-              'browser_download_url': 'https://example.com/melotrip-windows-x64.zip',
+              'browser_download_url':
+                  'https://example.com/melotrip-windows-x64.zip',
               'size': 2097152,
             },
           ],

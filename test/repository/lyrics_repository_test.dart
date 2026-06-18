@@ -61,8 +61,24 @@ void main() {
       final result = await repository.fetchLyrics('song-123');
 
       expect(result, isNotNull);
-      expect(result.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayArtist, 'Test Artist');
-      expect(result.subsonicResponse?.lyricsList?.structuredLyrics?.first.displayTitle, 'Test Song');
+      expect(
+        result
+            .subsonicResponse
+            ?.lyricsList
+            ?.structuredLyrics
+            ?.first
+            .displayArtist,
+        'Test Artist',
+      );
+      expect(
+        result
+            .subsonicResponse
+            ?.lyricsList
+            ?.structuredLyrics
+            ?.first
+            .displayTitle,
+        'Test Song',
+      );
     });
 
     test('fetchLyrics throws for empty payload', () async {
@@ -114,7 +130,8 @@ void main() {
       final result = await repository.tryFetchMergedLyrics('song-123');
 
       expect(result.isOk, isTrue);
-      final merged = result.data?.subsonicResponse?.lyricsList?.structuredLyrics;
+      final merged =
+          result.data?.subsonicResponse?.lyricsList?.structuredLyrics;
       expect(merged, isNotNull);
       expect(merged, hasLength(1));
       expect(merged!.first.lang, 'NetEase');
@@ -151,13 +168,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

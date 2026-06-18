@@ -133,13 +133,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

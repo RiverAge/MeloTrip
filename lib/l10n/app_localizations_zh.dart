@@ -731,6 +731,62 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fontWeightW700 => 'w700';
+
+  @override
+  String get similarSongs => '相似';
+
+  @override
+  String similarSongsTitle(String title) {
+    return '与\"$title\"相似';
+  }
+
+  @override
+  String get noSimilarSongsFound => '未找到相似歌曲';
+
+  @override
+  String get sonicPathTitle => '声音路径';
+
+  @override
+  String get fromSong => '起点';
+
+  @override
+  String get toSong => '终点';
+
+  @override
+  String get generatePath => '生成路径';
+
+  @override
+  String get recommendations => '为你推荐';
+
+  @override
+  String get startRadio => '电台';
+
+  @override
+  String get radioPlaying => '电台模式';
+
+  @override
+  String get playSimilarQueue => '播放相似';
+
+  @override
+  String get sonicPath => '声音路径';
+
+  @override
+  String get selectStartSong => '选择起点歌曲';
+
+  @override
+  String get selectEndSong => '选择终点歌曲';
+
+  @override
+  String get similarRadio => '相似电台';
+
+  @override
+  String get startSimilarRadio => '开始相似电台';
+
+  @override
+  String get noSongsFoundForRadio => '未找到相似歌曲，无法开始电台';
+
+  @override
+  String get similarArtists => '相似艺术家';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -906,6 +962,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get searchHint => '搜索歌曲、艺术家或专辑...';
+
+  @override
+  String get musicBarTagline => '与旋律同行';
 
   @override
   String get searchHistory => '搜索历史';
@@ -1457,4 +1516,60 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get fontWeightW700 => 'w700';
+
+  @override
+  String get similarSongs => '相似';
+
+  @override
+  String similarSongsTitle(String title) {
+    return '与\"$title\"相似';
+  }
+
+  @override
+  String get noSimilarSongsFound => '未找到相似歌曲';
+
+  @override
+  String get sonicPathTitle => '声音路径';
+
+  @override
+  String get fromSong => '起点';
+
+  @override
+  String get toSong => '终点';
+
+  @override
+  String get generatePath => '生成路径';
+
+  @override
+  String get recommendations => '为你推荐';
+
+  @override
+  String get startRadio => '电台';
+
+  @override
+  String get radioPlaying => '电台模式';
+
+  @override
+  String get playSimilarQueue => '播放相似';
+
+  @override
+  String get sonicPath => '声音路径';
+
+  @override
+  String get selectStartSong => '选择起点歌曲';
+
+  @override
+  String get selectEndSong => '选择终点歌曲';
+
+  @override
+  String get similarRadio => '相似电台';
+
+  @override
+  String get startSimilarRadio => '开始相似电台';
+
+  @override
+  String get noSongsFoundForRadio => '未找到相似歌曲，无法开始电台';
+
+  @override
+  String get similarArtists => '相似艺术家';
 }

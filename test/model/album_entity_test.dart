@@ -32,10 +32,7 @@ void main() {
     });
 
     test('fromJson handles partial data', () {
-      final json = {
-        'id': 'album123',
-        'name': 'Test Album',
-      };
+      final json = {'id': 'album123', 'name': 'Test Album'};
 
       final album = AlbumEntity.fromJson(json);
 
@@ -59,10 +56,7 @@ void main() {
     });
 
     test('copyWith creates modified copy', () {
-      final original = const AlbumEntity(
-        id: 'album123',
-        name: 'Original',
-      );
+      final original = const AlbumEntity(id: 'album123', name: 'Original');
 
       final modified = original.copyWith(name: 'Modified');
 
@@ -82,10 +76,7 @@ void main() {
 
   group('DiscTitle', () {
     test('fromJson parses fields', () {
-      final json = {
-        'disc': 1,
-        'title': 'Disc One',
-      };
+      final json = {'disc': 1, 'title': 'Disc One'};
 
       final discTitle = DiscTitle.fromJson(json);
 
@@ -105,11 +96,7 @@ void main() {
 
   group('ReleaseDate', () {
     test('fromJson parses fields', () {
-      final json = {
-        'year': 2024,
-        'month': 1,
-        'day': 15,
-      };
+      final json = {'year': 2024, 'month': 1, 'day': 15};
 
       final releaseDate = ReleaseDate.fromJson(json);
 
@@ -155,10 +142,12 @@ void main() {
     });
 
     test('toJson serializes album list', () {
-      final albumList = const AlbumListEntity(album: [
-        AlbumEntity(id: '1', name: 'Album 1'),
-        AlbumEntity(id: '2', name: 'Album 2'),
-      ]);
+      final albumList = const AlbumListEntity(
+        album: [
+          AlbumEntity(id: '1', name: 'Album 1'),
+          AlbumEntity(id: '2', name: 'Album 2'),
+        ],
+      );
 
       final json = albumList.toJson();
 

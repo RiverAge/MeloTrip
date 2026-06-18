@@ -16,7 +16,9 @@ void main() {
       container = ProviderContainer(
         overrides: [
           artistDetailRepositoryProvider.overrideWith((ref) {
-            return ArtistDetailRepository(() async => _createMockDio(mockAdapter));
+            return ArtistDetailRepository(
+              () async => _createMockDio(mockAdapter),
+            );
           }),
         ],
       );
@@ -83,6 +85,129 @@ void main() {
       expect(result.isErr, isTrue);
       expect(result.error, isNotNull);
     });
+
+    // ========== fetchArtistInfo2 tests ==========
+
+    test('fetchArtistInfo2 sends correct request', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'artistInfo2': {'similarArtist': []},
+        },
+      });
+
+      final repository = container.read(artistDetailRepositoryProvider);
+      await repository.fetchArtistInfo2(artistId: 'artist-123');
+
+      expect(mockAdapter.lastRequest?.path, '/rest/getArtistInfo2');
+      expect(mockAdapter.lastRequest?.queryParameters['id'], 'artist-123');
+    });
+
+    test('fetchArtistInfo2 sends count parameter when provided', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'artistInfo2': {'similarArtist': []},
+        },
+      });
+
+      final repository = container.read(artistDetailRepositoryProvider);
+      await repository.fetchArtistInfo2(artistId: 'artist-123', count: 10);
+
+      expect(mockAdapter.lastRequest?.path, '/rest/getArtistInfo2');
+      expect(mockAdapter.lastRequest?.queryParameters['id'], 'artist-123');
+      expect(mockAdapter.lastRequest?.queryParameters['count'], 10);
+    });
+
+    test(
+      'fetchArtistInfo2 without count does not send count parameter',
+      () async {
+        mockAdapter.setResponse({
+          'subsonic-response': {
+            'status': 'ok',
+            'artistInfo2': {'similarArtist': []},
+          },
+        });
+
+        final repository = container.read(artistDetailRepositoryProvider);
+        await repository.fetchArtistInfo2(artistId: 'artist-123');
+
+        expect(mockAdapter.lastRequest?.path, '/rest/getArtistInfo2');
+        expect(mockAdapter.lastRequest?.queryParameters['id'], 'artist-123');
+        expect(
+          mockAdapter.lastRequest?.queryParameters.containsKey('count'),
+          false,
+        );
+      },
+    );
+
+    test('fetchArtistInfo2 parses artistInfo2.similarArtist', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {
+          'status': 'ok',
+          'artistInfo2': {
+            'similarArtist': [
+              {
+                'id': 'similar-artist-1',
+                'name': 'Similar Artist One',
+                'coverArt': 'cover-1',
+                'albumCount': 5,
+              },
+              {
+                'id': 'similar-artist-2',
+                'name': 'Similar Artist Two',
+                'coverArt': 'cover-2',
+                'albumCount': 3,
+              },
+            ],
+          },
+        },
+      });
+
+      final repository = container.read(artistDetailRepositoryProvider);
+      final result = await repository.fetchArtistInfo2(artistId: 'artist-123');
+
+      expect(result.subsonicResponse?.artistInfo2, isNotNull);
+      final similarArtists =
+          result.subsonicResponse?.artistInfo2?.similarArtist;
+      expect(similarArtists, isNotNull);
+      expect(similarArtists!.length, 2);
+      expect(similarArtists[0].id, 'similar-artist-1');
+      expect(similarArtists[0].name, 'Similar Artist One');
+      expect(similarArtists[1].id, 'similar-artist-2');
+      expect(similarArtists[1].name, 'Similar Artist Two');
+    });
+
+    test('tryFetchArtistInfo2 returns Result.err for empty payload', () async {
+      mockAdapter.setResponse(null);
+
+      final repository = container.read(artistDetailRepositoryProvider);
+      final result = await repository.tryFetchArtistInfo2(
+        artistId: 'artist-123',
+      );
+
+      expect(result.isErr, isTrue);
+      expect(result.error, isNotNull);
+    });
+
+    test(
+      'tryFetchArtistInfo2 returns Result.err for invalid response',
+      () async {
+        mockAdapter.setResponse({
+          'subsonic-response': {
+            'status': 'failed',
+            'error': {'code': 70, 'message': 'Artist not found'},
+          },
+        });
+
+        final repository = container.read(artistDetailRepositoryProvider);
+        final result = await repository.tryFetchArtistInfo2(
+          artistId: 'invalid-id',
+        );
+
+        expect(result.isErr, isTrue);
+      },
+    );
   });
 }
 
@@ -114,13 +239,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

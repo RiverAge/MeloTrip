@@ -28,10 +28,7 @@ void main() {
 
     test('fetchStarred sends correct request', () async {
       mockAdapter.setResponse({
-        'subsonic-response': {
-          'status': 'ok',
-          'starred': {},
-        },
+        'subsonic-response': {'status': 'ok', 'starred': {}},
       });
 
       final repository = container.read(favoriteRepositoryProvider);
@@ -61,37 +58,37 @@ void main() {
       expect(result.subsonicResponse?.starred?.song?.first.id, 'song-1');
     });
 
-    test('fetchStarred returns parsed response with albums and artists', () async {
-      mockAdapter.setResponse({
-        'subsonic-response': {
-          'status': 'ok',
-          'starred': {
-            'album': [
-              {'id': 'album-1', 'name': 'Favorite Album'},
-            ],
-            'artist': [
-              {'id': 'artist-1', 'name': 'Favorite Artist'},
-            ],
+    test(
+      'fetchStarred returns parsed response with albums and artists',
+      () async {
+        mockAdapter.setResponse({
+          'subsonic-response': {
+            'status': 'ok',
+            'starred': {
+              'album': [
+                {'id': 'album-1', 'name': 'Favorite Album'},
+              ],
+              'artist': [
+                {'id': 'artist-1', 'name': 'Favorite Artist'},
+              ],
+            },
           },
-        },
-      });
+        });
 
-      final repository = container.read(favoriteRepositoryProvider);
-      final result = await repository.fetchStarred();
+        final repository = container.read(favoriteRepositoryProvider);
+        final result = await repository.fetchStarred();
 
-      expect(result, isNotNull);
-      expect(result.subsonicResponse?.starred?.album, hasLength(1));
-      expect(result.subsonicResponse?.starred?.artist, hasLength(1));
-    });
+        expect(result, isNotNull);
+        expect(result.subsonicResponse?.starred?.album, hasLength(1));
+        expect(result.subsonicResponse?.starred?.artist, hasLength(1));
+      },
+    );
 
     test('fetchStarred throws for empty payload', () async {
       mockAdapter.setResponse(null);
 
       final repository = container.read(favoriteRepositoryProvider);
-      await expectLater(
-        repository.fetchStarred(),
-        throwsA(isA<StateError>()),
-      );
+      await expectLater(repository.fetchStarred(), throwsA(isA<StateError>()));
     });
 
     test('tryFetchStarred returns Result.err for empty payload', () async {
@@ -134,13 +131,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

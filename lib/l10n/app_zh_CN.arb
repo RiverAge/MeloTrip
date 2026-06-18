@@ -428,4 +428,29 @@
     "fontWeightW400": "w400",
     "fontWeightW500": "w500",
     "fontWeightW600": "w600",
-    "fontWeightW700": "w700"}
+    "fontWeightW700": "w700",
+    "musicBarTagline": "与旋律同行",
+
+    "similarSongs": "相似",
+    "similarSongsTitle": "与\"{title}\"相似",
+    "noSimilarSongsFound": "未找到相似歌曲",
+    "sonicPathTitle": "声音路径",
+    "fromSong": "起点",
+    "toSong": "终点",
+    "generatePath": "生成路径",
+    "recommendations": "为你推荐",
+    "startRadio": "电台",
+    "radioPlaying": "电台模式",
+    "playSimilarQueue": "播放相似",
+    "sonicPath": "声音路径",
+    "selectStartSong": "选择起点歌曲",
+    "selectEndSong": "选择终点歌曲",
+    "similarRadio": "相似电台",
+    "startSimilarRadio": "开始相似电台",
+    "noSongsFoundForRadio": "未找到相似歌曲，无法开始电台",
+
+    "similarArtists": "相似艺术家",
+    "@similarArtists": {
+      "description": "艺术家详情页相似艺术家区块标题"
+    }
+}

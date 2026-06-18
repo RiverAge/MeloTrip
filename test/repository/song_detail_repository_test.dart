@@ -16,7 +16,9 @@ void main() {
       container = ProviderContainer(
         overrides: [
           songDetailRepositoryProvider.overrideWith((ref) {
-            return SongDetailRepository(() async => _createMockDio(mockAdapter));
+            return SongDetailRepository(
+              () async => _createMockDio(mockAdapter),
+            );
           }),
         ],
       );
@@ -101,7 +103,10 @@ void main() {
       });
 
       final repository = container.read(songDetailRepositoryProvider);
-      final result = await repository.trySetRating(songId: 'song-789', rating: 4);
+      final result = await repository.trySetRating(
+        songId: 'song-789',
+        rating: 4,
+      );
 
       expect(result.isOk, isTrue);
       expect(mockAdapter.lastRequest?.path, '/rest/setRating');
@@ -159,13 +164,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

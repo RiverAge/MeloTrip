@@ -145,7 +145,9 @@ void main() {
       expect(scrobbleRuntime.attachCalls, 1);
       expect(desktopLyricsRuntime.attachCalls, 1);
     },
-    variant: const TargetPlatformVariant(<TargetPlatform>{TargetPlatform.windows}),
+    variant: const TargetPlatformVariant(<TargetPlatform>{
+      TargetPlatform.windows,
+    }),
   );
 
   testWidgets('runtime coordinator forwards player errors to app error bus', (
@@ -164,7 +166,9 @@ void main() {
           _FakePlayerPreferencesRuntime(),
         ),
         playerScrobbleRuntimeProvider.overrideWithValue(_FakeScrobbleRuntime()),
-        desktopLyricsRuntimeProvider.overrideWithValue(_FakeDesktopLyricsRuntime()),
+        desktopLyricsRuntimeProvider.overrideWithValue(
+          _FakeDesktopLyricsRuntime(),
+        ),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(_FakeAppPlayer()),
         ),

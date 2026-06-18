@@ -37,10 +37,7 @@ void main() {
         folderCount: 5,
       );
 
-      final copy = original.copyWith(
-        scanning: true,
-        count: 100,
-      );
+      final copy = original.copyWith(scanning: true, count: 100);
 
       expect(copy.scanning, true);
       expect(copy.count, 100);

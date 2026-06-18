@@ -55,11 +55,7 @@ void main() {
     });
 
     test('handles empty entry list', () {
-      final json = {
-        'entry': [],
-        'current': null,
-        'position': -1,
-      };
+      final json = {'entry': [], 'current': null, 'position': -1};
 
       final entity = PlayQueueEntity.fromJson(json);
 

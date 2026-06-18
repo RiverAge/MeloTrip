@@ -136,10 +136,7 @@ void main() {
     });
 
     test('toJson serializes shuffle as integer', () {
-      const config = Configuration(
-        username: 'testuser',
-        shuffle: true,
-      );
+      const config = Configuration(username: 'testuser', shuffle: true);
 
       final json = config.toJson();
 
@@ -147,10 +144,7 @@ void main() {
     });
 
     test('toJson serializes false shuffle as 0', () {
-      const config = Configuration(
-        username: 'testuser',
-        shuffle: false,
-      );
+      const config = Configuration(username: 'testuser', shuffle: false);
 
       final json = config.toJson();
 

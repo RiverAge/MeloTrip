@@ -33,9 +33,7 @@ void main() {
     test('returns null when songId is null', () async {
       final mockRepository = _MockLyricsRepository(null);
       final container = ProviderContainer(
-        overrides: [
-          lyricsRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [lyricsRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -48,9 +46,7 @@ void main() {
     test('returns Result.err when repository throws', () async {
       final mockRepository = _MockLyricsRepository(null);
       final container = ProviderContainer(
-        overrides: [
-          lyricsRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [lyricsRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -63,20 +59,15 @@ void main() {
 
     test('returns Result.ok lyrics response from repository', () async {
       final mockResponse = const SubsonicResponse(
-        subsonicResponse: SubsonicResponseClass(
-          status: 'ok',
-        ),
+        subsonicResponse: SubsonicResponseClass(status: 'ok'),
       );
       final mockRepository = _MockLyricsRepository(mockResponse);
       final container = ProviderContainer(
-        overrides: [
-          lyricsRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [lyricsRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
-      final result =
-          await container.read(lyricsProvider('song123').future);
+      final result = await container.read(lyricsProvider('song123').future);
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);

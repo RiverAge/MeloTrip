@@ -14,9 +14,7 @@ import 'test_helpers.dart';
 void main() {
   test('apiProvider injects auth and subsonic query parameters', () async {
     final container = ProviderContainer(
-      overrides: [
-        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
-      ],
+      overrides: [sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn)],
     );
     addTearDown(container.dispose);
 
@@ -43,9 +41,7 @@ void main() {
 
   test('apiProvider configures default timeouts', () async {
     final container = ProviderContainer(
-      overrides: [
-        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
-      ],
+      overrides: [sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn)],
     );
     addTearDown(container.dispose);
 
@@ -59,9 +55,7 @@ void main() {
     'apiProvider does not emit global error for business response failure payload',
     () async {
       final container = ProviderContainer(
-        overrides: [
-          sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
-        ],
+        overrides: [sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn)],
       );
       addTearDown(container.dispose);
 
@@ -82,41 +76,37 @@ void main() {
     },
   );
 
-  test('apiProvider does not emit global error for http response failures', () async {
-    final container = ProviderContainer(
-      overrides: [
-        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
-      ],
-    );
-    addTearDown(container.dispose);
+  test(
+    'apiProvider does not emit global error for http response failures',
+    () async {
+      final container = ProviderContainer(
+        overrides: [sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn)],
+      );
+      addTearDown(container.dispose);
 
-    final Dio api = await container.read(apiProvider.future);
-    api.httpClientAdapter = RecordingAdapter(
-      (_) {
+      final Dio api = await container.read(apiProvider.future);
+      api.httpClientAdapter = RecordingAdapter((_) {
         return {
           'subsonic-response': {
             'status': 'failed',
             'error': {'message': 'request failed'},
           },
         };
-      },
-      statusCode: 500,
-    );
+      }, statusCode: 500);
 
-    await expectLater(
-      api.get('/rest/getAlbumList'),
-      throwsA(isA<DioException>()),
-    );
+      await expectLater(
+        api.get('/rest/getAlbumList'),
+        throwsA(isA<DioException>()),
+      );
 
-    final AppErrorEvent? error = container.read(appErrorProvider);
-    expect(error, isNull);
-  });
+      final AppErrorEvent? error = container.read(appErrorProvider);
+      expect(error, isNull);
+    },
+  );
 
   test('apiProvider emits global error for transport failures', () async {
     final container = ProviderContainer(
-      overrides: [
-        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
-      ],
+      overrides: [sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn)],
     );
     addTearDown(container.dispose);
 
@@ -136,9 +126,7 @@ void main() {
 
   test('apiProvider retries once for transport failures on GET', () async {
     final container = ProviderContainer(
-      overrides: [
-        sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn),
-      ],
+      overrides: [sessionAuthProvider.overrideWith(fakeSessionAuthLoggedIn)],
     );
     addTearDown(container.dispose);
 

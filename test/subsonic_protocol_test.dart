@@ -30,9 +30,6 @@ void main() {
 
     final digest = buildCacheableSubsonicMediaDigest(uri);
 
-    expect(
-      digest,
-      'https://example.com/rest/stream?id=song-1&maxBitRate=320',
-    );
+    expect(digest, 'https://example.com/rest/stream?id=song-1&maxBitRate=320');
   });
 }

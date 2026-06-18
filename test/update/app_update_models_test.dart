@@ -14,7 +14,7 @@ void main() {
       };
 
       final info = AppUpdateInfo.fromJson(json);
-      
+
       expect(info.versionName, equals('1.0.0'));
       expect(info.versionCode, equals(100));
       expect(info.sha256, equals('abc123'));

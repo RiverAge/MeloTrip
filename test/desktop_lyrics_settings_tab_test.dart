@@ -58,11 +58,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      buildApp(
-        DesktopLyricsSettingsTab(
-          onApplyConfig: (_) async {},
-        ),
-      ),
+      buildApp(DesktopLyricsSettingsTab(onApplyConfig: (_) async {})),
     );
     await tester.pumpAndSettle();
 
@@ -78,31 +74,32 @@ void main() {
     expect(find.text('w700'), findsOneWidget);
   });
 
-  testWidgets('DesktopLyricsSettingsTab updates provider when toggling enabled', (
-    tester,
-  ) async {
-    DesktopLyricsConfig? appliedConfig;
-    await tester.pumpWidget(
-      buildApp(
-        DesktopLyricsSettingsTab(
-          onApplyConfig: (DesktopLyricsConfig config) async {
-            appliedConfig = config;
-          },
+  testWidgets(
+    'DesktopLyricsSettingsTab updates provider when toggling enabled',
+    (tester) async {
+      DesktopLyricsConfig? appliedConfig;
+      await tester.pumpWidget(
+        buildApp(
+          DesktopLyricsSettingsTab(
+            onApplyConfig: (DesktopLyricsConfig config) async {
+              appliedConfig = config;
+            },
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(Switch).first);
-    await tester.pumpAndSettle();
+      await tester.tap(find.byType(Switch).first);
+      await tester.pumpAndSettle();
 
-    expect(_FakeDesktopLyricsSettings.lastUpdatedConfig, isNotNull);
-    expect(
-      _FakeDesktopLyricsSettings.lastUpdatedConfig!.interaction.enabled,
-      isTrue,
-    );
-    expect(appliedConfig?.interaction.enabled, isTrue);
-  });
+      expect(_FakeDesktopLyricsSettings.lastUpdatedConfig, isNotNull);
+      expect(
+        _FakeDesktopLyricsSettings.lastUpdatedConfig!.interaction.enabled,
+        isTrue,
+      );
+      expect(appliedConfig?.interaction.enabled, isTrue);
+    },
+  );
 
   testWidgets('DesktopLyricsSettingsTab updates text align selection', (
     tester,

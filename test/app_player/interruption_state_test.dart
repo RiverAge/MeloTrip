@@ -61,7 +61,10 @@ void main() {
       expect(result.pausePlayback, isTrue);
       expect(result.resumePlayback, isFalse);
       expect(result.endDuckingImmediately, isFalse);
-      expect(result.nextPlaybackState, equals(PlaybackInterruptionState.pausedByInterruption));
+      expect(
+        result.nextPlaybackState,
+        equals(PlaybackInterruptionState.pausedByInterruption),
+      );
     });
 
     test('pause type does not pause when not playing', () {
@@ -74,7 +77,10 @@ void main() {
       );
 
       expect(result.pausePlayback, isFalse);
-      expect(result.nextPlaybackState, equals(PlaybackInterruptionState.normal));
+      expect(
+        result.nextPlaybackState,
+        equals(PlaybackInterruptionState.normal),
+      );
     });
 
     test('unknown type behaves like pause', () {
@@ -87,7 +93,10 @@ void main() {
       );
 
       expect(result.pausePlayback, isTrue);
-      expect(result.nextPlaybackState, equals(PlaybackInterruptionState.pausedByInterruption));
+      expect(
+        result.nextPlaybackState,
+        equals(PlaybackInterruptionState.pausedByInterruption),
+      );
     });
   });
 
@@ -189,7 +198,10 @@ void main() {
       );
 
       expect(result.resumePlayback, isTrue);
-      expect(result.nextPlaybackState, equals(PlaybackInterruptionState.normal));
+      expect(
+        result.nextPlaybackState,
+        equals(PlaybackInterruptionState.normal),
+      );
     });
 
     test('pause type does not resume when not paused by interruption', () {
@@ -202,7 +214,10 @@ void main() {
       );
 
       expect(result.resumePlayback, isFalse);
-      expect(result.nextPlaybackState, equals(PlaybackInterruptionState.normal));
+      expect(
+        result.nextPlaybackState,
+        equals(PlaybackInterruptionState.normal),
+      );
     });
 
     test('pause end preserves ducking state', () {
@@ -229,7 +244,10 @@ void main() {
       );
 
       expect(result.resumePlayback, isFalse);
-      expect(result.nextPlaybackState, equals(PlaybackInterruptionState.normal));
+      expect(
+        result.nextPlaybackState,
+        equals(PlaybackInterruptionState.normal),
+      );
       expect(result.nextDuckingState, DuckingState.ducking);
     });
   });

@@ -78,15 +78,13 @@ void main() {
         overrides: [
           sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
           playlistsProvider.overrideWith(
-            (ref) async => Result.ok(
-              [
-                const PlaylistEntity(
-                  id: 'pl-1',
-                  name: 'My Playlist 1',
-                  songCount: 2,
-                ),
-              ],
-            ),
+            (ref) async => Result.ok([
+              const PlaylistEntity(
+                id: 'pl-1',
+                name: 'My Playlist 1',
+                songCount: 2,
+              ),
+            ]),
           ),
           playlistDetailProvider('pl-1').overrideWith(
             () => _FakePlaylistDetail(
@@ -124,4 +122,3 @@ void main() {
     expect(find.text('2:05'), findsOneWidget);
   });
 }
-

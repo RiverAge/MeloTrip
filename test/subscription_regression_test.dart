@@ -22,7 +22,10 @@ void main() {
 
     expect(_countPattern(musicBar, 'appPlayerHandlerProvider'), greaterThan(0));
     expect(_countPattern(musicBar, 'playingStream'), greaterThan(0));
-    expect(_countPattern(playQueuePanel, 'appPlayerHandlerProvider'), greaterThan(0));
+    expect(
+      _countPattern(playQueuePanel, 'appPlayerHandlerProvider'),
+      greaterThan(0),
+    );
   });
 
   test('list item pages avoid nested player provider reads', () {

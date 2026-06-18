@@ -54,7 +54,9 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailProvider('artist-123').future);
+      final result = await container.read(
+        artistDetailProvider('artist-123').future,
+      );
 
       expect(result?.isErr, isTrue);
       expect(result?.error, isA<AppFailure>());
@@ -83,13 +85,18 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result = await container.read(artistDetailProvider('artist-123').future);
+      final result = await container.read(
+        artistDetailProvider('artist-123').future,
+      );
 
       expect(result, isNotNull);
       expect(result?.isOk, isTrue);
       expect(result?.data?.subsonicResponse?.status, equals('ok'));
       expect(result?.data?.subsonicResponse?.artist?.id, equals('artist-123'));
-      expect(result?.data?.subsonicResponse?.artist?.name, equals('Test Artist'));
+      expect(
+        result?.data?.subsonicResponse?.artist?.name,
+        equals('Test Artist'),
+      );
     });
   });
 }

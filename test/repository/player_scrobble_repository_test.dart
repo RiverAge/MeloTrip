@@ -16,7 +16,9 @@ void main() {
       container = ProviderContainer(
         overrides: [
           playerScrobbleRepositoryProvider.overrideWith((ref) {
-            return PlayerScrobbleRepository(() async => _createMockDio(mockAdapter));
+            return PlayerScrobbleRepository(
+              () async => _createMockDio(mockAdapter),
+            );
           }),
         ],
       );
@@ -105,13 +107,17 @@ class _MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

@@ -102,11 +102,10 @@ void main() {
 
       // Order must be: user-jump, user-play, then interruption-pause
       // NOT: interruption-pause, user-play
-      expect(sim.operations, equals([
-        'user-jump',
-        'user-play',
-        'interruption-pause',
-      ]));
+      expect(
+        sim.operations,
+        equals(['user-jump', 'user-play', 'interruption-pause']),
+      );
     });
 
     test('interruption pause end waits for pause to complete', () async {
@@ -121,10 +120,10 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 50));
 
       // Order: pause then play
-      expect(sim.operations, equals([
-        'interruption-pause',
-        'interruption-play',
-      ]));
+      expect(
+        sim.operations,
+        equals(['interruption-pause', 'interruption-play']),
+      );
     });
 
     test('interruption pause cannot interleave user command', () async {
@@ -152,11 +151,14 @@ void main() {
 
       // Now both user-end and interruption-pause should execute
       await Future.delayed(const Duration(milliseconds: 20));
-      expect(sim.operations, equals([
-        'user-insertAndPlay-start',
-        'user-insertAndPlay-end',
-        'interruption-pause',
-      ]));
+      expect(
+        sim.operations,
+        equals([
+          'user-insertAndPlay-start',
+          'user-insertAndPlay-end',
+          'interruption-pause',
+        ]),
+      );
     });
 
     test('multiple interruption events queue correctly', () async {
@@ -168,10 +170,10 @@ void main() {
 
       await Future.delayed(const Duration(milliseconds: 50));
 
-      expect(sim.operations, equals([
-        'interruption-pause',
-        'interruption-play',
-      ]));
+      expect(
+        sim.operations,
+        equals(['interruption-pause', 'interruption-play']),
+      );
     });
 
     test('user command after interruption pause queues correctly', () async {
@@ -205,10 +207,10 @@ void main() {
 
       // setVolume happens first (in interruption serializer)
       // Then pause (through command serializer)
-      expect(sim.operations, equals([
-        'interruption-setVolume',
-        'interruption-pause',
-      ]));
+      expect(
+        sim.operations,
+        equals(['interruption-setVolume', 'interruption-pause']),
+      );
     });
   });
 
@@ -274,7 +276,10 @@ void main() {
 
       await Future.delayed(const Duration(milliseconds: 50));
 
-      expect(operations, equals(['event-0', 'event-1', 'event-2', 'event-3', 'event-4']));
+      expect(
+        operations,
+        equals(['event-0', 'event-1', 'event-2', 'event-3', 'event-4']),
+      );
     });
   });
 }

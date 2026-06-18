@@ -32,9 +32,8 @@ void main() {
           overrides: [
             sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
             playlistsProvider.overrideWith(
-              (_) async => Result.err(
-                AppFailure(type: c, message: 'mock-${c.name}'),
-              ),
+              (_) async =>
+                  Result.err(AppFailure(type: c, message: 'mock-${c.name}')),
             ),
           ],
           child: MaterialApp(

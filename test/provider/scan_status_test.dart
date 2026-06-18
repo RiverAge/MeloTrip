@@ -8,8 +8,7 @@ import 'package:melo_trip/provider/scan_status/scan_status.dart';
 import 'package:melo_trip/repository/scan_status/scan_status_repository.dart';
 
 class _MockScanStatusRepository extends ScanStatusRepository {
-  _MockScanStatusRepository(this._fetchResult)
-      : super(() async => Dio());
+  _MockScanStatusRepository(this._fetchResult) : super(() async => Dio());
 
   final SubsonicResponse? _fetchResult;
   bool fetchCalled = false;
@@ -63,4 +62,3 @@ void main() {
     });
   });
 }
-

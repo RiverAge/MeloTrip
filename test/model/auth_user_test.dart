@@ -31,10 +31,7 @@ void main() {
     });
 
     test('fromJson handles partial data', () {
-      final json = {
-        'username': 'testuser',
-        'token': 'abc123',
-      };
+      final json = {'username': 'testuser', 'token': 'abc123'};
 
       final authUser = AuthUser.fromJson(json);
 
@@ -73,20 +70,11 @@ void main() {
     });
 
     test('equality works correctly', () {
-      final user1 = const AuthUser(
-        username: 'testuser',
-        token: 'abc123',
-      );
+      final user1 = const AuthUser(username: 'testuser', token: 'abc123');
 
-      final user2 = const AuthUser(
-        username: 'testuser',
-        token: 'abc123',
-      );
+      final user2 = const AuthUser(username: 'testuser', token: 'abc123');
 
-      final user3 = const AuthUser(
-        username: 'different',
-        token: 'abc123',
-      );
+      final user3 = const AuthUser(username: 'different', token: 'abc123');
 
       expect(user1, equals(user2));
       expect(user1, isNot(equals(user3)));

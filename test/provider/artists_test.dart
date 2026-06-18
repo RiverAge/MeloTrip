@@ -142,7 +142,8 @@ class _MockArtistsRepository extends ArtistsRepository {
   }
 
   @override
-  Future<Result<List<ArtistIndexEntry>, AppFailure>> tryFetchAllArtists() async {
+  Future<Result<List<ArtistIndexEntry>, AppFailure>>
+  tryFetchAllArtists() async {
     return Result.ok(_artists);
   }
 }

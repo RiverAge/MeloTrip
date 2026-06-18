@@ -80,7 +80,9 @@ void main() {
 
   tearDown(resetPlayQueueRestoreStateForTest);
 
-  testWidgets('restores play queue once for the same user session', (tester) async {
+  testWidgets('restores play queue once for the same user session', (
+    tester,
+  ) async {
     var authLoads = 0;
     var queueLoads = 0;
     List<SongEntity>? restoredSongs;
@@ -184,7 +186,9 @@ void main() {
     expect(applyCalls, 1);
   });
 
-  testWidgets('restore safely returns when player is unavailable', (tester) async {
+  testWidgets('restore safely returns when player is unavailable', (
+    tester,
+  ) async {
     final ref = await _pumpRef(
       tester,
       overrides: [
@@ -196,7 +200,8 @@ void main() {
           ),
         ),
         playQueueProvider.overrideWith(
-          (ref) async => Result.ok(_queueResponse(songs: <SongEntity>[_song('s1')])),
+          (ref) async =>
+              Result.ok(_queueResponse(songs: <SongEntity>[_song('s1')])),
         ),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(null),
@@ -213,9 +218,7 @@ void main() {
     final ref = await _pumpRef(
       tester,
       overrides: [
-        sessionAuthProvider.overrideWith(
-          (_) async => throw StateError('boom'),
-        ),
+        sessionAuthProvider.overrideWith((_) async => throw StateError('boom')),
         appPlayerHandlerProvider.overrideWith(
           () => _FakeAppPlayerHandler(null),
         ),

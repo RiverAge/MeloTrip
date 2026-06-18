@@ -7,11 +7,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: FixedCenterCircular(),
-        ),
-      ),
+      MaterialApp(home: Scaffold(body: FixedCenterCircular())),
     );
 
     expect(find.byType(FixedCenterCircular), findsOneWidget);
@@ -22,11 +18,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: FixedCenterCircular(),
-        ),
-      ),
+      MaterialApp(home: Scaffold(body: FixedCenterCircular())),
     );
 
     final widget = tester.widget<FixedCenterCircular>(
@@ -41,9 +33,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: FixedCenterCircular(size: 40, strokeWidth: 4),
-        ),
+        home: Scaffold(body: FixedCenterCircular(size: 40, strokeWidth: 4)),
       ),
     );
 
@@ -58,11 +48,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: FixedCenterCircular(),
-        ),
-      ),
+      MaterialApp(home: Scaffold(body: FixedCenterCircular())),
     );
 
     expect(find.byType(Center), findsOneWidget);

@@ -66,4 +66,3 @@ void main() {
     expect(result.data?.subsonicResponse?.version, '1.2.3');
   });
 }
-

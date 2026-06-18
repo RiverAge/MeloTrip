@@ -89,6 +89,12 @@ _SubsonicResponseClass _$SubsonicResponseClassFromJson(
   error: json['error'] == null
       ? null
       : ErrorEntity.fromJson(json['error'] as Map<String, dynamic>),
+  sonicMatch: (json['sonicMatch'] as List<dynamic>?)
+      ?.map((e) => SonicMatch.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  artistInfo2: json['artistInfo2'] == null
+      ? null
+      : ArtistInfo2Entity.fromJson(json['artistInfo2'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$SubsonicResponseClassToJson(
@@ -118,4 +124,6 @@ Map<String, dynamic> _$SubsonicResponseClassToJson(
   'genres': instance.genres,
   'songsByGenre': instance.songsByGenre,
   'error': instance.error,
+  'sonicMatch': instance.sonicMatch,
+  'artistInfo2': instance.artistInfo2,
 };

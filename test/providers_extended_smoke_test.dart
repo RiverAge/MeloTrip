@@ -213,7 +213,9 @@ void main() {
     addTearDown(container.dispose);
 
     expect(await container.read(searchByQueryProvider('').future), isNull);
-    final result = await container.read(searchByQueryProvider('keyword').future);
+    final result = await container.read(
+      searchByQueryProvider('keyword').future,
+    );
     expect(result?.isOk, isTrue);
     expect(
       result?.data?.subsonicResponse?.searchResult3?.song?.first.title,
@@ -261,6 +263,3 @@ void main() {
     expect(state.hasMore, isTrue);
   });
 }
-
-
-

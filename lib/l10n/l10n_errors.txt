@@ -1,5 +1,1 @@
-{
-  "zh_CN": [
-    "musicBarTagline"
-  ]
-}
+{}

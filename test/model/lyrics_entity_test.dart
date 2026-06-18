@@ -4,10 +4,7 @@ import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 void main() {
   group('Line', () {
     test('parses line with value', () {
-      final json = {
-        'start': 1000,
-        'value': 'Test lyric line',
-      };
+      final json = {'start': 1000, 'value': 'Test lyric line'};
 
       final line = Line.fromJson(json);
 
@@ -16,10 +13,7 @@ void main() {
     });
 
     test('parses line with empty value', () {
-      final json = {
-        'start': 2000,
-        'value': '',
-      };
+      final json = {'start': 2000, 'value': ''};
 
       final line = Line.fromJson(json);
 
@@ -56,9 +50,7 @@ void main() {
     });
 
     test('parses lyric with null optional fields', () {
-      final json = <String, dynamic>{
-        'line': [],
-      };
+      final json = <String, dynamic>{'line': []};
 
       final lyric = StructuredLyric.fromJson(json);
 

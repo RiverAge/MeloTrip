@@ -41,38 +41,41 @@ void main() {
         expect(secondDecision.nextDuckingState, DuckingState.ducking);
       });
 
-      test('duck begin during restore animation should preserve original volume', () {
-        // Scenario: Volume starts at 100
-        // First duck begin -> volumeBeforeDucking = 100, target = 50
-        // Duck end -> start restoring to 100, duckingState = restoring
-        // Second duck begin during restore -> should keep volumeBeforeDucking = 100
+      test(
+        'duck begin during restore animation should preserve original volume',
+        () {
+          // Scenario: Volume starts at 100
+          // First duck begin -> volumeBeforeDucking = 100, target = 50
+          // Duck end -> start restoring to 100, duckingState = restoring
+          // Second duck begin during restore -> should keep volumeBeforeDucking = 100
 
-        // Duck end transitions to normal in decision, but handler uses restoring internally
-        final duckEndDecision = resolveInterruptionDecision(
-          type: .duck,
-          isBegin: false,
-          isPlaying: true,
-          playbackState: .normal,
-          duckingState: .ducking,
-        );
+          // Duck end transitions to normal in decision, but handler uses restoring internally
+          final duckEndDecision = resolveInterruptionDecision(
+            type: .duck,
+            isBegin: false,
+            isPlaying: true,
+            playbackState: .normal,
+            duckingState: .ducking,
+          );
 
-        expect(duckEndDecision.endDucking, isTrue);
-        expect(duckEndDecision.nextDuckingState, DuckingState.normal);
+          expect(duckEndDecision.endDucking, isTrue);
+          expect(duckEndDecision.nextDuckingState, DuckingState.normal);
 
-        // In the actual handler, during restore animation:
-        // _duckingState = DuckingState.restoring
-        // If another duck begin arrives:
-        final reDuckDecision = resolveInterruptionDecision(
-          type: .duck,
-          isBegin: true,
-          isPlaying: true,
-          playbackState: .normal,
-          duckingState: .restoring,
-        );
+          // In the actual handler, during restore animation:
+          // _duckingState = DuckingState.restoring
+          // If another duck begin arrives:
+          final reDuckDecision = resolveInterruptionDecision(
+            type: .duck,
+            isBegin: true,
+            isPlaying: true,
+            playbackState: .normal,
+            duckingState: .restoring,
+          );
 
-        expect(reDuckDecision.beginDucking, isTrue);
-        expect(reDuckDecision.nextDuckingState, DuckingState.ducking);
-      });
+          expect(reDuckDecision.beginDucking, isTrue);
+          expect(reDuckDecision.nextDuckingState, DuckingState.ducking);
+        },
+      );
 
       test('final duck end restores to original volume', () {
         // After any number of duck begin/end cycles,

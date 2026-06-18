@@ -108,8 +108,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result =
-          await container.read(playlistDetailProvider(null).future);
+      final result = await container.read(playlistDetailProvider(null).future);
 
       expect(result, isNull);
       expect(mockRepository.fetchCalled, isFalse);
@@ -130,8 +129,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final result =
-          await container.read(playlistDetailProvider('123').future);
+      final result = await container.read(playlistDetailProvider('123').future);
 
       expect(result, isNotNull);
       expect(result?.data?.id, equals('123'));
@@ -175,7 +173,6 @@ void main() {
       expect(result?.isOk, isTrue);
       expect(mockRepository.createCalled, isTrue);
     });
-
   });
 
   group('playlistDetailProvider notifier', () {
@@ -307,5 +304,3 @@ void main() {
     });
   });
 }
-
-

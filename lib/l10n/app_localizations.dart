@@ -1466,6 +1466,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'w700'**
   String get fontWeightW700;
+
+  /// Button text for viewing similar songs
+  ///
+  /// In en, this message translates to:
+  /// **'Similar'**
+  String get similarSongs;
+
+  /// Title for similar songs page
+  ///
+  /// In en, this message translates to:
+  /// **'Similar to \"{title}\"'**
+  String similarSongsTitle(String title);
+
+  /// Message when no similar songs are found
+  ///
+  /// In en, this message translates to:
+  /// **'No similar songs found'**
+  String get noSimilarSongsFound;
+
+  /// Title for sonic path page
+  ///
+  /// In en, this message translates to:
+  /// **'Sonic Path'**
+  String get sonicPathTitle;
+
+  /// Label for source song in sonic path
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get fromSong;
+
+  /// Label for destination song in sonic path
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get toSong;
+
+  /// Button to generate sonic path
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Path'**
+  String get generatePath;
+
+  /// Title for recommendations section
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get recommendations;
+
+  /// Button to start radio mode
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get startRadio;
+
+  /// Indicator that radio mode is active
+  ///
+  /// In en, this message translates to:
+  /// **'Radio Mode'**
+  String get radioPlaying;
+
+  /// Button to play similar songs queue
+  ///
+  /// In en, this message translates to:
+  /// **'Play Similar'**
+  String get playSimilarQueue;
+
+  /// Sonic path feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Sonic Path'**
+  String get sonicPath;
+
+  /// Hint for selecting start song in sonic path
+  ///
+  /// In en, this message translates to:
+  /// **'Select start song'**
+  String get selectStartSong;
+
+  /// Hint for selecting end song in sonic path
+  ///
+  /// In en, this message translates to:
+  /// **'Select end song'**
+  String get selectEndSong;
+
+  /// Similar radio feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Similar Radio'**
+  String get similarRadio;
+
+  /// Button to start similar radio from current song
+  ///
+  /// In en, this message translates to:
+  /// **'Start Similar Radio'**
+  String get startSimilarRadio;
+
+  /// Message when no similar songs are found to start radio
+  ///
+  /// In en, this message translates to:
+  /// **'No similar songs found for radio'**
+  String get noSongsFoundForRadio;
+
+  /// Title for similar artists section on artist detail page
+  ///
+  /// In en, this message translates to:
+  /// **'Similar Artists'**
+  String get similarArtists;
 }
 
 class _AppLocalizationsDelegate

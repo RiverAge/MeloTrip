@@ -125,7 +125,9 @@ class TestableInterruptionProcessor {
           sideEffects.add('duckAnimation:${action.duckAction!.targetVolume}');
         case _DuckActionType.endDuck:
           // Fire-and-forget restore animation
-          sideEffects.add('restoreAnimation:${action.duckAction!.targetVolume}');
+          sideEffects.add(
+            'restoreAnimation:${action.duckAction!.targetVolume}',
+          );
         case _DuckActionType.endDuckImmediately:
           // Must await setVolume
           final completer = createCompleter('setVolume');
@@ -140,11 +142,11 @@ enum _DuckActionType { beginDuck, endDuck, endDuckImmediately }
 
 class _DuckAsyncAction {
   const _DuckAsyncAction.beginDuck(this.duckAction)
-      : type = _DuckActionType.beginDuck;
+    : type = _DuckActionType.beginDuck;
   const _DuckAsyncAction.endDuck(this.duckAction)
-      : type = _DuckActionType.endDuck;
+    : type = _DuckActionType.endDuck;
   const _DuckAsyncAction.endDuckImmediately(this.duckAction)
-      : type = _DuckActionType.endDuckImmediately;
+    : type = _DuckActionType.endDuckImmediately;
 
   final _DuckActionType type;
   final DuckAction? duckAction;
@@ -152,82 +154,86 @@ class _DuckAsyncAction {
 
 void main() {
   group('Side effect ordering', () {
-    test('mixed duck -> pause begin -> pause end: setVolume, pause, play', () async {
-      final processor = TestableInterruptionProcessor();
+    test(
+      'mixed duck -> pause begin -> pause end: setVolume, pause, play',
+      () async {
+        final processor = TestableInterruptionProcessor();
 
-      // Event 1: duck begin
-      processor.processEvent(
-        type: AudioInterruptionType.duck,
-        isBegin: true,
-        isPlaying: true,
-        currentVolume: 100.0,
-      );
+        // Event 1: duck begin
+        processor.processEvent(
+          type: AudioInterruptionType.duck,
+          isBegin: true,
+          isPlaying: true,
+          currentVolume: 100.0,
+        );
 
-      // Wait for duck animation to be recorded (fire-and-forget)
-      await Future.delayed(Duration.zero);
+        // Wait for duck animation to be recorded (fire-and-forget)
+        await Future.delayed(Duration.zero);
 
-      // Event 2: pause begin (while ducking)
-      // This should: setVolume(100), then pause
-      processor.processEvent(
-        type: AudioInterruptionType.pause,
-        isBegin: true,
-        isPlaying: true,
-        currentVolume: 50.0,
-      );
+        // Event 2: pause begin (while ducking)
+        // This should: setVolume(100), then pause
+        processor.processEvent(
+          type: AudioInterruptionType.pause,
+          isBegin: true,
+          isPlaying: true,
+          currentVolume: 50.0,
+        );
 
-      // At this point, state is already pausedByInterruption
-      expect(processor.playbackState, PlaybackInterruptionState.pausedByInterruption);
+        // At this point, state is already pausedByInterruption
+        expect(
+          processor.playbackState,
+          PlaybackInterruptionState.pausedByInterruption,
+        );
 
-      // Wait for serializer to start processing event 2
-      await Future.delayed(Duration.zero);
+        // Wait for serializer to start processing event 2
+        await Future.delayed(Duration.zero);
 
-      // setVolume should have started but not completed
-      expect(processor.hasStartedSideEffect('setVolume'), isTrue);
-      expect(processor.sideEffects, contains('setVolume:100.0'));
+        // setVolume should have started but not completed
+        expect(processor.hasStartedSideEffect('setVolume'), isTrue);
+        expect(processor.sideEffects, contains('setVolume:100.0'));
 
-      // pause should not have started yet (waiting for setVolume to complete)
-      expect(processor.hasStartedSideEffect('pause'), isFalse);
+        // pause should not have started yet (waiting for setVolume to complete)
+        expect(processor.hasStartedSideEffect('pause'), isFalse);
 
-      // Event 3: pause end arrives BEFORE setVolume completes
-      // State decision will be correct (resumePlayback: true) because state was updated synchronously
-      processor.processEvent(
-        type: AudioInterruptionType.pause,
-        isBegin: false,
-        isPlaying: false,
-        currentVolume: 100.0,
-      );
+        // Event 3: pause end arrives BEFORE setVolume completes
+        // State decision will be correct (resumePlayback: true) because state was updated synchronously
+        processor.processEvent(
+          type: AudioInterruptionType.pause,
+          isBegin: false,
+          isPlaying: false,
+          currentVolume: 100.0,
+        );
 
-      // At this point, play is enqueued but can't start yet
-      // because setVolume and pause from event 2 haven't completed
+        // At this point, play is enqueued but can't start yet
+        // because setVolume and pause from event 2 haven't completed
 
-      // Complete setVolume from event 2
-      processor.completeSideEffect('setVolume');
+        // Complete setVolume from event 2
+        processor.completeSideEffect('setVolume');
 
-      // Wait for serializer to proceed
-      await Future.delayed(Duration.zero);
+        // Wait for serializer to proceed
+        await Future.delayed(Duration.zero);
 
-      // Now pause should start
-      expect(processor.hasStartedSideEffect('pause'), isTrue);
-      expect(processor.sideEffects, contains('pause'));
+        // Now pause should start
+        expect(processor.hasStartedSideEffect('pause'), isTrue);
+        expect(processor.sideEffects, contains('pause'));
 
-      // Complete pause
-      processor.completeSideEffect('pause');
+        // Complete pause
+        processor.completeSideEffect('pause');
 
-      // Wait for serializer to proceed
-      await Future.delayed(Duration.zero);
+        // Wait for serializer to proceed
+        await Future.delayed(Duration.zero);
 
-      // Now play should start
-      expect(processor.hasStartedSideEffect('play'), isTrue);
-      expect(processor.sideEffects, contains('play'));
+        // Now play should start
+        expect(processor.hasStartedSideEffect('play'), isTrue);
+        expect(processor.sideEffects, contains('play'));
 
-      // Verify final order
-      expect(processor.sideEffects, equals([
-        'duckAnimation:50.0',
-        'setVolume:100.0',
-        'pause',
-        'play',
-      ]));
-    });
+        // Verify final order
+        expect(
+          processor.sideEffects,
+          equals(['duckAnimation:50.0', 'setVolume:100.0', 'pause', 'play']),
+        );
+      },
+    );
 
     test('pause begin -> pause end fast: pause before play', () async {
       final processor = TestableInterruptionProcessor();
@@ -239,7 +245,10 @@ void main() {
         isPlaying: true,
       );
 
-      expect(processor.playbackState, PlaybackInterruptionState.pausedByInterruption);
+      expect(
+        processor.playbackState,
+        PlaybackInterruptionState.pausedByInterruption,
+      );
 
       // Wait for serializer to start processing
       await Future.delayed(Duration.zero);
@@ -269,58 +278,87 @@ void main() {
       expect(processor.sideEffects, equals(['pause', 'play']));
     });
 
-    test('state visible to subsequent event before side effects complete', () async {
-      final processor = TestableInterruptionProcessor();
+    test(
+      'state visible to subsequent event before side effects complete',
+      () async {
+        final processor = TestableInterruptionProcessor();
 
-      // Event 1: pause begin
-      processor.processEvent(
-        type: AudioInterruptionType.pause,
-        isBegin: true,
-        isPlaying: true,
-      );
+        // Event 1: pause begin
+        processor.processEvent(
+          type: AudioInterruptionType.pause,
+          isBegin: true,
+          isPlaying: true,
+        );
 
-      // State is immediately updated
-      expect(processor.playbackState, PlaybackInterruptionState.pausedByInterruption);
+        // State is immediately updated
+        expect(
+          processor.playbackState,
+          PlaybackInterruptionState.pausedByInterruption,
+        );
 
-      // Wait for serializer to start processing
-      await Future.delayed(Duration.zero);
+        // Wait for serializer to start processing
+        await Future.delayed(Duration.zero);
 
-      // pause side effect has started but not completed
-      expect(processor.hasStartedSideEffect('pause'), isTrue);
+        // pause side effect has started but not completed
+        expect(processor.hasStartedSideEffect('pause'), isTrue);
 
-      // Event 2: pause end - should see pausedByInterruption state
-      // because state was updated synchronously BEFORE side effects
-      final decision = resolveInterruptionDecision(
-        type: AudioInterruptionType.pause,
-        isBegin: false,
-        isPlaying: false,
-        playbackState: processor.playbackState,
-        duckingState: processor.duckState.duckingState,
-      );
+        // Event 2: pause end - should see pausedByInterruption state
+        // because state was updated synchronously BEFORE side effects
+        final decision = resolveInterruptionDecision(
+          type: AudioInterruptionType.pause,
+          isBegin: false,
+          isPlaying: false,
+          playbackState: processor.playbackState,
+          duckingState: processor.duckState.duckingState,
+        );
 
-      expect(decision.resumePlayback, isTrue,
-          reason: 'pause end should resume because state is pausedByInterruption');
-    });
+        expect(
+          decision.resumePlayback,
+          isTrue,
+          reason:
+              'pause end should resume because state is pausedByInterruption',
+        );
+      },
+    );
 
-    test('multiple duck begin/end events: animations fire-and-forget', () async {
-      final processor = TestableInterruptionProcessor();
+    test(
+      'multiple duck begin/end events: animations fire-and-forget',
+      () async {
+        final processor = TestableInterruptionProcessor();
 
-      // Multiple rapid duck events
-      processor.processEvent(type: AudioInterruptionType.duck, isBegin: true, isPlaying: true);
-      processor.processEvent(type: AudioInterruptionType.duck, isBegin: false, isPlaying: true);
-      processor.processEvent(type: AudioInterruptionType.duck, isBegin: true, isPlaying: true);
-      processor.processEvent(type: AudioInterruptionType.duck, isBegin: false, isPlaying: true);
+        // Multiple rapid duck events
+        processor.processEvent(
+          type: AudioInterruptionType.duck,
+          isBegin: true,
+          isPlaying: true,
+        );
+        processor.processEvent(
+          type: AudioInterruptionType.duck,
+          isBegin: false,
+          isPlaying: true,
+        );
+        processor.processEvent(
+          type: AudioInterruptionType.duck,
+          isBegin: true,
+          isPlaying: true,
+        );
+        processor.processEvent(
+          type: AudioInterruptionType.duck,
+          isBegin: false,
+          isPlaying: true,
+        );
 
-      // Wait for all animations to be recorded
-      await Future.delayed(Duration.zero);
-      await Future.delayed(Duration.zero);
-      await Future.delayed(Duration.zero);
-      await Future.delayed(Duration.zero);
+        // Wait for all animations to be recorded
+        await Future.delayed(Duration.zero);
+        await Future.delayed(Duration.zero);
+        await Future.delayed(Duration.zero);
+        await Future.delayed(Duration.zero);
 
-      // Animations are fire-and-forget, so all should be recorded
-      expect(processor.sideEffects, contains('duckAnimation:50.0'));
-      expect(processor.sideEffects, contains('restoreAnimation:100.0'));
-    });
+        // Animations are fire-and-forget, so all should be recorded
+        expect(processor.sideEffects, contains('duckAnimation:50.0'));
+        expect(processor.sideEffects, contains('restoreAnimation:100.0'));
+      },
+    );
   });
 
   group('Serializer ordering guarantee', () {

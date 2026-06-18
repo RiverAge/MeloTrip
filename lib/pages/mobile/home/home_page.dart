@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/common/paginated_list_snapshot.dart';
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/pages/mobile/search_v2/search_page_v2.dart';
 import 'package:melo_trip/provider/album/albums.dart';
+import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/endof_data.dart';
 import 'package:melo_trip/widget/no_data.dart';
@@ -15,6 +19,7 @@ part 'parts/top_search_bar.dart';
 part 'parts/albums.dart';
 part 'parts/albums_view_all_page.dart';
 part 'parts/for_you_placeholder.dart';
+part 'parts/for_you_recommendations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -90,7 +95,7 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
               const SizedBox(height: 16),
-              const _ForYouPlaceholder(),
+              const _ForYouRecommendations(),
               const SizedBox(height: 16),
               _Albums(
                 type: AlbumListType.recent,

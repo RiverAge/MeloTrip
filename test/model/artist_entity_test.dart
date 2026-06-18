@@ -57,10 +57,7 @@ void main() {
     });
 
     test('handles missing albumCount', () {
-      final json = {
-        'id': 'art-789',
-        'name': 'Artist Without Count',
-      };
+      final json = {'id': 'art-789', 'name': 'Artist Without Count'};
 
       final entity = ArtistEntity.fromJson(json);
 

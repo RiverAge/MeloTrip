@@ -7,11 +7,7 @@ void main() {
   testWidgets('ArtworkImage shows placeholder when id is null', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: ProviderScope(
-            child: ArtworkImage(id: null),
-          ),
-        ),
+        home: Scaffold(body: ProviderScope(child: ArtworkImage(id: null))),
       ),
     );
 
@@ -46,10 +42,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: ProviderScope(
-            child: ArtworkImage(
-              id: null,
-              errorWidget: customError,
-            ),
+            child: ArtworkImage(id: null, errorWidget: customError),
           ),
         ),
       ),
@@ -58,16 +51,13 @@ void main() {
     expect(find.text('Custom Error'), findsOneWidget);
   });
 
-  testWidgets('ArtworkImage with valid id shows placeholder initially', (tester) async {
+  testWidgets('ArtworkImage with valid id shows placeholder initially', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: ProviderScope(
-            child: ArtworkImage(
-              id: '123',
-              size: 100,
-            ),
-          ),
+          body: ProviderScope(child: ArtworkImage(id: '123', size: 100)),
         ),
       ),
     );
@@ -81,12 +71,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: ProviderScope(
-            child: ArtworkImage(
-              id: 'test',
-              size: 200,
-              width: 100,
-              height: 100,
-            ),
+            child: ArtworkImage(id: 'test', size: 200, width: 100, height: 100),
           ),
         ),
       ),
@@ -100,10 +85,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: ProviderScope(
-            child: ArtworkImage(
-              id: 'test',
-              fit: BoxFit.cover,
-            ),
+            child: ArtworkImage(id: 'test', fit: BoxFit.cover),
           ),
         ),
       ),

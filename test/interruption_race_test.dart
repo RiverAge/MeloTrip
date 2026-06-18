@@ -80,10 +80,7 @@ void main() {
       );
 
       // Event: duck end
-      final action = handleDuckingEnd(
-        state: duckState,
-        currentVolume: 50.0,
-      );
+      final action = handleDuckingEnd(state: duckState, currentVolume: 50.0);
 
       // State MUST be updated synchronously BEFORE animation starts
       duckState = action.nextState;
@@ -129,33 +126,36 @@ void main() {
   });
 
   group('Animation cancellation scenarios', () {
-    test('restore animation cancelled by new duck begin preserves original volume', () {
-      // Start: ducking state with original volume
-      var duckState = const DuckVolumeState(
-        duckingState: DuckingState.ducking,
-        volumeBeforeDucking: 100.0,
-      );
+    test(
+      'restore animation cancelled by new duck begin preserves original volume',
+      () {
+        // Start: ducking state with original volume
+        var duckState = const DuckVolumeState(
+          duckingState: DuckingState.ducking,
+          volumeBeforeDucking: 100.0,
+        );
 
-      // Duck end -> enters restoring state
-      final endAction = handleDuckingEnd(
-        state: duckState,
-        currentVolume: 50.0,
-      );
-      duckState = endAction.nextState;
-      expect(duckState.duckingState, DuckingState.restoring);
+        // Duck end -> enters restoring state
+        final endAction = handleDuckingEnd(
+          state: duckState,
+          currentVolume: 50.0,
+        );
+        duckState = endAction.nextState;
+        expect(duckState.duckingState, DuckingState.restoring);
 
-      // While restoring (animation running), new duck begin arrives
-      final beginAction = handleDuckingBegin(
-        state: duckState,
-        currentVolume: 75.0, // Mid-animation volume
-      );
-      duckState = beginAction.nextState;
+        // While restoring (animation running), new duck begin arrives
+        final beginAction = handleDuckingBegin(
+          state: duckState,
+          currentVolume: 75.0, // Mid-animation volume
+        );
+        duckState = beginAction.nextState;
 
-      // Original volume preserved (not overwritten by 75)
-      expect(duckState.volumeBeforeDucking, equals(100.0));
-      // Target is 50 (100 * 0.5), not 37.5 (75 * 0.5)
-      expect(beginAction.targetVolume, equals(50.0));
-    });
+        // Original volume preserved (not overwritten by 75)
+        expect(duckState.volumeBeforeDucking, equals(100.0));
+        // Target is 50 (100 * 0.5), not 37.5 (75 * 0.5)
+        expect(beginAction.targetVolume, equals(50.0));
+      },
+    );
 
     test('restore animation cancelled by immediate end clears state', () {
       // Start: restoring state

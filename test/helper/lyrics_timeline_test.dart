@@ -4,10 +4,7 @@ import 'package:melo_trip/helper/lyrics_timeline.dart';
 void main() {
   group('lyricIndexByStartMs', () {
     test('returns -1 for empty list', () {
-      final result = lyricIndexByStartMs(
-        sortedStartMs: [],
-        positionMs: 0,
-      );
+      final result = lyricIndexByStartMs(sortedStartMs: [], positionMs: 0);
       expect(result, equals(-1));
     });
 

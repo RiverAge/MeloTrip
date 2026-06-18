@@ -12,6 +12,7 @@ import 'package:melo_trip/pages/shared/player/playback_background.dart';
 import 'package:melo_trip/pages/shared/player/playback_media_meta_badge.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
+import 'package:melo_trip/provider/sonic_similarity/sonic_similarity.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';

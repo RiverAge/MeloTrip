@@ -27,6 +27,40 @@ class ArtistDetailRepository {
   ) {
     return runGuarded(() => fetchArtistDetail(artistId));
   }
+
+  /// Fetches artist info including similar artists from getArtistInfo2 endpoint.
+  ///
+  /// This is an OpenSubsonic extension provided by Navidrome.
+  /// Returns similar artists based on the requested artist.
+  Future<SubsonicResponse> fetchArtistInfo2({
+    required String artistId,
+    int? count,
+  }) async {
+    final api = await _readApi();
+    final res = await api.get<Map<String, dynamic>>(
+      '/rest/getArtistInfo2',
+      queryParameters: <String, dynamic>{
+        'id': artistId,
+        ...?count != null ? {'count': count} : null,
+      },
+    );
+
+    return parseSubsonicResponseOrThrow(
+      res.data,
+      endpoint: '/rest/getArtistInfo2',
+    );
+  }
+
+  /// Safely fetches artist info with error handling.
+  ///
+  /// Returns Result.ok with the response on success,
+  /// or Result.err with AppFailure on failure.
+  Future<Result<SubsonicResponse, AppFailure>> tryFetchArtistInfo2({
+    required String artistId,
+    int? count,
+  }) {
+    return runGuarded(() => fetchArtistInfo2(artistId: artistId, count: count));
+  }
 }
 
 final artistDetailRepositoryProvider = Provider<ArtistDetailRepository>((ref) {

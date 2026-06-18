@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/pages/mobile/album/album_detail_page.dart';
 import 'package:melo_trip/provider/artist/artist_detail.dart';
+import 'package:melo_trip/provider/artist/similar_artists.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
@@ -115,6 +117,10 @@ class ArtistDetailPage extends StatelessWidget {
                     },
                   ),
                 ),
+              // Similar Artists Section
+              SliverToBoxAdapter(
+                child: _SimilarArtistsSection(artistId: artist.id ?? artistId),
+              ),
             ],
           ),
         );
@@ -212,4 +218,124 @@ String _albumReleaseDateText(AlbumEntity album) {
     return '${album.year}';
   }
   return '';
+}
+
+/// Similar Artists section widget.
+///
+/// Displays a horizontal list of similar artists.
+/// Hidden when there are no similar artists to avoid cluttering the UI.
+class _SimilarArtistsSection extends StatelessWidget {
+  const _SimilarArtistsSection({required this.artistId});
+
+  final String? artistId;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return AsyncValueBuilder(
+      provider: similarArtistsProvider(artistId: artistId, count: 12),
+      loading: (_, _) => const SizedBox.shrink(),
+      builder: (context, artists, _) {
+        // Hide section when no similar artists
+        if (artists.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  l10n.similarArtists,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 140,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  itemCount: artists.length,
+                  itemBuilder: (context, index) {
+                    final artist = artists[index];
+                    return _SimilarArtistCard(artist: artist);
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Card widget for a single similar artist.
+class _SimilarArtistCard extends StatelessWidget {
+  const _SimilarArtistCard({required this.artist});
+
+  final ArtistEntity artist;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ArtistDetailPage(artistId: artist.id),
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 110,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        child: Column(
+          children: [
+            // Artist cover
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: ArtworkImage(
+                  id: artist.coverArt ?? artist.id,
+                  size: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Artist name
+            Text(
+              artist.name ?? '',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

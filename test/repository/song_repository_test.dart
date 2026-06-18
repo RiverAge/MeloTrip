@@ -29,10 +29,7 @@ void main() {
 
     test('fetchSongSearchResponse sends correct request', () async {
       mockAdapter.setResponse({
-        'subsonic-response': {
-          'status': 'ok',
-          'searchResult3': {},
-        },
+        'subsonic-response': {'status': 'ok', 'searchResult3': {}},
       });
 
       final repository = container.read(songRepositoryProvider);
@@ -171,13 +168,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

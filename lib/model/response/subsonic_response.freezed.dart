@@ -302,7 +302,13 @@ $SubsonicResponseClassCopyWith<$Res>? get subsonicResponse {
 /// @nodoc
 mixin _$SubsonicResponseClass {
 
- String? get status; String? get version; String? get type; String? get serverVersion; bool? get openSubsonic; AlbumEntity? get album; AlbumListEntity? get albumList; SearchResult3Entity? get searchResult3; SimilarSongs2Entity? get similarSongs2; RandomSongsEntity? get randomSongs; SongEntity? get song; PlaylistEntity? get playlist; PlaylistsEntity? get playlists; PlayQueueEntity? get playQueue; LyricsListEntity? get lyricsList; ScanStatusEntity? get scanStatus; StarredEntity? get starred; ArtistEntity? get artist; ArtistsEntity? get artists; IndexesEntity? get indexes; DirectoryEntity? get directory; GenresEntity? get genres; SongsByGenreEntity? get songsByGenre; ErrorEntity? get error;
+ String? get status; String? get version; String? get type; String? get serverVersion; bool? get openSubsonic; AlbumEntity? get album; AlbumListEntity? get albumList; SearchResult3Entity? get searchResult3; SimilarSongs2Entity? get similarSongs2; RandomSongsEntity? get randomSongs; SongEntity? get song; PlaylistEntity? get playlist; PlaylistsEntity? get playlists; PlayQueueEntity? get playQueue; LyricsListEntity? get lyricsList; ScanStatusEntity? get scanStatus; StarredEntity? get starred; ArtistEntity? get artist; ArtistsEntity? get artists; IndexesEntity? get indexes; DirectoryEntity? get directory; GenresEntity? get genres; SongsByGenreEntity? get songsByGenre; ErrorEntity? get error;// AudioMuse-AI plugin OpenSubsonic extensions
+/// Response from getSonicSimilarTracks and findSonicPath endpoints.
+/// Navidrome returns sonicMatch as a direct array field in the response.
+/// Each SonicMatch contains an entry (song) and similarity score.
+@JsonKey(name: 'sonicMatch') List<SonicMatch>? get sonicMatch;/// Response from getArtistInfo2 endpoint.
+/// Contains similar artists based on the requested artist.
+ ArtistInfo2Entity? get artistInfo2;
 /// Create a copy of SubsonicResponseClass
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -315,16 +321,16 @@ $SubsonicResponseClassCopyWith<SubsonicResponseClass> get copyWith => _$Subsonic
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubsonicResponseClass&&(identical(other.status, status) || other.status == status)&&(identical(other.version, version) || other.version == version)&&(identical(other.type, type) || other.type == type)&&(identical(other.serverVersion, serverVersion) || other.serverVersion == serverVersion)&&(identical(other.openSubsonic, openSubsonic) || other.openSubsonic == openSubsonic)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumList, albumList) || other.albumList == albumList)&&(identical(other.searchResult3, searchResult3) || other.searchResult3 == searchResult3)&&(identical(other.similarSongs2, similarSongs2) || other.similarSongs2 == similarSongs2)&&(identical(other.randomSongs, randomSongs) || other.randomSongs == randomSongs)&&(identical(other.song, song) || other.song == song)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.playlists, playlists) || other.playlists == playlists)&&(identical(other.playQueue, playQueue) || other.playQueue == playQueue)&&(identical(other.lyricsList, lyricsList) || other.lyricsList == lyricsList)&&(identical(other.scanStatus, scanStatus) || other.scanStatus == scanStatus)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.artists, artists) || other.artists == artists)&&(identical(other.indexes, indexes) || other.indexes == indexes)&&(identical(other.directory, directory) || other.directory == directory)&&(identical(other.genres, genres) || other.genres == genres)&&(identical(other.songsByGenre, songsByGenre) || other.songsByGenre == songsByGenre)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubsonicResponseClass&&(identical(other.status, status) || other.status == status)&&(identical(other.version, version) || other.version == version)&&(identical(other.type, type) || other.type == type)&&(identical(other.serverVersion, serverVersion) || other.serverVersion == serverVersion)&&(identical(other.openSubsonic, openSubsonic) || other.openSubsonic == openSubsonic)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumList, albumList) || other.albumList == albumList)&&(identical(other.searchResult3, searchResult3) || other.searchResult3 == searchResult3)&&(identical(other.similarSongs2, similarSongs2) || other.similarSongs2 == similarSongs2)&&(identical(other.randomSongs, randomSongs) || other.randomSongs == randomSongs)&&(identical(other.song, song) || other.song == song)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.playlists, playlists) || other.playlists == playlists)&&(identical(other.playQueue, playQueue) || other.playQueue == playQueue)&&(identical(other.lyricsList, lyricsList) || other.lyricsList == lyricsList)&&(identical(other.scanStatus, scanStatus) || other.scanStatus == scanStatus)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.artists, artists) || other.artists == artists)&&(identical(other.indexes, indexes) || other.indexes == indexes)&&(identical(other.directory, directory) || other.directory == directory)&&(identical(other.genres, genres) || other.genres == genres)&&(identical(other.songsByGenre, songsByGenre) || other.songsByGenre == songsByGenre)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.sonicMatch, sonicMatch)&&(identical(other.artistInfo2, artistInfo2) || other.artistInfo2 == artistInfo2));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,status,version,type,serverVersion,openSubsonic,album,albumList,searchResult3,similarSongs2,randomSongs,song,playlist,playlists,playQueue,lyricsList,scanStatus,starred,artist,artists,indexes,directory,genres,songsByGenre,error]);
+int get hashCode => Object.hashAll([runtimeType,status,version,type,serverVersion,openSubsonic,album,albumList,searchResult3,similarSongs2,randomSongs,song,playlist,playlists,playQueue,lyricsList,scanStatus,starred,artist,artists,indexes,directory,genres,songsByGenre,error,const DeepCollectionEquality().hash(sonicMatch),artistInfo2]);
 
 @override
 String toString() {
-  return 'SubsonicResponseClass(status: $status, version: $version, type: $type, serverVersion: $serverVersion, openSubsonic: $openSubsonic, album: $album, albumList: $albumList, searchResult3: $searchResult3, similarSongs2: $similarSongs2, randomSongs: $randomSongs, song: $song, playlist: $playlist, playlists: $playlists, playQueue: $playQueue, lyricsList: $lyricsList, scanStatus: $scanStatus, starred: $starred, artist: $artist, artists: $artists, indexes: $indexes, directory: $directory, genres: $genres, songsByGenre: $songsByGenre, error: $error)';
+  return 'SubsonicResponseClass(status: $status, version: $version, type: $type, serverVersion: $serverVersion, openSubsonic: $openSubsonic, album: $album, albumList: $albumList, searchResult3: $searchResult3, similarSongs2: $similarSongs2, randomSongs: $randomSongs, song: $song, playlist: $playlist, playlists: $playlists, playQueue: $playQueue, lyricsList: $lyricsList, scanStatus: $scanStatus, starred: $starred, artist: $artist, artists: $artists, indexes: $indexes, directory: $directory, genres: $genres, songsByGenre: $songsByGenre, error: $error, sonicMatch: $sonicMatch, artistInfo2: $artistInfo2)';
 }
 
 
@@ -335,11 +341,11 @@ abstract mixin class $SubsonicResponseClassCopyWith<$Res>  {
   factory $SubsonicResponseClassCopyWith(SubsonicResponseClass value, $Res Function(SubsonicResponseClass) _then) = _$SubsonicResponseClassCopyWithImpl;
 @useResult
 $Res call({
- String? status, String? version, String? type, String? serverVersion, bool? openSubsonic, AlbumEntity? album, AlbumListEntity? albumList, SearchResult3Entity? searchResult3, SimilarSongs2Entity? similarSongs2, RandomSongsEntity? randomSongs, SongEntity? song, PlaylistEntity? playlist, PlaylistsEntity? playlists, PlayQueueEntity? playQueue, LyricsListEntity? lyricsList, ScanStatusEntity? scanStatus, StarredEntity? starred, ArtistEntity? artist, ArtistsEntity? artists, IndexesEntity? indexes, DirectoryEntity? directory, GenresEntity? genres, SongsByGenreEntity? songsByGenre, ErrorEntity? error
+ String? status, String? version, String? type, String? serverVersion, bool? openSubsonic, AlbumEntity? album, AlbumListEntity? albumList, SearchResult3Entity? searchResult3, SimilarSongs2Entity? similarSongs2, RandomSongsEntity? randomSongs, SongEntity? song, PlaylistEntity? playlist, PlaylistsEntity? playlists, PlayQueueEntity? playQueue, LyricsListEntity? lyricsList, ScanStatusEntity? scanStatus, StarredEntity? starred, ArtistEntity? artist, ArtistsEntity? artists, IndexesEntity? indexes, DirectoryEntity? directory, GenresEntity? genres, SongsByGenreEntity? songsByGenre, ErrorEntity? error,@JsonKey(name: 'sonicMatch') List<SonicMatch>? sonicMatch, ArtistInfo2Entity? artistInfo2
 });
 
 
-$AlbumEntityCopyWith<$Res>? get album;$AlbumListEntityCopyWith<$Res>? get albumList;$SearchResult3EntityCopyWith<$Res>? get searchResult3;$SimilarSongs2EntityCopyWith<$Res>? get similarSongs2;$RandomSongsEntityCopyWith<$Res>? get randomSongs;$SongEntityCopyWith<$Res>? get song;$PlaylistEntityCopyWith<$Res>? get playlist;$PlaylistsEntityCopyWith<$Res>? get playlists;$PlayQueueEntityCopyWith<$Res>? get playQueue;$LyricsListEntityCopyWith<$Res>? get lyricsList;$ScanStatusEntityCopyWith<$Res>? get scanStatus;$StarredEntityCopyWith<$Res>? get starred;$ArtistEntityCopyWith<$Res>? get artist;$ArtistsEntityCopyWith<$Res>? get artists;$IndexesEntityCopyWith<$Res>? get indexes;$DirectoryEntityCopyWith<$Res>? get directory;$GenresEntityCopyWith<$Res>? get genres;$SongsByGenreEntityCopyWith<$Res>? get songsByGenre;$ErrorEntityCopyWith<$Res>? get error;
+$AlbumEntityCopyWith<$Res>? get album;$AlbumListEntityCopyWith<$Res>? get albumList;$SearchResult3EntityCopyWith<$Res>? get searchResult3;$SimilarSongs2EntityCopyWith<$Res>? get similarSongs2;$RandomSongsEntityCopyWith<$Res>? get randomSongs;$SongEntityCopyWith<$Res>? get song;$PlaylistEntityCopyWith<$Res>? get playlist;$PlaylistsEntityCopyWith<$Res>? get playlists;$PlayQueueEntityCopyWith<$Res>? get playQueue;$LyricsListEntityCopyWith<$Res>? get lyricsList;$ScanStatusEntityCopyWith<$Res>? get scanStatus;$StarredEntityCopyWith<$Res>? get starred;$ArtistEntityCopyWith<$Res>? get artist;$ArtistsEntityCopyWith<$Res>? get artists;$IndexesEntityCopyWith<$Res>? get indexes;$DirectoryEntityCopyWith<$Res>? get directory;$GenresEntityCopyWith<$Res>? get genres;$SongsByGenreEntityCopyWith<$Res>? get songsByGenre;$ErrorEntityCopyWith<$Res>? get error;$ArtistInfo2EntityCopyWith<$Res>? get artistInfo2;
 
 }
 /// @nodoc
@@ -352,7 +358,7 @@ class _$SubsonicResponseClassCopyWithImpl<$Res>
 
 /// Create a copy of SubsonicResponseClass
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? version = freezed,Object? type = freezed,Object? serverVersion = freezed,Object? openSubsonic = freezed,Object? album = freezed,Object? albumList = freezed,Object? searchResult3 = freezed,Object? similarSongs2 = freezed,Object? randomSongs = freezed,Object? song = freezed,Object? playlist = freezed,Object? playlists = freezed,Object? playQueue = freezed,Object? lyricsList = freezed,Object? scanStatus = freezed,Object? starred = freezed,Object? artist = freezed,Object? artists = freezed,Object? indexes = freezed,Object? directory = freezed,Object? genres = freezed,Object? songsByGenre = freezed,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? version = freezed,Object? type = freezed,Object? serverVersion = freezed,Object? openSubsonic = freezed,Object? album = freezed,Object? albumList = freezed,Object? searchResult3 = freezed,Object? similarSongs2 = freezed,Object? randomSongs = freezed,Object? song = freezed,Object? playlist = freezed,Object? playlists = freezed,Object? playQueue = freezed,Object? lyricsList = freezed,Object? scanStatus = freezed,Object? starred = freezed,Object? artist = freezed,Object? artists = freezed,Object? indexes = freezed,Object? directory = freezed,Object? genres = freezed,Object? songsByGenre = freezed,Object? error = freezed,Object? sonicMatch = freezed,Object? artistInfo2 = freezed,}) {
   return _then(_self.copyWith(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
@@ -378,7 +384,9 @@ as IndexesEntity?,directory: freezed == directory ? _self.directory : directory 
 as DirectoryEntity?,genres: freezed == genres ? _self.genres : genres // ignore: cast_nullable_to_non_nullable
 as GenresEntity?,songsByGenre: freezed == songsByGenre ? _self.songsByGenre : songsByGenre // ignore: cast_nullable_to_non_nullable
 as SongsByGenreEntity?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as ErrorEntity?,
+as ErrorEntity?,sonicMatch: freezed == sonicMatch ? _self.sonicMatch : sonicMatch // ignore: cast_nullable_to_non_nullable
+as List<SonicMatch>?,artistInfo2: freezed == artistInfo2 ? _self.artistInfo2 : artistInfo2 // ignore: cast_nullable_to_non_nullable
+as ArtistInfo2Entity?,
   ));
 }
 /// Create a copy of SubsonicResponseClass
@@ -608,6 +616,18 @@ $ErrorEntityCopyWith<$Res>? get error {
 
   return $ErrorEntityCopyWith<$Res>(_self.error!, (value) {
     return _then(_self.copyWith(error: value));
+  });
+}/// Create a copy of SubsonicResponseClass
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ArtistInfo2EntityCopyWith<$Res>? get artistInfo2 {
+    if (_self.artistInfo2 == null) {
+    return null;
+  }
+
+  return $ArtistInfo2EntityCopyWith<$Res>(_self.artistInfo2!, (value) {
+    return _then(_self.copyWith(artistInfo2: value));
   });
 }
 }
@@ -691,10 +711,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? status,  String? version,  String? type,  String? serverVersion,  bool? openSubsonic,  AlbumEntity? album,  AlbumListEntity? albumList,  SearchResult3Entity? searchResult3,  SimilarSongs2Entity? similarSongs2,  RandomSongsEntity? randomSongs,  SongEntity? song,  PlaylistEntity? playlist,  PlaylistsEntity? playlists,  PlayQueueEntity? playQueue,  LyricsListEntity? lyricsList,  ScanStatusEntity? scanStatus,  StarredEntity? starred,  ArtistEntity? artist,  ArtistsEntity? artists,  IndexesEntity? indexes,  DirectoryEntity? directory,  GenresEntity? genres,  SongsByGenreEntity? songsByGenre,  ErrorEntity? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? status,  String? version,  String? type,  String? serverVersion,  bool? openSubsonic,  AlbumEntity? album,  AlbumListEntity? albumList,  SearchResult3Entity? searchResult3,  SimilarSongs2Entity? similarSongs2,  RandomSongsEntity? randomSongs,  SongEntity? song,  PlaylistEntity? playlist,  PlaylistsEntity? playlists,  PlayQueueEntity? playQueue,  LyricsListEntity? lyricsList,  ScanStatusEntity? scanStatus,  StarredEntity? starred,  ArtistEntity? artist,  ArtistsEntity? artists,  IndexesEntity? indexes,  DirectoryEntity? directory,  GenresEntity? genres,  SongsByGenreEntity? songsByGenre,  ErrorEntity? error, @JsonKey(name: 'sonicMatch')  List<SonicMatch>? sonicMatch,  ArtistInfo2Entity? artistInfo2)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SubsonicResponseClass() when $default != null:
-return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.openSubsonic,_that.album,_that.albumList,_that.searchResult3,_that.similarSongs2,_that.randomSongs,_that.song,_that.playlist,_that.playlists,_that.playQueue,_that.lyricsList,_that.scanStatus,_that.starred,_that.artist,_that.artists,_that.indexes,_that.directory,_that.genres,_that.songsByGenre,_that.error);case _:
+return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.openSubsonic,_that.album,_that.albumList,_that.searchResult3,_that.similarSongs2,_that.randomSongs,_that.song,_that.playlist,_that.playlists,_that.playQueue,_that.lyricsList,_that.scanStatus,_that.starred,_that.artist,_that.artists,_that.indexes,_that.directory,_that.genres,_that.songsByGenre,_that.error,_that.sonicMatch,_that.artistInfo2);case _:
   return orElse();
 
 }
@@ -712,10 +732,10 @@ return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? status,  String? version,  String? type,  String? serverVersion,  bool? openSubsonic,  AlbumEntity? album,  AlbumListEntity? albumList,  SearchResult3Entity? searchResult3,  SimilarSongs2Entity? similarSongs2,  RandomSongsEntity? randomSongs,  SongEntity? song,  PlaylistEntity? playlist,  PlaylistsEntity? playlists,  PlayQueueEntity? playQueue,  LyricsListEntity? lyricsList,  ScanStatusEntity? scanStatus,  StarredEntity? starred,  ArtistEntity? artist,  ArtistsEntity? artists,  IndexesEntity? indexes,  DirectoryEntity? directory,  GenresEntity? genres,  SongsByGenreEntity? songsByGenre,  ErrorEntity? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? status,  String? version,  String? type,  String? serverVersion,  bool? openSubsonic,  AlbumEntity? album,  AlbumListEntity? albumList,  SearchResult3Entity? searchResult3,  SimilarSongs2Entity? similarSongs2,  RandomSongsEntity? randomSongs,  SongEntity? song,  PlaylistEntity? playlist,  PlaylistsEntity? playlists,  PlayQueueEntity? playQueue,  LyricsListEntity? lyricsList,  ScanStatusEntity? scanStatus,  StarredEntity? starred,  ArtistEntity? artist,  ArtistsEntity? artists,  IndexesEntity? indexes,  DirectoryEntity? directory,  GenresEntity? genres,  SongsByGenreEntity? songsByGenre,  ErrorEntity? error, @JsonKey(name: 'sonicMatch')  List<SonicMatch>? sonicMatch,  ArtistInfo2Entity? artistInfo2)  $default,) {final _that = this;
 switch (_that) {
 case _SubsonicResponseClass():
-return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.openSubsonic,_that.album,_that.albumList,_that.searchResult3,_that.similarSongs2,_that.randomSongs,_that.song,_that.playlist,_that.playlists,_that.playQueue,_that.lyricsList,_that.scanStatus,_that.starred,_that.artist,_that.artists,_that.indexes,_that.directory,_that.genres,_that.songsByGenre,_that.error);case _:
+return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.openSubsonic,_that.album,_that.albumList,_that.searchResult3,_that.similarSongs2,_that.randomSongs,_that.song,_that.playlist,_that.playlists,_that.playQueue,_that.lyricsList,_that.scanStatus,_that.starred,_that.artist,_that.artists,_that.indexes,_that.directory,_that.genres,_that.songsByGenre,_that.error,_that.sonicMatch,_that.artistInfo2);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -732,10 +752,10 @@ return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? status,  String? version,  String? type,  String? serverVersion,  bool? openSubsonic,  AlbumEntity? album,  AlbumListEntity? albumList,  SearchResult3Entity? searchResult3,  SimilarSongs2Entity? similarSongs2,  RandomSongsEntity? randomSongs,  SongEntity? song,  PlaylistEntity? playlist,  PlaylistsEntity? playlists,  PlayQueueEntity? playQueue,  LyricsListEntity? lyricsList,  ScanStatusEntity? scanStatus,  StarredEntity? starred,  ArtistEntity? artist,  ArtistsEntity? artists,  IndexesEntity? indexes,  DirectoryEntity? directory,  GenresEntity? genres,  SongsByGenreEntity? songsByGenre,  ErrorEntity? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? status,  String? version,  String? type,  String? serverVersion,  bool? openSubsonic,  AlbumEntity? album,  AlbumListEntity? albumList,  SearchResult3Entity? searchResult3,  SimilarSongs2Entity? similarSongs2,  RandomSongsEntity? randomSongs,  SongEntity? song,  PlaylistEntity? playlist,  PlaylistsEntity? playlists,  PlayQueueEntity? playQueue,  LyricsListEntity? lyricsList,  ScanStatusEntity? scanStatus,  StarredEntity? starred,  ArtistEntity? artist,  ArtistsEntity? artists,  IndexesEntity? indexes,  DirectoryEntity? directory,  GenresEntity? genres,  SongsByGenreEntity? songsByGenre,  ErrorEntity? error, @JsonKey(name: 'sonicMatch')  List<SonicMatch>? sonicMatch,  ArtistInfo2Entity? artistInfo2)?  $default,) {final _that = this;
 switch (_that) {
 case _SubsonicResponseClass() when $default != null:
-return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.openSubsonic,_that.album,_that.albumList,_that.searchResult3,_that.similarSongs2,_that.randomSongs,_that.song,_that.playlist,_that.playlists,_that.playQueue,_that.lyricsList,_that.scanStatus,_that.starred,_that.artist,_that.artists,_that.indexes,_that.directory,_that.genres,_that.songsByGenre,_that.error);case _:
+return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.openSubsonic,_that.album,_that.albumList,_that.searchResult3,_that.similarSongs2,_that.randomSongs,_that.song,_that.playlist,_that.playlists,_that.playQueue,_that.lyricsList,_that.scanStatus,_that.starred,_that.artist,_that.artists,_that.indexes,_that.directory,_that.genres,_that.songsByGenre,_that.error,_that.sonicMatch,_that.artistInfo2);case _:
   return null;
 
 }
@@ -747,7 +767,7 @@ return $default(_that.status,_that.version,_that.type,_that.serverVersion,_that.
 @JsonSerializable()
 
 class _SubsonicResponseClass implements SubsonicResponseClass {
-  const _SubsonicResponseClass({this.status, this.version, this.type, this.serverVersion, this.openSubsonic, this.album, this.albumList, this.searchResult3, this.similarSongs2, this.randomSongs, this.song, this.playlist, this.playlists, this.playQueue, this.lyricsList, this.scanStatus, this.starred, this.artist, this.artists, this.indexes, this.directory, this.genres, this.songsByGenre, this.error});
+  const _SubsonicResponseClass({this.status, this.version, this.type, this.serverVersion, this.openSubsonic, this.album, this.albumList, this.searchResult3, this.similarSongs2, this.randomSongs, this.song, this.playlist, this.playlists, this.playQueue, this.lyricsList, this.scanStatus, this.starred, this.artist, this.artists, this.indexes, this.directory, this.genres, this.songsByGenre, this.error, @JsonKey(name: 'sonicMatch') final  List<SonicMatch>? sonicMatch, this.artistInfo2}): _sonicMatch = sonicMatch;
   factory _SubsonicResponseClass.fromJson(Map<String, dynamic> json) => _$SubsonicResponseClassFromJson(json);
 
 @override final  String? status;
@@ -774,6 +794,26 @@ class _SubsonicResponseClass implements SubsonicResponseClass {
 @override final  GenresEntity? genres;
 @override final  SongsByGenreEntity? songsByGenre;
 @override final  ErrorEntity? error;
+// AudioMuse-AI plugin OpenSubsonic extensions
+/// Response from getSonicSimilarTracks and findSonicPath endpoints.
+/// Navidrome returns sonicMatch as a direct array field in the response.
+/// Each SonicMatch contains an entry (song) and similarity score.
+ final  List<SonicMatch>? _sonicMatch;
+// AudioMuse-AI plugin OpenSubsonic extensions
+/// Response from getSonicSimilarTracks and findSonicPath endpoints.
+/// Navidrome returns sonicMatch as a direct array field in the response.
+/// Each SonicMatch contains an entry (song) and similarity score.
+@override@JsonKey(name: 'sonicMatch') List<SonicMatch>? get sonicMatch {
+  final value = _sonicMatch;
+  if (value == null) return null;
+  if (_sonicMatch is EqualUnmodifiableListView) return _sonicMatch;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+/// Response from getArtistInfo2 endpoint.
+/// Contains similar artists based on the requested artist.
+@override final  ArtistInfo2Entity? artistInfo2;
 
 /// Create a copy of SubsonicResponseClass
 /// with the given fields replaced by the non-null parameter values.
@@ -788,16 +828,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubsonicResponseClass&&(identical(other.status, status) || other.status == status)&&(identical(other.version, version) || other.version == version)&&(identical(other.type, type) || other.type == type)&&(identical(other.serverVersion, serverVersion) || other.serverVersion == serverVersion)&&(identical(other.openSubsonic, openSubsonic) || other.openSubsonic == openSubsonic)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumList, albumList) || other.albumList == albumList)&&(identical(other.searchResult3, searchResult3) || other.searchResult3 == searchResult3)&&(identical(other.similarSongs2, similarSongs2) || other.similarSongs2 == similarSongs2)&&(identical(other.randomSongs, randomSongs) || other.randomSongs == randomSongs)&&(identical(other.song, song) || other.song == song)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.playlists, playlists) || other.playlists == playlists)&&(identical(other.playQueue, playQueue) || other.playQueue == playQueue)&&(identical(other.lyricsList, lyricsList) || other.lyricsList == lyricsList)&&(identical(other.scanStatus, scanStatus) || other.scanStatus == scanStatus)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.artists, artists) || other.artists == artists)&&(identical(other.indexes, indexes) || other.indexes == indexes)&&(identical(other.directory, directory) || other.directory == directory)&&(identical(other.genres, genres) || other.genres == genres)&&(identical(other.songsByGenre, songsByGenre) || other.songsByGenre == songsByGenre)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubsonicResponseClass&&(identical(other.status, status) || other.status == status)&&(identical(other.version, version) || other.version == version)&&(identical(other.type, type) || other.type == type)&&(identical(other.serverVersion, serverVersion) || other.serverVersion == serverVersion)&&(identical(other.openSubsonic, openSubsonic) || other.openSubsonic == openSubsonic)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumList, albumList) || other.albumList == albumList)&&(identical(other.searchResult3, searchResult3) || other.searchResult3 == searchResult3)&&(identical(other.similarSongs2, similarSongs2) || other.similarSongs2 == similarSongs2)&&(identical(other.randomSongs, randomSongs) || other.randomSongs == randomSongs)&&(identical(other.song, song) || other.song == song)&&(identical(other.playlist, playlist) || other.playlist == playlist)&&(identical(other.playlists, playlists) || other.playlists == playlists)&&(identical(other.playQueue, playQueue) || other.playQueue == playQueue)&&(identical(other.lyricsList, lyricsList) || other.lyricsList == lyricsList)&&(identical(other.scanStatus, scanStatus) || other.scanStatus == scanStatus)&&(identical(other.starred, starred) || other.starred == starred)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.artists, artists) || other.artists == artists)&&(identical(other.indexes, indexes) || other.indexes == indexes)&&(identical(other.directory, directory) || other.directory == directory)&&(identical(other.genres, genres) || other.genres == genres)&&(identical(other.songsByGenre, songsByGenre) || other.songsByGenre == songsByGenre)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other._sonicMatch, _sonicMatch)&&(identical(other.artistInfo2, artistInfo2) || other.artistInfo2 == artistInfo2));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,status,version,type,serverVersion,openSubsonic,album,albumList,searchResult3,similarSongs2,randomSongs,song,playlist,playlists,playQueue,lyricsList,scanStatus,starred,artist,artists,indexes,directory,genres,songsByGenre,error]);
+int get hashCode => Object.hashAll([runtimeType,status,version,type,serverVersion,openSubsonic,album,albumList,searchResult3,similarSongs2,randomSongs,song,playlist,playlists,playQueue,lyricsList,scanStatus,starred,artist,artists,indexes,directory,genres,songsByGenre,error,const DeepCollectionEquality().hash(_sonicMatch),artistInfo2]);
 
 @override
 String toString() {
-  return 'SubsonicResponseClass(status: $status, version: $version, type: $type, serverVersion: $serverVersion, openSubsonic: $openSubsonic, album: $album, albumList: $albumList, searchResult3: $searchResult3, similarSongs2: $similarSongs2, randomSongs: $randomSongs, song: $song, playlist: $playlist, playlists: $playlists, playQueue: $playQueue, lyricsList: $lyricsList, scanStatus: $scanStatus, starred: $starred, artist: $artist, artists: $artists, indexes: $indexes, directory: $directory, genres: $genres, songsByGenre: $songsByGenre, error: $error)';
+  return 'SubsonicResponseClass(status: $status, version: $version, type: $type, serverVersion: $serverVersion, openSubsonic: $openSubsonic, album: $album, albumList: $albumList, searchResult3: $searchResult3, similarSongs2: $similarSongs2, randomSongs: $randomSongs, song: $song, playlist: $playlist, playlists: $playlists, playQueue: $playQueue, lyricsList: $lyricsList, scanStatus: $scanStatus, starred: $starred, artist: $artist, artists: $artists, indexes: $indexes, directory: $directory, genres: $genres, songsByGenre: $songsByGenre, error: $error, sonicMatch: $sonicMatch, artistInfo2: $artistInfo2)';
 }
 
 
@@ -808,11 +848,11 @@ abstract mixin class _$SubsonicResponseClassCopyWith<$Res> implements $SubsonicR
   factory _$SubsonicResponseClassCopyWith(_SubsonicResponseClass value, $Res Function(_SubsonicResponseClass) _then) = __$SubsonicResponseClassCopyWithImpl;
 @override @useResult
 $Res call({
- String? status, String? version, String? type, String? serverVersion, bool? openSubsonic, AlbumEntity? album, AlbumListEntity? albumList, SearchResult3Entity? searchResult3, SimilarSongs2Entity? similarSongs2, RandomSongsEntity? randomSongs, SongEntity? song, PlaylistEntity? playlist, PlaylistsEntity? playlists, PlayQueueEntity? playQueue, LyricsListEntity? lyricsList, ScanStatusEntity? scanStatus, StarredEntity? starred, ArtistEntity? artist, ArtistsEntity? artists, IndexesEntity? indexes, DirectoryEntity? directory, GenresEntity? genres, SongsByGenreEntity? songsByGenre, ErrorEntity? error
+ String? status, String? version, String? type, String? serverVersion, bool? openSubsonic, AlbumEntity? album, AlbumListEntity? albumList, SearchResult3Entity? searchResult3, SimilarSongs2Entity? similarSongs2, RandomSongsEntity? randomSongs, SongEntity? song, PlaylistEntity? playlist, PlaylistsEntity? playlists, PlayQueueEntity? playQueue, LyricsListEntity? lyricsList, ScanStatusEntity? scanStatus, StarredEntity? starred, ArtistEntity? artist, ArtistsEntity? artists, IndexesEntity? indexes, DirectoryEntity? directory, GenresEntity? genres, SongsByGenreEntity? songsByGenre, ErrorEntity? error,@JsonKey(name: 'sonicMatch') List<SonicMatch>? sonicMatch, ArtistInfo2Entity? artistInfo2
 });
 
 
-@override $AlbumEntityCopyWith<$Res>? get album;@override $AlbumListEntityCopyWith<$Res>? get albumList;@override $SearchResult3EntityCopyWith<$Res>? get searchResult3;@override $SimilarSongs2EntityCopyWith<$Res>? get similarSongs2;@override $RandomSongsEntityCopyWith<$Res>? get randomSongs;@override $SongEntityCopyWith<$Res>? get song;@override $PlaylistEntityCopyWith<$Res>? get playlist;@override $PlaylistsEntityCopyWith<$Res>? get playlists;@override $PlayQueueEntityCopyWith<$Res>? get playQueue;@override $LyricsListEntityCopyWith<$Res>? get lyricsList;@override $ScanStatusEntityCopyWith<$Res>? get scanStatus;@override $StarredEntityCopyWith<$Res>? get starred;@override $ArtistEntityCopyWith<$Res>? get artist;@override $ArtistsEntityCopyWith<$Res>? get artists;@override $IndexesEntityCopyWith<$Res>? get indexes;@override $DirectoryEntityCopyWith<$Res>? get directory;@override $GenresEntityCopyWith<$Res>? get genres;@override $SongsByGenreEntityCopyWith<$Res>? get songsByGenre;@override $ErrorEntityCopyWith<$Res>? get error;
+@override $AlbumEntityCopyWith<$Res>? get album;@override $AlbumListEntityCopyWith<$Res>? get albumList;@override $SearchResult3EntityCopyWith<$Res>? get searchResult3;@override $SimilarSongs2EntityCopyWith<$Res>? get similarSongs2;@override $RandomSongsEntityCopyWith<$Res>? get randomSongs;@override $SongEntityCopyWith<$Res>? get song;@override $PlaylistEntityCopyWith<$Res>? get playlist;@override $PlaylistsEntityCopyWith<$Res>? get playlists;@override $PlayQueueEntityCopyWith<$Res>? get playQueue;@override $LyricsListEntityCopyWith<$Res>? get lyricsList;@override $ScanStatusEntityCopyWith<$Res>? get scanStatus;@override $StarredEntityCopyWith<$Res>? get starred;@override $ArtistEntityCopyWith<$Res>? get artist;@override $ArtistsEntityCopyWith<$Res>? get artists;@override $IndexesEntityCopyWith<$Res>? get indexes;@override $DirectoryEntityCopyWith<$Res>? get directory;@override $GenresEntityCopyWith<$Res>? get genres;@override $SongsByGenreEntityCopyWith<$Res>? get songsByGenre;@override $ErrorEntityCopyWith<$Res>? get error;@override $ArtistInfo2EntityCopyWith<$Res>? get artistInfo2;
 
 }
 /// @nodoc
@@ -825,7 +865,7 @@ class __$SubsonicResponseClassCopyWithImpl<$Res>
 
 /// Create a copy of SubsonicResponseClass
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? version = freezed,Object? type = freezed,Object? serverVersion = freezed,Object? openSubsonic = freezed,Object? album = freezed,Object? albumList = freezed,Object? searchResult3 = freezed,Object? similarSongs2 = freezed,Object? randomSongs = freezed,Object? song = freezed,Object? playlist = freezed,Object? playlists = freezed,Object? playQueue = freezed,Object? lyricsList = freezed,Object? scanStatus = freezed,Object? starred = freezed,Object? artist = freezed,Object? artists = freezed,Object? indexes = freezed,Object? directory = freezed,Object? genres = freezed,Object? songsByGenre = freezed,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? version = freezed,Object? type = freezed,Object? serverVersion = freezed,Object? openSubsonic = freezed,Object? album = freezed,Object? albumList = freezed,Object? searchResult3 = freezed,Object? similarSongs2 = freezed,Object? randomSongs = freezed,Object? song = freezed,Object? playlist = freezed,Object? playlists = freezed,Object? playQueue = freezed,Object? lyricsList = freezed,Object? scanStatus = freezed,Object? starred = freezed,Object? artist = freezed,Object? artists = freezed,Object? indexes = freezed,Object? directory = freezed,Object? genres = freezed,Object? songsByGenre = freezed,Object? error = freezed,Object? sonicMatch = freezed,Object? artistInfo2 = freezed,}) {
   return _then(_SubsonicResponseClass(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
@@ -851,7 +891,9 @@ as IndexesEntity?,directory: freezed == directory ? _self.directory : directory 
 as DirectoryEntity?,genres: freezed == genres ? _self.genres : genres // ignore: cast_nullable_to_non_nullable
 as GenresEntity?,songsByGenre: freezed == songsByGenre ? _self.songsByGenre : songsByGenre // ignore: cast_nullable_to_non_nullable
 as SongsByGenreEntity?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as ErrorEntity?,
+as ErrorEntity?,sonicMatch: freezed == sonicMatch ? _self._sonicMatch : sonicMatch // ignore: cast_nullable_to_non_nullable
+as List<SonicMatch>?,artistInfo2: freezed == artistInfo2 ? _self.artistInfo2 : artistInfo2 // ignore: cast_nullable_to_non_nullable
+as ArtistInfo2Entity?,
   ));
 }
 
@@ -1082,6 +1124,18 @@ $ErrorEntityCopyWith<$Res>? get error {
 
   return $ErrorEntityCopyWith<$Res>(_self.error!, (value) {
     return _then(_self.copyWith(error: value));
+  });
+}/// Create a copy of SubsonicResponseClass
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ArtistInfo2EntityCopyWith<$Res>? get artistInfo2 {
+    if (_self.artistInfo2 == null) {
+    return null;
+  }
+
+  return $ArtistInfo2EntityCopyWith<$Res>(_self.artistInfo2!, (value) {
+    return _then(_self.copyWith(artistInfo2: value));
   });
 }
 }

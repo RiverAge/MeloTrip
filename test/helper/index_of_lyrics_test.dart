@@ -5,10 +5,7 @@ import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 void main() {
   group('indexOfLyrics', () {
     Line createLine(int startMs) {
-      return Line(
-        start: startMs,
-        value: ['Lyric $startMs'],
-      );
+      return Line(start: startMs, value: ['Lyric $startMs']);
     }
 
     test('returns correct index for position in middle of lyrics', () {
@@ -28,10 +25,7 @@ void main() {
     });
 
     test('returns 0 for position at start', () {
-      final lyrics = [
-        createLine(0),
-        createLine(5000),
-      ];
+      final lyrics = [createLine(0), createLine(5000)];
 
       final result = indexOfLyrics(
         sortedLyrics: lyrics,
@@ -42,11 +36,7 @@ void main() {
     });
 
     test('returns last index for position after all lyrics', () {
-      final lyrics = [
-        createLine(0),
-        createLine(5000),
-        createLine(10000),
-      ];
+      final lyrics = [createLine(0), createLine(5000), createLine(10000)];
 
       final result = indexOfLyrics(
         sortedLyrics: lyrics,
@@ -66,11 +56,7 @@ void main() {
     });
 
     test('works with Duration converted to milliseconds', () {
-      final lyrics = [
-        createLine(1000),
-        createLine(2000),
-        createLine(3000),
-      ];
+      final lyrics = [createLine(1000), createLine(2000), createLine(3000)];
 
       final result1 = indexOfLyrics(
         sortedLyrics: lyrics,

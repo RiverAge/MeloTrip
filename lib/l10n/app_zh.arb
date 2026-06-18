@@ -428,4 +428,85 @@
     "fontWeightW500": "w500",
     "fontWeightW600": "w600",
     "fontWeightW700": "w700",
-    "musicBarTagline": "与旋律同行"}
+    "musicBarTagline": "与旋律同行",
+
+    "similarSongs": "相似",
+    "@similarSongs": {
+      "description": "Button text for viewing similar songs"
+    },
+    "similarSongsTitle": "与\"{title}\"相似",
+    "@similarSongsTitle": {
+      "description": "Title for similar songs page",
+      "placeholders": {
+         "title": {
+            "type": "String",
+            "example": "我的歌曲"
+         }
+      }
+    },
+    "noSimilarSongsFound": "未找到相似歌曲",
+    "@noSimilarSongsFound": {
+      "description": "Message when no similar songs are found"
+    },
+    "sonicPathTitle": "声音路径",
+    "@sonicPathTitle": {
+      "description": "Title for sonic path page"
+    },
+    "fromSong": "起点",
+    "@fromSong": {
+      "description": "Label for source song in sonic path"
+    },
+    "toSong": "终点",
+    "@toSong": {
+      "description": "Label for destination song in sonic path"
+    },
+    "generatePath": "生成路径",
+    "@generatePath": {
+      "description": "Button to generate sonic path"
+    },
+    "recommendations": "为你推荐",
+    "@recommendations": {
+      "description": "Title for recommendations section"
+    },
+    "startRadio": "电台",
+    "@startRadio": {
+      "description": "Button to start radio mode"
+    },
+    "radioPlaying": "电台模式",
+    "@radioPlaying": {
+      "description": "Indicator that radio mode is active"
+    },
+    "playSimilarQueue": "播放相似",
+    "@playSimilarQueue": {
+      "description": "Button to play similar songs queue"
+    },
+    "sonicPath": "声音路径",
+    "@sonicPath": {
+      "description": "Sonic path feature name"
+    },
+    "selectStartSong": "选择起点歌曲",
+    "@selectStartSong": {
+      "description": "Hint for selecting start song in sonic path"
+    },
+    "selectEndSong": "选择终点歌曲",
+    "@selectEndSong": {
+      "description": "Hint for selecting end song in sonic path"
+    },
+    "similarRadio": "相似电台",
+    "@similarRadio": {
+      "description": "相似电台功能名称"
+    },
+    "startSimilarRadio": "开始相似电台",
+    "@startSimilarRadio": {
+      "description": "基于当前歌曲开始相似电台"
+    },
+    "noSongsFoundForRadio": "未找到相似歌曲，无法开始电台",
+    "@noSongsFoundForRadio": {
+      "description": "未找到相似歌曲时的提示"
+    },
+
+    "similarArtists": "相似艺术家",
+    "@similarArtists": {
+      "description": "艺术家详情页相似艺术家区块标题"
+    }
+}

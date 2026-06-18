@@ -30,7 +30,8 @@ class _MockFoldersRepository extends FoldersRepository {
   }
 
   @override
-  Future<Result<List<FolderIndexEntry>, AppFailure>> tryFetchFolderIndexes() async {
+  Future<Result<List<FolderIndexEntry>, AppFailure>>
+  tryFetchFolderIndexes() async {
     fetchIndexesCalled = true;
     return Result.ok(_indexesResult);
   }
@@ -97,9 +98,7 @@ void main() {
 
   group('folderContentsProvider', () {
     test('returns folder indexes when no folder selected', () async {
-      final mockIndexes = [
-        FolderIndexEntry(id: 'folder-1', name: 'Artist A'),
-      ];
+      final mockIndexes = [FolderIndexEntry(id: 'folder-1', name: 'Artist A')];
       final mockRepository = _MockFoldersRepository();
       mockRepository.setIndexesResult(mockIndexes);
 
@@ -131,9 +130,9 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      container.read(selectedFolderProvider.notifier).set(
-            FolderIndexEntry(id: 'folder-1', name: 'Selected Folder'),
-          );
+      container
+          .read(selectedFolderProvider.notifier)
+          .set(FolderIndexEntry(id: 'folder-1', name: 'Selected Folder'));
 
       final result = await container.read(folderContentsProvider.future);
 
@@ -158,9 +157,9 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      container.read(selectedFolderProvider.notifier).set(
-            FolderIndexEntry(id: 'folder-1', name: 'Test Folder'),
-          );
+      container
+          .read(selectedFolderProvider.notifier)
+          .set(FolderIndexEntry(id: 'folder-1', name: 'Test Folder'));
 
       final result = container.read(selectedFolderProvider);
       expect(result, isNotNull);
@@ -186,7 +185,10 @@ void main() {
       expect(container.read(expandedFolderIdsProvider), contains('folder-1'));
 
       container.read(expandedFolderIdsProvider.notifier).toggle('folder-1');
-      expect(container.read(expandedFolderIdsProvider), isNot(contains('folder-1')));
+      expect(
+        container.read(expandedFolderIdsProvider),
+        isNot(contains('folder-1')),
+      );
     });
 
     test('add only adds if not present', () {

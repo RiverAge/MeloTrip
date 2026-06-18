@@ -35,9 +35,7 @@ class _FakeUserSession extends UserSession {
     currentValue = currentValue?.copyWith(
       desktopLyricsConfig: savedDesktopLyricsConfig,
     );
-    state = AsyncData(
-      UserSessionSnapshot(auth: null, config: currentValue),
-    );
+    state = AsyncData(UserSessionSnapshot(auth: null, config: currentValue));
   }
 }
 
@@ -139,10 +137,7 @@ void main() {
           enabled: false,
           clickThrough: false,
         ),
-        text: DesktopLyricsTextConfig(
-          fontSize: 34,
-          textAlign: .center,
-        ),
+        text: DesktopLyricsTextConfig(fontSize: 34, textAlign: .center),
         background: DesktopLyricsBackgroundConfig(
           opacity: 0.0,
           backgroundColor: Color(0x00010203),

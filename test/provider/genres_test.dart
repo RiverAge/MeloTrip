@@ -10,7 +10,7 @@ import 'package:melo_trip/repository/genre/genres_repository.dart';
 
 class _MockGenresRepository extends GenresRepository {
   _MockGenresRepository(this._fetchResponse, this._fetchItems)
-      : super(() async => Dio());
+    : super(() async => Dio());
 
   final SubsonicResponse? _fetchResponse;
   final List<GenreEntity> _fetchItems;
@@ -41,9 +41,7 @@ void main() {
     test('returns empty list when repository returns empty list', () async {
       final mockRepository = _MockGenresRepository(null, []);
       final container = ProviderContainer(
-        overrides: [
-          genresRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [genresRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -60,9 +58,7 @@ void main() {
       ];
       final mockRepository = _MockGenresRepository(null, mockGenres);
       final container = ProviderContainer(
-        overrides: [
-          genresRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [genresRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 
@@ -80,9 +76,7 @@ void main() {
     test('calls repository fetchGenresItems', () async {
       final mockRepository = _MockGenresRepository(null, []);
       final container = ProviderContainer(
-        overrides: [
-          genresRepositoryProvider.overrideWithValue(mockRepository),
-        ],
+        overrides: [genresRepositoryProvider.overrideWithValue(mockRepository)],
       );
       addTearDown(container.dispose);
 

@@ -22,25 +22,34 @@ void main() {
 
     test('subsonicCacheableMediaPaths contains stream and cover art', () {
       expect(subsonicCacheableMediaPaths.contains(subsonicStreamPath), isTrue);
-      expect(subsonicCacheableMediaPaths.contains(subsonicCoverArtPath), isTrue);
+      expect(
+        subsonicCacheableMediaPaths.contains(subsonicCoverArtPath),
+        isTrue,
+      );
     });
 
-    test('subsonicRequiredMediaQueryParameterNames contains required params', () {
-      expect(subsonicRequiredMediaQueryParameterNames.contains('u'), isTrue);
-      expect(subsonicRequiredMediaQueryParameterNames.contains('t'), isTrue);
-      expect(subsonicRequiredMediaQueryParameterNames.contains('s'), isTrue);
-      expect(subsonicRequiredMediaQueryParameterNames.contains('v'), isTrue);
-      expect(subsonicRequiredMediaQueryParameterNames.contains('c'), isTrue);
-      expect(subsonicRequiredMediaQueryParameterNames.contains('id'), isTrue);
-    });
+    test(
+      'subsonicRequiredMediaQueryParameterNames contains required params',
+      () {
+        expect(subsonicRequiredMediaQueryParameterNames.contains('u'), isTrue);
+        expect(subsonicRequiredMediaQueryParameterNames.contains('t'), isTrue);
+        expect(subsonicRequiredMediaQueryParameterNames.contains('s'), isTrue);
+        expect(subsonicRequiredMediaQueryParameterNames.contains('v'), isTrue);
+        expect(subsonicRequiredMediaQueryParameterNames.contains('c'), isTrue);
+        expect(subsonicRequiredMediaQueryParameterNames.contains('id'), isTrue);
+      },
+    );
 
-    test('subsonicDigestExcludedQueryParameterNames contains excluded params', () {
-      expect(subsonicDigestExcludedQueryParameterNames.contains('u'), isTrue);
-      expect(subsonicDigestExcludedQueryParameterNames.contains('t'), isTrue);
-      expect(subsonicDigestExcludedQueryParameterNames.contains('s'), isTrue);
-      expect(subsonicDigestExcludedQueryParameterNames.contains('c'), isTrue);
-      expect(subsonicDigestExcludedQueryParameterNames.contains('v'), isTrue);
-    });
+    test(
+      'subsonicDigestExcludedQueryParameterNames contains excluded params',
+      () {
+        expect(subsonicDigestExcludedQueryParameterNames.contains('u'), isTrue);
+        expect(subsonicDigestExcludedQueryParameterNames.contains('t'), isTrue);
+        expect(subsonicDigestExcludedQueryParameterNames.contains('s'), isTrue);
+        expect(subsonicDigestExcludedQueryParameterNames.contains('c'), isTrue);
+        expect(subsonicDigestExcludedQueryParameterNames.contains('v'), isTrue);
+      },
+    );
   });
 
   group('isCacheableSubsonicMediaUri', () {
@@ -95,7 +104,10 @@ void main() {
       final uri = Uri.parse('https://example.com/rest/stream?id=1&extra=value');
       final digest = buildCacheableSubsonicMediaDigest(uri);
 
-      expect(digest, equals('https://example.com/rest/stream?id=1&extra=value'));
+      expect(
+        digest,
+        equals('https://example.com/rest/stream?id=1&extra=value'),
+      );
     });
   });
 }

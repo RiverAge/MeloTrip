@@ -68,10 +68,7 @@ void main() {
           ),
           playQueueProvider.overrideWith(
             (_) async => const Result.err(
-              AppFailure(
-                type: AppFailureType.unknown,
-                message: 'skip restore',
-              ),
+              AppFailure(type: AppFailureType.unknown, message: 'skip restore'),
             ),
           ),
           initialBootstrapServiceProvider.overrideWithValue(

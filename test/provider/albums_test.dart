@@ -46,11 +46,7 @@ void main() {
     });
 
     test('copyWith preserves unchanged values', () {
-      const original = AlbumListQuery(
-        type: 'newest',
-        size: 10,
-        offset: 5,
-      );
+      const original = AlbumListQuery(type: 'newest', size: 10, offset: 5);
 
       final modified = original.copyWith(type: 'random');
 
@@ -171,32 +167,39 @@ void main() {
 
       await Future.delayed(const Duration(milliseconds: 100));
 
-      await container.read(paginatedAlbumListProvider(query).notifier).refresh();
+      await container
+          .read(paginatedAlbumListProvider(query).notifier)
+          .refresh();
 
       final snapshot = container.read(paginatedAlbumListProvider(query));
       expect(snapshot.items, hasLength(3));
     });
 
-    test('loadInitial stores typed error when repository returns Result.err', () async {
-      final container2 = ProviderContainer(
-        overrides: [
-          albumRepositoryProvider.overrideWith((ref) {
-            return _MockFailingAlbumRepository();
-          }),
-        ],
-      );
-      addTearDown(container2.dispose);
+    test(
+      'loadInitial stores typed error when repository returns Result.err',
+      () async {
+        final container2 = ProviderContainer(
+          overrides: [
+            albumRepositoryProvider.overrideWith((ref) {
+              return _MockFailingAlbumRepository();
+            }),
+          ],
+        );
+        addTearDown(container2.dispose);
 
-      const query = AlbumListQuery(type: 'newest', size: 10);
-      await container2.read(paginatedAlbumListProvider(query).notifier).loadInitial();
+        const query = AlbumListQuery(type: 'newest', size: 10);
+        await container2
+            .read(paginatedAlbumListProvider(query).notifier)
+            .loadInitial();
 
-      final snapshot = container2.read(paginatedAlbumListProvider(query));
-      expect(snapshot.items, isEmpty);
-      expect(snapshot.hasMore, isFalse);
-      expect(snapshot.error, isNotNull);
-      expect(snapshot.error?.message, 'mock-failure');
-      expect(snapshot.error?.cause, isA<AppFailure>());
-    });
+        final snapshot = container2.read(paginatedAlbumListProvider(query));
+        expect(snapshot.items, isEmpty);
+        expect(snapshot.hasMore, isFalse);
+        expect(snapshot.error, isNotNull);
+        expect(snapshot.error?.message, 'mock-failure');
+        expect(snapshot.error?.cause, isA<AppFailure>());
+      },
+    );
   });
 
   group('albumListProvider', () {

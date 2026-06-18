@@ -745,4 +745,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fontWeightW700 => 'w700';
+
+  @override
+  String get similarSongs => 'Similar';
+
+  @override
+  String similarSongsTitle(String title) {
+    return 'Similar to \"$title\"';
+  }
+
+  @override
+  String get noSimilarSongsFound => 'No similar songs found';
+
+  @override
+  String get sonicPathTitle => 'Sonic Path';
+
+  @override
+  String get fromSong => 'From';
+
+  @override
+  String get toSong => 'To';
+
+  @override
+  String get generatePath => 'Generate Path';
+
+  @override
+  String get recommendations => 'For You';
+
+  @override
+  String get startRadio => 'Radio';
+
+  @override
+  String get radioPlaying => 'Radio Mode';
+
+  @override
+  String get playSimilarQueue => 'Play Similar';
+
+  @override
+  String get sonicPath => 'Sonic Path';
+
+  @override
+  String get selectStartSong => 'Select start song';
+
+  @override
+  String get selectEndSong => 'Select end song';
+
+  @override
+  String get similarRadio => 'Similar Radio';
+
+  @override
+  String get startSimilarRadio => 'Start Similar Radio';
+
+  @override
+  String get noSongsFoundForRadio => 'No similar songs found for radio';
+
+  @override
+  String get similarArtists => 'Similar Artists';
 }

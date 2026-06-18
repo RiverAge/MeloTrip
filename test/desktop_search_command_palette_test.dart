@@ -104,9 +104,9 @@ void main() {
       ProviderScope(
         overrides: [
           sessionConfigProvider.overrideWith(fakeSessionConfigNull),
-          searchByQueryProvider('rock').overrideWith(
-            (ref) async => Result.ok(searchResponse()),
-          ),
+          searchByQueryProvider(
+            'rock',
+          ).overrideWith((ref) async => Result.ok(searchResponse())),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -125,4 +125,3 @@ void main() {
     expect(find.text('Quick Artist'), findsWidgets);
   });
 }
-

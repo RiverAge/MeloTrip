@@ -32,9 +32,7 @@ void main() {
               if (!pattern.hasMatch(line)) {
                 continue;
               }
-              violations.add(
-                '${file.path}:${index + 1}:${line.trim()}',
-              );
+              violations.add('${file.path}:${index + 1}:${line.trim()}');
             }
           }
         }

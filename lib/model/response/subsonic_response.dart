@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
+import 'package:melo_trip/model/response/artist_info2/artist_info2.dart';
 import 'package:melo_trip/model/response/error/error.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/model/response/library_index/library_index.dart';
@@ -12,6 +13,7 @@ import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/scan_status/scan_status.dart';
 import 'package:melo_trip/model/response/search_result/search_result3.dart';
 import 'package:melo_trip/model/response/similar_songs/similar_songs2.dart';
+import 'package:melo_trip/model/response/sonic_similarity/sonic_similarity.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/songs_by_genre/songs_by_gener.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
@@ -56,6 +58,15 @@ abstract class SubsonicResponseClass with _$SubsonicResponseClass {
     GenresEntity? genres,
     SongsByGenreEntity? songsByGenre,
     ErrorEntity? error,
+    // AudioMuse-AI plugin OpenSubsonic extensions
+    /// Response from getSonicSimilarTracks and findSonicPath endpoints.
+    /// Navidrome returns sonicMatch as a direct array field in the response.
+    /// Each SonicMatch contains an entry (song) and similarity score.
+    @JsonKey(name: 'sonicMatch') List<SonicMatch>? sonicMatch,
+
+    /// Response from getArtistInfo2 endpoint.
+    /// Contains similar artists based on the requested artist.
+    ArtistInfo2Entity? artistInfo2,
   }) = _SubsonicResponseClass;
 
   factory SubsonicResponseClass.fromJson(Map<String, dynamic> json) =>

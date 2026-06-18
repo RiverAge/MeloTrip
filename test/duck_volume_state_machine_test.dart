@@ -187,19 +187,13 @@ void main() {
       expect(currentVolume, equals(50.0));
 
       // Second duck begin (while already ducking)
-      action = handleDuckingBegin(
-        state: state,
-        currentVolume: currentVolume,
-      );
+      action = handleDuckingBegin(state: state, currentVolume: currentVolume);
       state = action.nextState;
       currentVolume = action.targetVolume;
       expect(currentVolume, equals(50.0)); // Still 50, not 25
 
       // Duck end
-      action = handleDuckingEnd(
-        state: state,
-        currentVolume: currentVolume,
-      );
+      action = handleDuckingEnd(state: state, currentVolume: currentVolume);
       state = action.nextState;
       currentVolume = action.targetVolume;
       expect(currentVolume, equals(100.0)); // Restoring to original
@@ -228,10 +222,7 @@ void main() {
       expect(currentVolume, equals(50.0));
 
       // Duck end (starts restore)
-      action = handleDuckingEnd(
-        state: state,
-        currentVolume: currentVolume,
-      );
+      action = handleDuckingEnd(state: state, currentVolume: currentVolume);
       state = action.nextState;
       expect(state.duckingState, DuckingState.restoring);
 
@@ -239,10 +230,7 @@ void main() {
       currentVolume = 75.0;
 
       // Another duck begin during restore
-      action = handleDuckingBegin(
-        state: state,
-        currentVolume: currentVolume,
-      );
+      action = handleDuckingBegin(state: state, currentVolume: currentVolume);
       state = action.nextState;
       currentVolume = action.targetVolume;
 
@@ -251,10 +239,7 @@ void main() {
       expect(state.volumeBeforeDucking, equals(100.0));
 
       // Final duck end
-      action = handleDuckingEnd(
-        state: state,
-        currentVolume: currentVolume,
-      );
+      action = handleDuckingEnd(state: state, currentVolume: currentVolume);
       state = action.nextState;
       currentVolume = action.targetVolume;
 

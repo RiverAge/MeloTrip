@@ -4,13 +4,7 @@ import 'package:melo_trip/widget/guesture_hint.dart';
 
 void main() {
   testWidgets('GestureHint renders correctly', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: GestureHint(),
-        ),
-      ),
-    );
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: GestureHint())));
 
     expect(find.byType(GestureHint), findsOneWidget);
     expect(find.byType(Container), findsOneWidget);
@@ -20,13 +14,7 @@ void main() {
   });
 
   testWidgets('GestureHint has correct dimensions', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: GestureHint(),
-        ),
-      ),
-    );
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: GestureHint())));
 
     final container = tester.widget<Container>(find.byType(Container));
     expect(container.constraints?.maxHeight, equals(5.0));
@@ -34,13 +22,7 @@ void main() {
   });
 
   testWidgets('GestureHint has rounded border', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: GestureHint(),
-        ),
-      ),
-    );
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: GestureHint())));
 
     final container = tester.widget<Container>(find.byType(Container));
     final decoration = container.decoration as BoxDecoration;

@@ -42,10 +42,7 @@ void main() {
       final mockResponse = SubsonicResponse(
         subsonicResponse: SubsonicResponseClass(
           status: 'ok',
-          playQueue: PlayQueueEntity(
-            current: 'song-1',
-            position: 100,
-          ),
+          playQueue: PlayQueueEntity(current: 'song-1', position: 100),
         ),
       );
       final mockRepository = _MockPlayQueueRepository(mockResponse);
@@ -61,7 +58,10 @@ void main() {
       expect(result, isNotNull);
       expect(result.isOk, isTrue);
       expect(result.data?.subsonicResponse?.status, equals('ok'));
-      expect(result.data?.subsonicResponse?.playQueue?.current, equals('song-1'));
+      expect(
+        result.data?.subsonicResponse?.playQueue?.current,
+        equals('song-1'),
+      );
       expect(mockRepository.fetchCalled, isTrue);
     });
   });

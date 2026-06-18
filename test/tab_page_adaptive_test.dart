@@ -176,4 +176,3 @@ void main() {
     expect(pageRoute.reverseTransitionDuration, Duration.zero);
   });
 }
-

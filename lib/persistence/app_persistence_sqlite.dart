@@ -49,13 +49,15 @@ class SqliteAppPersistence implements AppPersistence {
     final path = join(dbPath, 'melo_trip.db');
     final database = await openDatabase(
       path,
-      version: 2,
+      version: 5,
       onCreate: (Database db, int version) async {
         await db.execute(_createPlayHistorySql);
         await db.execute(_createUserConfigSql);
         await db.execute(_createCurrentUserSql);
+        // Note: server_capability table removed - Sonic API is always available on Navidrome 0.61+
       },
       onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        // User config migrations
         if (oldVersion < 2) {
           await db.execute(
             'ALTER TABLE user_config ADD COLUMN desktop_lyrics_config TEXT',
@@ -63,6 +65,11 @@ class SqliteAppPersistence implements AppPersistence {
           await db.execute(
             'ALTER TABLE user_config ADD COLUMN shuffle INTEGER DEFAULT 0',
           );
+        }
+
+        // Drop deprecated server_capability table if it exists (cleanup from older versions)
+        if (oldVersion < 5) {
+          await db.execute('DROP TABLE IF EXISTS server_capability');
         }
       },
     );

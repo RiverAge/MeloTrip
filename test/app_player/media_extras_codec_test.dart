@@ -66,9 +66,7 @@ void main() {
     test('readMediaArtUri returns null for invalid uri payloads', () {
       final media = Media(
         'https://proxy.example/rest/stream?id=invalid-art',
-        extras: const <String, dynamic>{
-          mediaExtraArtUri: 'http://[invalid',
-        },
+        extras: const <String, dynamic>{mediaExtraArtUri: 'http://[invalid'},
       );
 
       expect(readMediaArtUri(media), isNull);

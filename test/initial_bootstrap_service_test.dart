@@ -129,27 +129,32 @@ void main() {
       expect(result, InitialBootstrapResult.loggedIn);
       expect(desktopLyricsRestored, isTrue);
     },
-    variant: const TargetPlatformVariant(<TargetPlatform>{TargetPlatform.windows}),
+    variant: const TargetPlatformVariant(<TargetPlatform>{
+      TargetPlatform.windows,
+    }),
   );
 
-  test('bootstrap does not restore desktop lyrics when auth is missing', () async {
-    var desktopLyricsRestored = false;
+  test(
+    'bootstrap does not restore desktop lyrics when auth is missing',
+    () async {
+      var desktopLyricsRestored = false;
 
-    final service = InitialBootstrapService(
-      loadAuthUser: () async => null,
-      loadConfig: () async => null,
-      resolveCachePath: () async => '/tmp/cache',
-      startCacheServer: (_, _) {},
-      restorePlaylistMode: (_) async {},
-      restoreShuffle: (_) async {},
-      restoreDesktopLyricsConfig: () async {
-        desktopLyricsRestored = true;
-      },
-    );
+      final service = InitialBootstrapService(
+        loadAuthUser: () async => null,
+        loadConfig: () async => null,
+        resolveCachePath: () async => '/tmp/cache',
+        startCacheServer: (_, _) {},
+        restorePlaylistMode: (_) async {},
+        restoreShuffle: (_) async {},
+        restoreDesktopLyricsConfig: () async {
+          desktopLyricsRestored = true;
+        },
+      );
 
-    final result = await service.bootstrap();
+      final result = await service.bootstrap();
 
-    expect(result, InitialBootstrapResult.loggedOut);
-    expect(desktopLyricsRestored, isFalse);
-  });
+      expect(result, InitialBootstrapResult.loggedOut);
+      expect(desktopLyricsRestored, isFalse);
+    },
+  );
 }

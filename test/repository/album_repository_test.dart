@@ -52,7 +52,10 @@ void main() {
 
     test('fetchAlbumListResponse sends correct query parameters', () async {
       mockAdapter.setResponse({
-        'subsonic-response': {'status': 'ok', 'albumList': {'album': []}},
+        'subsonic-response': {
+          'status': 'ok',
+          'albumList': {'album': []},
+        },
       });
 
       final repository = container.read(albumRepositoryProvider);
@@ -107,17 +110,20 @@ void main() {
       expect(result[1].id, 'album-2');
     });
 
-    test('tryFetchAlbumListResponse returns Result.err for empty payload', () async {
-      mockAdapter.setResponse(null);
+    test(
+      'tryFetchAlbumListResponse returns Result.err for empty payload',
+      () async {
+        mockAdapter.setResponse(null);
 
-      final repository = container.read(albumRepositoryProvider);
-      final result = await repository.tryFetchAlbumListResponse(
-        query: const AlbumListQuery(type: 'newest'),
-      );
+        final repository = container.read(albumRepositoryProvider);
+        final result = await repository.tryFetchAlbumListResponse(
+          query: const AlbumListQuery(type: 'newest'),
+        );
 
-      expect(result.isErr, isTrue);
-      expect(result.error, isNotNull);
-    });
+        expect(result.isErr, isTrue);
+        expect(result.error, isNotNull);
+      },
+    );
   });
 }
 
@@ -149,13 +155,17 @@ class MockApiAdapter implements HttpClientAdapter {
       return ResponseBody.fromBytes(
         utf8.encode(''),
         200,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
       );
     }
     return ResponseBody.fromBytes(
       utf8.encode(jsonEncode(_response)),
       200,
-      headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
     );
   }
 }

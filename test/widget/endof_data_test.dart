@@ -9,9 +9,7 @@ void main() {
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: EndofData(),
-        ),
+        home: Scaffold(body: EndofData()),
       ),
     );
 
@@ -23,15 +21,11 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: ThemeData(
-          colorScheme: ColorScheme.light(
-            onSurfaceVariant: Colors.green,
-          ),
+          colorScheme: ColorScheme.light(onSurfaceVariant: Colors.green),
         ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: EndofData(),
-        ),
+        home: Scaffold(body: EndofData()),
       ),
     );
 

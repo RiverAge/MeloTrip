@@ -6,12 +6,7 @@ void main() {
   testWidgets('Rating renders 5 stars', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: Rating(
-            rating: 0,
-            onRating: (_) {},
-          ),
-        ),
+        home: Scaffold(body: Rating(rating: 0, onRating: (_) {})),
       ),
     );
 
@@ -24,12 +19,7 @@ void main() {
   testWidgets('Rating displays correct star icons', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: Rating(
-            rating: 3,
-            onRating: (_) {},
-          ),
-        ),
+        home: Scaffold(body: Rating(rating: 3, onRating: (_) {})),
       ),
     );
 
@@ -47,12 +37,7 @@ void main() {
   testWidgets('Rating handles hover interaction', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: Rating(
-            rating: 0,
-            onRating: (_) {},
-          ),
-        ),
+        home: Scaffold(body: Rating(rating: 0, onRating: (_) {})),
       ),
     );
 
@@ -65,10 +50,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: Rating(
-            rating: 0,
-            onRating: (value) => selectedRating = value,
-          ),
+          body: Rating(rating: 0, onRating: (value) => selectedRating = value),
         ),
       ),
     );
@@ -79,12 +61,7 @@ void main() {
   testWidgets('Rating handles null rating', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: Rating(
-            rating: null,
-            onRating: (_) {},
-          ),
-        ),
+        home: Scaffold(body: Rating(rating: null, onRating: (_) {})),
       ),
     );
 
@@ -95,11 +72,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: Rating(
-            rating: 2,
-            onRating: (_) {},
-            color: Colors.red,
-          ),
+          body: Rating(rating: 2, onRating: (_) {}, color: Colors.red),
         ),
       ),
     );

@@ -4,11 +4,7 @@ import 'package:melo_trip/model/response/genre/genre.dart';
 void main() {
   group('GenreEntity', () {
     test('fromJson creates instance with correct values', () {
-      final json = {
-        'value': 'Rock',
-        'songCount': 100,
-        'albumCount': 10,
-      };
+      final json = {'value': 'Rock', 'songCount': 100, 'albumCount': 10};
 
       final entity = GenreEntity.fromJson(json);
 
@@ -34,10 +30,7 @@ void main() {
         albumCount: 10,
       );
 
-      final copy = original.copyWith(
-        songCount: 200,
-        albumCount: 20,
-      );
+      final copy = original.copyWith(songCount: 200, albumCount: 20);
 
       expect(copy.value, 'Rock');
       expect(copy.songCount, 200);
@@ -71,13 +64,9 @@ void main() {
     });
 
     test('copyWith creates new instance with updated values', () {
-      final original = GenresEntity(
-        genre: [GenreEntity(value: 'Rock')],
-      );
+      final original = GenresEntity(genre: [GenreEntity(value: 'Rock')]);
 
-      final copy = original.copyWith(
-        genre: [GenreEntity(value: 'Pop')],
-      );
+      final copy = original.copyWith(genre: [GenreEntity(value: 'Pop')]);
 
       expect(copy.genre!.first.value, 'Pop');
     });
