@@ -35,26 +35,17 @@ class _DesktopVolumeBar extends ConsumerWidget {
                     minWidth: 84,
                     maxWidth: 140,
                   ),
-                  child: SliderTheme(
-                    data: SliderThemeData(
-                      trackHeight: 2,
-                      activeTrackColor: Theme.of(context).colorScheme.primary,
-                      inactiveTrackColor: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.12),
-                      overlayShape: SliderComponentShape.noOverlay,
-                      thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 4,
-                        elevation: 0,
-                        pressedElevation: 0,
-                      ),
-                    ),
-                    child: Slider(
-                      value: volume,
-                      min: 0,
-                      max: 100,
-                      onChanged: (v) => player?.setVolume(v),
-                    ),
+                  child: AppLinearSlider(
+                    value: volume.clamp(0.0, 100.0).toDouble(),
+                    min: 0,
+                    max: 100,
+                    trackHeight: 2,
+                    thumbRadius: 4,
+                    activeColor: Theme.of(context).colorScheme.primary,
+                    inactiveColor: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.12),
+                    onChanged: (value) => player?.setVolume(value),
                   ),
                 ),
               ],

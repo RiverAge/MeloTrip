@@ -8,6 +8,7 @@ import 'package:melo_trip/pages/mobile/playing/playing_page.dart';
 import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/widget/app_linear_slider.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/guesture_hint.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
@@ -218,25 +219,21 @@ class _MusicBarState extends State<MusicBar> {
       loading: (_) => const SizedBox.shrink(),
       provider: player.volumeStream,
       builder: (context, data) {
+        final double volume = (data as double?) ?? 0.0;
         return Row(
           mainAxisSize: .min,
           children: [
             SizedBox(width: 10),
             Icon(Icons.volume_up, size: 25),
-            SliderTheme(
-              data: SliderThemeData(
-                trackHeight: 2,
-                overlayShape: SliderComponentShape.noOverlay,
-                thumbShape: SliderComponentShape.noOverlay,
-              ),
-              child: Slider(
-                value: data,
-                min: 0.0,
-                max: 100.0,
-                onChanged: (value) {
-                  player.setVolume(value);
-                },
-              ),
+            AppLinearSlider(
+              value: volume.clamp(0.0, 100.0).toDouble(),
+              min: 0,
+              max: 100,
+              trackHeight: 2,
+              thumbRadius: 0,
+              onChanged: (value) {
+                player.setVolume(value);
+              },
             ),
           ],
         );

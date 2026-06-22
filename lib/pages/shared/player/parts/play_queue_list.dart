@@ -106,7 +106,8 @@ class _PlayQueueListItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final currentSong = songs[index];
     final isCurrent = currentPlayingIndex == index;
-    final artist = (currentSong.displayArtist ?? currentSong.artist ?? '').trim();
+    final artist = (currentSong.displayArtist ?? currentSong.artist ?? '')
+        .trim();
     final album = (currentSong.album ?? '').trim();
     final subtitle = [artist, album].where((it) => it.isNotEmpty).join(' - ');
     final tile = ListTile(
@@ -192,26 +193,20 @@ class _PlayQueueListItem extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: isCurrent
-              ? colorScheme.primary.withValues(alpha: 0.08)
-              : colorScheme.surfaceContainerHighest.withValues(alpha: 0.62),
+      child: Material(
+        color: isCurrent
+            ? colorScheme.primary.withValues(alpha: 0.08)
+            : colorScheme.surfaceContainerHighest.withValues(alpha: 0.62),
+        clipBehavior: .antiAlias,
+        elevation: isCurrent ? 2 : 0,
+        shadowColor: colorScheme.primary.withValues(alpha: 0.16),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
+          side: BorderSide(
             color: isCurrent
                 ? colorScheme.primary.withValues(alpha: 0.28)
                 : colorScheme.outlineVariant.withValues(alpha: 0.18),
           ),
-          boxShadow: isCurrent
-              ? [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.08),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
-                  ),
-                ]
-              : null,
         ),
         child: tile,
       ),

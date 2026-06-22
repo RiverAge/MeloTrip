@@ -62,39 +62,33 @@ class _SettingSliderRowState extends State<SettingSliderRow> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      trackHeight: 4,
-                      overlayShape: const RoundSliderOverlayShape(
-                        overlayRadius: 14,
-                      ),
-                    ),
-                    child: Slider(
-                      value: _displayValue,
-                      min: widget.min,
-                      max: widget.max,
-                      onChangeStart: (_) {
-                        setState(() {
-                          _isDragging = true;
-                        });
-                      },
-                      onChangeEnd: (_) {
-                        final ValueChanged<double>? onSubmitted =
-                            widget.onSubmitted;
-                        setState(() {
-                          _isDragging = false;
-                        });
-                        if (onSubmitted != null) {
-                          onSubmitted(_displayValue);
-                        }
-                      },
-                      onChanged: (double value) {
-                        setState(() {
-                          _displayValue = value;
-                        });
-                        widget.onPreviewChanged?.call(value);
-                      },
-                    ),
+                  child: AppLinearSlider(
+                    value: _displayValue.clamp(widget.min, widget.max),
+                    min: widget.min,
+                    max: widget.max,
+                    trackHeight: 4,
+                    thumbRadius: 6,
+                    onChangeStart: (_) {
+                      setState(() {
+                        _isDragging = true;
+                      });
+                    },
+                    onChangeEnd: (_) {
+                      final ValueChanged<double>? onSubmitted =
+                          widget.onSubmitted;
+                      setState(() {
+                        _isDragging = false;
+                      });
+                      if (onSubmitted != null) {
+                        onSubmitted(_displayValue);
+                      }
+                    },
+                    onChanged: (double value) {
+                      setState(() {
+                        _displayValue = value;
+                      });
+                      widget.onPreviewChanged?.call(value);
+                    },
                   ),
                 ),
                 const SizedBox(width: 14),

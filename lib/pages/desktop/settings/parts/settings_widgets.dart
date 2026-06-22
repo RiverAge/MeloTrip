@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melo_trip/widget/app_linear_slider.dart';
 
 part 'settings_widgets/setting_color_row.dart';
 part 'settings_widgets/setting_section_components.dart';

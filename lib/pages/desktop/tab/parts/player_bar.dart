@@ -21,7 +21,7 @@ class _DesktopPlayerBar extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.fromLTRB(12, 20, 12, 20),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       child: AsyncValueBuilder(
         provider: appPlayerHandlerProvider,
         builder: (context, player, _) {

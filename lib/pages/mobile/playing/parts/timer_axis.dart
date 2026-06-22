@@ -24,39 +24,30 @@ class _TimerAxisState extends State<_TimerAxis> {
 
     return Column(
       children: [
-        SliderTheme(
-          data: const SliderThemeData(
-            padding: EdgeInsets.only(left: 25, right: 25, top: 4),
-            trackHeight: 4.0,
-            thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: 6.0,
-              pressedElevation: 9.0,
-            ),
-            overlayShape: RoundSliderOverlayShape(overlayRadius: 16.0),
-            trackShape: RoundedRectSliderTrackShape(),
-          ),
-          child: Slider(
-            onChangeStart: (val) {
-              setState(() {
-                _isSliding = true;
-                _slidigValue = val;
-              });
-            },
-            onChangeEnd: (val) async {
-              await player.seek(Duration(seconds: (sTotal * val).toInt()));
-              setState(() {
-                _isSliding = false;
-                _slidigValue = val;
-              });
-            },
-            onChanged: (val) {
-              setState(() {
-                _slidigValue = val;
-              });
-            },
-            secondaryTrackValue: sBufferPercent > 1 ? 1 : sBufferPercent,
-            value: effectiveValue > 1 ? 1 : effectiveValue,
-          ),
+        AppLinearSlider(
+          value: effectiveValue.clamp(0.0, 1.0).toDouble(),
+          secondaryValue: sBufferPercent.clamp(0.0, 1.0).toDouble(),
+          padding: const EdgeInsets.only(left: 25, right: 25, top: 4),
+          trackHeight: 4,
+          thumbRadius: 6,
+          onChangeStart: (val) {
+            setState(() {
+              _isSliding = true;
+              _slidigValue = val;
+            });
+          },
+          onChangeEnd: (val) async {
+            await player.seek(Duration(seconds: (sTotal * val).toInt()));
+            setState(() {
+              _isSliding = false;
+              _slidigValue = val;
+            });
+          },
+          onChanged: (val) {
+            setState(() {
+              _slidigValue = val;
+            });
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

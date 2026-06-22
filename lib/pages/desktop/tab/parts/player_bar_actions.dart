@@ -45,6 +45,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: .end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   onPressed: current == null

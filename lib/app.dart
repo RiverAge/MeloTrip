@@ -23,6 +23,9 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey();
+  static const TooltipThemeData _tooltipTheme = TooltipThemeData(
+    waitDuration: Duration(milliseconds: 500),
+  );
   final bool _enableBackgroundModeOptimization =
       !kIsWeb &&
       (defaultTargetPlatform == .android || defaultTargetPlatform == .iOS);
@@ -75,9 +78,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   void _showGlobalErrorMessage({required AppErrorEvent event}) {
     _scaffoldMessengerKey.currentState?.showSnackBar(
-      SnackBar(
-        content: Text(_resolveGlobalErrorMessage(event)),
-      ),
+      SnackBar(content: Text(_resolveGlobalErrorMessage(event))),
     );
   }
 
@@ -102,6 +103,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       navigatorObservers: [observer],
       theme: ThemeData(
         useMaterial3: true,
+        tooltipTheme: _tooltipTheme,
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: seedColor,
@@ -111,6 +113,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       locale: config?.locale,
       darkTheme: ThemeData(
         useMaterial3: true,
+        tooltipTheme: _tooltipTheme,
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: seedColor,

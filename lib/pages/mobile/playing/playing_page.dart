@@ -14,6 +14,7 @@ import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
 import 'package:melo_trip/provider/sonic_similarity/sonic_similarity.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
+import 'package:melo_trip/widget/app_linear_slider.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';

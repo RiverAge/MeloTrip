@@ -60,26 +60,19 @@ class _DesktopProgressBar extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: SliderTheme(
-                    data: SliderThemeData(
-                      activeTrackColor: Theme.of(context).colorScheme.primary,
-                      inactiveTrackColor: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.25),
-                      overlayShape: SliderComponentShape.noOverlay,
-                      trackHeight: 4.2,
-                      thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 6.5,
-                      ),
-                    ),
-                    child: Slider(
-                      min: 0,
-                      max: maxSec == 0 ? 1 : maxSec,
-                      value: maxSec == 0 ? 0 : posSec,
-                      onChanged: (value) {
-                        player.seek(Duration(seconds: value.round()));
-                      },
-                    ),
+                  child: AppLinearSlider(
+                    min: 0,
+                    max: maxSec == 0 ? 1 : maxSec,
+                    value: maxSec == 0 ? 0 : posSec,
+                    trackHeight: 4.2,
+                    thumbRadius: 6.5,
+                    activeColor: Theme.of(context).colorScheme.primary,
+                    inactiveColor: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.25),
+                    onChanged: (value) {
+                      player.seek(Duration(seconds: value.round()));
+                    },
                   ),
                 ),
                 ConstrainedBox(
