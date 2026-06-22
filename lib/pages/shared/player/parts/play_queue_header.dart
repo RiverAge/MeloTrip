@@ -38,11 +38,14 @@ class _PlayQueueHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: _PlayQueueTitle(variant: variant, player: player)),
+          Expanded(
+            child: _PlayQueueTitle(variant: variant, player: player),
+          ),
           Container(
             decoration: BoxDecoration(
-              color: colorScheme.surface
-                  .withValues(alpha: _isDesktop ? 0.88 : 0.92),
+              color: colorScheme.surface.withValues(
+                alpha: _isDesktop ? 0.88 : 0.92,
+              ),
               borderRadius: BorderRadius.circular(999),
               border: Border.all(
                 color: colorScheme.outlineVariant.withValues(
@@ -101,9 +104,12 @@ class _ClearQueueButton extends StatelessWidget {
             if (closeAfterClear) {
               onClose?.call();
             }
-            messenger.showSnackBar(
-              SnackBar(
-                duration: const Duration(seconds: 6),
+            const snackBarDuration = Duration(seconds: 6);
+            showAutoClosingSnackBar(
+              messenger,
+              dismissAfter: snackBarDuration,
+              snackBar: SnackBar(
+                duration: snackBarDuration,
                 content: Text(l10n.playQueueCleared),
                 action: SnackBarAction(
                   label: l10n.revoke,

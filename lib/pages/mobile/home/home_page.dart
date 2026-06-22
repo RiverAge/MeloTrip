@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage>
         slivers: [
           SliverAppBar(
             floating: true,
-            pinned: false,
+            pinned: true,
             snap: true,
             expandedHeight: 120.0,
             flexibleSpace: FlexibleSpaceBar(

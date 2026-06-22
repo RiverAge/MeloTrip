@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
@@ -15,6 +17,27 @@ part 'parts/play_queue_controls.dart';
 part 'parts/play_queue_list.dart';
 
 enum PlayQueuePanelVariant { mobile, desktop }
+
+@visibleForTesting
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
+showAutoClosingSnackBar(
+  ScaffoldMessengerState messenger, {
+  required SnackBar snackBar,
+  required Duration dismissAfter,
+}) {
+  final controller = messenger.showSnackBar(snackBar);
+  // SnackBars with actions can stay open under accessible navigation settings.
+  var isClosed = false;
+  unawaited(controller.closed.whenComplete(() => isClosed = true));
+  unawaited(
+    Future<void>.delayed(dismissAfter, () {
+      if (!isClosed && messenger.mounted) {
+        controller.close();
+      }
+    }),
+  );
+  return controller;
+}
 
 double? computePlayQueueJumpOffset({
   required int index,
