@@ -466,7 +466,13 @@ final class RecommendationsProvider
   /// If getSonicSimilarTracks is unavailable, returns empty list.
   RecommendationsProvider._({
     required RecommendationsFamily super.from,
-    required ({int limit, List<String>? seedSongIds}) super.argument,
+    required ({
+      int limit,
+      List<String>? seedSongIds,
+      List<String>? excludedSongIds,
+      int refreshNonce,
+    })
+    super.argument,
   }) : super(
          retry: null,
          name: r'recommendationsProvider',
@@ -500,7 +506,7 @@ final class RecommendationsProvider
   }
 }
 
-String _$recommendationsHash() => r'20915105262d077af2da3db3693963beaca3ab2c';
+String _$recommendationsHash() => r'48742dbf09e850d57c568d5868786104621af1cc';
 
 /// Provider for client-side recommendations.
 ///
@@ -525,7 +531,12 @@ final class RecommendationsFamily extends $Family
           AsyncValue<List<SongEntity>>,
           List<SongEntity>,
           FutureOr<List<SongEntity>>,
-          ({int limit, List<String>? seedSongIds})
+          ({
+            int limit,
+            List<String>? seedSongIds,
+            List<String>? excludedSongIds,
+            int refreshNonce,
+          })
         > {
   RecommendationsFamily._()
     : super(
@@ -552,11 +563,20 @@ final class RecommendationsFamily extends $Family
   /// IMPORTANT: Does NOT call getSimilarSongs2.
   /// If getSonicSimilarTracks is unavailable, returns empty list.
 
-  RecommendationsProvider call({int limit = 20, List<String>? seedSongIds}) =>
-      RecommendationsProvider._(
-        argument: (limit: limit, seedSongIds: seedSongIds),
-        from: this,
-      );
+  RecommendationsProvider call({
+    int limit = 20,
+    List<String>? seedSongIds,
+    List<String>? excludedSongIds,
+    int refreshNonce = 0,
+  }) => RecommendationsProvider._(
+    argument: (
+      limit: limit,
+      seedSongIds: seedSongIds,
+      excludedSongIds: excludedSongIds,
+      refreshNonce: refreshNonce,
+    ),
+    from: this,
+  );
 
   @override
   String toString() => r'recommendationsProvider';
@@ -579,11 +599,25 @@ final class RecommendationsFamily extends $Family
 /// If getSonicSimilarTracks is unavailable, returns empty list.
 
 abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
-  late final _$args = ref.$arg as ({int limit, List<String>? seedSongIds});
+  late final _$args =
+      ref.$arg
+          as ({
+            int limit,
+            List<String>? seedSongIds,
+            List<String>? excludedSongIds,
+            int refreshNonce,
+          });
   int get limit => _$args.limit;
   List<String>? get seedSongIds => _$args.seedSongIds;
+  List<String>? get excludedSongIds => _$args.excludedSongIds;
+  int get refreshNonce => _$args.refreshNonce;
 
-  FutureOr<List<SongEntity>> build({int limit = 20, List<String>? seedSongIds});
+  FutureOr<List<SongEntity>> build({
+    int limit = 20,
+    List<String>? seedSongIds,
+    List<String>? excludedSongIds,
+    int refreshNonce = 0,
+  });
   @$mustCallSuper
   @override
   void runBuild() {
@@ -599,7 +633,12 @@ abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
             >;
     element.handleCreate(
       ref,
-      () => build(limit: _$args.limit, seedSongIds: _$args.seedSongIds),
+      () => build(
+        limit: _$args.limit,
+        seedSongIds: _$args.seedSongIds,
+        excludedSongIds: _$args.excludedSongIds,
+        refreshNonce: _$args.refreshNonce,
+      ),
     );
   }
 }

@@ -11,6 +11,7 @@ class _ForYouRecommendations extends ConsumerStatefulWidget {
 class _ForYouRecommendationsState
     extends ConsumerState<_ForYouRecommendations> {
   late final ScrollController _scrollController;
+  bool _isRefreshing = false;
 
   @override
   void initState() {
@@ -24,11 +25,25 @@ class _ForYouRecommendationsState
     super.dispose();
   }
 
-  void _refreshRecommendations() {
+  Future<void> _refreshRecommendations(List<SongEntity> currentSongs) async {
+    if (_isRefreshing) {
+      return;
+    }
     if (_scrollController.hasClients) {
       _scrollController.jumpTo(0);
     }
-    ref.invalidate(forYouRecommendationsProvider);
+    setState(() => _isRefreshing = true);
+    ref
+        .read(forYouRecommendationRefreshProvider.notifier)
+        .requestRefresh(currentSongs);
+
+    try {
+      await ref.read(forYouRecommendationsProvider.future);
+    } finally {
+      if (mounted) {
+        setState(() => _isRefreshing = false);
+      }
+    }
   }
 
   @override
@@ -62,12 +77,22 @@ class _ForYouRecommendationsState
                   ),
                   IconButton(
                     tooltip: l10n.refreshRecommendations,
-                    onPressed: _refreshRecommendations,
-                    icon: Icon(
-                      Icons.refresh_rounded,
-                      size: 20,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                    onPressed: _isRefreshing
+                        ? null
+                        : () => _refreshRecommendations(songs),
+                    icon: _isRefreshing
+                        ? SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          )
+                        : Icon(
+                            Icons.refresh_rounded,
+                            size: 20,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                   ),
                   // Play all button
                   TextButton.icon(

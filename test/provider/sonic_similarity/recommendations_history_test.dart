@@ -37,6 +37,37 @@ void main() {
     expect(recommendations.map((song) => song.id).toSet(), {'new-1', 'new-2'});
     expect(repository.requestedCounts.single, 50);
   });
+
+  test('recommendations never fallback to explicitly excluded songs', () async {
+    final repository = _FakeSonicSimilarityRepository(
+      songs: [
+        SongEntity(id: 'shown-1', title: 'Shown 1'),
+        SongEntity(id: 'shown-2', title: 'Shown 2'),
+      ],
+    );
+    final container = ProviderContainer(
+      overrides: [
+        sonicSimilarityRepositoryProvider.overrideWithValue(repository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    container.read(recentRecommendationHistoryProvider.notifier).record([
+      SongEntity(id: 'shown-1', title: 'Shown 1'),
+      SongEntity(id: 'shown-2', title: 'Shown 2'),
+    ]);
+
+    final recommendations = await container.read(
+      recommendationsProvider(
+        limit: 2,
+        seedSongIds: ['seed'],
+        excludedSongIds: ['shown-1', 'shown-2'],
+        refreshNonce: 1,
+      ).future,
+    );
+
+    expect(recommendations, isEmpty);
+  });
 }
 
 class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {

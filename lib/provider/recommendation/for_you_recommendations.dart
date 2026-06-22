@@ -5,6 +5,42 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'for_you_recommendations.g.dart';
 
+class ForYouRecommendationRefreshState {
+  const ForYouRecommendationRefreshState({
+    this.nonce = 0,
+    this.excludedSongIds = const <String>[],
+  });
+
+  final int nonce;
+  final List<String> excludedSongIds;
+}
+
+@Riverpod(keepAlive: true)
+class ForYouRecommendationRefresh extends _$ForYouRecommendationRefresh {
+  @override
+  ForYouRecommendationRefreshState build() {
+    return const ForYouRecommendationRefreshState();
+  }
+
+  void requestRefresh(Iterable<SongEntity> currentSongs) {
+    final excludedIds = <String>[];
+    final seenIds = <String>{};
+
+    for (final song in currentSongs) {
+      final id = song.id;
+      if (id == null || id.isEmpty || !seenIds.add(id)) {
+        continue;
+      }
+      excludedIds.add(id);
+    }
+
+    state = ForYouRecommendationRefreshState(
+      nonce: state.nonce + 1,
+      excludedSongIds: excludedIds,
+    );
+  }
+}
+
 /// Provider for "For You" recommendations on the home page.
 ///
 /// Uses aggregated user taste seeds and calls the existing
@@ -16,6 +52,7 @@ part 'for_you_recommendations.g.dart';
 /// - Does NOT cache results to local database.
 @riverpod
 Future<List<SongEntity>> forYouRecommendations(Ref ref) async {
+  final refresh = ref.watch(forYouRecommendationRefreshProvider);
   final seeds = await ref.watch(userTasteSeedsProvider.future);
 
   if (seeds.isEmpty) {
@@ -25,7 +62,12 @@ Future<List<SongEntity>> forYouRecommendations(Ref ref) async {
   final seedSongIds = seeds.map((seed) => seed.songId).toList();
 
   final recommendations = await ref.watch(
-    recommendationsProvider(limit: 20, seedSongIds: seedSongIds).future,
+    recommendationsProvider(
+      limit: 20,
+      seedSongIds: seedSongIds,
+      excludedSongIds: refresh.excludedSongIds,
+      refreshNonce: refresh.nonce,
+    ).future,
   );
 
   return recommendations;

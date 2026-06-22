@@ -87,6 +87,23 @@ void main() {
       },
     );
 
+    test('refresh request stores current recommendation ids', () {
+      final notifier = container.read(
+        forYouRecommendationRefreshProvider.notifier,
+      );
+
+      notifier.requestRefresh([
+        SongEntity(id: 'song-1', title: 'Song 1'),
+        SongEntity(id: 'song-1', title: 'Song 1 Duplicate'),
+        SongEntity(id: null, title: 'No ID'),
+        SongEntity(id: 'song-2', title: 'Song 2'),
+      ]);
+
+      final state = container.read(forYouRecommendationRefreshProvider);
+      expect(state.nonce, 1);
+      expect(state.excludedSongIds, ['song-1', 'song-2']);
+    });
+
     test('uses playlist seeds when favorite songs are unavailable', () async {
       mockFavoriteResult = Result.ok(
         SubsonicResponse(

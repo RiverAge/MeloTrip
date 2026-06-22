@@ -151,12 +151,17 @@ class Recommendations extends _$Recommendations {
   Future<List<SongEntity>> build({
     int limit = 20,
     List<String>? seedSongIds,
+    List<String>? excludedSongIds,
+    int refreshNonce = 0,
   }) async {
     final List<SongEntity> recommendations = [];
     final Set<String> seenIds = {};
     final Map<String, int> artistCount = {};
     final Map<String, int> albumCount = {};
     final recentIds = ref.read(recentRecommendationHistoryProvider).toSet();
+    final excludedIds = excludedSongIds == null
+        ? const <String>{}
+        : excludedSongIds.where((id) => id.isNotEmpty).toSet();
     final fallbackCandidates = <SongEntity>[];
     final fallbackSeenIds = <String>{};
 
@@ -187,6 +192,7 @@ class Recommendations extends _$Recommendations {
             final id = song.id;
             if (id == null || id.isEmpty) continue;
             if (seenIds.contains(id) || seeds.contains(id)) continue;
+            if (excludedIds.contains(id)) continue;
 
             if (recentIds.contains(id)) {
               if (fallbackSeenIds.add(id)) {

@@ -5,6 +5,7 @@ class _SectionHeader extends StatelessWidget {
     required this.title,
     this.onRefresh,
     this.refreshTooltip,
+    this.isRefreshing = false,
     this.onScrollBack,
     this.onScrollForward,
   });
@@ -12,6 +13,7 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onRefresh;
   final String? refreshTooltip;
+  final bool isRefreshing;
   final VoidCallback? onScrollBack;
   final VoidCallback? onScrollForward;
 
@@ -40,8 +42,9 @@ class _SectionHeader extends StatelessWidget {
           if (onRefresh != null) ...[
             _ScrollButton(
               icon: Icons.refresh_rounded,
-              onPressed: onRefresh,
+              onPressed: isRefreshing ? null : onRefresh,
               tooltip: refreshTooltip,
+              isLoading: isRefreshing,
             ),
             const SizedBox(width: 8),
           ],
@@ -61,11 +64,17 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _ScrollButton extends StatelessWidget {
-  const _ScrollButton({required this.icon, this.onPressed, this.tooltip});
+  const _ScrollButton({
+    required this.icon,
+    this.onPressed,
+    this.tooltip,
+    this.isLoading = false,
+  });
 
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -74,16 +83,24 @@ class _ScrollButton extends StatelessWidget {
     return IconButton(
       onPressed: onPressed,
       tooltip: tooltip,
-      icon: Icon(
-        icon,
-        size: 12,
-        color: theme.colorScheme.onSurfaceVariant.withValues(
-          alpha: enabled ? 1.0 : 0.3,
-        ),
-      ),
+      icon: isLoading
+          ? SizedBox.square(
+              dimension: 12,
+              child: CircularProgressIndicator(
+                strokeWidth: 1.8,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
+          : Icon(
+              icon,
+              size: 12,
+              color: theme.colorScheme.onSurfaceVariant.withValues(
+                alpha: enabled ? 1.0 : 0.3,
+              ),
+            ),
       style: IconButton.styleFrom(
         backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: enabled ? 0.5 : 0.2,
+          alpha: enabled || isLoading ? 0.5 : 0.2,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         padding: const EdgeInsets.all(6),

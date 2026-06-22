@@ -253,6 +253,7 @@ void main() {
       recent: [randomAlbum],
       newest: [randomAlbum],
       frequent: [randomAlbum],
+      recommendations: [_song(id: 'rec-1', title: 'Recommended 1')],
       viewportSize: const Size(1600, 1800),
       detail: _albumDetailResponse(
         albumId: 'album-1',

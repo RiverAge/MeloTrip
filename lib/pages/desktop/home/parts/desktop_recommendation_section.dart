@@ -79,7 +79,7 @@ class _DesktopRecommendationSectionState
     );
   }
 
-  void _refreshRecommendations() {
+  void _refreshRecommendations(List<SongEntity> currentSongs) {
     if (_scrollController.hasClients) {
       _scrollController.jumpTo(0);
     }
@@ -89,13 +89,17 @@ class _DesktopRecommendationSectionState
         _canScrollForward = false;
       });
     }
-    ref.invalidate(forYouRecommendationsProvider);
+    ref
+        .read(forYouRecommendationRefreshProvider.notifier)
+        .requestRefresh(currentSongs);
   }
 
   @override
   Widget build(BuildContext context) {
     final recommendations = ref.watch(forYouRecommendationsProvider);
     final l10n = AppLocalizations.of(context)!;
+    final currentSongs = recommendations.asData?.value ?? const <SongEntity>[];
+    final isRefreshing = recommendations.isLoading && currentSongs.isNotEmpty;
 
     return SliverToBoxAdapter(
       child: LayoutBuilder(
@@ -120,8 +124,11 @@ class _DesktopRecommendationSectionState
             children: [
               _SectionHeader(
                 title: widget.title,
-                onRefresh: _refreshRecommendations,
+                onRefresh: currentSongs.isEmpty
+                    ? null
+                    : () => _refreshRecommendations(currentSongs),
                 refreshTooltip: l10n.refreshRecommendations,
+                isRefreshing: isRefreshing,
                 onScrollBack: hasRecommendations && _canScrollBack
                     ? _onScrollBack
                     : null,
