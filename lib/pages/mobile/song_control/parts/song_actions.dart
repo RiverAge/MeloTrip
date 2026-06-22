@@ -39,122 +39,118 @@ class _SongActions extends StatelessWidget {
             child: AsyncValueBuilder(
               provider: appPlayerHandlerProvider,
               builder: (context, player, _) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: .start,
-                    children: [
-                      AsyncStreamBuilder(
-                        provider: player.playingStream,
-                        builder: (_, playing) {
-                          final isCurrentPlaying = playing && isCurrent;
-                          return _PrimaryActionButton(
-                            icon: isCurrentPlaying
-                                ? Icons.pause_rounded
-                                : Icons.play_arrow_rounded,
-                            label: isCurrentPlaying ? l10n.pause : l10n.play,
-                            onPressed: () {
-                              if (isCurrentPlaying) {
-                                player.pause();
-                              } else if (isCurrent) {
-                                player.play();
-                              } else {
-                                player.insertAndPlay(song);
-                              }
-                            },
-                          );
-                        },
-                      ),
-                      _ActionButton(
-                        icon: Icons.graphic_eq_outlined,
-                        label: l10n.similarSongs,
+                final actions = <Widget>[
+                  AsyncStreamBuilder(
+                    provider: player.playingStream,
+                    builder: (_, playing) {
+                      final isCurrentPlaying = playing && isCurrent;
+                      return _PrimaryActionButton(
+                        icon: isCurrentPlaying
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                        label: isCurrentPlaying ? l10n.pause : l10n.play,
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => SimilarSongsPage(
-                                songId: song.id,
-                                songTitle: song.title,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      _ActionButton(
-                        icon: Icons.radio_outlined,
-                        label: l10n.similarRadio,
-                        onPressed: () async {
-                          final radioQueueNotifier = ref.read(
-                            radioQueueProvider.notifier,
-                          );
-                          await radioQueueNotifier.startRadio(song);
-                          final radioQueue = ref.read(radioQueueProvider);
-                          if (radioQueue.isNotEmpty) {
-                            await player.setPlaylist(
-                              songs: radioQueue,
-                              initialId: radioQueue.first.id,
-                            );
-                            await player.play();
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(l10n.radioPlaying),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            }
+                          if (isCurrentPlaying) {
+                            player.pause();
+                          } else if (isCurrent) {
+                            player.play();
                           } else {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(l10n.noSongsFoundForRadio),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            }
+                            player.insertAndPlay(song);
                           }
                         },
-                      ),
-                      _ActionButton(
-                        icon: isStarred
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        iconColor: isStarred ? theme.colorScheme.error : null,
-                        label: isStarred ? l10n.unfavorite : l10n.favorite,
-                        onPressed: onToggleFavorite,
-                      ),
-                      if (!isCurrent && !isNext)
-                        _ActionButton(
-                          icon: Icons.not_started_outlined,
-                          label: l10n.playNext,
-                          onPressed: () {
-                            player.insertToNext(song);
-                          },
-                        ),
-                      if (indexOfSong == -1)
-                        _ActionButton(
-                          icon: Icons.playlist_add_outlined,
-                          label: l10n.addToPlayQueue,
-                          onPressed: () {
-                            player.insertToEnd(song);
-                          },
-                        ),
-                      if (indexOfSong != -1 && !isCurrent)
-                        _ActionButton(
-                          icon: Icons.playlist_remove_outlined,
-                          label: l10n.removeFromPlayQueue,
-                          onPressed: () {
-                            player.removeQueueItemAt(indexOfSong);
-                          },
-                        ),
-                      _ActionButton(
-                        icon: Icons.library_add_check_outlined,
-                        label: l10n.addToPlaylist,
-                        onPressed: onAddToPlaylist,
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                );
+                  _ActionButton(
+                    icon: isStarred
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    iconColor: isStarred ? theme.colorScheme.error : null,
+                    label: isStarred ? l10n.unfavorite : l10n.favorite,
+                    onPressed: onToggleFavorite,
+                  ),
+                  _ActionButton(
+                    icon: Icons.library_add_check_outlined,
+                    label: l10n.addToPlaylist,
+                    onPressed: onAddToPlaylist,
+                  ),
+                  if (!isCurrent && !isNext)
+                    _ActionButton(
+                      icon: Icons.not_started_outlined,
+                      label: l10n.playNext,
+                      onPressed: () {
+                        player.insertToNext(song);
+                      },
+                    ),
+                  if (indexOfSong == -1)
+                    _ActionButton(
+                      icon: Icons.playlist_add_outlined,
+                      label: l10n.addToPlayQueue,
+                      onPressed: () {
+                        player.insertToEnd(song);
+                      },
+                    ),
+                  if (indexOfSong != -1 && !isCurrent)
+                    _ActionButton(
+                      icon: Icons.playlist_remove_outlined,
+                      label: l10n.removeFromPlayQueue,
+                      onPressed: () {
+                        player.removeQueueItemAt(indexOfSong);
+                      },
+                    ),
+                  _ActionButton(
+                    icon: Icons.radio_outlined,
+                    label: l10n.similarRadio,
+                    onPressed: () async {
+                      final radioQueueNotifier = ref.read(
+                        radioQueueProvider.notifier,
+                      );
+                      await radioQueueNotifier.startRadio(song);
+                      final radioQueue = ref.read(radioQueueProvider);
+                      if (radioQueue.isNotEmpty) {
+                        await player.setPlaylist(
+                          songs: radioQueue,
+                          initialId: radioQueue.first.id,
+                        );
+                        await player.play();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.radioPlaying),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.noSongsFoundForRadio),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                  _ActionButton(
+                    icon: Icons.graphic_eq_outlined,
+                    label: l10n.similarSongs,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => SimilarSongsPage(
+                            songId: song.id,
+                            songTitle: song.title,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ];
+
+                return _CenteredActionStrip(children: actions);
               },
             ),
           ),
@@ -163,6 +159,40 @@ class _SongActions extends StatelessWidget {
     );
   }
 }
+
+class _CenteredActionStrip extends StatelessWidget {
+  const _CenteredActionStrip({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final contentWidth = children.length * _actionButtonWidth;
+        final hasBoundedWidth = constraints.maxWidth.isFinite;
+        final contentFits =
+            hasBoundedWidth && contentWidth <= constraints.maxWidth;
+        final rowWidth = contentFits ? constraints.maxWidth : contentWidth;
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(
+            width: hasBoundedWidth ? rowWidth : null,
+            child: Row(
+              mainAxisSize: .min,
+              mainAxisAlignment: contentFits ? .center : .start,
+              crossAxisAlignment: .start,
+              children: children,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+const double _actionButtonWidth = 60;
 
 class _PrimaryActionButton extends StatelessWidget {
   const _PrimaryActionButton({
@@ -179,15 +209,15 @@ class _PrimaryActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SizedBox(
-      width: 60,
+      width: _actionButtonWidth,
       child: Column(
         mainAxisSize: .min,
         children: [
           IconButton.filled(
             onPressed: onPressed,
-            iconSize: 28,
+            iconSize: 22,
             style: IconButton.styleFrom(
-              minimumSize: const Size.square(52),
+              minimumSize: const Size.square(44),
               foregroundColor: theme.colorScheme.onPrimary,
               backgroundColor: theme.colorScheme.primary,
             ),
@@ -227,7 +257,7 @@ class _ActionButton extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return SizedBox(
-      width: 60,
+      width: _actionButtonWidth,
       child: Column(
         mainAxisSize: .min,
         children: [
