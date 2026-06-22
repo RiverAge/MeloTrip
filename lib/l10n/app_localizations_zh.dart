@@ -182,6 +182,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get refreshRecommendations => '换一批';
 
   @override
+  String get favoriteRecommendations => '基于收藏';
+
+  @override
+  String get playlistRecommendations => '基于歌单';
+
+  @override
+  String get currentSongRecommendations => '基于当前歌曲';
+
+  @override
   String get searchHint => '搜索歌曲、艺术家或专辑...';
 
   @override
@@ -971,6 +980,15 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get refreshRecommendations => '换一批';
+
+  @override
+  String get favoriteRecommendations => '基于收藏';
+
+  @override
+  String get playlistRecommendations => '基于歌单';
+
+  @override
+  String get currentSongRecommendations => '基于当前歌曲';
 
   @override
   String get searchHint => '搜索歌曲、艺术家或专辑...';

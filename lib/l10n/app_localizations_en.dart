@@ -182,6 +182,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refreshRecommendations => 'Refresh recommendations';
 
   @override
+  String get favoriteRecommendations => 'From Favorites';
+
+  @override
+  String get playlistRecommendations => 'From Playlists';
+
+  @override
+  String get currentSongRecommendations => 'From Current Song';
+
+  @override
   String get searchHint => 'Search for songs, artists or albums...';
 
   @override

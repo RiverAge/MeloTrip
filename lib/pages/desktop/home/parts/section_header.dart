@@ -6,6 +6,8 @@ class _SectionHeader extends StatelessWidget {
     this.onRefresh,
     this.refreshTooltip,
     this.isRefreshing = false,
+    this.onViewAll,
+    this.viewAllTooltip,
     this.onScrollBack,
     this.onScrollForward,
   });
@@ -14,6 +16,8 @@ class _SectionHeader extends StatelessWidget {
   final VoidCallback? onRefresh;
   final String? refreshTooltip;
   final bool isRefreshing;
+  final VoidCallback? onViewAll;
+  final String? viewAllTooltip;
   final VoidCallback? onScrollBack;
   final VoidCallback? onScrollForward;
 
@@ -39,6 +43,14 @@ class _SectionHeader extends StatelessWidget {
           const SizedBox(width: 8),
           const Spacer(),
           const SizedBox(width: 10),
+          if (onViewAll != null) ...[
+            _ScrollButton(
+              icon: Icons.open_in_full_rounded,
+              onPressed: onViewAll,
+              tooltip: viewAllTooltip,
+            ),
+            const SizedBox(width: 8),
+          ],
           if (onRefresh != null) ...[
             _ScrollButton(
               icon: Icons.refresh_rounded,

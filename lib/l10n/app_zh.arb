@@ -74,6 +74,9 @@
     "guessYouLike": "猜你喜欢",
     "noRecommendations": "暂无推荐",
     "refreshRecommendations": "换一批",
+    "favoriteRecommendations": "基于收藏",
+    "playlistRecommendations": "基于歌单",
+    "currentSongRecommendations": "基于当前歌曲",
 
     "searchHistory": "搜索历史",
     "searchHint": "搜索歌曲、艺术家或专辑...",

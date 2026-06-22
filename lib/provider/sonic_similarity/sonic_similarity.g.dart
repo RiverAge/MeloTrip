@@ -506,7 +506,7 @@ final class RecommendationsProvider
   }
 }
 
-String _$recommendationsHash() => r'48742dbf09e850d57c568d5868786104621af1cc';
+String _$recommendationsHash() => r'6ea77424756b9b1cb965525e336e5cf421418545';
 
 /// Provider for client-side recommendations.
 ///

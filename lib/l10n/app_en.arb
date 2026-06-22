@@ -261,6 +261,18 @@
    "@refreshRecommendations": {
       "description": "Tooltip for refreshing smart recommendations"
    },
+   "favoriteRecommendations": "From Favorites",
+   "@favoriteRecommendations": {
+      "description": "Title for recommendations based on favorite songs"
+   },
+   "playlistRecommendations": "From Playlists",
+   "@playlistRecommendations": {
+      "description": "Title for recommendations based on playlists"
+   },
+   "currentSongRecommendations": "From Current Song",
+   "@currentSongRecommendations": {
+      "description": "Title for recommendation actions based on current song"
+   },
 
    "searchHint": "Search for songs, artists or albums...",
    "@searchHint": {

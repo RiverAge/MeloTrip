@@ -171,7 +171,7 @@ class Recommendations extends _$Recommendations {
       return [];
     }
 
-    final random = Random();
+    final random = refreshNonce == 0 ? Random() : Random(refreshNonce);
     final shuffledSeeds = List<String>.from(seeds)..shuffle(random);
     final maxSeeds = min(shuffledSeeds.length, 8);
     final candidateCount = maxSeeds <= 2 ? 50 : 20;

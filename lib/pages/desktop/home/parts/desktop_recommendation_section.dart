@@ -129,6 +129,9 @@ class _DesktopRecommendationSectionState
                     : () => _refreshRecommendations(currentSongs),
                 refreshTooltip: l10n.refreshRecommendations,
                 isRefreshing: isRefreshing,
+                onViewAll: () =>
+                    Navigator.of(context).pushNamed('/recommendations'),
+                viewAllTooltip: l10n.viewAll,
                 onScrollBack: hasRecommendations && _canScrollBack
                     ? _onScrollBack
                     : null,

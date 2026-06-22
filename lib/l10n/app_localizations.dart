@@ -441,6 +441,24 @@ abstract class AppLocalizations {
   /// **'Refresh recommendations'**
   String get refreshRecommendations;
 
+  /// Title for recommendations based on favorite songs
+  ///
+  /// In en, this message translates to:
+  /// **'From Favorites'**
+  String get favoriteRecommendations;
+
+  /// Title for recommendations based on playlists
+  ///
+  /// In en, this message translates to:
+  /// **'From Playlists'**
+  String get playlistRecommendations;
+
+  /// Title for recommendation actions based on current song
+  ///
+  /// In en, this message translates to:
+  /// **'From Current Song'**
+  String get currentSongRecommendations;
+
   /// Search hint text for search bar
   ///
   /// In en, this message translates to:
