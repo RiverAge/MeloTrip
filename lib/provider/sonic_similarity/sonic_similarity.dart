@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/recommendation/seed_source.dart';
+import 'package:melo_trip/model/recommendation/weighted_seed.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -130,6 +132,96 @@ class RecentRecommendationHistory extends _$RecentRecommendationHistory {
   }
 }
 
+const Map<SeedSource, int> _defaultSeedSourceCaps = <SeedSource, int>{
+  SeedSource.favorite: 4,
+  SeedSource.favoriteAlbum: 2,
+  SeedSource.favoriteArtist: 2,
+  SeedSource.playlist: 3,
+  SeedSource.recent: 2,
+  SeedSource.rating: 2,
+  SeedSource.current: 1,
+  SeedSource.queue: 2,
+  SeedSource.playHistory: 2,
+};
+
+/// Selects recommendation seeds using weight first, then source diversity.
+///
+/// The first pass enforces per-source caps so one signal does not dominate
+/// mixed seed sets. If that leaves unused slots, the second pass fills them
+/// from the strongest remaining seeds.
+List<WeightedSeed> selectWeightedRecommendationSeeds({
+  required Iterable<WeightedSeed> seeds,
+  int maxSeeds = 8,
+  int refreshNonce = 0,
+}) {
+  if (maxSeeds <= 0) {
+    return const <WeightedSeed>[];
+  }
+
+  final bySongId = <String, WeightedSeed>{};
+  for (final seed in seeds) {
+    if (seed.songId.isEmpty || seed.weight <= 0) {
+      continue;
+    }
+    final existing = bySongId[seed.songId];
+    if (existing == null || seed.weight > existing.weight) {
+      bySongId[seed.songId] = seed;
+    }
+  }
+
+  if (bySongId.isEmpty) {
+    return const <WeightedSeed>[];
+  }
+
+  final random = refreshNonce == 0 ? Random() : Random(refreshNonce);
+  final scored =
+      bySongId.values
+          .map((seed) => _ScoredSeed(seed, _seedSelectionScore(seed, random)))
+          .toList()
+        ..sort((a, b) => b.score.compareTo(a.score));
+
+  final selected = <WeightedSeed>[];
+  final selectedIds = <String>{};
+  final sourceCounts = <SeedSource, int>{};
+
+  for (final item in scored) {
+    if (selected.length >= maxSeeds) break;
+    final cap = _defaultSeedSourceCaps[item.seed.source] ?? 2;
+    final currentCount = sourceCounts[item.seed.source] ?? 0;
+    if (currentCount >= cap) {
+      continue;
+    }
+    selected.add(item.seed);
+    selectedIds.add(item.seed.songId);
+    sourceCounts[item.seed.source] = currentCount + 1;
+  }
+
+  if (selected.length < maxSeeds) {
+    for (final item in scored) {
+      if (selected.length >= maxSeeds) break;
+      if (selectedIds.contains(item.seed.songId)) {
+        continue;
+      }
+      selected.add(item.seed);
+      selectedIds.add(item.seed.songId);
+    }
+  }
+
+  return selected;
+}
+
+double _seedSelectionScore(WeightedSeed seed, Random random) {
+  final jitter = 0.92 + random.nextDouble() * 0.16;
+  return seed.weight * jitter;
+}
+
+class _ScoredSeed {
+  const _ScoredSeed(this.seed, this.score);
+
+  final WeightedSeed seed;
+  final double score;
+}
+
 /// Provider for client-side recommendations.
 ///
 /// Generates recommendations from user-provided seed song IDs.
@@ -151,62 +243,62 @@ class Recommendations extends _$Recommendations {
   Future<List<SongEntity>> build({
     int limit = 20,
     List<String>? seedSongIds,
+    List<WeightedSeed>? weightedSeeds,
     List<String>? excludedSongIds,
     int refreshNonce = 0,
   }) async {
-    final List<SongEntity> recommendations = [];
-    final Set<String> seenIds = {};
-    final Map<String, int> artistCount = {};
-    final Map<String, int> albumCount = {};
+    if (limit <= 0) {
+      return const <SongEntity>[];
+    }
+
     final recentIds = ref.read(recentRecommendationHistoryProvider).toSet();
     final excludedIds = excludedSongIds == null
         ? const <String>{}
         : excludedSongIds.where((id) => id.isNotEmpty).toSet();
-    final fallbackCandidates = <SongEntity>[];
-    final fallbackSeenIds = <String>{};
-
-    final seeds = seedSongIds ?? const [];
+    final repository = ref.read(sonicSimilarityRepositoryProvider);
+    final seedCandidates = weightedSeeds ?? _weightedSeedsFromIds(seedSongIds);
+    final seeds = selectWeightedRecommendationSeeds(
+      seeds: seedCandidates,
+      maxSeeds: 8,
+      refreshNonce: refreshNonce,
+    );
 
     if (seeds.isEmpty) {
-      return [];
+      return const <SongEntity>[];
     }
 
     final random = refreshNonce == 0 ? Random() : Random(refreshNonce);
-    final shuffledSeeds = List<String>.from(seeds)..shuffle(random);
-    final maxSeeds = min(shuffledSeeds.length, 8);
-    final candidateCount = maxSeeds <= 2 ? 50 : 20;
+    final seedIds = seeds.map((seed) => seed.songId).toSet();
+    final candidateCount = seeds.length <= 2 ? 50 : 24;
+    final candidatesById = <String, _RecommendationCandidate>{};
 
-    for (int i = 0; i < maxSeeds && recommendations.length < limit; i++) {
-      final seedId = shuffledSeeds[i];
-
-      final result = await ref.read(
-        similarSongsProvider(songId: seedId, count: candidateCount).future,
+    for (final seed in seeds) {
+      final result = await repository.tryFetchSonicSimilarTracksWithScores(
+        id: seed.songId,
+        count: candidateCount,
       );
 
       result.when(
-        ok: (songs) {
-          final candidates = List<SongEntity>.from(songs)..shuffle(random);
-          for (final song in candidates) {
-            if (recommendations.length >= limit) break;
-
+        ok: (matches) {
+          for (var rank = 0; rank < matches.length; rank++) {
+            final (song, similarity) = matches[rank];
             final id = song.id;
             if (id == null || id.isEmpty) continue;
-            if (seenIds.contains(id) || seeds.contains(id)) continue;
+            if (seedIds.contains(id)) continue;
             if (excludedIds.contains(id)) continue;
 
-            if (recentIds.contains(id)) {
-              if (fallbackSeenIds.add(id)) {
-                fallbackCandidates.add(song);
-              }
-              continue;
-            }
-
-            _tryAddRecommendation(
+            final score = _candidateScore(
+              seed: seed,
+              rank: rank,
+              similarity: similarity,
+              isRecent: recentIds.contains(id),
+              random: random,
+            );
+            _mergeRecommendationCandidate(
+              candidatesById,
               song: song,
-              recommendations: recommendations,
-              seenIds: seenIds,
-              artistCount: artistCount,
-              albumCount: albumCount,
+              score: score,
+              isRecent: recentIds.contains(id),
             );
           }
         },
@@ -216,16 +308,10 @@ class Recommendations extends _$Recommendations {
       );
     }
 
-    for (final song in fallbackCandidates) {
-      if (recommendations.length >= limit) break;
-      _tryAddRecommendation(
-        song: song,
-        recommendations: recommendations,
-        seenIds: seenIds,
-        artistCount: artistCount,
-        albumCount: albumCount,
-      );
-    }
+    final recommendations = _rankRecommendationCandidates(
+      candidatesById.values,
+      limit: limit,
+    );
 
     if (recommendations.isNotEmpty) {
       ref
@@ -237,12 +323,148 @@ class Recommendations extends _$Recommendations {
   }
 }
 
+List<WeightedSeed> _weightedSeedsFromIds(List<String>? seedSongIds) {
+  if (seedSongIds == null || seedSongIds.isEmpty) {
+    return const <WeightedSeed>[];
+  }
+  return seedSongIds
+      .where((id) => id.isNotEmpty)
+      .map(
+        (id) =>
+            WeightedSeed(songId: id, source: SeedSource.current, weight: 1.0),
+      )
+      .toList();
+}
+
+double _candidateScore({
+  required WeightedSeed seed,
+  required int rank,
+  required double? similarity,
+  required bool isRecent,
+  required Random random,
+}) {
+  final similarityScore = (similarity == null || similarity <= 0)
+      ? 1.0
+      : similarity.clamp(0.0, 1.0).toDouble();
+  final rankDecay = 1.0 / (1.0 + rank * 0.08);
+  final recentPenalty = isRecent ? 0.35 : 1.0;
+  final jitter = 0.98 + random.nextDouble() * 0.04;
+  return seed.weight * similarityScore * rankDecay * recentPenalty * jitter;
+}
+
+void _mergeRecommendationCandidate(
+  Map<String, _RecommendationCandidate> candidatesById, {
+  required SongEntity song,
+  required double score,
+  required bool isRecent,
+}) {
+  final id = song.id;
+  if (id == null || id.isEmpty) {
+    return;
+  }
+
+  final existing = candidatesById[id];
+  if (existing == null) {
+    candidatesById[id] = _RecommendationCandidate(
+      song: song,
+      score: score,
+      isRecent: isRecent,
+    );
+    return;
+  }
+
+  candidatesById[id] = existing.merge(song: song, score: score);
+}
+
+List<SongEntity> _rankRecommendationCandidates(
+  Iterable<_RecommendationCandidate> candidates, {
+  required int limit,
+}) {
+  final sorted = candidates.toList()
+    ..sort((a, b) {
+      if (a.isRecent != b.isRecent) {
+        return a.isRecent ? 1 : -1;
+      }
+      return b.score.compareTo(a.score);
+    });
+
+  final strict = _selectByDiversityCaps(
+    sorted,
+    limit: limit,
+    artistCap: 2,
+    albumCap: 2,
+  );
+  if (strict.length >= limit) {
+    return strict;
+  }
+
+  final relaxed = _selectByDiversityCaps(
+    sorted,
+    limit: limit,
+    artistCap: 3,
+    albumCap: 3,
+  );
+  return relaxed;
+}
+
+List<SongEntity> _selectByDiversityCaps(
+  Iterable<_RecommendationCandidate> candidates, {
+  required int limit,
+  required int artistCap,
+  required int albumCap,
+}) {
+  final result = <SongEntity>[];
+  final seenIds = <String>{};
+  final artistCount = <String, int>{};
+  final albumCount = <String, int>{};
+
+  for (final candidate in candidates) {
+    if (result.length >= limit) break;
+    _tryAddRecommendation(
+      song: candidate.song,
+      recommendations: result,
+      seenIds: seenIds,
+      artistCount: artistCount,
+      albumCount: albumCount,
+      artistCap: artistCap,
+      albumCap: albumCap,
+    );
+  }
+
+  return result;
+}
+
+class _RecommendationCandidate {
+  const _RecommendationCandidate({
+    required this.song,
+    required this.score,
+    required this.isRecent,
+  });
+
+  final SongEntity song;
+  final double score;
+  final bool isRecent;
+
+  _RecommendationCandidate merge({
+    required SongEntity song,
+    required double score,
+  }) {
+    return _RecommendationCandidate(
+      song: score > this.score ? song : this.song,
+      score: this.score + score * 0.35,
+      isRecent: isRecent,
+    );
+  }
+}
+
 bool _tryAddRecommendation({
   required SongEntity song,
   required List<SongEntity> recommendations,
   required Set<String> seenIds,
   required Map<String, int> artistCount,
   required Map<String, int> albumCount,
+  required int artistCap,
+  required int albumCap,
 }) {
   final id = song.id;
   if (id == null || id.isEmpty || seenIds.contains(id)) {
@@ -255,7 +477,7 @@ bool _tryAddRecommendation({
   final artistPenalty = artistCount[artistId] ?? 0;
   final albumPenalty = albumCount[albumId] ?? 0;
 
-  if (artistPenalty >= 3 || albumPenalty >= 3) {
+  if (artistPenalty >= artistCap || albumPenalty >= albumCap) {
     return false;
   }
 

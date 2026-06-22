@@ -72,7 +72,8 @@ class _GeneralSettingsState extends ConsumerState<GeneralSettings> {
                         label: l10n.checkForUpdates,
                         description: _buildUpdateSubtitle(context, updateState),
                         progress: _buildUpdateProgress(context, updateState),
-                        trailing: updateState.isChecking
+                        trailing:
+                            (updateState.isChecking || updateState.isUpdating)
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,

@@ -494,17 +494,35 @@ class _RecommendationShelfHeader extends StatelessWidget {
           tooltip: l10n.refreshRecommendations,
           icon: const Icon(Icons.refresh_rounded),
           iconSize: 18,
-          style: IconButton.styleFrom(
-            backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: onRefresh == null ? .22 : .5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
+          style: _quietRecommendationIconButtonStyle(theme),
         ),
       ],
     );
   }
+}
+
+ButtonStyle _quietRecommendationIconButtonStyle(ThemeData theme) {
+  return ButtonStyle(
+    foregroundColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.disabled)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.38);
+      }
+      return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.68);
+    }),
+    backgroundColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.pressed)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12);
+      }
+      if (states.contains(WidgetState.hovered) ||
+          states.contains(WidgetState.focused)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.08);
+      }
+      return null;
+    }),
+    shape: WidgetStateProperty.all(
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+    ),
+  );
 }
 
 class _DesktopRecommendationScrollBehavior extends MaterialScrollBehavior {

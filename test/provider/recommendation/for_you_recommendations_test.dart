@@ -479,6 +479,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
     int? count,
     CancelToken? cancelToken,
   }) async {
+    requestedIds.add(id);
     final result = fetchResult(id);
     return result.when(
       ok: (songs) => Result.ok(songs.map((s) => (s, null as double?)).toList()),

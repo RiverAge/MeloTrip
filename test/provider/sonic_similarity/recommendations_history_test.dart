@@ -122,6 +122,7 @@ class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
     int? count,
     CancelToken? cancelToken,
   }) async {
+    requestedCounts.add(count);
     return Result.ok(songs.map((song) => (song, null as double?)).toList());
   }
 

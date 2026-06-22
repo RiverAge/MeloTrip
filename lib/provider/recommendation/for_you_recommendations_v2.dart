@@ -30,12 +30,9 @@ Future<List<SongEntity>> forYouRecommendationsV2(Ref ref) async {
     return <SongEntity>[];
   }
 
-  // Extract song IDs from weighted seeds
-  final songIds = seeds.map((seed) => seed.songId).toList();
-
   // Reuse existing Recommendations provider
   final recommendations = await ref.watch(
-    recommendationsProvider(limit: 20, seedSongIds: songIds).future,
+    recommendationsProvider(limit: 20, weightedSeeds: seeds).future,
   );
 
   return recommendations;

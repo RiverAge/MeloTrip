@@ -145,4 +145,4 @@ final class ForYouRecommendationsProvider
 }
 
 String _$forYouRecommendationsHash() =>
-    r'fa5cc9791d8740a90573a25f5f82979c3b3f4990';
+    r'85c6da24308dac57800ca4d9ca5a5a1b0b9bd2d9';

@@ -59,12 +59,10 @@ Future<List<SongEntity>> forYouRecommendations(Ref ref) async {
     return <SongEntity>[];
   }
 
-  final seedSongIds = seeds.map((seed) => seed.songId).toList();
-
   final recommendations = await ref.watch(
     recommendationsProvider(
       limit: 20,
-      seedSongIds: seedSongIds,
+      weightedSeeds: seeds,
       excludedSongIds: refresh.excludedSongIds,
       refreshNonce: refresh.nonce,
     ).future,

@@ -85,14 +85,12 @@ class _ForYouRecommendationsState
                             dimension: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: theme.colorScheme.onSurfaceVariant,
+                              color: theme.colorScheme.onSurfaceVariant
+                                  .withValues(alpha: 0.72),
                             ),
                           )
-                        : Icon(
-                            Icons.refresh_rounded,
-                            size: 20,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                        : Icon(Icons.refresh_rounded, size: 20),
+                    style: _quietRefreshButtonStyle(theme),
                   ),
                   // Play all button
                   TextButton.icon(
@@ -145,6 +143,27 @@ class _ForYouRecommendationsState
       },
     );
   }
+}
+
+ButtonStyle _quietRefreshButtonStyle(ThemeData theme) {
+  return ButtonStyle(
+    foregroundColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.disabled)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.38);
+      }
+      return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.68);
+    }),
+    backgroundColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.pressed)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12);
+      }
+      if (states.contains(WidgetState.hovered) ||
+          states.contains(WidgetState.focused)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.08);
+      }
+      return null;
+    }),
+  );
 }
 
 class _HorizontalCardScrollBehavior extends MaterialScrollBehavior {

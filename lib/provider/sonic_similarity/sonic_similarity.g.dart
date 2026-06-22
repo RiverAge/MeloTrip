@@ -469,6 +469,7 @@ final class RecommendationsProvider
     required ({
       int limit,
       List<String>? seedSongIds,
+      List<WeightedSeed>? weightedSeeds,
       List<String>? excludedSongIds,
       int refreshNonce,
     })
@@ -506,7 +507,7 @@ final class RecommendationsProvider
   }
 }
 
-String _$recommendationsHash() => r'6ea77424756b9b1cb965525e336e5cf421418545';
+String _$recommendationsHash() => r'30eb89d250669f65dfaed7423733def80f18bf2d';
 
 /// Provider for client-side recommendations.
 ///
@@ -534,6 +535,7 @@ final class RecommendationsFamily extends $Family
           ({
             int limit,
             List<String>? seedSongIds,
+            List<WeightedSeed>? weightedSeeds,
             List<String>? excludedSongIds,
             int refreshNonce,
           })
@@ -566,12 +568,14 @@ final class RecommendationsFamily extends $Family
   RecommendationsProvider call({
     int limit = 20,
     List<String>? seedSongIds,
+    List<WeightedSeed>? weightedSeeds,
     List<String>? excludedSongIds,
     int refreshNonce = 0,
   }) => RecommendationsProvider._(
     argument: (
       limit: limit,
       seedSongIds: seedSongIds,
+      weightedSeeds: weightedSeeds,
       excludedSongIds: excludedSongIds,
       refreshNonce: refreshNonce,
     ),
@@ -604,17 +608,20 @@ abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
           as ({
             int limit,
             List<String>? seedSongIds,
+            List<WeightedSeed>? weightedSeeds,
             List<String>? excludedSongIds,
             int refreshNonce,
           });
   int get limit => _$args.limit;
   List<String>? get seedSongIds => _$args.seedSongIds;
+  List<WeightedSeed>? get weightedSeeds => _$args.weightedSeeds;
   List<String>? get excludedSongIds => _$args.excludedSongIds;
   int get refreshNonce => _$args.refreshNonce;
 
   FutureOr<List<SongEntity>> build({
     int limit = 20,
     List<String>? seedSongIds,
+    List<WeightedSeed>? weightedSeeds,
     List<String>? excludedSongIds,
     int refreshNonce = 0,
   });
@@ -636,6 +643,7 @@ abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
       () => build(
         limit: _$args.limit,
         seedSongIds: _$args.seedSongIds,
+        weightedSeeds: _$args.weightedSeeds,
         excludedSongIds: _$args.excludedSongIds,
         refreshNonce: _$args.refreshNonce,
       ),

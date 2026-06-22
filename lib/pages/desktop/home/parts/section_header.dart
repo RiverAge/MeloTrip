@@ -57,6 +57,7 @@ class _SectionHeader extends StatelessWidget {
               onPressed: isRefreshing ? null : onRefresh,
               tooltip: refreshTooltip,
               isLoading: isRefreshing,
+              quiet: true,
             ),
             const SizedBox(width: 8),
           ],
@@ -81,12 +82,14 @@ class _ScrollButton extends StatelessWidget {
     this.onPressed,
     this.tooltip,
     this.isLoading = false,
+    this.quiet = false,
   });
 
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
   final bool isLoading;
+  final bool quiet;
 
   @override
   Widget build(BuildContext context) {
@@ -100,24 +103,50 @@ class _ScrollButton extends StatelessWidget {
               dimension: 12,
               child: CircularProgressIndicator(
                 strokeWidth: 1.8,
-                color: theme.colorScheme.onSurfaceVariant,
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: quiet ? 0.72 : 1.0,
+                ),
               ),
             )
           : Icon(
               icon,
               size: 12,
               color: theme.colorScheme.onSurfaceVariant.withValues(
-                alpha: enabled ? 1.0 : 0.3,
+                alpha: enabled ? (quiet ? 0.72 : 1.0) : 0.3,
               ),
             ),
-      style: IconButton.styleFrom(
-        backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(
-          alpha: enabled || isLoading ? 0.5 : 0.2,
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        padding: const EdgeInsets.all(6),
-        minimumSize: const Size(24, 24),
-      ),
+      style: quiet
+          ? _quietIconButtonStyle(theme, isLoading: isLoading)
+          : IconButton.styleFrom(
+              backgroundColor: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: enabled || isLoading ? 0.5 : 0.2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(6),
+              minimumSize: const Size(24, 24),
+            ),
     );
   }
+}
+
+ButtonStyle _quietIconButtonStyle(ThemeData theme, {required bool isLoading}) {
+  return ButtonStyle(
+    backgroundColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.pressed)) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12);
+      }
+      if (states.contains(WidgetState.hovered) ||
+          states.contains(WidgetState.focused) ||
+          isLoading) {
+        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.08);
+      }
+      return null;
+    }),
+    shape: WidgetStateProperty.all(
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+    ),
+    padding: WidgetStateProperty.all(const EdgeInsets.all(6)),
+    minimumSize: WidgetStateProperty.all(const Size(24, 24)),
+  );
 }

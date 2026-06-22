@@ -67,7 +67,7 @@ Future<List<SongEntity>> _recommendFromSeeds(
   return ref.watch(
     recommendationsProvider(
       limit: limit,
-      seedSongIds: seeds.map((seed) => seed.songId).toList(),
+      weightedSeeds: seeds,
       refreshNonce: refreshNonce,
     ).future,
   );

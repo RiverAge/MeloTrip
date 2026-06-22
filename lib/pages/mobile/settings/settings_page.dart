@@ -117,7 +117,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                       : updateState.availableUpdate != null
                       ? () => _startNativeUpdate(updateState.availableUpdate!)
                       : null,
-                  trailing: updateState.isChecking
+                  trailing: (updateState.isChecking || updateState.isUpdating)
                       ? const SizedBox(
                           width: 18,
                           height: 18,
