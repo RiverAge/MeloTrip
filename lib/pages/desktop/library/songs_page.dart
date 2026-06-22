@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/pages/desktop/shared/desktop_song_more_button.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
 import 'package:melo_trip/provider/song/song_detail.dart';
@@ -116,7 +117,7 @@ class _DesktopSongsPageState extends ConsumerState<DesktopSongsPage> {
                     ),
                   ),
                 ),
-                const SizedBox.square(dimension: 16),
+                const SizedBox(width: 80),
               ],
             ),
           ),

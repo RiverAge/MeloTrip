@@ -71,6 +71,8 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
+                DesktopSongMoreButton(song: effectiveSong),
+                const SizedBox(width: 8),
                 const Flexible(child: _DesktopVolumeBar()),
               ],
             ),

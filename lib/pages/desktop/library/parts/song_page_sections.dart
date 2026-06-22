@@ -247,21 +247,37 @@ class _SongTrackRowState extends ConsumerState<SongTrackRow> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: _toggleFavorite,
-                    icon: Icon(
-                      _isStarred
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
-                      size: 16,
-                      color: _isStarred
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.onSurfaceVariant.withValues(
-                              alpha: 0.45,
-                            ),
+                  SizedBox(
+                    width: 80,
+                    child: Row(
+                      mainAxisAlignment: .end,
+                      children: [
+                        IconButton(
+                          onPressed: _toggleFavorite,
+                          icon: Icon(
+                            _isStarred
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
+                            size: 16,
+                            color: _isStarred
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.onSurfaceVariant.withValues(
+                                    alpha: 0.45,
+                                  ),
+                          ),
+                          splashRadius: 16,
+                          visualDensity: .compact,
+                          constraints: const BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                            maxWidth: 34,
+                            maxHeight: 34,
+                          ),
+                          padding: EdgeInsets.zero,
+                        ),
+                        DesktopSongMoreButton(song: song),
+                      ],
                     ),
-                    splashRadius: 16,
-                    visualDensity: .compact,
                   ),
                 ],
               );

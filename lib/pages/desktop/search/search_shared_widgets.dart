@@ -5,6 +5,7 @@ import 'package:melo_trip/model/auth_user/configuration.dart';
 import 'package:melo_trip/model/response/album/album.dart';
 import 'package:melo_trip/model/response/artist/artist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/pages/desktop/shared/desktop_song_more_button.dart';
 import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
@@ -55,9 +56,11 @@ class DesktopSearchHistoryPanel extends ConsumerWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () {
-                    ref.read(userSessionProvider.notifier).setConfiguration(
-                      recentSearches: const ValueUpdater<String>(''),
-                    );
+                    ref
+                        .read(userSessionProvider.notifier)
+                        .setConfiguration(
+                          recentSearches: const ValueUpdater<String>(''),
+                        );
                   },
                   icon: const Icon(Icons.delete_outline_rounded, size: 20),
                 ),

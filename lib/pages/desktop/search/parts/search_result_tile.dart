@@ -13,6 +13,7 @@ class _SongResultTile extends StatelessWidget {
       subtitle: _joinNonEmpty(<String?>[song.album, song.artist]),
       artworkId: song.id,
       onTap: onTap,
+      trailing: DesktopSongMoreButton(song: song),
     );
   }
 }
@@ -60,12 +61,14 @@ class _ResultTile extends StatelessWidget {
     required this.subtitle,
     required this.artworkId,
     required this.onTap,
+    this.trailing,
   });
 
   final String title;
   final String subtitle;
   final String? artworkId;
   final VoidCallback onTap;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +120,10 @@ class _ResultTile extends StatelessWidget {
                   ],
                 ),
               ),
+              if (trailing != null) ...<Widget>[
+                const SizedBox(width: 8),
+                trailing!,
+              ],
             ],
           ),
         ),

@@ -124,10 +124,22 @@ class PlaylistTrackRow extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.favorite_border_rounded,
-              size: 16,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+            SizedBox(
+              width: 72,
+              child: Row(
+                mainAxisAlignment: .end,
+                children: [
+                  Icon(
+                    Icons.favorite_border_rounded,
+                    size: 16,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  DesktopSongMoreButton(song: song),
+                ],
+              ),
             ),
           ],
         ),
