@@ -4,10 +4,12 @@ import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/recommendation/seed_source.dart';
 import 'package:melo_trip/model/recommendation/weighted_seed.dart';
+import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
+import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/recommendation/user_taste_seeds.dart';
 
 /// Tests for userTasteSeedsProvider.
@@ -18,7 +20,7 @@ import 'package:melo_trip/provider/recommendation/user_taste_seeds.dart';
 /// 3. Deduplication by songId keeping higher weight
 /// 4. Sorting by weight descending
 /// 5. Empty input returns empty
-/// 6. P1-A does not include current/play_history/rating
+/// 6. Does not include current/play_history/rating
 void main() {
   group('deduplicateWeightedSeeds pure function', () {
     test('returns empty list for empty input', () {
@@ -231,14 +233,24 @@ void main() {
   group('userTasteSeedsProvider', () {
     late ProviderContainer container;
     late Result<SubsonicResponse, AppFailure>? mockFavoriteResult;
+    late List<PlaylistEntity> mockPlaylists;
+    late Map<String, Result<PlaylistEntity, AppFailure>?> mockPlaylistDetails;
 
     setUp(() {
       mockFavoriteResult = null;
+      mockPlaylists = const <PlaylistEntity>[];
+      mockPlaylistDetails = <String, Result<PlaylistEntity, AppFailure>?>{};
 
       container = ProviderContainer(
         overrides: [
           favoriteProvider.overrideWith(
             () => _FakeFavoriteNotifier(mockResult: () => mockFavoriteResult),
+          ),
+          playlistsProvider.overrideWith((_) async => Result.ok(mockPlaylists)),
+          playlistDetailProvider('pl-1').overrideWith(
+            () => _FakePlaylistDetail(
+              mockResult: () => mockPlaylistDetails['pl-1'],
+            ),
           ),
         ],
       );
@@ -282,6 +294,32 @@ void main() {
       expect(seeds.every((s) => s.weight == 1.0), true);
     });
 
+    test('uses playlist seeds when favorite songs are unavailable', () async {
+      mockFavoriteResult = Result.ok(
+        SubsonicResponse(
+          subsonicResponse: SubsonicResponseClass(
+            starred: StarredEntity(song: []),
+          ),
+        ),
+      );
+      mockPlaylists = [PlaylistEntity(id: 'pl-1', name: 'Daily', songCount: 2)];
+      mockPlaylistDetails['pl-1'] = Result.ok(
+        PlaylistEntity(
+          id: 'pl-1',
+          name: 'Daily',
+          entry: [
+            SongEntity(id: 'playlist-1', title: 'Playlist 1'),
+            SongEntity(id: 'playlist-2', title: 'Playlist 2'),
+          ],
+        ),
+      );
+
+      final seeds = await container.read(userTasteSeedsProvider.future);
+
+      expect(seeds.map((seed) => seed.songId), ['playlist-1', 'playlist-2']);
+      expect(seeds.every((seed) => seed.source == SeedSource.playlist), true);
+    });
+
     test('returns seeds sorted by weight (all 1.0 for favorites)', () async {
       mockFavoriteResult = Result.ok(
         SubsonicResponse(
@@ -302,7 +340,7 @@ void main() {
       expect(seeds.every((s) => s.weight == 1.0), true);
     });
 
-    test('P1-A does not include current playing seed', () async {
+    test('does not include current playing seed', () async {
       mockFavoriteResult = Result.ok(
         SubsonicResponse(
           subsonicResponse: SubsonicResponseClass(
@@ -315,12 +353,10 @@ void main() {
 
       final seeds = await container.read(userTasteSeedsProvider.future);
 
-      // P1-A: Only favorite seeds, no current playing
-      expect(seeds.every((s) => s.source == SeedSource.favorite), true);
       expect(seeds.any((s) => s.source == SeedSource.current), false);
     });
 
-    test('P1-A does not include play history seed', () async {
+    test('does not include play history seed', () async {
       mockFavoriteResult = Result.ok(
         SubsonicResponse(
           subsonicResponse: SubsonicResponseClass(
@@ -336,7 +372,7 @@ void main() {
       expect(seeds.any((s) => s.source == SeedSource.playHistory), false);
     });
 
-    test('P1-A does not include rating seed', () async {
+    test('does not include rating seed', () async {
       mockFavoriteResult = Result.ok(
         SubsonicResponse(
           subsonicResponse: SubsonicResponseClass(
@@ -351,9 +387,7 @@ void main() {
 
       final seeds = await container.read(userTasteSeedsProvider.future);
 
-      // Rating exists on song but P1-A doesn't use rating seeds
       expect(seeds.any((s) => s.source == SeedSource.rating), false);
-      expect(seeds.every((s) => s.source == SeedSource.favorite), true);
     });
 
     test('returns empty list on favorite provider error', () async {
@@ -381,5 +415,16 @@ class _FakeFavoriteNotifier extends Favorite {
             subsonicResponse: SubsonicResponseClass(starred: null),
           ),
         );
+  }
+}
+
+class _FakePlaylistDetail extends PlaylistDetail {
+  _FakePlaylistDetail({required this.mockResult});
+
+  final Result<PlaylistEntity, AppFailure>? Function() mockResult;
+
+  @override
+  Future<Result<PlaylistEntity, AppFailure>?> build(String? _) async {
+    return mockResult();
   }
 }

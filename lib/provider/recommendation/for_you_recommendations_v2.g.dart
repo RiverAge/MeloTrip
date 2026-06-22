@@ -10,11 +10,11 @@ part of 'for_you_recommendations_v2.dart';
 // ignore_for_file: type=lint, type=warning
 /// Provider for "For You" recommendations (P1 version).
 ///
-/// This is a parallel implementation for P1-A testing and validation.
+/// This is a parallel implementation kept for migration testing and validation.
 /// It does NOT replace the existing forYouRecommendationsProvider.
 ///
 /// The provider:
-/// 1. Reads userTasteSeedsProvider (currently only favorite seeds)
+/// 1. Reads userTasteSeedsProvider
 /// 2. Extracts song IDs from weighted seeds
 /// 3. Calls recommendationsProvider with the seed IDs
 ///
@@ -23,7 +23,7 @@ part of 'for_you_recommendations_v2.dart';
 /// Does NOT call AudioMuse-AI API directly.
 /// Does NOT cache results to local database.
 ///
-/// P1-A: This provider is NOT connected to the homepage UI.
+/// This provider is NOT connected to the homepage UI.
 /// It exists for parallel testing and future migration consideration.
 
 @ProviderFor(forYouRecommendationsV2)
@@ -31,11 +31,11 @@ final forYouRecommendationsV2Provider = ForYouRecommendationsV2Provider._();
 
 /// Provider for "For You" recommendations (P1 version).
 ///
-/// This is a parallel implementation for P1-A testing and validation.
+/// This is a parallel implementation kept for migration testing and validation.
 /// It does NOT replace the existing forYouRecommendationsProvider.
 ///
 /// The provider:
-/// 1. Reads userTasteSeedsProvider (currently only favorite seeds)
+/// 1. Reads userTasteSeedsProvider
 /// 2. Extracts song IDs from weighted seeds
 /// 3. Calls recommendationsProvider with the seed IDs
 ///
@@ -44,7 +44,7 @@ final forYouRecommendationsV2Provider = ForYouRecommendationsV2Provider._();
 /// Does NOT call AudioMuse-AI API directly.
 /// Does NOT cache results to local database.
 ///
-/// P1-A: This provider is NOT connected to the homepage UI.
+/// This provider is NOT connected to the homepage UI.
 /// It exists for parallel testing and future migration consideration.
 
 final class ForYouRecommendationsV2Provider
@@ -57,11 +57,11 @@ final class ForYouRecommendationsV2Provider
     with $FutureModifier<List<SongEntity>>, $FutureProvider<List<SongEntity>> {
   /// Provider for "For You" recommendations (P1 version).
   ///
-  /// This is a parallel implementation for P1-A testing and validation.
+  /// This is a parallel implementation kept for migration testing and validation.
   /// It does NOT replace the existing forYouRecommendationsProvider.
   ///
   /// The provider:
-  /// 1. Reads userTasteSeedsProvider (currently only favorite seeds)
+  /// 1. Reads userTasteSeedsProvider
   /// 2. Extracts song IDs from weighted seeds
   /// 3. Calls recommendationsProvider with the seed IDs
   ///
@@ -70,7 +70,7 @@ final class ForYouRecommendationsV2Provider
   /// Does NOT call AudioMuse-AI API directly.
   /// Does NOT cache results to local database.
   ///
-  /// P1-A: This provider is NOT connected to the homepage UI.
+  /// This provider is NOT connected to the homepage UI.
   /// It exists for parallel testing and future migration consideration.
   ForYouRecommendationsV2Provider._()
     : super(

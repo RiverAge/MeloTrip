@@ -1,5 +1,8 @@
 import 'package:melo_trip/model/recommendation/weighted_seed.dart';
+import 'package:melo_trip/provider/recommendation/favorite_album_weighted_seeds.dart';
+import 'package:melo_trip/provider/recommendation/favorite_artist_weighted_seeds.dart';
 import 'package:melo_trip/provider/recommendation/favorite_weighted_seeds.dart';
+import 'package:melo_trip/provider/recommendation/playlist_weighted_seeds.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_taste_seeds.g.dart';
@@ -45,15 +48,21 @@ List<WeightedSeed> sortSeedsByWeight(List<WeightedSeed> seeds) {
 
 /// Provider for aggregated user taste seeds.
 ///
-/// P1-A: Currently only aggregates favorite weighted seeds.
+/// Aggregates weighted seeds from available user taste signals.
 ///
-/// Future P1-B/P1-C may add:
+/// Currently includes:
+/// - Favorite songs
+/// - Songs from favorite albums
+/// - Songs from favorite artists
+/// - Songs from user playlists
+///
+/// Future iterations may add:
 /// - Current playing song (for context recommendations only)
 /// - Play history seeds
 /// - Rating seeds
 ///
 /// The provider:
-/// 1. Aggregates seeds from multiple sources (currently only favorites)
+/// 1. Aggregates seeds from multiple sources
 /// 2. Deduplicates by songId, keeping highest weight
 /// 3. Sorts by weight descending
 ///
@@ -62,11 +71,21 @@ List<WeightedSeed> sortSeedsByWeight(List<WeightedSeed> seeds) {
 Future<List<WeightedSeed>> userTasteSeeds(Ref ref) async {
   final seeds = <WeightedSeed>[];
 
-  // P1-A: Only favorite seeds for For You homepage
   final favoriteSeeds = await ref.watch(favoriteWeightedSeedsProvider.future);
   seeds.addAll(favoriteSeeds);
 
-  // P1-A: No current playing, no play_history, no rating
+  final favoriteAlbumSeeds = await ref.watch(
+    favoriteAlbumWeightedSeedsProvider().future,
+  );
+  seeds.addAll(favoriteAlbumSeeds);
+
+  final favoriteArtistSeeds = await ref.watch(
+    favoriteArtistWeightedSeedsProvider().future,
+  );
+  seeds.addAll(favoriteArtistSeeds);
+
+  final playlistSeeds = await ref.watch(playlistWeightedSeedsProvider().future);
+  seeds.addAll(playlistSeeds);
 
   // Deduplicate by songId, keeping highest weight
   final deduplicated = deduplicateWeightedSeeds(seeds);

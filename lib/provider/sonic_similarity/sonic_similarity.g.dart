@@ -341,17 +341,90 @@ abstract class _$SonicPath
   }
 }
 
+/// Tracks recently returned recommendation song IDs for the current app session.
+///
+/// Recommendations use this as a soft exclusion list. If fresh candidates are
+/// insufficient, old recommendations can still be used as fallback.
+
+@ProviderFor(RecentRecommendationHistory)
+final recentRecommendationHistoryProvider =
+    RecentRecommendationHistoryProvider._();
+
+/// Tracks recently returned recommendation song IDs for the current app session.
+///
+/// Recommendations use this as a soft exclusion list. If fresh candidates are
+/// insufficient, old recommendations can still be used as fallback.
+final class RecentRecommendationHistoryProvider
+    extends $NotifierProvider<RecentRecommendationHistory, List<String>> {
+  /// Tracks recently returned recommendation song IDs for the current app session.
+  ///
+  /// Recommendations use this as a soft exclusion list. If fresh candidates are
+  /// insufficient, old recommendations can still be used as fallback.
+  RecentRecommendationHistoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recentRecommendationHistoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$recentRecommendationHistoryHash();
+
+  @$internal
+  @override
+  RecentRecommendationHistory create() => RecentRecommendationHistory();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
+String _$recentRecommendationHistoryHash() =>
+    r'64a12df1e8db5591637e8e2629452eea711e4b28';
+
+/// Tracks recently returned recommendation song IDs for the current app session.
+///
+/// Recommendations use this as a soft exclusion list. If fresh candidates are
+/// insufficient, old recommendations can still be used as fallback.
+
+abstract class _$RecentRecommendationHistory extends $Notifier<List<String>> {
+  List<String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 /// Provider for client-side recommendations.
 ///
 /// Generates recommendations from user-provided seed song IDs.
 /// Each seed calls getSonicSimilarTracks to find similar songs.
 ///
 /// Results are deduplicated and ranked by:
+/// - Recent recommendation avoidance when enough fresh candidates exist
 /// - Artist diversity (max 3 songs per artist)
 /// - Album diversity (max 3 songs per album)
 ///
-/// NOTE: Does NOT automatically extract seeds from play history,
-/// starred songs, or ratings. Seeds must be provided via seedSongIds.
+/// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+/// seedSongIds.
 ///
 /// IMPORTANT: Does NOT call getSimilarSongs2.
 /// If getSonicSimilarTracks is unavailable, returns empty list.
@@ -365,11 +438,12 @@ final recommendationsProvider = RecommendationsFamily._();
 /// Each seed calls getSonicSimilarTracks to find similar songs.
 ///
 /// Results are deduplicated and ranked by:
+/// - Recent recommendation avoidance when enough fresh candidates exist
 /// - Artist diversity (max 3 songs per artist)
 /// - Album diversity (max 3 songs per album)
 ///
-/// NOTE: Does NOT automatically extract seeds from play history,
-/// starred songs, or ratings. Seeds must be provided via seedSongIds.
+/// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+/// seedSongIds.
 ///
 /// IMPORTANT: Does NOT call getSimilarSongs2.
 /// If getSonicSimilarTracks is unavailable, returns empty list.
@@ -381,11 +455,12 @@ final class RecommendationsProvider
   /// Each seed calls getSonicSimilarTracks to find similar songs.
   ///
   /// Results are deduplicated and ranked by:
+  /// - Recent recommendation avoidance when enough fresh candidates exist
   /// - Artist diversity (max 3 songs per artist)
   /// - Album diversity (max 3 songs per album)
   ///
-  /// NOTE: Does NOT automatically extract seeds from play history,
-  /// starred songs, or ratings. Seeds must be provided via seedSongIds.
+  /// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+  /// seedSongIds.
   ///
   /// IMPORTANT: Does NOT call getSimilarSongs2.
   /// If getSonicSimilarTracks is unavailable, returns empty list.
@@ -425,7 +500,7 @@ final class RecommendationsProvider
   }
 }
 
-String _$recommendationsHash() => r'25964f7e9fd3dd67ffde0d8062522e7bf8e43477';
+String _$recommendationsHash() => r'20915105262d077af2da3db3693963beaca3ab2c';
 
 /// Provider for client-side recommendations.
 ///
@@ -433,11 +508,12 @@ String _$recommendationsHash() => r'25964f7e9fd3dd67ffde0d8062522e7bf8e43477';
 /// Each seed calls getSonicSimilarTracks to find similar songs.
 ///
 /// Results are deduplicated and ranked by:
+/// - Recent recommendation avoidance when enough fresh candidates exist
 /// - Artist diversity (max 3 songs per artist)
 /// - Album diversity (max 3 songs per album)
 ///
-/// NOTE: Does NOT automatically extract seeds from play history,
-/// starred songs, or ratings. Seeds must be provided via seedSongIds.
+/// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+/// seedSongIds.
 ///
 /// IMPORTANT: Does NOT call getSimilarSongs2.
 /// If getSonicSimilarTracks is unavailable, returns empty list.
@@ -466,11 +542,12 @@ final class RecommendationsFamily extends $Family
   /// Each seed calls getSonicSimilarTracks to find similar songs.
   ///
   /// Results are deduplicated and ranked by:
+  /// - Recent recommendation avoidance when enough fresh candidates exist
   /// - Artist diversity (max 3 songs per artist)
   /// - Album diversity (max 3 songs per album)
   ///
-  /// NOTE: Does NOT automatically extract seeds from play history,
-  /// starred songs, or ratings. Seeds must be provided via seedSongIds.
+  /// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+  /// seedSongIds.
   ///
   /// IMPORTANT: Does NOT call getSimilarSongs2.
   /// If getSonicSimilarTracks is unavailable, returns empty list.
@@ -491,11 +568,12 @@ final class RecommendationsFamily extends $Family
 /// Each seed calls getSonicSimilarTracks to find similar songs.
 ///
 /// Results are deduplicated and ranked by:
+/// - Recent recommendation avoidance when enough fresh candidates exist
 /// - Artist diversity (max 3 songs per artist)
 /// - Album diversity (max 3 songs per album)
 ///
-/// NOTE: Does NOT automatically extract seeds from play history,
-/// starred songs, or ratings. Seeds must be provided via seedSongIds.
+/// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+/// seedSongIds.
 ///
 /// IMPORTANT: Does NOT call getSimilarSongs2.
 /// If getSonicSimilarTracks is unavailable, returns empty list.

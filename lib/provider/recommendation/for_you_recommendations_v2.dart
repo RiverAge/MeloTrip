@@ -7,11 +7,11 @@ part 'for_you_recommendations_v2.g.dart';
 
 /// Provider for "For You" recommendations (P1 version).
 ///
-/// This is a parallel implementation for P1-A testing and validation.
+/// This is a parallel implementation kept for migration testing and validation.
 /// It does NOT replace the existing forYouRecommendationsProvider.
 ///
 /// The provider:
-/// 1. Reads userTasteSeedsProvider (currently only favorite seeds)
+/// 1. Reads userTasteSeedsProvider
 /// 2. Extracts song IDs from weighted seeds
 /// 3. Calls recommendationsProvider with the seed IDs
 ///
@@ -20,7 +20,7 @@ part 'for_you_recommendations_v2.g.dart';
 /// Does NOT call AudioMuse-AI API directly.
 /// Does NOT cache results to local database.
 ///
-/// P1-A: This provider is NOT connected to the homepage UI.
+/// This provider is NOT connected to the homepage UI.
 /// It exists for parallel testing and future migration consideration.
 @riverpod
 Future<List<SongEntity>> forYouRecommendationsV2(Ref ref) async {

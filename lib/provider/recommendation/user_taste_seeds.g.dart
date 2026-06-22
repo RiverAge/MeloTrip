@@ -10,15 +10,21 @@ part of 'user_taste_seeds.dart';
 // ignore_for_file: type=lint, type=warning
 /// Provider for aggregated user taste seeds.
 ///
-/// P1-A: Currently only aggregates favorite weighted seeds.
+/// Aggregates weighted seeds from available user taste signals.
 ///
-/// Future P1-B/P1-C may add:
+/// Currently includes:
+/// - Favorite songs
+/// - Songs from favorite albums
+/// - Songs from favorite artists
+/// - Songs from user playlists
+///
+/// Future iterations may add:
 /// - Current playing song (for context recommendations only)
 /// - Play history seeds
 /// - Rating seeds
 ///
 /// The provider:
-/// 1. Aggregates seeds from multiple sources (currently only favorites)
+/// 1. Aggregates seeds from multiple sources
 /// 2. Deduplicates by songId, keeping highest weight
 /// 3. Sorts by weight descending
 ///
@@ -29,15 +35,21 @@ final userTasteSeedsProvider = UserTasteSeedsProvider._();
 
 /// Provider for aggregated user taste seeds.
 ///
-/// P1-A: Currently only aggregates favorite weighted seeds.
+/// Aggregates weighted seeds from available user taste signals.
 ///
-/// Future P1-B/P1-C may add:
+/// Currently includes:
+/// - Favorite songs
+/// - Songs from favorite albums
+/// - Songs from favorite artists
+/// - Songs from user playlists
+///
+/// Future iterations may add:
 /// - Current playing song (for context recommendations only)
 /// - Play history seeds
 /// - Rating seeds
 ///
 /// The provider:
-/// 1. Aggregates seeds from multiple sources (currently only favorites)
+/// 1. Aggregates seeds from multiple sources
 /// 2. Deduplicates by songId, keeping highest weight
 /// 3. Sorts by weight descending
 ///
@@ -55,15 +67,21 @@ final class UserTasteSeedsProvider
         $FutureProvider<List<WeightedSeed>> {
   /// Provider for aggregated user taste seeds.
   ///
-  /// P1-A: Currently only aggregates favorite weighted seeds.
+  /// Aggregates weighted seeds from available user taste signals.
   ///
-  /// Future P1-B/P1-C may add:
+  /// Currently includes:
+  /// - Favorite songs
+  /// - Songs from favorite albums
+  /// - Songs from favorite artists
+  /// - Songs from user playlists
+  ///
+  /// Future iterations may add:
   /// - Current playing song (for context recommendations only)
   /// - Play history seeds
   /// - Rating seeds
   ///
   /// The provider:
-  /// 1. Aggregates seeds from multiple sources (currently only favorites)
+  /// 1. Aggregates seeds from multiple sources
   /// 2. Deduplicates by songId, keeping highest weight
   /// 3. Sorts by weight descending
   ///
@@ -94,4 +112,4 @@ final class UserTasteSeedsProvider
   }
 }
 
-String _$userTasteSeedsHash() => r'5e8df15b54be7f0ed013adf7ff843398f252a5a9';
+String _$userTasteSeedsHash() => r'5df35df1ece752b0989d697aa0327314e0415f7c';

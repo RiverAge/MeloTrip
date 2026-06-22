@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
+import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 
@@ -23,12 +25,16 @@ void main() {
   group('forYouRecommendationsProvider', () {
     late ProviderContainer container;
     late Result<SubsonicResponse, AppFailure>? mockFavoriteResult;
+    late List<PlaylistEntity> mockPlaylists;
+    late Map<String, Result<PlaylistEntity, AppFailure>?> mockPlaylistDetails;
     late List<SongEntity> mockSimilarSongs;
     late AppFailure? mockSonicError;
     late FakeSonicSimilarityRepository fakeRepository;
 
     setUp(() {
       mockFavoriteResult = null;
+      mockPlaylists = const <PlaylistEntity>[];
+      mockPlaylistDetails = <String, Result<PlaylistEntity, AppFailure>?>{};
       mockSimilarSongs = [];
       mockSonicError = null;
 
@@ -45,6 +51,12 @@ void main() {
         overrides: [
           favoriteProvider.overrideWith(
             () => _FakeFavoriteNotifier(mockResult: () => mockFavoriteResult),
+          ),
+          playlistsProvider.overrideWith((_) async => Result.ok(mockPlaylists)),
+          playlistDetailProvider('pl-1').overrideWith(
+            () => _FakePlaylistDetail(
+              mockResult: () => mockPlaylistDetails['pl-1'],
+            ),
           ),
           sonicSimilarityRepositoryProvider.overrideWithValue(fakeRepository),
         ],
@@ -74,6 +86,40 @@ void main() {
         expect(fakeRepository.requestedIds.isEmpty, true);
       },
     );
+
+    test('uses playlist seeds when favorite songs are unavailable', () async {
+      mockFavoriteResult = Result.ok(
+        SubsonicResponse(
+          subsonicResponse: SubsonicResponseClass(
+            starred: StarredEntity(song: []),
+          ),
+        ),
+      );
+      mockPlaylists = [PlaylistEntity(id: 'pl-1', name: 'Daily', songCount: 2)];
+      mockPlaylistDetails['pl-1'] = Result.ok(
+        PlaylistEntity(
+          id: 'pl-1',
+          name: 'Daily',
+          entry: [
+            SongEntity(id: 'playlist-1', title: 'Playlist 1'),
+            SongEntity(id: 'playlist-2', title: 'Playlist 2'),
+          ],
+        ),
+      );
+      mockSimilarSongs = [SongEntity(id: 'similar-1', title: 'Similar 1')];
+
+      final recommendations = await container.read(
+        forYouRecommendationsProvider.future,
+      );
+
+      expect(recommendations, isNotEmpty);
+      expect(
+        fakeRepository.requestedIds.any(
+          (id) => ['playlist-1', 'playlist-2'].contains(id),
+        ),
+        true,
+      );
+    });
 
     test(
       'returns empty list when favoriteProvider returns null starred',
@@ -343,6 +389,17 @@ class _FakeFavoriteNotifier extends Favorite {
             subsonicResponse: SubsonicResponseClass(starred: null),
           ),
         );
+  }
+}
+
+class _FakePlaylistDetail extends PlaylistDetail {
+  _FakePlaylistDetail({required this.mockResult});
+
+  final Result<PlaylistEntity, AppFailure>? Function() mockResult;
+
+  @override
+  Future<Result<PlaylistEntity, AppFailure>?> build(String? _) async {
+    return mockResult();
   }
 }
 

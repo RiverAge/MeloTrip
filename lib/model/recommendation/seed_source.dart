@@ -6,6 +6,15 @@ enum SeedSource {
   /// Favorite/starred songs.
   favorite,
 
+  /// Songs from favorite/starred albums.
+  favoriteAlbum,
+
+  /// Songs from favorite/starred artists.
+  favoriteArtist,
+
+  /// Songs from user playlists.
+  playlist,
+
   /// Recently played songs.
   recent,
 

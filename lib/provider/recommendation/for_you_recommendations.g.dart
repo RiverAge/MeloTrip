@@ -10,8 +10,8 @@ part of 'for_you_recommendations.dart';
 // ignore_for_file: type=lint, type=warning
 /// Provider for "For You" recommendations on the home page.
 ///
-/// Uses favorite songs as seeds and calls the existing recommendationsProvider
-/// to get similar songs via getSonicSimilarTracks.
+/// Uses aggregated user taste seeds and calls the existing
+/// recommendationsProvider to get similar songs via getSonicSimilarTracks.
 ///
 /// - Returns empty list if no seeds available.
 /// - Does NOT fallback to getSimilarSongs2.
@@ -23,8 +23,8 @@ final forYouRecommendationsProvider = ForYouRecommendationsProvider._();
 
 /// Provider for "For You" recommendations on the home page.
 ///
-/// Uses favorite songs as seeds and calls the existing recommendationsProvider
-/// to get similar songs via getSonicSimilarTracks.
+/// Uses aggregated user taste seeds and calls the existing
+/// recommendationsProvider to get similar songs via getSonicSimilarTracks.
 ///
 /// - Returns empty list if no seeds available.
 /// - Does NOT fallback to getSimilarSongs2.
@@ -41,8 +41,8 @@ final class ForYouRecommendationsProvider
     with $FutureModifier<List<SongEntity>>, $FutureProvider<List<SongEntity>> {
   /// Provider for "For You" recommendations on the home page.
   ///
-  /// Uses favorite songs as seeds and calls the existing recommendationsProvider
-  /// to get similar songs via getSonicSimilarTracks.
+  /// Uses aggregated user taste seeds and calls the existing
+  /// recommendationsProvider to get similar songs via getSonicSimilarTracks.
   ///
   /// - Returns empty list if no seeds available.
   /// - Does NOT fallback to getSimilarSongs2.
@@ -75,4 +75,4 @@ final class ForYouRecommendationsProvider
 }
 
 String _$forYouRecommendationsHash() =>
-    r'47cf744176c5c235ddd195cfd242f5d1b5db4eba';
+    r'768290494fc9593c5661824af7a2722a578c9b79';

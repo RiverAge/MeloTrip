@@ -97,17 +97,51 @@ class SonicPath extends _$SonicPath {
   }
 }
 
+/// Tracks recently returned recommendation song IDs for the current app session.
+///
+/// Recommendations use this as a soft exclusion list. If fresh candidates are
+/// insufficient, old recommendations can still be used as fallback.
+@Riverpod(keepAlive: true)
+class RecentRecommendationHistory extends _$RecentRecommendationHistory {
+  @override
+  List<String> build() => const <String>[];
+
+  void record(Iterable<SongEntity> songs, {int maxItems = 80}) {
+    final next = <String>[];
+    final seen = <String>{};
+
+    for (final song in songs) {
+      final id = song.id;
+      if (id == null || id.isEmpty || !seen.add(id)) continue;
+      next.add(id);
+    }
+
+    for (final id in state) {
+      if (seen.add(id)) {
+        next.add(id);
+      }
+    }
+
+    state = next.take(maxItems).toList();
+  }
+
+  void clear() {
+    state = const <String>[];
+  }
+}
+
 /// Provider for client-side recommendations.
 ///
 /// Generates recommendations from user-provided seed song IDs.
 /// Each seed calls getSonicSimilarTracks to find similar songs.
 ///
 /// Results are deduplicated and ranked by:
+/// - Recent recommendation avoidance when enough fresh candidates exist
 /// - Artist diversity (max 3 songs per artist)
 /// - Album diversity (max 3 songs per album)
 ///
-/// NOTE: Does NOT automatically extract seeds from play history,
-/// starred songs, or ratings. Seeds must be provided via seedSongIds.
+/// NOTE: Does NOT automatically extract seeds. Seeds must be provided via
+/// seedSongIds.
 ///
 /// IMPORTANT: Does NOT call getSimilarSongs2.
 /// If getSonicSimilarTracks is unavailable, returns empty list.
@@ -122,55 +156,52 @@ class Recommendations extends _$Recommendations {
     final Set<String> seenIds = {};
     final Map<String, int> artistCount = {};
     final Map<String, int> albumCount = {};
+    final recentIds = ref.read(recentRecommendationHistoryProvider).toSet();
+    final fallbackCandidates = <SongEntity>[];
+    final fallbackSeenIds = <String>{};
 
-    // Use provided seeds or empty list
     final seeds = seedSongIds ?? const [];
 
     if (seeds.isEmpty) {
-      // No seeds available - return empty
       return [];
     }
 
-    // Shuffle seeds for variety
     final random = Random();
     final shuffledSeeds = List<String>.from(seeds)..shuffle(random);
-
-    // Limit concurrent API calls (max 5 seeds)
-    final maxSeeds = min(shuffledSeeds.length, 5);
+    final maxSeeds = min(shuffledSeeds.length, 8);
+    final candidateCount = maxSeeds <= 2 ? 50 : 20;
 
     for (int i = 0; i < maxSeeds && recommendations.length < limit; i++) {
       final seedId = shuffledSeeds[i];
 
       final result = await ref.read(
-        similarSongsProvider(songId: seedId, count: 10).future,
+        similarSongsProvider(songId: seedId, count: candidateCount).future,
       );
 
       result.when(
         ok: (songs) {
-          for (final song in songs) {
+          final candidates = List<SongEntity>.from(songs)..shuffle(random);
+          for (final song in candidates) {
             if (recommendations.length >= limit) break;
-            if (song.id == null || seenIds.contains(song.id)) continue;
-            // Skip if already in seed set
-            if (seeds.contains(song.id)) continue;
 
-            // Apply artist/album diversity penalty
-            final artistId = song.artistId ?? song.artist;
-            final albumId = song.albumId ?? song.album;
+            final id = song.id;
+            if (id == null || id.isEmpty) continue;
+            if (seenIds.contains(id) || seeds.contains(id)) continue;
 
-            final artistPenalty = artistCount[artistId] ?? 0;
-            final albumPenalty = albumCount[albumId] ?? 0;
-
-            // Skip if too many from same artist or album
-            if (artistPenalty >= 3 || albumPenalty >= 3) continue;
-
-            recommendations.add(song);
-            seenIds.add(song.id!);
-            if (artistId != null) {
-              artistCount[artistId] = (artistCount[artistId] ?? 0) + 1;
+            if (recentIds.contains(id)) {
+              if (fallbackSeenIds.add(id)) {
+                fallbackCandidates.add(song);
+              }
+              continue;
             }
-            if (albumId != null) {
-              albumCount[albumId] = (albumCount[albumId] ?? 0) + 1;
-            }
+
+            _tryAddRecommendation(
+              song: song,
+              recommendations: recommendations,
+              seenIds: seenIds,
+              artistCount: artistCount,
+              albumCount: albumCount,
+            );
           }
         },
         err: (_) {
@@ -179,8 +210,58 @@ class Recommendations extends _$Recommendations {
       );
     }
 
+    for (final song in fallbackCandidates) {
+      if (recommendations.length >= limit) break;
+      _tryAddRecommendation(
+        song: song,
+        recommendations: recommendations,
+        seenIds: seenIds,
+        artistCount: artistCount,
+        albumCount: albumCount,
+      );
+    }
+
+    if (recommendations.isNotEmpty) {
+      ref
+          .read(recentRecommendationHistoryProvider.notifier)
+          .record(recommendations);
+    }
+
     return recommendations;
   }
+}
+
+bool _tryAddRecommendation({
+  required SongEntity song,
+  required List<SongEntity> recommendations,
+  required Set<String> seenIds,
+  required Map<String, int> artistCount,
+  required Map<String, int> albumCount,
+}) {
+  final id = song.id;
+  if (id == null || id.isEmpty || seenIds.contains(id)) {
+    return false;
+  }
+
+  final artistId = song.artistId ?? song.artist;
+  final albumId = song.albumId ?? song.album;
+
+  final artistPenalty = artistCount[artistId] ?? 0;
+  final albumPenalty = albumCount[albumId] ?? 0;
+
+  if (artistPenalty >= 3 || albumPenalty >= 3) {
+    return false;
+  }
+
+  recommendations.add(song);
+  seenIds.add(id);
+  if (artistId != null) {
+    artistCount[artistId] = (artistCount[artistId] ?? 0) + 1;
+  }
+  if (albumId != null) {
+    albumCount[albumId] = (albumCount[albumId] ?? 0) + 1;
+  }
+  return true;
 }
 
 /// Provider for radio mode queue generation.
