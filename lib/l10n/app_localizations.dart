@@ -429,6 +429,12 @@ abstract class AppLocalizations {
   /// **'GuessYouLike'**
   String get guessYouLike;
 
+  /// Message shown when no recommendations are available
+  ///
+  /// In en, this message translates to:
+  /// **'No recommendations'**
+  String get noRecommendations;
+
   /// Search hint text for search bar
   ///
   /// In en, this message translates to:

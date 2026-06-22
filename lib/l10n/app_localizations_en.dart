@@ -176,6 +176,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guessYouLike => 'GuessYouLike';
 
   @override
+  String get noRecommendations => 'No recommendations';
+
+  @override
   String get searchHint => 'Search for songs, artists or albums...';
 
   @override

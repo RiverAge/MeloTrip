@@ -72,6 +72,7 @@
     "mostPlayed": "播放最多",
     "recommendedToday": "今日推荐",
     "guessYouLike": "猜你喜欢",
+    "noRecommendations": "暂无推荐",
 
     "searchHistory": "搜索历史",
     "searchHint": "搜索歌曲、艺术家或专辑...",

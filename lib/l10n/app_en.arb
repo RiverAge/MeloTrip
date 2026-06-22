@@ -253,6 +253,10 @@
    "@guessYouLike": {
       "description": "Title of smart suggestion"
    },
+   "noRecommendations": "No recommendations",
+   "@noRecommendations": {
+      "description": "Message shown when no recommendations are available"
+   },
 
    "searchHint": "Search for songs, artists or albums...",
    "@searchHint": {

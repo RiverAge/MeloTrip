@@ -53,10 +53,12 @@ Future<void> _pumpDesktopHome(
   required List<AlbumEntity> recent,
   required List<AlbumEntity> newest,
   required List<AlbumEntity> frequent,
+  List<SongEntity> recommendations = const <SongEntity>[],
+  Size viewportSize = const Size(1600, 1000),
   required SubsonicResponse detail,
 }) async {
   tester.view.devicePixelRatio = 1;
-  tester.view.physicalSize = const Size(1600, 1000);
+  tester.view.physicalSize = viewportSize;
   addTearDown(() {
     tester.view.resetPhysicalSize();
     tester.view.resetDevicePixelRatio();
@@ -67,6 +69,9 @@ Future<void> _pumpDesktopHome(
       overrides: [
         appPlayerHandlerProvider.overrideWith(FakeAppPlayerHandler.new),
         sessionAuthProvider.overrideWith(fakeSessionAuthLoggedOut),
+        forYouRecommendationsProvider.overrideWith(
+          (_) async => recommendations,
+        ),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.random.name),
         ).overrideWith((_) async => Result.ok(random)),
@@ -93,6 +98,7 @@ Future<void> _pumpDesktopHome(
         ).overrideWith(() => _FakeAlbumDetail(detail)),
       ],
       child: MaterialApp(
+        theme: ThemeData(splashFactory: NoSplash.splashFactory),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(body: DesktopHomePage()),
