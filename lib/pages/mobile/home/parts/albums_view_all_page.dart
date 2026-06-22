@@ -122,7 +122,7 @@ class _AlbumsViewAllPageState extends ConsumerState<_AlbumsViewAllPage> {
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 0.8,
+          childAspectRatio: _albumGridChildAspectRatio,
         ),
         itemBuilder: (_, idx) => _buildCardItem(context, albums[idx]),
       ),

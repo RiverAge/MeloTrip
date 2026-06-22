@@ -60,13 +60,16 @@ class _ForYouRecommendations extends StatelessWidget {
               const SizedBox(height: 8),
               SizedBox(
                 height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: songs.length,
-                  itemBuilder: (context, index) {
-                    final song = songs[index];
-                    return _SongCard(song: song);
-                  },
+                child: ScrollConfiguration(
+                  behavior: const _HorizontalCardScrollBehavior(),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: songs.length,
+                    itemBuilder: (context, index) {
+                      final song = songs[index];
+                      return _SongCard(song: song);
+                    },
+                  ),
                 ),
               ),
             ],
@@ -75,6 +78,16 @@ class _ForYouRecommendations extends StatelessWidget {
       },
     );
   }
+}
+
+class _HorizontalCardScrollBehavior extends MaterialScrollBehavior {
+  const _HorizontalCardScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    ...super.dragDevices,
+    .mouse,
+  };
 }
 
 class _SongCard extends StatelessWidget {
@@ -89,72 +102,74 @@ class _SongCard extends StatelessWidget {
 
     return Consumer(
       builder: (context, ref, _) {
-        return InkWell(
-          onTap: () async {
-            final player = await ref.read(appPlayerHandlerProvider.future);
-            if (player != null) {
-              await player.insertAndPlay(song);
-            }
-          },
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
+        return Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: SizedBox(
             width: 130,
-            margin: const EdgeInsets.only(right: 12),
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                // Album artwork
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.shadow.withValues(
-                            alpha: 0.05,
-                          ),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+            child: InkWell(
+              onTap: () async {
+                final player = await ref.read(appPlayerHandlerProvider.future);
+                if (player != null) {
+                  await player.insertAndPlay(song);
+                }
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.shadow.withValues(
+                                alpha: 0.05,
+                              ),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: ArtworkImage(
-                        fit: .cover,
-                        id: song.coverArt ?? song.albumId,
-                        size: 300,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: ArtworkImage(
+                            fit: .cover,
+                            id: song.coverArt ?? song.albumId,
+                            size: 300,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Song title
-                Text(
-                  song.title ?? '',
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: .w600,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                // Artist name
-                Text(
-                  artist,
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                  style: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: .7,
+                    const SizedBox(height: 8),
+                    Text(
+                      song.title ?? '',
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: .bold,
+                        height: 1.2,
+                      ),
                     ),
-                    fontSize: 12,
-                  ),
+                    const SizedBox(height: 2),
+                    Text(
+                      artist,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: TextStyle(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: .7,
+                        ),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );

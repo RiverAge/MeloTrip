@@ -71,7 +71,7 @@ class _DesktopPlayerBarActions extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const _DesktopVolumeBar(),
+                const Flexible(child: _DesktopVolumeBar()),
               ],
             ),
           ],

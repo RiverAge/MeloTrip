@@ -13,126 +13,173 @@ class _SongMeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final artists = song.artists ?? [];
+    final artistNames = artists
+        .map((artist) => artist.name?.trim() ?? '')
+        .where((name) => name.isNotEmpty)
+        .join(' / ');
+    final metaRows = <Widget>[];
+
+    void addMetaRow(Widget row) {
+      if (metaRows.isNotEmpty) metaRows.add(_MetaSeparator());
+      metaRows.add(row);
+    }
+
+    if (artistNames.isNotEmpty) {
+      addMetaRow(
+        _MetaItem(
+          icon: Icons.group_rounded,
+          label: l10n.artist,
+          value: artistNames,
+          onTap: artists.length == 1 && artists.first.id != null
+              ? () => onOpenArtist(artists.first.id!)
+              : null,
+        ),
+      );
+    }
+
+    addMetaRow(
+      _MetaItem(
+        icon: Icons.album_outlined,
+        label: l10n.album,
+        value: song.album ?? '-',
+        onTap: onOpenAlbum,
+      ),
+    );
+
+    if (song.genre != null) {
+      addMetaRow(
+        _MetaItem(
+          icon: Icons.gesture_rounded,
+          label: l10n.songMetaGenre,
+          value: song.genre!,
+        ),
+      );
+    }
+
+    if (song.year != null) {
+      addMetaRow(
+        _MetaItem(
+          icon: Icons.date_range_outlined,
+          label: l10n.songMetaYear,
+          value: '${song.year}',
+        ),
+      );
+    }
+
+    if (song.track != null) {
+      final trackText = song.discNumber == null
+          ? '${song.track}'
+          : '${song.discNumber}-${song.track}';
+      addMetaRow(
+        _MetaItem(
+          icon: Icons.disc_full_outlined,
+          label: l10n.songMetaTrackNumber,
+          value: trackText,
+        ),
+      );
+    }
+
+    addMetaRow(
+      _MetaItem(
+        icon: Icons.storage_rounded,
+        label: l10n.songMetaSize,
+        value: fileSizeFormatter(song.size),
+      ),
+    );
+
     return Expanded(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: (DividerTheme.of(context).space ?? 16) / 2),
-            if (artists.length == 1)
-              ListTile(
-                onTap: () {
-                  final artistId = artists.first.id;
-                  if (artistId != null) onOpenArtist(artistId);
-                },
-                leading: const Icon(Icons.group),
-                title: Text(
-                  '${AppLocalizations.of(context)!.artist}: ${artists.first.name}',
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(children: metaRows),
+      ),
+    );
+  }
+}
+
+class _MetaItem extends StatelessWidget {
+  const _MetaItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final content = Padding(
+      padding: const EdgeInsets.fromLTRB(6, 10, 2, 10),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 22,
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.76),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                  ),
                 ),
-              ),
-            if (artists.length > 1)
-              ListTile(
-                leading: const Icon(Icons.group),
-                title: Wrap(
-                  runSpacing: 4,
-                  children: [
-                    ...(song.artists ?? []).map(
-                      (e) => TextButton(
-                        onPressed: () {
-                          final artistId = e.id;
-                          if (artistId != null) onOpenArtist(artistId);
-                        },
-                        child: Text(e.name ?? ''),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  maxLines: 2,
+                  overflow: .ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
                 ),
-              ),
-            const Divider(),
-            ListTile(
-              onTap: onOpenAlbum,
-              leading: const Icon(Icons.album_outlined),
-              title: Text(
-                '${AppLocalizations.of(context)!.album}: ${song.album}',
-              ),
+              ],
             ),
-            // const Divider(),
-            // ListTile(
-            //   leading: const Icon(Icons.access_time),
-            //   title: Text(
-            //     '${AppLocalizations.of(context)!.songMetaDuration}: ${durationFormatter(song.duration)}',
-            //   ),
-            // ),
-            // const Divider(),
-            // ListTile(
-            //   leading: const Icon(Icons.disc_full_outlined),
-            //   title: Text(
-            //     '${AppLocalizations.of(context)!.songMetaFormat}: ${song.suffix}',
-            //   ),
-            // ),
-            // const Divider(),
-            // ListTile(
-            //   leading: const Icon(Icons.high_quality_outlined),
-            //   title: Text(
-            //     '${AppLocalizations.of(context)!.songMetaBitRate}: ${song.bitRate}K',
-            //   ),
-            // ),
-            if (song.genre != null) const Divider(),
-            if (song.genre != null)
-              ListTile(
-                leading: const Icon(Icons.gesture_rounded),
-                title: Text(
-                  '${AppLocalizations.of(context)!.songMetaGenre}: ${song.genre}',
-                ),
-              ),
-            if (song.year != null) const Divider(),
-            if (song.year != null)
-              ListTile(
-                leading: const Icon(Icons.date_range_outlined),
-                title: Text(
-                  '${AppLocalizations.of(context)!.songMetaYear}: ${song.year}',
-                ),
-              ),
-            const Divider(),
-            // ListTile(
-            //   leading: const Icon(Icons.route_outlined),
-            //   title: Text(
-            //     '${AppLocalizations.of(context)!.songMetaPath}: ${song.path}',
-            //   ),
-            // ),
-            // if (song.samplingRate != null && song.samplingRate != 0)
-            //   const Divider(),
-            // if (song.samplingRate != null && song.samplingRate != 0)
-            //   ListTile(
-            //     leading: const Icon(Icons.equalizer_outlined),
-            //     title: Text(
-            //       '${AppLocalizations.of(context)!.songMetaSampling}: ${song.samplingRate}',
-            //     ),
-            //   ),
-            // if (song.track != null) const Divider(),
-            if (song.track != null)
-              ListTile(
-                leading: const Icon(Icons.disc_full_outlined),
-                title: Text(
-                  '${AppLocalizations.of(context)!.songMetaTrackNumber}: ${song.discNumber}-${song.track}',
-                ),
-              ),
-            // const Divider(),
-            // ListTile(
-            //   leading: const Icon(Icons.pin_outlined),
-            //   title: Text(
-            //     '${AppLocalizations.of(context)!.songMetaDiskNumber}: ${song.discNumber}',
-            //   ),
-            // ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.storage_rounded),
-              title: Text(
-                '${AppLocalizations.of(context)!.songMetaSize}: ${fileSizeFormatter(song.size)}',
-              ),
+          ),
+          if (onTap != null) ...[
+            const SizedBox(width: 8),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.55),
             ),
           ],
-        ),
+        ],
+      ),
+    );
+
+    if (onTap == null) return content;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: content,
+    );
+  }
+}
+
+class _MetaSeparator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 42),
+      child: Divider(
+        height: 1,
+        color: Theme.of(
+          context,
+        ).colorScheme.outlineVariant.withValues(alpha: 0.42),
       ),
     );
   }

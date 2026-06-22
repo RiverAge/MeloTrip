@@ -64,9 +64,11 @@ Future<T?> showSongControlSheet<T>(
   final effectiveNavigation = navigation ?? _defaultNavigation();
   return showModalBottomSheet<T>(
     isScrollControlled: true,
+    backgroundColor: Theme.of(context).colorScheme.surface,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
     ),
+    clipBehavior: Clip.antiAlias,
     context: context,
     builder: (context) {
       return _SongControls(
@@ -84,19 +86,22 @@ class _SongControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.7,
+      heightFactor: 0.72,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
         child: AsyncValueBuilder(
           provider: songDetailProvider(songId),
           builder: (ctx, data, ref) {
             final song = data.data?.subsonicResponse?.song;
             if (song == null) return const Center(child: NoData());
             return SafeArea(
+              top: false,
               child: Column(
+                crossAxisAlignment: .stretch,
                 children: [
-                  GestureHint(),
+                  const Align(alignment: .center, child: GestureHint()),
                   _SongTitle(song: song),
+                  const SizedBox(height: 10),
                   _SongActions(
                     song: song,
                     onAddToPlaylist: () =>
@@ -105,6 +110,7 @@ class _SongControls extends StatelessWidget {
                         .read(songDetailProvider(song.id).notifier)
                         .toggleFavorite(),
                   ),
+                  const SizedBox(height: 10),
                   _SongMeta(
                     song: song,
                     onOpenArtist: (artistId) =>
@@ -121,4 +127,3 @@ class _SongControls extends StatelessWidget {
     );
   }
 }
-

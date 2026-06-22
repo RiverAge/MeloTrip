@@ -2,6 +2,8 @@ part of '../home_page.dart';
 
 enum AlbumLayout { horizontal, grid, tile }
 
+const double _albumGridChildAspectRatio = 0.76;
+
 class _Albums extends StatelessWidget {
   const _Albums({
     required this.type,
@@ -107,7 +109,7 @@ class _Albums extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 0.8,
+          childAspectRatio: _albumGridChildAspectRatio,
         ),
         itemBuilder: (_, idx) => _cardItem(context, albums[idx]),
       ),
