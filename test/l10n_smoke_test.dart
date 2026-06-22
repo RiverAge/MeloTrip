@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/common/result.dart';
 import 'package:melo_trip/model/response/album/album.dart';
+import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/mobile/home/home_page.dart';
 import 'package:melo_trip/provider/album/albums.dart';
+import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
 
 void main() {
   testWidgets('Localization delegates load', (WidgetTester tester) async {
@@ -84,6 +86,9 @@ void main() {
           albumListProvider(
             AlbumListQuery(type: AlbumListType.recent.name),
           ).overrideWith((_) async => const Result.ok(<AlbumEntity>[])),
+          forYouRecommendationsProvider.overrideWith(
+            (_) async => const <SongEntity>[],
+          ),
         ],
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
