@@ -79,9 +79,23 @@ class _DesktopRecommendationSectionState
     );
   }
 
+  void _refreshRecommendations() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+    if (_canScrollBack || _canScrollForward) {
+      setState(() {
+        _canScrollBack = false;
+        _canScrollForward = false;
+      });
+    }
+    ref.invalidate(forYouRecommendationsProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     final recommendations = ref.watch(forYouRecommendationsProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return SliverToBoxAdapter(
       child: LayoutBuilder(
@@ -106,6 +120,8 @@ class _DesktopRecommendationSectionState
             children: [
               _SectionHeader(
                 title: widget.title,
+                onRefresh: _refreshRecommendations,
+                refreshTooltip: l10n.refreshRecommendations,
                 onScrollBack: hasRecommendations && _canScrollBack
                     ? _onScrollBack
                     : null,

@@ -3,11 +3,15 @@ part of '../home_page.dart';
 class _SectionHeader extends StatelessWidget {
   const _SectionHeader({
     required this.title,
+    this.onRefresh,
+    this.refreshTooltip,
     this.onScrollBack,
     this.onScrollForward,
   });
 
   final String title;
+  final VoidCallback? onRefresh;
+  final String? refreshTooltip;
   final VoidCallback? onScrollBack;
   final VoidCallback? onScrollForward;
 
@@ -33,6 +37,14 @@ class _SectionHeader extends StatelessWidget {
           const SizedBox(width: 8),
           const Spacer(),
           const SizedBox(width: 10),
+          if (onRefresh != null) ...[
+            _ScrollButton(
+              icon: Icons.refresh_rounded,
+              onPressed: onRefresh,
+              tooltip: refreshTooltip,
+            ),
+            const SizedBox(width: 8),
+          ],
           _ScrollButton(
             icon: Icons.arrow_back_ios_new_rounded,
             onPressed: onScrollBack,
@@ -49,10 +61,11 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _ScrollButton extends StatelessWidget {
-  const _ScrollButton({required this.icon, this.onPressed});
+  const _ScrollButton({required this.icon, this.onPressed, this.tooltip});
 
   final IconData icon;
   final VoidCallback? onPressed;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +73,7 @@ class _ScrollButton extends StatelessWidget {
     final enabled = onPressed != null;
     return IconButton(
       onPressed: onPressed,
+      tooltip: tooltip,
       icon: Icon(
         icon,
         size: 12,

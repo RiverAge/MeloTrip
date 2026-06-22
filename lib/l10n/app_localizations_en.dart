@@ -179,6 +179,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noRecommendations => 'No recommendations';
 
   @override
+  String get refreshRecommendations => 'Refresh recommendations';
+
+  @override
   String get searchHint => 'Search for songs, artists or albums...';
 
   @override

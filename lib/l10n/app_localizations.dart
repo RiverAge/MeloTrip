@@ -435,6 +435,12 @@ abstract class AppLocalizations {
   /// **'No recommendations'**
   String get noRecommendations;
 
+  /// Tooltip for refreshing smart recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh recommendations'**
+  String get refreshRecommendations;
+
   /// Search hint text for search bar
   ///
   /// In en, this message translates to:

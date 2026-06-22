@@ -253,6 +253,7 @@ void main() {
       recent: [randomAlbum],
       newest: [randomAlbum],
       frequent: [randomAlbum],
+      viewportSize: const Size(1600, 1800),
       detail: _albumDetailResponse(
         albumId: 'album-1',
         albumName: 'Hero Album',
@@ -267,6 +268,10 @@ void main() {
     );
     expect(
       find.widgetWithIcon(IconButton, Icons.arrow_forward_ios_rounded),
+      findsWidgets,
+    );
+    expect(
+      find.widgetWithIcon(IconButton, Icons.refresh_rounded),
       findsWidgets,
     );
   });

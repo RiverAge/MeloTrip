@@ -179,6 +179,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noRecommendations => '暂无推荐';
 
   @override
+  String get refreshRecommendations => '换一批';
+
+  @override
   String get searchHint => '搜索歌曲、艺术家或专辑...';
 
   @override
@@ -965,6 +968,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get noRecommendations => '暂无推荐';
+
+  @override
+  String get refreshRecommendations => '换一批';
 
   @override
   String get searchHint => '搜索歌曲、艺术家或专辑...';

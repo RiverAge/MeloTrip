@@ -1,7 +1,35 @@
 part of '../home_page.dart';
 
-class _ForYouRecommendations extends StatelessWidget {
+class _ForYouRecommendations extends ConsumerStatefulWidget {
   const _ForYouRecommendations();
+
+  @override
+  ConsumerState<_ForYouRecommendations> createState() =>
+      _ForYouRecommendationsState();
+}
+
+class _ForYouRecommendationsState
+    extends ConsumerState<_ForYouRecommendations> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _refreshRecommendations() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+    ref.invalidate(forYouRecommendationsProvider);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +52,22 @@ class _ForYouRecommendations extends StatelessWidget {
               Row(
                 mainAxisAlignment: .spaceBetween,
                 children: [
-                  Text(
-                    l10n.guessYouLike,
-                    style: const TextStyle(fontSize: 18, fontWeight: .w900),
+                  Expanded(
+                    child: Text(
+                      l10n.guessYouLike,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      style: const TextStyle(fontSize: 18, fontWeight: .w900),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: l10n.refreshRecommendations,
+                    onPressed: _refreshRecommendations,
+                    icon: Icon(
+                      Icons.refresh_rounded,
+                      size: 20,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   // Play all button
                   TextButton.icon(
@@ -63,6 +104,7 @@ class _ForYouRecommendations extends StatelessWidget {
                 child: ScrollConfiguration(
                   behavior: const _HorizontalCardScrollBehavior(),
                   child: ListView.builder(
+                    controller: _scrollController,
                     scrollDirection: Axis.horizontal,
                     itemCount: songs.length,
                     itemBuilder: (context, index) {
@@ -84,10 +126,7 @@ class _HorizontalCardScrollBehavior extends MaterialScrollBehavior {
   const _HorizontalCardScrollBehavior();
 
   @override
-  Set<PointerDeviceKind> get dragDevices => {
-    ...super.dragDevices,
-    .mouse,
-  };
+  Set<PointerDeviceKind> get dragDevices => {...super.dragDevices, .mouse};
 }
 
 class _SongCard extends StatelessWidget {

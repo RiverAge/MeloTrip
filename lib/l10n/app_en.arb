@@ -257,6 +257,10 @@
    "@noRecommendations": {
       "description": "Message shown when no recommendations are available"
    },
+   "refreshRecommendations": "Refresh recommendations",
+   "@refreshRecommendations": {
+      "description": "Tooltip for refreshing smart recommendations"
+   },
 
    "searchHint": "Search for songs, artists or albums...",
    "@searchHint": {
