@@ -69,6 +69,34 @@ void main() {
       expect(info.fileSize, 2048);
     });
 
+    test('uses platform versionCode when provided', () {
+      final manifestJson = <String, dynamic>{
+        'repository': 'RiverAge/MeloTrip',
+        'tagName': 'v1.0.13',
+        'versionName': '1.0.13',
+        'versionCode': 14,
+        'platforms': <String, dynamic>{
+          'android': <String, dynamic>{
+            'packageType': 'apk',
+            'assetName': 'app-release.apk',
+            'versionCode': 2014,
+            'sha256': 'android-sha',
+            'fileSize': 4096,
+          },
+        },
+      };
+
+      final info = parser.parseManifest(
+        manifestJson: manifestJson,
+        platform: 'android',
+        packageType: 'apk',
+      );
+
+      expect(info.versionName, '1.0.13');
+      expect(info.versionCode, 2014);
+      expect(info.downloadUrl, contains('app-release.apk'));
+    });
+
     test('throws when package type does not match', () {
       final manifestJson = <String, dynamic>{
         'versionName': '1.0.12',

@@ -39,6 +39,13 @@ class UpdateManifestParser {
       );
     }
 
+    final platformVersionCode = (platformPayload['versionCode'] as num?)
+        ?.toInt();
+    final effectiveVersionCode = platformVersionCode ?? versionCode;
+    if (effectiveVersionCode <= 0) {
+      throw StateError('Update manifest has invalid platform versionCode.');
+    }
+
     final downloadUrl = _readDownloadUrl(
       manifestJson: manifestJson,
       platformPayload: platformPayload,
@@ -50,7 +57,7 @@ class UpdateManifestParser {
 
     return ParsedUpdateInfo(
       versionName: versionName,
-      versionCode: versionCode,
+      versionCode: effectiveVersionCode,
       sha256: platformPayload['sha256'] as String? ?? '',
       fileSize: fileSize,
       downloadUrl: downloadUrl,

@@ -37,7 +37,7 @@ class GitHubReleaseParser {
     );
 
     final versionName = metadata.versionName ?? _extractVersionFromTag(tagName);
-    final versionCode = metadata.versionCode ?? 0;
+    final versionCode = assetInfo.versionCode ?? metadata.versionCode ?? 0;
     if (versionCode <= 0) {
       throw StateError('Invalid version code in release metadata.');
     }
@@ -84,12 +84,12 @@ class GitHubReleaseParser {
     final endIndex = body.indexOf(endMarker, startIndex);
     if (endIndex == -1) return null;
 
-    final content = body.substring(
-      startIndex + startMarker.length,
-      endIndex,
-    );
+    final content = body.substring(startIndex + startMarker.length, endIndex);
 
-    final lines = content.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty);
+    final lines = content
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty);
 
     String? versionName;
     int? versionCode;
@@ -100,6 +100,8 @@ class GitHubReleaseParser {
         versionName = line.substring('versionName='.length);
       } else if (line.startsWith('versionCode=')) {
         versionCode = int.tryParse(line.substring('versionCode='.length));
+      } else if (line.startsWith('versionCode.')) {
+        _parseVersionCodeLine(line, platformAssets);
       } else if (line.startsWith('asset.')) {
         _parseAssetLine(line, platformAssets);
       } else if (line.startsWith('sha256.')) {
@@ -116,7 +118,10 @@ class GitHubReleaseParser {
     );
   }
 
-  void _parseAssetLine(String line, Map<String, PlatformAssetInfo> platformAssets) {
+  void _parseAssetLine(
+    String line,
+    Map<String, PlatformAssetInfo> platformAssets,
+  ) {
     // Format: asset.<platform>.<ext>=<filename>
     // e.g., asset.android.apk=app-release.apk
     // ext can contain dots, e.g., asset.linux.tar.gz=melotrip-linux.tar.gz
@@ -137,12 +142,31 @@ class GitHubReleaseParser {
 
     final infoKey = '$platform.$packageType';
 
-    platformAssets[infoKey] = (platformAssets[infoKey] ?? PlatformAssetInfo()).copyWith(
-      assetName: value,
+    platformAssets[infoKey] = (platformAssets[infoKey] ?? PlatformAssetInfo())
+        .copyWith(assetName: value);
+  }
+
+  void _parseVersionCodeLine(
+    String line,
+    Map<String, PlatformAssetInfo> platformAssets,
+  ) {
+    // Format: versionCode.<platform>.<ext>=<code>
+    final eqIndex = line.indexOf('=');
+    if (eqIndex == -1) return;
+
+    final key = line.substring('versionCode.'.length, eqIndex);
+    final value = int.tryParse(line.substring(eqIndex + 1));
+    if (value == null) return;
+
+    platformAssets[key] = (platformAssets[key] ?? PlatformAssetInfo()).copyWith(
+      versionCode: value,
     );
   }
 
-  void _parseSha256Line(String line, Map<String, PlatformAssetInfo> platformAssets) {
+  void _parseSha256Line(
+    String line,
+    Map<String, PlatformAssetInfo> platformAssets,
+  ) {
     // Format: sha256.<platform>.<ext>=<hash>
     final eqIndex = line.indexOf('=');
     if (eqIndex == -1) return;
@@ -151,12 +175,14 @@ class GitHubReleaseParser {
     final value = line.substring(eqIndex + 1);
 
     final infoKey = key;
-    platformAssets[infoKey] = (platformAssets[infoKey] ?? PlatformAssetInfo()).copyWith(
-      sha256: value,
-    );
+    platformAssets[infoKey] = (platformAssets[infoKey] ?? PlatformAssetInfo())
+        .copyWith(sha256: value);
   }
 
-  void _parseSizeLine(String line, Map<String, PlatformAssetInfo> platformAssets) {
+  void _parseSizeLine(
+    String line,
+    Map<String, PlatformAssetInfo> platformAssets,
+  ) {
     // Format: size.<platform>.<ext>=<bytes>
     final eqIndex = line.indexOf('=');
     if (eqIndex == -1) return;
@@ -167,9 +193,8 @@ class GitHubReleaseParser {
     if (value == null) return;
 
     final infoKey = key;
-    platformAssets[infoKey] = (platformAssets[infoKey] ?? PlatformAssetInfo()).copyWith(
-      size: value,
-    );
+    platformAssets[infoKey] = (platformAssets[infoKey] ?? PlatformAssetInfo())
+        .copyWith(size: value);
   }
 
   /// Parses the legacy METADATA format (Android APK only).
@@ -183,12 +208,12 @@ class GitHubReleaseParser {
     final endIndex = body.indexOf(endMarker, startIndex);
     if (endIndex == -1) return null;
 
-    final content = body.substring(
-      startIndex + startMarker.length,
-      endIndex,
-    );
+    final content = body.substring(startIndex + startMarker.length, endIndex);
 
-    final lines = content.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty);
+    final lines = content
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty);
 
     String? versionName;
     int? versionCode;
@@ -234,7 +259,9 @@ class GitHubReleaseParser {
   }) {
     final infoKey = '$platform.$packageType';
     final platformAssetInfo = metadata.platformAssets[infoKey];
-    final expectedAssetName = platformAssetInfo?.assetName ?? _defaultAssetName(platform, packageType);
+    final expectedAssetName =
+        platformAssetInfo?.assetName ??
+        _defaultAssetName(platform, packageType);
 
     // Find matching asset
     for (final asset in assets) {
@@ -250,8 +277,11 @@ class GitHubReleaseParser {
 
         return SelectedAssetInfo(
           downloadUrl: downloadUrl,
+          versionCode: platformAssetInfo?.versionCode,
           sha256: platformAssetInfo?.sha256 ?? '',
-          size: (platformAssetInfo?.size ?? 0) > 0 ? platformAssetInfo!.size : assetSize,
+          size: (platformAssetInfo?.size ?? 0) > 0
+              ? platformAssetInfo!.size
+              : assetSize,
         );
       }
     }
@@ -341,21 +371,25 @@ class ReleaseMetadata {
 class PlatformAssetInfo {
   PlatformAssetInfo({
     this.assetName,
+    this.versionCode,
     this.sha256 = '',
     this.size = 0,
   });
 
   final String? assetName;
+  final int? versionCode;
   final String sha256;
   final int size;
 
   PlatformAssetInfo copyWith({
     String? assetName,
+    int? versionCode,
     String? sha256,
     int? size,
   }) {
     return PlatformAssetInfo(
       assetName: assetName ?? this.assetName,
+      versionCode: versionCode ?? this.versionCode,
       sha256: sha256 ?? this.sha256,
       size: size ?? this.size,
     );
@@ -366,11 +400,13 @@ class PlatformAssetInfo {
 class SelectedAssetInfo {
   SelectedAssetInfo({
     required this.downloadUrl,
+    this.versionCode,
     required this.sha256,
     required this.size,
   });
 
   final String downloadUrl;
+  final int? versionCode;
   final String sha256;
   final int size;
 }

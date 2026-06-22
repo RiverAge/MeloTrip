@@ -114,6 +114,50 @@ void main() {
     expect(adapter.requestedUrls, <String>[manifestUrl]);
   });
 
+  test('checkForUpdate uses Android platform versionCode', () async {
+    debugDefaultTargetPlatformOverride = .android;
+    addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+    });
+    PackageInfo.setMockInitialValues(
+      appName: 'MeloTrip',
+      packageName: 'com.riverage.melotrip',
+      version: '1.0.12',
+      buildNumber: '2013',
+      buildSignature: '',
+    );
+
+    const manifestUrl = 'https://example.com/update.json';
+    final adapter = _RouteJsonAdapter(<String, Map<String, dynamic>>{
+      manifestUrl: <String, dynamic>{
+        'versionName': '1.0.13',
+        'versionCode': 14,
+        'platforms': <String, dynamic>{
+          'android': <String, dynamic>{
+            'packageType': 'apk',
+            'assetName': 'app-release.apk',
+            'versionCode': 2014,
+            'downloadUrl': 'https://example.com/app-release.apk',
+            'sha256': 'manifest-sha',
+            'fileSize': 1024,
+          },
+        },
+      },
+    });
+    final dio = Dio()..httpClientAdapter = adapter;
+    final service = AppUpdateService(
+      manifestUrl: manifestUrl,
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final result = await service.checkForUpdate();
+
+    expect(result.currentVersionCode, 2013);
+    expect(result.remote?.versionCode, 2014);
+    expect(result.hasUpdate, isTrue);
+  });
+
   test('checkForUpdate falls back to GitHub API when manifest fails', () async {
     _setUpdateTestPlatform();
     const manifestUrl = 'https://example.com/update.json';

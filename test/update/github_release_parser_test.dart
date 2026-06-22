@@ -159,6 +159,39 @@ MELOTRIP_UPDATE_METADATA -->
         expect(info.fileSize, equals(2097152));
       });
 
+      test('uses platform versionCode when provided', () {
+        final releaseJson = {
+          'tag_name': 'v1.0.13',
+          'body': '''
+<!-- MELOTRIP_UPDATE_METADATA
+versionName=1.0.13
+versionCode=14
+asset.android.apk=app-release.apk
+versionCode.android.apk=2014
+sha256.android.apk=androidsha256
+size.android.apk=1048576
+MELOTRIP_UPDATE_METADATA -->
+''',
+          'assets': [
+            {
+              'name': 'app-release.apk',
+              'browser_download_url': 'https://example.com/app-release.apk',
+              'size': 1048576,
+            },
+          ],
+        };
+
+        final info = parser.parseRelease(
+          releaseJson: releaseJson,
+          platform: 'android',
+          packageType: 'apk',
+        );
+
+        expect(info.versionName, equals('1.0.13'));
+        expect(info.versionCode, equals(2014));
+        expect(info.sha256, equals('androidsha256'));
+      });
+
       test('selects correct asset for Linux platform', () {
         final releaseJson = {
           'tag_name': 'v1.0.10',
