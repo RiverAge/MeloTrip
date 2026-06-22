@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:melo_trip/model/update/app_update_info.dart';
 import 'package:melo_trip/update/github_release_parser.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
+import 'package:melo_trip/update/update_manifest_parser.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -16,14 +18,21 @@ export 'package:melo_trip/model/update/app_update_info.dart';
 
 class AppUpdateService {
   AppUpdateService({
+    this.manifestUrl =
+        'https://github.com/RiverAge/MeloTrip/releases/latest/download/update.json',
     this.checkUrl =
         'https://api.github.com/repos/RiverAge/MeloTrip/releases/latest',
+    Dio? dio,
     UpdateInstallerGateway? installerGateway,
-  }) : _installerGateway = installerGateway ?? UpdateInstallerGateway.auto();
+  }) : _dio = dio ?? Dio(),
+       _installerGateway = installerGateway ?? UpdateInstallerGateway.auto();
 
+  final String manifestUrl;
   final String checkUrl;
+  final Dio _dio;
   final UpdateInstallerGateway _installerGateway;
   final GitHubReleaseParser _releaseParser = GitHubReleaseParser();
+  final UpdateManifestParser _manifestParser = UpdateManifestParser();
 
   bool get isInstallSupported => _installerGateway.isSupported;
 
@@ -110,26 +119,22 @@ class AppUpdateService {
   Future<AppUpdateCheckResult> checkForUpdate() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final currentVersionCode = int.tryParse(packageInfo.buildNumber) ?? 0;
-    final response = await Dio().get<Map<String, dynamic>>(
-      checkUrl,
-      options: Options(
-        headers: <String, String>{
-          'User-Agent': 'MeloTrip-App',
-          'Accept': 'application/vnd.github.v3+json',
-        },
-      ),
-    );
-
-    final payload = response.data;
-    if (payload == null) {
-      throw StateError('Empty GitHub Release response.');
+    ParsedUpdateInfo parsedInfo;
+    try {
+      parsedInfo = await _fetchManifestUpdateInfo();
+    } catch (manifestError) {
+      try {
+        parsedInfo = await _fetchGitHubReleaseUpdateInfo();
+      } catch (apiError) {
+        throw StateError(
+          'Update check failed. '
+          'manifestUrl=$manifestUrl, '
+          'manifestError=${_summarizeUpdateCheckError(manifestError)}; '
+          'apiUrl=$checkUrl, '
+          'apiError=${_summarizeUpdateCheckError(apiError)}',
+        );
+      }
     }
-
-    final parsedInfo = _releaseParser.parseRelease(
-      releaseJson: payload,
-      platform: _currentPlatformName(),
-      packageType: expectedPackageType,
-    );
 
     final remote = AppUpdateInfo(
       versionName: parsedInfo.versionName,
@@ -150,6 +155,57 @@ class AppUpdateService {
       remote: remote,
       hasUpdate: remote.versionCode > currentVersionCode,
     );
+  }
+
+  Future<ParsedUpdateInfo> _fetchManifestUpdateInfo() async {
+    final payload = await _getJsonMap(
+      manifestUrl,
+      headers: const <String, String>{
+        'User-Agent': 'MeloTrip-App',
+        'Accept': 'application/json, */*',
+      },
+    );
+    return _manifestParser.parseManifest(
+      manifestJson: payload,
+      platform: _currentPlatformName(),
+      packageType: expectedPackageType,
+    );
+  }
+
+  Future<ParsedUpdateInfo> _fetchGitHubReleaseUpdateInfo() async {
+    final payload = await _getJsonMap(
+      checkUrl,
+      headers: const <String, String>{
+        'User-Agent': 'MeloTrip-App',
+        'Accept': 'application/vnd.github.v3+json',
+      },
+    );
+    return _releaseParser.parseRelease(
+      releaseJson: payload,
+      platform: _currentPlatformName(),
+      packageType: expectedPackageType,
+    );
+  }
+
+  Future<Map<String, dynamic>> _getJsonMap(
+    String url, {
+    required Map<String, String> headers,
+  }) async {
+    final response = await _dio.get<dynamic>(
+      url,
+      options: Options(responseType: ResponseType.plain, headers: headers),
+    );
+    final data = response.data;
+    if (data is Map<String, dynamic>) {
+      return data;
+    }
+    if (data is String) {
+      final decoded = jsonDecode(data);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+    }
+    throw StateError('Expected JSON object from $url.');
   }
 
   Future<File> downloadAndVerifyApk({
@@ -206,7 +262,7 @@ class AppUpdateService {
     }
 
     onStageChanged?.call(UpdateDownloadStage.downloading);
-    await Dio().download(
+    await _dio.download(
       update.downloadUrl,
       filePath,
       options: Options(
@@ -299,5 +355,27 @@ class AppUpdateService {
       return 'ios';
     }
     return 'unknown';
+  }
+
+  String _summarizeUpdateCheckError(dynamic error) {
+    if (error is DioException) {
+      final statusCode = error.response?.statusCode;
+      final responseData = error.response?.data;
+      return 'DioException(statusCode=$statusCode, '
+          'message=${error.message}, response=${_stringifyResponseData(responseData)})';
+    }
+    return '$error';
+  }
+
+  String _stringifyResponseData(dynamic data) {
+    if (data == null) {
+      return '';
+    }
+    final text = data is String ? data : data.toString();
+    const maxLength = 300;
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return '${text.substring(0, maxLength)}...';
   }
 }

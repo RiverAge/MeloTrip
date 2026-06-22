@@ -296,6 +296,78 @@ jobs:
 
           EOF
 
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          fragments = [
+              Path("dist/android-artifacts/android-metadata.txt"),
+              Path("dist/windows-artifacts/windows-metadata.txt"),
+              Path("dist/linux-artifacts/linux-metadata.txt"),
+              Path("dist/macos-artifacts/macos-metadata.txt"),
+          ]
+          metadata = {}
+          for path in fragments:
+              if not path.exists():
+                  continue
+              for raw_line in path.read_text(encoding="utf-8").splitlines():
+                  line = raw_line.strip()
+                  if not line or "=" not in line:
+                      continue
+                  key, value = line.split("=", 1)
+                  metadata[key] = value
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          tag_name = os.environ["GITHUB_REF_NAME"]
+          version_name = metadata["versionName"]
+          version_code = int(metadata["versionCode"])
+          platforms = {}
+
+          for key, asset_name in metadata.items():
+              if not key.startswith("asset."):
+                  continue
+              platform_key = key[len("asset."):]
+              platform, package_type = platform_key.split(".", 1)
+              platforms[platform] = {
+                  "packageType": package_type,
+                  "assetName": asset_name,
+                  "downloadUrl": (
+                      f"https://github.com/{repository}/releases/download/"
+                      f"{tag_name}/{asset_name}"
+                  ),
+              }
+
+          for key, value in metadata.items():
+              if key.startswith("sha256."):
+                  platform_key = key[len("sha256."):]
+                  platform, _ = platform_key.split(".", 1)
+                  platforms.setdefault(platform, {})["sha256"] = value
+              elif key.startswith("size."):
+                  platform_key = key[len("size."):]
+                  platform, _ = platform_key.split(".", 1)
+                  platforms.setdefault(platform, {})["fileSize"] = int(value)
+
+          manifest = {
+              "schemaVersion": 1,
+              "repository": repository,
+              "tagName": tag_name,
+              "releasePageUrl": (
+                  f"https://github.com/{repository}/releases/tag/{tag_name}"
+              ),
+              "versionName": version_name,
+              "versionCode": version_code,
+              "changelog": "",
+              "platforms": platforms,
+          }
+
+          output = Path("release-files/update.json")
+          output.write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:

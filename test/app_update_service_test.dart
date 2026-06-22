@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:melo_trip/update/app_update_service.dart';
+import 'package:melo_trip/update/update_installer_gateway.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:update_installer/update_installer.dart';
 
 void main() {
@@ -68,6 +72,90 @@ void main() {
     );
   });
 
+  test('checkForUpdate prefers static update manifest', () async {
+    _setUpdateTestPlatform();
+    const manifestUrl = 'https://example.com/update.json';
+    const apiUrl = 'https://example.com/latest';
+    final adapter = _RouteJsonAdapter(<String, Map<String, dynamic>>{
+      manifestUrl: <String, dynamic>{
+        'versionName': '1.0.12',
+        'versionCode': 13,
+        'platforms': <String, dynamic>{
+          'windows': <String, dynamic>{
+            'packageType': 'zip',
+            'assetName': 'melotrip-windows-x64.zip',
+            'downloadUrl': 'https://example.com/melotrip-windows-x64.zip',
+            'sha256': 'manifest-sha',
+            'fileSize': 1024,
+          },
+        },
+      },
+      apiUrl: <String, dynamic>{
+        'tag_name': 'v1.0.99',
+        'body': '',
+        'assets': <Map<String, dynamic>>[],
+      },
+    });
+    final dio = Dio()..httpClientAdapter = adapter;
+    final service = AppUpdateService(
+      manifestUrl: manifestUrl,
+      checkUrl: apiUrl,
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final result = await service.checkForUpdate();
+
+    expect(result.hasUpdate, isTrue);
+    expect(result.currentVersionName, '1.0.11');
+    expect(result.currentVersionCode, 12);
+    expect(result.remote?.versionName, '1.0.12');
+    expect(result.remote?.sha256, 'manifest-sha');
+    expect(adapter.requestedUrls, <String>[manifestUrl]);
+  });
+
+  test('checkForUpdate falls back to GitHub API when manifest fails', () async {
+    _setUpdateTestPlatform();
+    const manifestUrl = 'https://example.com/update.json';
+    const apiUrl = 'https://example.com/latest';
+    final adapter = _RouteJsonAdapter(<String, Map<String, dynamic>>{
+      apiUrl: <String, dynamic>{
+        'tag_name': 'v1.0.12',
+        'body': '''
+<!-- MELOTRIP_UPDATE_METADATA
+versionName=1.0.12
+versionCode=13
+asset.windows.zip=melotrip-windows-x64.zip
+sha256.windows.zip=api-sha
+size.windows.zip=2048
+MELOTRIP_UPDATE_METADATA -->
+''',
+        'assets': <Map<String, dynamic>>[
+          <String, dynamic>{
+            'name': 'melotrip-windows-x64.zip',
+            'browser_download_url':
+                'https://example.com/melotrip-windows-x64.zip',
+            'size': 2048,
+          },
+        ],
+      },
+    });
+    final dio = Dio()..httpClientAdapter = adapter;
+    final service = AppUpdateService(
+      manifestUrl: manifestUrl,
+      checkUrl: apiUrl,
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final result = await service.checkForUpdate();
+
+    expect(result.hasUpdate, isTrue);
+    expect(result.remote?.versionName, '1.0.12');
+    expect(result.remote?.sha256, 'api-sha');
+    expect(adapter.requestedUrls, <String>[manifestUrl, apiUrl]);
+  });
+
   test('installer capability delegates to gateway', () async {
     final service = AppUpdateService(
       installerGateway: const _FakeGateway(supported: true, permission: true),
@@ -126,6 +214,20 @@ void main() {
   });
 }
 
+void _setUpdateTestPlatform() {
+  debugDefaultTargetPlatformOverride = .windows;
+  addTearDown(() {
+    debugDefaultTargetPlatformOverride = null;
+  });
+  PackageInfo.setMockInitialValues(
+    appName: 'MeloTrip',
+    packageName: 'com.riverage.melotrip',
+    version: '1.0.11',
+    buildNumber: '12',
+    buildSignature: '',
+  );
+}
+
 class _FakeGateway extends UpdateInstallerGateway {
   const _FakeGateway({
     this.supported = false,
@@ -152,6 +254,43 @@ class _FakeGateway extends UpdateInstallerGateway {
 
   @override
   Future<void> openInstallPermissionSettings() async {}
+}
+
+class _RouteJsonAdapter implements HttpClientAdapter {
+  _RouteJsonAdapter(this.routes);
+
+  final Map<String, Map<String, dynamic>> routes;
+  final List<String> requestedUrls = <String>[];
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final url = options.uri.toString();
+    requestedUrls.add(url);
+    final payload = routes[url];
+    if (payload == null) {
+      return ResponseBody.fromBytes(
+        utf8.encode('{"message":"not found"}'),
+        404,
+        headers: <String, List<String>>{
+          Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+        },
+      );
+    }
+    return ResponseBody.fromBytes(
+      utf8.encode(jsonEncode(payload)),
+      200,
+      headers: <String, List<String>>{
+        Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+      },
+    );
+  }
 }
 
 class _RecordingGateway extends UpdateInstallerGateway {
