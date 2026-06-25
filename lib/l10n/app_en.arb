@@ -1147,6 +1147,14 @@
    "@noSimilarSongsFound": {
      "description": "Message when no similar songs are found"
    },
+   "songNotAnalyzed": "This song has not been analyzed yet. Please try again later.",
+   "@songNotAnalyzed": {
+     "description": "Message when song has not been analyzed by AudioMuse-AI"
+   },
+   "songNotAnalyzedForRadio": "This song has not been analyzed yet. Cannot start radio.",
+   "@songNotAnalyzedForRadio": {
+     "description": "Message when song has not been analyzed and cannot start radio"
+   },
    "sonicPathTitle": "Sonic Path",
    "@sonicPathTitle": {
      "description": "Title for sonic path page"

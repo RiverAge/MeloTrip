@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/recommendation/seed_source.dart';
 import 'package:melo_trip/model/recommendation/weighted_seed.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -168,14 +169,16 @@ class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFetchSonicSimilarTracks({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFetchSonicSimilarTracks({
     required String id,
     int? count,
     CancelToken? cancelToken,
   }) async {
     final result = fetchResult(id);
     return result.when(
-      ok: (matches) => Result.ok(matches.map((match) => match.$1).toList()),
+      ok: (matches) => Result.ok(
+        SonicSimilarityResult(songs: matches.map((match) => match.$1).toList()),
+      ),
       err: Result.err,
     );
   }
@@ -201,7 +204,7 @@ class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFindSonicPath({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFindSonicPath({
     required String startSongId,
     required String endSongId,
     int? count,

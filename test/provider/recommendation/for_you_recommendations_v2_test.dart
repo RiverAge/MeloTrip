@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/response/playlist/playlist.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/starred/starred.dart';
@@ -43,7 +44,7 @@ void main() {
           if (mockSonicError != null) {
             return Result.err(mockSonicError!);
           }
-          return Result.ok(mockSimilarSongs);
+          return Result.ok(SonicSimilarityResult(songs: mockSimilarSongs));
         },
       );
 
@@ -415,7 +416,7 @@ class _FakePlaylistDetail extends PlaylistDetail {
 
 /// Fake implementation of SonicSimilarityRepository for testing
 class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
-  final Result<List<SongEntity>, AppFailure> Function(String id) fetchResult;
+  final Result<SonicSimilarityResult, AppFailure> Function(String id) fetchResult;
 
   /// Records all song IDs requested via tryFetchSonicSimilarTracks
   final List<String> requestedIds = [];
@@ -436,7 +437,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFetchSonicSimilarTracks({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFetchSonicSimilarTracks({
     required String id,
     int? count,
     CancelToken? cancelToken,
@@ -456,7 +457,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFindSonicPath({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFindSonicPath({
     required String startSongId,
     required String endSongId,
     int? count,
@@ -475,7 +476,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
     requestedIds.add(id);
     final result = fetchResult(id);
     return result.when(
-      ok: (songs) => Result.ok(songs.map((s) => (s, null as double?)).toList()),
+      ok: (similarityResult) => Result.ok(similarityResult.songs.map((s) => (s, null as double?)).toList()),
       err: (e) => Result.err(e),
     );
   }
@@ -490,7 +491,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }) async {
     final result = fetchResult(startSongId);
     return result.when(
-      ok: (songs) => Result.ok(songs.map((s) => (s, null as double?)).toList()),
+      ok: (similarityResult) => Result.ok(similarityResult.songs.map((s) => (s, null as double?)).toList()),
       err: (e) => Result.err(e),
     );
   }

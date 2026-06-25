@@ -85,13 +85,13 @@ class _SonicPathPageState extends State<SonicPathPage> {
     );
 
     result.when(
-      ok: (songs) async {
-        if (songs.isEmpty) return;
+      ok: (similarityResult) async {
+        if (similarityResult.isEmpty) return;
         final player = await ref.read(appPlayerHandlerProvider.future);
         if (player != null) {
           // Play the path: start song + path songs + end song
-          final allSongs = [_startSong!, ...songs];
-          if (songs.last.id != _endSong!.id) {
+          final allSongs = [_startSong!, ...similarityResult.songs];
+          if (similarityResult.songs.last.id != _endSong!.id) {
             allSongs.add(_endSong!);
           }
           await player.setPlaylist(songs: allSongs, initialId: _startSong!.id);
@@ -199,14 +199,17 @@ class _PathResult extends ConsumerWidget {
       ),
       builder: (context, result, ref) {
         return result.when(
-          ok: (songs) {
-            if (songs.isEmpty) {
+          ok: (similarityResult) {
+            if (similarityResult.isUnanalyzed) {
+              return Center(child: Text(l10n.songNotAnalyzed));
+            }
+            if (similarityResult.isEmpty) {
               return Center(child: Text(l10n.noSimilarSongsFound));
             }
             return ListView.builder(
-              itemCount: songs.length,
+              itemCount: similarityResult.songs.length,
               itemBuilder: (context, index) {
-                final song = songs[index];
+                final song = similarityResult.songs[index];
                 return ListTile(
                   leading: ArtworkImage(
                     id: song.coverArt,

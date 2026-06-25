@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/recommendation/seed_source.dart';
 import 'package:melo_trip/model/recommendation/weighted_seed.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -17,7 +18,7 @@ void main() {
     test('favorite section recommends from favorite weighted seeds', () async {
       final repository = _FakeSonicSimilarityRepository(
         fetchResult: (id) =>
-            Result.ok([SongEntity(id: 'similar-$id', title: 'Similar $id')]),
+            Result.ok(SonicSimilarityResult(songs: [SongEntity(id: 'similar-$id', title: 'Similar $id')])),
       );
       final container = ProviderContainer(
         overrides: [
@@ -54,7 +55,7 @@ void main() {
     test('playlist section skips similarity request without seeds', () async {
       final repository = _FakeSonicSimilarityRepository(
         fetchResult: (_) =>
-            Result.ok([SongEntity(id: 'similar-1', title: 'Similar 1')]),
+            Result.ok(SonicSimilarityResult(songs: [SongEntity(id: 'similar-1', title: 'Similar 1')])),
       );
       final container = ProviderContainer(
         overrides: [
@@ -79,7 +80,7 @@ void main() {
 class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   _FakeSonicSimilarityRepository({required this.fetchResult});
 
-  final Result<List<SongEntity>, AppFailure> Function(String id) fetchResult;
+  final Result<SonicSimilarityResult, AppFailure> Function(String id) fetchResult;
   final List<String> requestedIds = [];
 
   @override
@@ -92,7 +93,7 @@ class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFetchSonicSimilarTracks({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFetchSonicSimilarTracks({
     required String id,
     int? count,
     CancelToken? cancelToken,
@@ -112,7 +113,7 @@ class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFindSonicPath({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFindSonicPath({
     required String startSongId,
     required String endSongId,
     int? count,
@@ -131,8 +132,8 @@ class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
     requestedIds.add(id);
     final result = fetchResult(id);
     return result.when(
-      ok: (songs) =>
-          Result.ok(songs.map((song) => (song, null as double?)).toList()),
+      ok: (similarityResult) =>
+          Result.ok(similarityResult.songs.map((song) => (song, null as double?)).toList()),
       err: (failure) => Result.err(failure),
     );
   }

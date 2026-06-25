@@ -1515,6 +1515,18 @@ abstract class AppLocalizations {
   /// **'No similar songs found'**
   String get noSimilarSongsFound;
 
+  /// Message when song has not been analyzed by AudioMuse-AI
+  ///
+  /// In en, this message translates to:
+  /// **'This song has not been analyzed yet. Please try again later.'**
+  String get songNotAnalyzed;
+
+  /// Message when song has not been analyzed and cannot start radio
+  ///
+  /// In en, this message translates to:
+  /// **'This song has not been analyzed yet. Cannot start radio.'**
+  String get songNotAnalyzedForRadio;
+
   /// Title for sonic path page
   ///
   /// In en, this message translates to:

@@ -12,6 +12,7 @@ String resolveAppFailureMessage(
     AppFailureType.unauthorized => l10n.globalErrorUnauthorized,
     AppFailureType.server => l10n.globalErrorServer,
     AppFailureType.protocol => l10n.globalErrorProtocol,
+    AppFailureType.notAnalyzed => l10n.songNotAnalyzed,
     AppFailureType.unknown || null => l10n.unknownError,
   };
 }

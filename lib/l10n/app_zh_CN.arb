@@ -439,6 +439,8 @@
     "similarSongs": "相似",
     "similarSongsTitle": "与\"{title}\"相似",
     "noSimilarSongsFound": "未找到相似歌曲",
+    "songNotAnalyzed": "该歌曲尚未完成音频分析，请稍后再试",
+    "songNotAnalyzedForRadio": "该歌曲尚未完成音频分析，无法开启电台",
     "sonicPathTitle": "声音路径",
     "fromSong": "起点",
     "toSong": "终点",

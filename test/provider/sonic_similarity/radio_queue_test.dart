@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/sonic_similarity/sonic_similarity.dart';
@@ -192,7 +193,7 @@ void main() {
           if (mockError != null) {
             return Result.err(mockError!);
           }
-          return Result.ok(mockSimilarSongs);
+          return Result.ok(SonicSimilarityResult(songs: mockSimilarSongs));
         },
       );
 
@@ -461,7 +462,7 @@ void main() {
 
   group('Radio Queue No Fallback', () {
     test('error message does not contain getSimilarSongs2', () {
-      final result = Result<List<SongEntity>, AppFailure>.err(
+      final result = Result<SonicSimilarityResult, AppFailure>.err(
         AppFailure(
           type: AppFailureType.server,
           message: 'Sonic similarity not available',
@@ -478,14 +479,16 @@ void main() {
     });
 
     test('empty results do not trigger fallback', () {
-      final result = Result<List<SongEntity>, AppFailure>.ok([]);
+      final result = Result<SonicSimilarityResult, AppFailure>.ok(
+        SonicSimilarityResult.empty,
+      );
 
       var usedFallback = false;
 
       result.when(
-        ok: (songs) {
+        ok: (similarityResult) {
           // Empty is valid, no fallback
-          if (songs.isEmpty) {
+          if (similarityResult.isEmpty) {
             usedFallback = false;
           }
         },
@@ -496,7 +499,7 @@ void main() {
     });
 
     test('error does not trigger fallback', () {
-      final result = Result<List<SongEntity>, AppFailure>.err(
+      final result = Result<SonicSimilarityResult, AppFailure>.err(
         AppFailure(type: AppFailureType.server, message: 'Network error'),
       );
 
@@ -514,11 +517,10 @@ void main() {
     });
 
     test('404 error is not retried with fallback', () {
-      final result = Result<List<SongEntity>, AppFailure>.err(
+      final result = Result<SonicSimilarityResult, AppFailure>.err(
         AppFailure(
-          type: AppFailureType.server,
-          message: '404: Not found',
-          statusCode: 404,
+          type: AppFailureType.notAnalyzed,
+          message: 'Song has not been analyzed by AudioMuse-AI plugin.',
         ),
       );
 
@@ -527,9 +529,9 @@ void main() {
       result.when(
         ok: (_) {},
         err: (error) {
-          // 404 means endpoint not available
+          // 404 means song not analyzed
           // Do NOT call getSimilarSongs2
-          expect(error.statusCode, 404);
+          expect(error.type, AppFailureType.notAnalyzed);
           fallbackCalled = false;
         },
       );
@@ -541,7 +543,7 @@ void main() {
 
 /// Fake implementation of SonicSimilarityRepository for testing
 class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
-  final Result<List<SongEntity>, AppFailure> Function(String id) fetchResult;
+  final Result<SonicSimilarityResult, AppFailure> Function(String id) fetchResult;
 
   /// Records all song IDs requested via tryFetchSonicSimilarTracks
   final List<String> requestedIds = [];
@@ -563,7 +565,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFetchSonicSimilarTracks({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFetchSonicSimilarTracks({
     required String id,
     int? count,
     CancelToken? cancelToken,
@@ -583,7 +585,7 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }
 
   @override
-  Future<Result<List<SongEntity>, AppFailure>> tryFindSonicPath({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFindSonicPath({
     required String startSongId,
     required String endSongId,
     int? count,
@@ -601,7 +603,9 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }) async {
     final result = fetchResult(id);
     return result.when(
-      ok: (songs) => Result.ok(songs.map((s) => (s, null as double?)).toList()),
+      ok: (similarityResult) => Result.ok(
+        similarityResult.songs.map((s) => (s, null as double?)).toList(),
+      ),
       err: (e) => Result.err(e),
     );
   }
@@ -616,7 +620,9 @@ class FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   }) async {
     final result = fetchResult(startSongId);
     return result.when(
-      ok: (songs) => Result.ok(songs.map((s) => (s, null as double?)).toList()),
+      ok: (similarityResult) => Result.ok(
+        similarityResult.songs.map((s) => (s, null as double?)).toList(),
+      ),
       err: (e) => Result.err(e),
     );
   }

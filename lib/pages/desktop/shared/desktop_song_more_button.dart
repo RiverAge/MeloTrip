@@ -128,7 +128,17 @@ class DesktopSongMoreButton extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.maybeOf(context);
     final player = await ref.read(appPlayerHandlerProvider.future);
-    await ref.read(radioQueueProvider.notifier).startRadio(song);
+    final radioQueueNotifier = ref.read(radioQueueProvider.notifier);
+    await radioQueueNotifier.startRadio(song);
+
+    // Check if seed song was not analyzed
+    if (radioQueueNotifier.isSeedSongUnanalyzed) {
+      messenger?.showSnackBar(
+        SnackBar(content: Text(l10n.songNotAnalyzedForRadio)),
+      );
+      return;
+    }
+
     final radioQueue = ref.read(radioQueueProvider);
     if (!context.mounted) return;
     if (radioQueue.isEmpty) {

@@ -773,6 +773,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSimilarSongsFound => 'No similar songs found';
 
   @override
+  String get songNotAnalyzed =>
+      'This song has not been analyzed yet. Please try again later.';
+
+  @override
+  String get songNotAnalyzedForRadio =>
+      'This song has not been analyzed yet. Cannot start radio.';
+
+  @override
   String get sonicPathTitle => 'Sonic Path';
 
   @override

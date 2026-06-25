@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/recommendation/seed_source.dart';
 import 'package:melo_trip/model/recommendation/weighted_seed.dart';
 import 'package:melo_trip/model/response/song/song.dart';
@@ -63,7 +64,7 @@ List<SongEntity> filterRadioQueueCandidates({
 @riverpod
 class SimilarSongs extends _$SimilarSongs {
   @override
-  Future<Result<List<SongEntity>, AppFailure>> build({
+  Future<Result<SonicSimilarityResult, AppFailure>> build({
     required String songId,
     int? count,
   }) async {
@@ -85,7 +86,7 @@ class SimilarSongs extends _$SimilarSongs {
 @riverpod
 class SonicPath extends _$SonicPath {
   @override
-  Future<Result<List<SongEntity>, AppFailure>> build({
+  Future<Result<SonicSimilarityResult, AppFailure>> build({
     required String startSongId,
     required String endSongId,
     int? count,
@@ -505,6 +506,7 @@ class RadioQueue extends _$RadioQueue {
   final List<SongEntity> _queue = [];
   final Set<String> _seenIds = {};
   SongEntity? _seedSong;
+  bool _seedSongUnanalyzed = false;
 
   @override
   List<SongEntity> build() {
@@ -512,9 +514,13 @@ class RadioQueue extends _$RadioQueue {
       _queue.clear();
       _seenIds.clear();
       _seedSong = null;
+      _seedSongUnanalyzed = false;
     });
     return _queue;
   }
+
+  /// Whether the seed song has not been analyzed by AudioMuse-AI.
+  bool get isSeedSongUnanalyzed => _seedSongUnanalyzed;
 
   /// Start radio from a seed song.
   ///
@@ -524,6 +530,7 @@ class RadioQueue extends _$RadioQueue {
     _queue.clear();
     _seenIds.clear();
     _seedSong = seedSong;
+    _seedSongUnanalyzed = false;
     state = const []; // Publish empty state immediately
 
     if (seedSong.id != null) {
@@ -552,10 +559,16 @@ class RadioQueue extends _$RadioQueue {
     );
 
     result.when(
-      ok: (songs) {
+      ok: (similarityResult) {
+        // Check if seed song is unanalyzed
+        if (similarityResult.isUnanalyzed && lastSong == _seedSong) {
+          _seedSongUnanalyzed = true;
+          return;
+        }
+
         // Filter candidates preserving Sonic API order
         final candidates = filterRadioQueueCandidates(
-          songs: songs,
+          songs: similarityResult.songs,
           seenIds: _seenIds,
           seedId: _seedSong?.id,
           limit: targetCount,
@@ -580,6 +593,7 @@ class RadioQueue extends _$RadioQueue {
     _queue.clear();
     _seenIds.clear();
     _seedSong = null;
+    _seedSongUnanalyzed = false;
     state = [];
   }
 

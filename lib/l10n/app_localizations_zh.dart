@@ -759,6 +759,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noSimilarSongsFound => '未找到相似歌曲';
 
   @override
+  String get songNotAnalyzed => '该歌曲尚未完成音频分析，请稍后再试';
+
+  @override
+  String get songNotAnalyzedForRadio => '该歌曲尚未完成音频分析，无法开启电台';
+
+  @override
   String get sonicPathTitle => '声音路径';
 
   @override
@@ -1557,6 +1563,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get noSimilarSongsFound => '未找到相似歌曲';
+
+  @override
+  String get songNotAnalyzed => '该歌曲尚未完成音频分析，请稍后再试';
+
+  @override
+  String get songNotAnalyzedForRadio => '该歌曲尚未完成音频分析，无法开启电台';
 
   @override
   String get sonicPathTitle => '声音路径';

@@ -453,6 +453,14 @@
     "@noSimilarSongsFound": {
       "description": "Message when no similar songs are found"
     },
+    "songNotAnalyzed": "该歌曲尚未完成音频分析，请稍后再试",
+    "@songNotAnalyzed": {
+      "description": "Message when song has not been analyzed by AudioMuse-AI"
+    },
+    "songNotAnalyzedForRadio": "该歌曲尚未完成音频分析，无法开启电台",
+    "@songNotAnalyzedForRadio": {
+      "description": "Message when song has not been analyzed and cannot start radio"
+    },
     "sonicPathTitle": "声音路径",
     "@sonicPathTitle": {
       "description": "Title for sonic path page"

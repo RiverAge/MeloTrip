@@ -35,15 +35,15 @@ class SimilarSongsPage extends ConsumerWidget {
                 similarSongsProvider(songId: songId ?? '', count: 50).future,
               );
               result.when(
-                ok: (songs) async {
-                  if (songs.isEmpty) return;
+                ok: (similarityResult) async {
+                  if (similarityResult.isEmpty) return;
                   final player = await ref.read(
                     appPlayerHandlerProvider.future,
                   );
                   if (player != null) {
                     await player.setPlaylist(
-                      songs: songs,
-                      initialId: songs.first.id,
+                      songs: similarityResult.songs,
+                      initialId: similarityResult.songs.first.id,
                     );
                     await player.play();
                   }
@@ -57,13 +57,16 @@ class SimilarSongsPage extends ConsumerWidget {
       body: AsyncValueBuilder(
         provider: similarSongsProvider(songId: songId ?? '', count: 30),
         builder: (context, result, ref) {
-          // result is Result<List<SongEntity>, AppFailure>
+          // result is Result<SonicSimilarityResult, AppFailure>
           return result.when(
-            ok: (songs) {
-              if (songs.isEmpty) {
+            ok: (similarityResult) {
+              if (similarityResult.isUnanalyzed) {
+                return Center(child: Text(l10n.songNotAnalyzed));
+              }
+              if (similarityResult.isEmpty) {
                 return Center(child: Text(l10n.noSimilarSongsFound));
               }
-              return _SimilarSongsList(songs: songs);
+              return _SimilarSongsList(songs: similarityResult.songs);
             },
             err: (error) => Center(child: Text(error.message)),
           );

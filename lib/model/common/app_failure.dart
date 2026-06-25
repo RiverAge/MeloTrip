@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-enum AppFailureType { network, unauthorized, server, protocol, unknown }
+enum AppFailureType { network, unauthorized, server, protocol, unknown, notAnalyzed }
 
 class AppFailure {
   const AppFailure({
@@ -73,6 +73,17 @@ class AppFailure {
       return AppFailure(
         type: AppFailureType.protocol,
         message: error.message,
+        cause: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    // Handle SongNotAnalyzedError from AudioMuse-AI plugin
+    if (error.toString().contains('AudioMuse-AI returned status 404') ||
+        error.toString().contains('has not been analyzed by AudioMuse-AI')) {
+      return AppFailure(
+        type: AppFailureType.notAnalyzed,
+        message: 'Song has not been analyzed by AudioMuse-AI plugin.',
         cause: error,
         stackTrace: stackTrace,
       );

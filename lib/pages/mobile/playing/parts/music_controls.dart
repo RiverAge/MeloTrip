@@ -135,6 +135,20 @@ class _MusicControls extends StatelessWidget {
                           );
                           await radioQueueNotifier.startRadio(current);
                           final radioQueue = ref.read(radioQueueProvider);
+
+                          // Check if seed song was not analyzed
+                          if (radioQueueNotifier.isSeedSongUnanalyzed) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.songNotAnalyzedForRadio),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                            return;
+                          }
+
                           if (radioQueue.isNotEmpty) {
                             await player.setPlaylist(
                               songs: radioQueue,

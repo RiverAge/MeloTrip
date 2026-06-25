@@ -32,7 +32,7 @@ final class SimilarSongsProvider
     extends
         $AsyncNotifierProvider<
           SimilarSongs,
-          Result<List<SongEntity>, AppFailure>
+          Result<SonicSimilarityResult, AppFailure>
         > {
   /// Provider for fetching similar songs using Sonic Similarity API.
   ///
@@ -78,7 +78,7 @@ final class SimilarSongsProvider
   }
 }
 
-String _$similarSongsHash() => r'2da413b8d415872e9616f357f3e3ce5242b862f3';
+String _$similarSongsHash() => r'ce18a0beb672d93abe13b0155c3fb6ef6702860e';
 
 /// Provider for fetching similar songs using Sonic Similarity API.
 ///
@@ -93,9 +93,9 @@ final class SimilarSongsFamily extends $Family
     with
         $ClassFamilyOverride<
           SimilarSongs,
-          AsyncValue<Result<List<SongEntity>, AppFailure>>,
-          Result<List<SongEntity>, AppFailure>,
-          FutureOr<Result<List<SongEntity>, AppFailure>>,
+          AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
+          Result<SonicSimilarityResult, AppFailure>,
+          FutureOr<Result<SonicSimilarityResult, AppFailure>>,
           ({String songId, int? count})
         > {
   SimilarSongsFamily._()
@@ -136,12 +136,12 @@ final class SimilarSongsFamily extends $Family
 /// Errors (404/501/network) are returned as Result.err without caching.
 
 abstract class _$SimilarSongs
-    extends $AsyncNotifier<Result<List<SongEntity>, AppFailure>> {
+    extends $AsyncNotifier<Result<SonicSimilarityResult, AppFailure>> {
   late final _$args = ref.$arg as ({String songId, int? count});
   String get songId => _$args.songId;
   int? get count => _$args.count;
 
-  FutureOr<Result<List<SongEntity>, AppFailure>> build({
+  FutureOr<Result<SonicSimilarityResult, AppFailure>> build({
     required String songId,
     int? count,
   });
@@ -151,17 +151,17 @@ abstract class _$SimilarSongs
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<Result<List<SongEntity>, AppFailure>>,
-              Result<List<SongEntity>, AppFailure>
+              AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
+              Result<SonicSimilarityResult, AppFailure>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<Result<List<SongEntity>, AppFailure>>,
-                Result<List<SongEntity>, AppFailure>
+                AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
+                Result<SonicSimilarityResult, AppFailure>
               >,
-              AsyncValue<Result<List<SongEntity>, AppFailure>>,
+              AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
               Object?,
               Object?
             >;
@@ -194,7 +194,7 @@ final class SonicPathProvider
     extends
         $AsyncNotifierProvider<
           SonicPath,
-          Result<List<SongEntity>, AppFailure>
+          Result<SonicSimilarityResult, AppFailure>
         > {
   /// Provider for sonic path between two songs.
   ///
@@ -240,7 +240,7 @@ final class SonicPathProvider
   }
 }
 
-String _$sonicPathHash() => r'ca938d303fd9569c5286eead856a578186521e64';
+String _$sonicPathHash() => r'fd6abbe8e8f35beae81e722f2780e76e890b230d';
 
 /// Provider for sonic path between two songs.
 ///
@@ -254,9 +254,9 @@ final class SonicPathFamily extends $Family
     with
         $ClassFamilyOverride<
           SonicPath,
-          AsyncValue<Result<List<SongEntity>, AppFailure>>,
-          Result<List<SongEntity>, AppFailure>,
-          FutureOr<Result<List<SongEntity>, AppFailure>>,
+          AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
+          Result<SonicSimilarityResult, AppFailure>,
+          FutureOr<Result<SonicSimilarityResult, AppFailure>>,
           ({String startSongId, String endSongId, int? count})
         > {
   SonicPathFamily._()
@@ -298,14 +298,14 @@ final class SonicPathFamily extends $Family
 /// Errors (404/501/network) are returned as Result.err without caching.
 
 abstract class _$SonicPath
-    extends $AsyncNotifier<Result<List<SongEntity>, AppFailure>> {
+    extends $AsyncNotifier<Result<SonicSimilarityResult, AppFailure>> {
   late final _$args =
       ref.$arg as ({String startSongId, String endSongId, int? count});
   String get startSongId => _$args.startSongId;
   String get endSongId => _$args.endSongId;
   int? get count => _$args.count;
 
-  FutureOr<Result<List<SongEntity>, AppFailure>> build({
+  FutureOr<Result<SonicSimilarityResult, AppFailure>> build({
     required String startSongId,
     required String endSongId,
     int? count,
@@ -316,17 +316,17 @@ abstract class _$SonicPath
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<Result<List<SongEntity>, AppFailure>>,
-              Result<List<SongEntity>, AppFailure>
+              AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
+              Result<SonicSimilarityResult, AppFailure>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<Result<List<SongEntity>, AppFailure>>,
-                Result<List<SongEntity>, AppFailure>
+                AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
+                Result<SonicSimilarityResult, AppFailure>
               >,
-              AsyncValue<Result<List<SongEntity>, AppFailure>>,
+              AsyncValue<Result<SonicSimilarityResult, AppFailure>>,
               Object?,
               Object?
             >;
@@ -708,7 +708,7 @@ final class RadioQueueProvider
   }
 }
 
-String _$radioQueueHash() => r'15f91e37fc58b5c86d4ad8aa2f60a73c190b4b08';
+String _$radioQueueHash() => r'18df5374f0107d4a456aefe23430e21ffef5cc8e';
 
 /// Provider for radio mode queue generation.
 ///

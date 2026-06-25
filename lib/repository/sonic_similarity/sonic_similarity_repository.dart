@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/model/common/app_failure.dart';
 import 'package:melo_trip/model/common/result.dart';
+import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/api/api.dart';
@@ -48,13 +49,14 @@ class SonicSimilarityRepository {
     return parseSubsonicResponseOrThrow(
       res.data,
       endpoint: '/rest/getSonicSimilarTracks.view',
+      songId: id,
     );
   }
 
   /// Get similar tracks with Result wrapper.
-  /// Returns list of SongEntity extracted from SonicMatch entries.
+  /// Returns SonicSimilarityResult with songs and isUnanalyzed flag.
   /// IMPORTANT: Does NOT fallback to getSimilarSongs2.
-  Future<Result<List<SongEntity>, AppFailure>> tryFetchSonicSimilarTracks({
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFetchSonicSimilarTracks({
     required String id,
     int? count,
     CancelToken? cancelToken,
@@ -67,10 +69,11 @@ class SonicSimilarityRepository {
       );
       final matches = response.subsonicResponse?.sonicMatch ?? const [];
       // Extract SongEntity from SonicMatch.entry
-      return matches
+      final songs = matches
           .map((match) => match.entry)
           .whereType<SongEntity>()
           .toList();
+      return SonicSimilarityResult(songs: songs);
     });
   }
 
@@ -125,12 +128,13 @@ class SonicSimilarityRepository {
     return parseSubsonicResponseOrThrow(
       res.data,
       endpoint: '/rest/findSonicPath.view',
+      songId: startSongId,
     );
   }
 
   /// Find sonic path with Result wrapper.
-  /// Returns ordered list of songs from start to end.
-  Future<Result<List<SongEntity>, AppFailure>> tryFindSonicPath({
+  /// Returns SonicSimilarityResult with ordered list of songs from start to end.
+  Future<Result<SonicSimilarityResult, AppFailure>> tryFindSonicPath({
     required String startSongId,
     required String endSongId,
     int? count,
@@ -145,10 +149,11 @@ class SonicSimilarityRepository {
       );
       final matches = response.subsonicResponse?.sonicMatch ?? const [];
       // Extract SongEntity from SonicMatch.entry, preserving order
-      return matches
+      final songs = matches
           .map((match) => match.entry)
           .whereType<SongEntity>()
           .toList();
+      return SonicSimilarityResult(songs: songs);
     });
   }
 
