@@ -134,7 +134,7 @@ class _MiniAlbumCard extends StatelessWidget {
         builder: (context, constraints) {
           final double cardWidth =
               (constraints.maxHeight.isFinite
-                      ? constraints.maxHeight * 0.72
+                      ? (constraints.maxHeight - 56) * 0.72
                       : 150.0)
                   .clamp(120.0, 180.0);
           return SizedBox(
