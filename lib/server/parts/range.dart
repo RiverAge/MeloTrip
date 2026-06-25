@@ -1,6 +1,9 @@
 part of '../cache_server.dart';
 
-class _Range {
+/// HTTP byte range representation for cache server.
+/// Used for parsing and merging Content-Range headers.
+@visibleForTesting
+class Range {
   int start;
   int end;
 
@@ -10,27 +13,30 @@ class _Range {
     return '$start-$end';
   }
 
-  _Range(this.start, this.end);
+  Range(this.start, this.end);
 
-  factory _Range.fromString(String str) {
+  factory Range.fromString(String str) {
     final parts = str.split('-');
     if (parts.length == 2) {
       final start = int.tryParse(parts[0]) ?? 0;
       final end = int.tryParse(parts[1]) ?? 0;
       if (start < end) {
-        return _Range(start, end);
+        return Range(start, end);
       } else {
-        return _Range(end, start);
+        return Range(end, start);
       }
     } else {
-      return _Range(0, 0);
+      return Range(0, 0);
     }
   }
 }
 
-List<_Range> _mergeRanges(List<String> oldRange, String newR) {
-  final allRanges = oldRange.map((e) => _Range.fromString(e)).toList();
-  allRanges.add(_Range.fromString(newR));
+/// Merges a list of existing byte ranges with a new range.
+/// Returns a sorted, non-overlapping list of merged ranges.
+@visibleForTesting
+List<Range> mergeRanges(List<String> oldRange, String newR) {
+  final allRanges = oldRange.map((e) => Range.fromString(e)).toList();
+  allRanges.add(Range.fromString(newR));
 
   allRanges.sort((a, b) => a.start.compareTo(b.start));
 
@@ -38,7 +44,7 @@ List<_Range> _mergeRanges(List<String> oldRange, String newR) {
     return [];
   }
 
-  final ret = <_Range>[];
+  final ret = <Range>[];
   ret.add(allRanges.first);
   if (allRanges.length == 1) {
     return ret;

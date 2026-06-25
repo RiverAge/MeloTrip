@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math' hide log;
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:melo_trip/const/index.dart';
 import 'package:melo_trip/helper/subsonic_protocol.dart';
 import 'package:melo_trip/model/cache_server/cache_manifest.dart';

@@ -59,7 +59,7 @@ Future<String?> _updateContentRange(
     }
 
     if (resRangeBytes != null) {
-      final mergeR = _mergeRanges(metaRangeList ?? [], resRangeBytes);
+      final mergeR = mergeRanges(metaRangeList ?? [], resRangeBytes);
       final ret = mergeR.map((e) => e.toString()).join(',');
       return ret;
     }
