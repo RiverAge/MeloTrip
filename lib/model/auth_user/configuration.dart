@@ -15,6 +15,7 @@ abstract class Configuration with _$Configuration {
     @JsonKey(name: 'shuffle') @SqliteBoolConvert() bool? shuffle,
     @JsonKey(name: 'recent_searches') String? recentSearches,
     @JsonKey(name: 'desktop_lyrics_config') String? desktopLyricsConfig,
+    @JsonKey(name: 'recommend_refresh_state') String? recommendRefreshState,
     ThemeMode? theme,
     @JsonKey(name: 'theme_seed') AppThemeSeed? themeSeed,
     @LocaleConvert() Locale? locale,

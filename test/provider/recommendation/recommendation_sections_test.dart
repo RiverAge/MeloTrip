@@ -11,6 +11,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/recommendation/favorite_weighted_seeds.dart';
 import 'package:melo_trip/provider/recommendation/playlist_weighted_seeds.dart';
 import 'package:melo_trip/provider/recommendation/recommendation_sections.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 
 void main() {
@@ -22,6 +23,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
           favoriteWeightedSeedsProvider.overrideWith(
             (_) async => const [
               WeightedSeed(
@@ -75,6 +77,20 @@ void main() {
       expect(repository.requestedIds, isEmpty);
     });
   });
+}
+
+/// Fake [UserSession] that avoids touching real persistence in tests.
+class _FakeUserSession extends UserSession {
+  @override
+  Future<UserSessionSnapshot> build() async {
+    return const UserSessionSnapshot(auth: null, config: null);
+  }
+
+  @override
+  Future<void> setRecommendRefreshState({
+    List<String>? recentIds,
+    List<String>? excludedSongIds,
+  }) async {}
 }
 
 class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {

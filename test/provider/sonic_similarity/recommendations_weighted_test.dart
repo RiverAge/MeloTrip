@@ -9,6 +9,7 @@ import 'package:melo_trip/model/recommendation/weighted_seed.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/sonic_similarity/sonic_similarity.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 
 void main() {
@@ -83,6 +84,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
           sonicSimilarityRepositoryProvider.overrideWithValue(repository),
         ],
       );
@@ -124,6 +126,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
           sonicSimilarityRepositoryProvider.overrideWithValue(repository),
         ],
       );
@@ -153,11 +156,25 @@ void main() {
   });
 }
 
+/// Fake [UserSession] that avoids touching real persistence in tests.
+class _FakeUserSession extends UserSession {
+  @override
+  Future<UserSessionSnapshot> build() async {
+    return const UserSessionSnapshot(auth: null, config: null);
+  }
+
+  @override
+  Future<void> setRecommendRefreshState({
+    List<String>? recentIds,
+    List<String>? excludedSongIds,
+  }) async {}
+}
+
 class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {
   _FakeSonicSimilarityRepository({required this.fetchResult});
 
   final Result<List<(SongEntity, double?)>, AppFailure> Function(String id)
-  fetchResult;
+      fetchResult;
 
   @override
   Future<SubsonicResponse> fetchSonicSimilarTracks({

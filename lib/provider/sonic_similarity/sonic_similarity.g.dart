@@ -341,25 +341,37 @@ abstract class _$SonicPath
   }
 }
 
-/// Tracks recently returned recommendation song IDs for the current app session.
+/// Tracks recently returned recommendation song IDs.
 ///
 /// Recommendations use this as a soft exclusion list. If fresh candidates are
 /// insufficient, old recommendations can still be used as fallback.
+///
+/// State is persisted in user_config (recommend_refresh_state) so that it
+/// survives app restarts and avoids re-recommending songs the user has
+/// already seen in a prior session.
 
 @ProviderFor(RecentRecommendationHistory)
 final recentRecommendationHistoryProvider =
     RecentRecommendationHistoryProvider._();
 
-/// Tracks recently returned recommendation song IDs for the current app session.
+/// Tracks recently returned recommendation song IDs.
 ///
 /// Recommendations use this as a soft exclusion list. If fresh candidates are
 /// insufficient, old recommendations can still be used as fallback.
+///
+/// State is persisted in user_config (recommend_refresh_state) so that it
+/// survives app restarts and avoids re-recommending songs the user has
+/// already seen in a prior session.
 final class RecentRecommendationHistoryProvider
-    extends $NotifierProvider<RecentRecommendationHistory, List<String>> {
-  /// Tracks recently returned recommendation song IDs for the current app session.
+    extends $AsyncNotifierProvider<RecentRecommendationHistory, List<String>> {
+  /// Tracks recently returned recommendation song IDs.
   ///
   /// Recommendations use this as a soft exclusion list. If fresh candidates are
   /// insufficient, old recommendations can still be used as fallback.
+  ///
+  /// State is persisted in user_config (recommend_refresh_state) so that it
+  /// survives app restarts and avoids re-recommending songs the user has
+  /// already seen in a prior session.
   RecentRecommendationHistoryProvider._()
     : super(
         from: null,
@@ -377,35 +389,32 @@ final class RecentRecommendationHistoryProvider
   @$internal
   @override
   RecentRecommendationHistory create() => RecentRecommendationHistory();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<String> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<List<String>>(value),
-    );
-  }
 }
 
 String _$recentRecommendationHistoryHash() =>
-    r'64a12df1e8db5591637e8e2629452eea711e4b28';
+    r'13679c021591fd2afcf78abdbc54f21c1a698102';
 
-/// Tracks recently returned recommendation song IDs for the current app session.
+/// Tracks recently returned recommendation song IDs.
 ///
 /// Recommendations use this as a soft exclusion list. If fresh candidates are
 /// insufficient, old recommendations can still be used as fallback.
+///
+/// State is persisted in user_config (recommend_refresh_state) so that it
+/// survives app restarts and avoids re-recommending songs the user has
+/// already seen in a prior session.
 
-abstract class _$RecentRecommendationHistory extends $Notifier<List<String>> {
-  List<String> build();
+abstract class _$RecentRecommendationHistory
+    extends $AsyncNotifier<List<String>> {
+  FutureOr<List<String>> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final ref = this.ref as $Ref<AsyncValue<List<String>>, List<String>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<String>, List<String>>,
-              List<String>,
+              AnyNotifier<AsyncValue<List<String>>, List<String>>,
+              AsyncValue<List<String>>,
               Object?,
               Object?
             >;
@@ -507,7 +516,7 @@ final class RecommendationsProvider
   }
 }
 
-String _$recommendationsHash() => r'30eb89d250669f65dfaed7423733def80f18bf2d';
+String _$recommendationsHash() => r'04636e1aa0f817e06aa9617592f68bd8b0e3ce57';
 
 /// Provider for client-side recommendations.
 ///

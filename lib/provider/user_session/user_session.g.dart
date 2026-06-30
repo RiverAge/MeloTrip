@@ -33,7 +33,7 @@ final class UserSessionProvider
   UserSession create() => UserSession();
 }
 
-String _$userSessionHash() => r'67a1df7f76ad733237a7dafbecb34a628a6a2074';
+String _$userSessionHash() => r'3c6ddb4e2f6bd8d8de87e24d090baef5cfc9e579';
 
 abstract class _$UserSession extends $AsyncNotifier<UserSessionSnapshot> {
   FutureOr<UserSessionSnapshot> build();

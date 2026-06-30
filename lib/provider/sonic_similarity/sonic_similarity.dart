@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:melo_trip/model/common/app_failure.dart';
@@ -6,6 +7,7 @@ import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/recommendation/seed_source.dart';
 import 'package:melo_trip/model/recommendation/weighted_seed.dart';
 import 'package:melo_trip/model/response/song/song.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -100,16 +102,24 @@ class SonicPath extends _$SonicPath {
   }
 }
 
-/// Tracks recently returned recommendation song IDs for the current app session.
+/// Tracks recently returned recommendation song IDs.
 ///
 /// Recommendations use this as a soft exclusion list. If fresh candidates are
 /// insufficient, old recommendations can still be used as fallback.
+///
+/// State is persisted in user_config (recommend_refresh_state) so that it
+/// survives app restarts and avoids re-recommending songs the user has
+/// already seen in a prior session.
 @Riverpod(keepAlive: true)
 class RecentRecommendationHistory extends _$RecentRecommendationHistory {
   @override
-  List<String> build() => const <String>[];
+  Future<List<String>> build() async {
+    final config = await ref.watch(sessionConfigProvider.future);
+    return parseRecommendRefreshState(config?.recommendRefreshState).recentIds;
+  }
 
   void record(Iterable<SongEntity> songs, {int maxItems = 80}) {
+    final current = state.asData?.value ?? const <String>[];
     final next = <String>[];
     final seen = <String>{};
 
@@ -119,17 +129,28 @@ class RecentRecommendationHistory extends _$RecentRecommendationHistory {
       next.add(id);
     }
 
-    for (final id in state) {
+    for (final id in current) {
       if (seen.add(id)) {
         next.add(id);
       }
     }
 
-    state = next.take(maxItems).toList();
+    final trimmed = next.take(maxItems).toList();
+    state = AsyncData(trimmed);
+    unawaited(
+      ref
+          .read(userSessionProvider.notifier)
+          .setRecommendRefreshState(recentIds: trimmed),
+    );
   }
 
   void clear() {
-    state = const <String>[];
+    state = const AsyncData(<String>[]);
+    unawaited(
+      ref
+          .read(userSessionProvider.notifier)
+          .setRecommendRefreshState(recentIds: const <String>[]),
+    );
   }
 }
 
@@ -142,7 +163,6 @@ const Map<SeedSource, int> _defaultSeedSourceCaps = <SeedSource, int>{
   SeedSource.rating: 2,
   SeedSource.current: 1,
   SeedSource.queue: 2,
-  SeedSource.playHistory: 2,
 };
 
 /// Selects recommendation seeds using weight first, then source diversity.
@@ -252,7 +272,8 @@ class Recommendations extends _$Recommendations {
       return const <SongEntity>[];
     }
 
-    final recentIds = ref.read(recentRecommendationHistoryProvider).toSet();
+    final recentIds =
+        (await ref.read(recentRecommendationHistoryProvider.future)).toSet();
     final excludedIds = excludedSongIds == null
         ? const <String>{}
         : excludedSongIds.where((id) => id.isNotEmpty).toSet();

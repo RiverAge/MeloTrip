@@ -129,6 +129,42 @@ class UserSession extends _$UserSession {
     }
   }
 
+  /// Persists the recommendation refresh state (recentIds + excludedSongIds)
+  /// into the user_config table. Each list is optional: when null, the
+  /// previously persisted value is preserved, so independent callers can
+  /// update only their own slice without clobbering the other.
+  ///
+  /// Used by [RecentRecommendationHistory.record] (recentIds only) and
+  /// [ForYouRecommendationRefresh.requestRefresh] (excludedSongIds only).
+  Future<void> setRecommendRefreshState({
+    List<String>? recentIds,
+    List<String>? excludedSongIds,
+  }) async {
+    final persistence = await ref.read(appPersistenceProvider.future);
+    final session = state.asData?.value ?? await future;
+    final username = session.auth?.username;
+    if (username == null || username.isEmpty) {
+      return;
+    }
+
+    final current = session.config ?? Configuration(username: username);
+    final existing = parseRecommendRefreshState(current.recommendRefreshState);
+    final resolvedRecent = recentIds ?? existing.recentIds;
+    final resolvedExcluded = excludedSongIds ?? existing.excludedSongIds;
+    final payload = jsonEncode({
+      'recent_ids': resolvedRecent,
+      'excluded_song_ids': resolvedExcluded,
+    });
+    final updated = current.copyWith(
+      recommendRefreshState: payload,
+      updateAt: DateTime.now().millisecondsSinceEpoch,
+    );
+    await persistence.saveUserConfig(updated);
+    if (ref.mounted) {
+      state = AsyncData(UserSessionSnapshot(auth: session.auth, config: updated));
+    }
+  }
+
   Future<Configuration> _loadOrCreateConfig({
     required String username,
     required AppPersistence persistence,
@@ -181,6 +217,44 @@ Future<AuthUser?> sessionAuth(Ref ref) async {
 Future<Configuration?> sessionConfig(Ref ref) async {
   final session = await ref.watch(userSessionProvider.future);
   return session.config;
+}
+
+/// Parsed view of the persisted recommendation refresh state.
+class RecommendRefreshState {
+  const RecommendRefreshState({
+    this.recentIds = const <String>[],
+    this.excludedSongIds = const <String>[],
+  });
+
+  final List<String> recentIds;
+  final List<String> excludedSongIds;
+}
+
+/// Parses the `recommend_refresh_state` JSON payload stored in user_config.
+///
+/// Returns an empty [RecommendRefreshState] when [payload] is null or malformed,
+/// so callers can always rely on non-null lists as the initial provider state.
+RecommendRefreshState parseRecommendRefreshState(String? payload) {
+  if (payload == null || payload.isEmpty) {
+    return const RecommendRefreshState();
+  }
+  try {
+    final decoded = jsonDecode(payload);
+    if (decoded is! Map<String, dynamic>) {
+      return const RecommendRefreshState();
+    }
+    return RecommendRefreshState(
+      recentIds: _asStringList(decoded['recent_ids']),
+      excludedSongIds: _asStringList(decoded['excluded_song_ids']),
+    );
+  } catch (_) {
+    return const RecommendRefreshState();
+  }
+}
+
+List<String> _asStringList(Object? value) {
+  if (value is! List) return const <String>[];
+  return value.whereType<String>().toList(growable: false);
 }
 
 String _generateSalt() {

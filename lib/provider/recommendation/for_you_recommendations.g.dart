@@ -15,7 +15,7 @@ final forYouRecommendationRefreshProvider =
 
 final class ForYouRecommendationRefreshProvider
     extends
-        $NotifierProvider<
+        $AsyncNotifierProvider<
           ForYouRecommendationRefresh,
           ForYouRecommendationRefreshState
         > {
@@ -36,41 +36,31 @@ final class ForYouRecommendationRefreshProvider
   @$internal
   @override
   ForYouRecommendationRefresh create() => ForYouRecommendationRefresh();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ForYouRecommendationRefreshState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ForYouRecommendationRefreshState>(
-        value,
-      ),
-    );
-  }
 }
 
 String _$forYouRecommendationRefreshHash() =>
-    r'e2b41ff1f98fd72a6b74845c97eb7a63f89c6efe';
+    r'49d45f814ca7fa5627e100a3fbad6b47f4e86e25';
 
 abstract class _$ForYouRecommendationRefresh
-    extends $Notifier<ForYouRecommendationRefreshState> {
-  ForYouRecommendationRefreshState build();
+    extends $AsyncNotifier<ForYouRecommendationRefreshState> {
+  FutureOr<ForYouRecommendationRefreshState> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
             as $Ref<
-              ForYouRecommendationRefreshState,
+              AsyncValue<ForYouRecommendationRefreshState>,
               ForYouRecommendationRefreshState
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                ForYouRecommendationRefreshState,
+                AsyncValue<ForYouRecommendationRefreshState>,
                 ForYouRecommendationRefreshState
               >,
-              ForYouRecommendationRefreshState,
+              AsyncValue<ForYouRecommendationRefreshState>,
               Object?,
               Object?
             >;
@@ -86,7 +76,8 @@ abstract class _$ForYouRecommendationRefresh
 /// - Returns empty list if no seeds available.
 /// - Does NOT fallback to getSimilarSongs2.
 /// - Does NOT call AudioMuse-AI API directly.
-/// - Does NOT cache results to local database.
+/// - Refresh state (excludedSongIds) is persisted via user_config so a restart
+///   resumes from the last page instead of resetting to the first batch.
 
 @ProviderFor(forYouRecommendations)
 final forYouRecommendationsProvider = ForYouRecommendationsProvider._();
@@ -99,7 +90,8 @@ final forYouRecommendationsProvider = ForYouRecommendationsProvider._();
 /// - Returns empty list if no seeds available.
 /// - Does NOT fallback to getSimilarSongs2.
 /// - Does NOT call AudioMuse-AI API directly.
-/// - Does NOT cache results to local database.
+/// - Refresh state (excludedSongIds) is persisted via user_config so a restart
+///   resumes from the last page instead of resetting to the first batch.
 
 final class ForYouRecommendationsProvider
     extends
@@ -117,7 +109,8 @@ final class ForYouRecommendationsProvider
   /// - Returns empty list if no seeds available.
   /// - Does NOT fallback to getSimilarSongs2.
   /// - Does NOT call AudioMuse-AI API directly.
-  /// - Does NOT cache results to local database.
+  /// - Refresh state (excludedSongIds) is persisted via user_config so a restart
+  ///   resumes from the last page instead of resetting to the first batch.
   ForYouRecommendationsProvider._()
     : super(
         from: null,
@@ -145,4 +138,4 @@ final class ForYouRecommendationsProvider
 }
 
 String _$forYouRecommendationsHash() =>
-    r'85c6da24308dac57800ca4d9ca5a5a1b0b9bd2d9';
+    r'2a9fe3feace4dfc50150eaa4be77a056889d22c0';

@@ -11,6 +11,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations_v2.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 
 /// Tests for forYouRecommendationsV2Provider.
@@ -50,6 +51,7 @@ void main() {
 
       container = ProviderContainer(
         overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
           favoriteProvider.overrideWith(
             () => _FakeFavoriteNotifier(mockResult: () => mockFavoriteResult),
           ),
@@ -401,6 +403,20 @@ class _FakeFavoriteNotifier extends Favorite {
           ),
         );
   }
+}
+
+/// Fake [UserSession] that avoids touching real persistence in tests.
+class _FakeUserSession extends UserSession {
+  @override
+  Future<UserSessionSnapshot> build() async {
+    return const UserSessionSnapshot(auth: null, config: null);
+  }
+
+  @override
+  Future<void> setRecommendRefreshState({
+    List<String>? recentIds,
+    List<String>? excludedSongIds,
+  }) async {}
 }
 
 class _FakePlaylistDetail extends PlaylistDetail {

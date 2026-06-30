@@ -7,17 +7,6 @@ import 'package:sqflite/sqflite.dart';
 class SqliteAppPersistence implements AppPersistence {
   SqliteAppPersistence._(this._database);
 
-  static const String _createPlayHistorySql = '''
-           CREATE TABLE play_history (
-             song_id TEXT NOT NULL,
-             play_count INTEGER NOT NULL DEFAULT 0,
-             last_played INTEGER NOT NULL,
-             is_completed TEXT NOT NULL DEFAULT 0,
-             is_skipped TEXT NOT NULL DEFAULT 0,
-             username TEXT NOT NULL,
-             PRIMARY KEY (song_id, username)
-           )
-         ''';
   static const String _createUserConfigSql = '''
            CREATE TABLE user_config (
              username TEXT PRIMARY KEY,
@@ -27,6 +16,7 @@ class SqliteAppPersistence implements AppPersistence {
              locale TEXT,
              recent_searches TEXT,
              desktop_lyrics_config TEXT,
+             recommend_refresh_state TEXT,
              theme TEXT,
              theme_seed TEXT,
              update_at INTEGER NOT NULL
@@ -51,7 +41,6 @@ class SqliteAppPersistence implements AppPersistence {
       path,
       version: 5,
       onCreate: (Database db, int version) async {
-        await db.execute(_createPlayHistorySql);
         await db.execute(_createUserConfigSql);
         await db.execute(_createCurrentUserSql);
         // Note: server_capability table removed - Sonic API is always available on Navidrome 0.61+
@@ -70,6 +59,9 @@ class SqliteAppPersistence implements AppPersistence {
         // Drop deprecated server_capability table if it exists (cleanup from older versions)
         if (oldVersion < 5) {
           await db.execute('DROP TABLE IF EXISTS server_capability');
+          // Drop deprecated play_history table (never read/written, replaced by
+          // server-side scrobble + recommend_refresh_state in user_config).
+          await db.execute('DROP TABLE IF EXISTS play_history');
         }
       },
     );
@@ -82,6 +74,14 @@ class SqliteAppPersistence implements AppPersistence {
     final hasThemeSeed = columns.any((row) => row['name'] == 'theme_seed');
     if (!hasThemeSeed) {
       await db.execute('ALTER TABLE user_config ADD COLUMN theme_seed TEXT');
+    }
+    final hasRecommendRefresh = columns.any(
+      (row) => row['name'] == 'recommend_refresh_state',
+    );
+    if (!hasRecommendRefresh) {
+      await db.execute(
+        'ALTER TABLE user_config ADD COLUMN recommend_refresh_state TEXT',
+      );
     }
   }
 

@@ -11,6 +11,7 @@ import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/favorite/favorite.dart';
 import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 
 /// Tests for forYouRecommendationsProvider integration.
@@ -50,6 +51,7 @@ void main() {
 
       container = ProviderContainer(
         overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
           favoriteProvider.overrideWith(
             () => _FakeFavoriteNotifier(mockResult: () => mockFavoriteResult),
           ),
@@ -88,7 +90,11 @@ void main() {
       },
     );
 
-    test('refresh request stores current recommendation ids', () {
+    test('refresh request stores current recommendation ids', () async {
+      // Ensure the keepAlive provider has finished its async build (which
+      // loads persisted state) before invoking requestRefresh.
+      await container.read(forYouRecommendationRefreshProvider.future);
+
       final notifier = container.read(
         forYouRecommendationRefreshProvider.notifier,
       );
@@ -100,7 +106,9 @@ void main() {
         SongEntity(id: 'song-2', title: 'Song 2'),
       ]);
 
-      final state = container.read(forYouRecommendationRefreshProvider);
+      final state = await container.read(
+        forYouRecommendationRefreshProvider.future,
+      );
       expect(state.nonce, 1);
       expect(state.excludedSongIds, ['song-1', 'song-2']);
     });
@@ -408,6 +416,24 @@ class _FakeFavoriteNotifier extends Favorite {
           ),
         );
   }
+}
+
+/// Fake [UserSession] that avoids touching real persistence in tests.
+///
+/// Returns an unauthenticated session so [sessionConfigProvider] resolves to
+/// null and recommendation providers fall back to empty persisted state.
+/// [setRecommendRefreshState] is a no-op so refresh writes do not hit SQLite.
+class _FakeUserSession extends UserSession {
+  @override
+  Future<UserSessionSnapshot> build() async {
+    return const UserSessionSnapshot(auth: null, config: null);
+  }
+
+  @override
+  Future<void> setRecommendRefreshState({
+    List<String>? recentIds,
+    List<String>? excludedSongIds,
+  }) async {}
 }
 
 class _FakePlaylistDetail extends PlaylistDetail {

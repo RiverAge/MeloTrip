@@ -26,7 +26,4 @@ enum SeedSource {
 
   /// Songs in play queue.
   queue,
-
-  /// Songs from local play history.
-  playHistory,
 }

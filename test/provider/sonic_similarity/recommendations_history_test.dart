@@ -7,6 +7,7 @@ import 'package:melo_trip/model/common/sonic_similarity_result.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/model/response/subsonic_response.dart';
 import 'package:melo_trip/provider/sonic_similarity/sonic_similarity.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:melo_trip/repository/sonic_similarity/sonic_similarity_repository.dart';
 
 void main() {
@@ -21,11 +22,14 @@ void main() {
     );
     final container = ProviderContainer(
       overrides: [
+        userSessionProvider.overrideWith(_FakeUserSession.new),
         sonicSimilarityRepositoryProvider.overrideWithValue(repository),
       ],
     );
     addTearDown(container.dispose);
 
+    // Ensure the keepAlive provider has finished its async build before record.
+    await container.read(recentRecommendationHistoryProvider.future);
     container.read(recentRecommendationHistoryProvider.notifier).record([
       SongEntity(id: 'old-1', title: 'Old 1'),
       SongEntity(id: 'old-2', title: 'Old 2'),
@@ -48,11 +52,13 @@ void main() {
     );
     final container = ProviderContainer(
       overrides: [
+        userSessionProvider.overrideWith(_FakeUserSession.new),
         sonicSimilarityRepositoryProvider.overrideWithValue(repository),
       ],
     );
     addTearDown(container.dispose);
 
+    await container.read(recentRecommendationHistoryProvider.future);
     container.read(recentRecommendationHistoryProvider.notifier).record([
       SongEntity(id: 'shown-1', title: 'Shown 1'),
       SongEntity(id: 'shown-2', title: 'Shown 2'),
@@ -69,6 +75,20 @@ void main() {
 
     expect(recommendations, isEmpty);
   });
+}
+
+/// Fake [UserSession] that avoids touching real persistence in tests.
+class _FakeUserSession extends UserSession {
+  @override
+  Future<UserSessionSnapshot> build() async {
+    return const UserSessionSnapshot(auth: null, config: null);
+  }
+
+  @override
+  Future<void> setRecommendRefreshState({
+    List<String>? recentIds,
+    List<String>? excludedSongIds,
+  }) async {}
 }
 
 class _FakeSonicSimilarityRepository implements SonicSimilarityRepository {

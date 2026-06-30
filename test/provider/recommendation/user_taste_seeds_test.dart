@@ -20,7 +20,7 @@ import 'package:melo_trip/provider/recommendation/user_taste_seeds.dart';
 /// 3. Deduplication by songId keeping higher weight
 /// 4. Sorting by weight descending
 /// 5. Empty input returns empty
-/// 6. Does not include current/play_history/rating
+/// 6. Does not include current/rating
 void main() {
   group('deduplicateWeightedSeeds pure function', () {
     test('returns empty list for empty input', () {
@@ -354,22 +354,6 @@ void main() {
       final seeds = await container.read(userTasteSeedsProvider.future);
 
       expect(seeds.any((s) => s.source == SeedSource.current), false);
-    });
-
-    test('does not include play history seed', () async {
-      mockFavoriteResult = Result.ok(
-        SubsonicResponse(
-          subsonicResponse: SubsonicResponseClass(
-            starred: StarredEntity(
-              song: [SongEntity(id: 'fav-1', title: 'Favorite 1')],
-            ),
-          ),
-        ),
-      );
-
-      final seeds = await container.read(userTasteSeedsProvider.future);
-
-      expect(seeds.any((s) => s.source == SeedSource.playHistory), false);
     });
 
     test('does not include rating seed', () async {

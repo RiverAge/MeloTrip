@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/recommendation/user_taste_seeds.dart';
 import 'package:melo_trip/provider/sonic_similarity/sonic_similarity.dart';
+import 'package:melo_trip/provider/user_session/user_session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'for_you_recommendations.g.dart';
@@ -18,8 +21,15 @@ class ForYouRecommendationRefreshState {
 @Riverpod(keepAlive: true)
 class ForYouRecommendationRefresh extends _$ForYouRecommendationRefresh {
   @override
-  ForYouRecommendationRefreshState build() {
-    return const ForYouRecommendationRefreshState();
+  Future<ForYouRecommendationRefreshState> build() async {
+    final config = await ref.watch(sessionConfigProvider.future);
+    final excludedSongIds =
+        parseRecommendRefreshState(config?.recommendRefreshState)
+            .excludedSongIds;
+    // nonce stays 0 on restart: an unseeded Random produces fresh seed selection
+    // jitter, so the next batch differs from the last session's first batch
+    // while excludedSongIds still prevents re-showing the most recent page.
+    return ForYouRecommendationRefreshState(excludedSongIds: excludedSongIds);
   }
 
   void requestRefresh(Iterable<SongEntity> currentSongs) {
@@ -34,9 +44,15 @@ class ForYouRecommendationRefresh extends _$ForYouRecommendationRefresh {
       excludedIds.add(id);
     }
 
-    state = ForYouRecommendationRefreshState(
-      nonce: state.nonce + 1,
+    final next = ForYouRecommendationRefreshState(
+      nonce: (state.asData?.value.nonce ?? 0) + 1,
       excludedSongIds: excludedIds,
+    );
+    state = AsyncData(next);
+    unawaited(
+      ref
+          .read(userSessionProvider.notifier)
+          .setRecommendRefreshState(excludedSongIds: excludedIds),
     );
   }
 }
@@ -49,10 +65,11 @@ class ForYouRecommendationRefresh extends _$ForYouRecommendationRefresh {
 /// - Returns empty list if no seeds available.
 /// - Does NOT fallback to getSimilarSongs2.
 /// - Does NOT call AudioMuse-AI API directly.
-/// - Does NOT cache results to local database.
+/// - Refresh state (excludedSongIds) is persisted via user_config so a restart
+///   resumes from the last page instead of resetting to the first batch.
 @riverpod
 Future<List<SongEntity>> forYouRecommendations(Ref ref) async {
-  final refresh = ref.watch(forYouRecommendationRefreshProvider);
+  final refresh = await ref.watch(forYouRecommendationRefreshProvider.future);
   final seeds = await ref.watch(userTasteSeedsProvider.future);
 
   if (seeds.isEmpty) {
