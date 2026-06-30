@@ -153,6 +153,97 @@ void main() {
       );
       expect(recommendations.any((song) => song.artist == 'Artist B'), isTrue);
     });
+
+    test('artistCap=1 limits same artist to 1 when alternatives exist',
+        () async {
+      final repository = _FakeSonicSimilarityRepository(
+        fetchResult: (_) => Result.ok([
+          (SongEntity(id: 'a-1', title: 'A1', artist: 'Artist A'), .99),
+          (SongEntity(id: 'a-2', title: 'A2', artist: 'Artist A'), .98),
+          (SongEntity(id: 'a-3', title: 'A3', artist: 'Artist A'), .97),
+          (SongEntity(id: 'b-1', title: 'B1', artist: 'Artist B'), .90),
+          (SongEntity(id: 'c-1', title: 'C1', artist: 'Artist C'), .89),
+          (SongEntity(id: 'd-1', title: 'D1', artist: 'Artist D'), .88),
+        ]),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
+          sonicSimilarityRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final recommendations = await container.read(
+        recommendationsProvider(
+          limit: 3,
+          weightedSeeds: const [
+            WeightedSeed(
+              songId: 'seed',
+              source: SeedSource.favorite,
+              weight: 1,
+            ),
+          ],
+          refreshNonce: 4,
+          artistCap: 1,
+          albumCap: 1,
+        ).future,
+      );
+
+      // Strict cap=1 fills all 3 slots from distinct artists, so Artist A
+      // appears at most once even though it has the top 3 scored songs.
+      expect(recommendations, hasLength(3));
+      expect(
+        recommendations.where((song) => song.artist == 'Artist A').length,
+        1,
+      );
+    });
+
+    test('artistCap=1 relaxes to 2 only for unfilled slots when pool is thin',
+        () async {
+      final repository = _FakeSonicSimilarityRepository(
+        fetchResult: (_) => Result.ok([
+          (SongEntity(id: 'a-1', title: 'A1', artist: 'Artist A'), .99),
+          (SongEntity(id: 'a-2', title: 'A2', artist: 'Artist A'), .98),
+          (SongEntity(id: 'a-3', title: 'A3', artist: 'Artist A'), .97),
+          (SongEntity(id: 'b-1', title: 'B1', artist: 'Artist B'), .90),
+        ]),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          userSessionProvider.overrideWith(_FakeUserSession.new),
+          sonicSimilarityRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final recommendations = await container.read(
+        recommendationsProvider(
+          limit: 3,
+          weightedSeeds: const [
+            WeightedSeed(
+              songId: 'seed',
+              source: SeedSource.favorite,
+              weight: 1,
+            ),
+          ],
+          refreshNonce: 4,
+          artistCap: 1,
+          albumCap: 1,
+        ).future,
+      );
+
+      // Only 2 distinct artists available for limit=3. Strict cap=1 picks
+      // A1 + B1 (2 songs), then the relaxed pass fills the remaining slot
+      // with cap=2, allowing a second Artist A song. The strict picks are
+      // preserved (not re-selected from scratch).
+      expect(recommendations, hasLength(3));
+      expect(
+        recommendations.where((song) => song.artist == 'Artist A').length,
+        2,
+      );
+      expect(recommendations.any((song) => song.artist == 'Artist B'), isTrue);
+    });
   });
 }
 

@@ -85,6 +85,8 @@ Future<List<SongEntity>> forYouRecommendations(Ref ref) async {
       weightedSeeds: seeds,
       excludedSongIds: refresh.excludedSongIds,
       refreshNonce: refresh.nonce,
+      artistCap: 1,
+      albumCap: 1,
     ).future,
   );
 

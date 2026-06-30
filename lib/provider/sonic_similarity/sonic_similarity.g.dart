@@ -392,7 +392,7 @@ final class RecentRecommendationHistoryProvider
 }
 
 String _$recentRecommendationHistoryHash() =>
-    r'13679c021591fd2afcf78abdbc54f21c1a698102';
+    r'36aecb1016462d7b6addbe5a8780c8d49ae3df86';
 
 /// Tracks recently returned recommendation song IDs.
 ///
@@ -481,6 +481,8 @@ final class RecommendationsProvider
       List<WeightedSeed>? weightedSeeds,
       List<String>? excludedSongIds,
       int refreshNonce,
+      int? artistCap,
+      int? albumCap,
     })
     super.argument,
   }) : super(
@@ -516,7 +518,7 @@ final class RecommendationsProvider
   }
 }
 
-String _$recommendationsHash() => r'04636e1aa0f817e06aa9617592f68bd8b0e3ce57';
+String _$recommendationsHash() => r'7eeca4dbed925113ff5b57584fd7e7c0657602f5';
 
 /// Provider for client-side recommendations.
 ///
@@ -547,6 +549,8 @@ final class RecommendationsFamily extends $Family
             List<WeightedSeed>? weightedSeeds,
             List<String>? excludedSongIds,
             int refreshNonce,
+            int? artistCap,
+            int? albumCap,
           })
         > {
   RecommendationsFamily._()
@@ -580,6 +584,8 @@ final class RecommendationsFamily extends $Family
     List<WeightedSeed>? weightedSeeds,
     List<String>? excludedSongIds,
     int refreshNonce = 0,
+    int? artistCap,
+    int? albumCap,
   }) => RecommendationsProvider._(
     argument: (
       limit: limit,
@@ -587,6 +593,8 @@ final class RecommendationsFamily extends $Family
       weightedSeeds: weightedSeeds,
       excludedSongIds: excludedSongIds,
       refreshNonce: refreshNonce,
+      artistCap: artistCap,
+      albumCap: albumCap,
     ),
     from: this,
   );
@@ -620,12 +628,16 @@ abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
             List<WeightedSeed>? weightedSeeds,
             List<String>? excludedSongIds,
             int refreshNonce,
+            int? artistCap,
+            int? albumCap,
           });
   int get limit => _$args.limit;
   List<String>? get seedSongIds => _$args.seedSongIds;
   List<WeightedSeed>? get weightedSeeds => _$args.weightedSeeds;
   List<String>? get excludedSongIds => _$args.excludedSongIds;
   int get refreshNonce => _$args.refreshNonce;
+  int? get artistCap => _$args.artistCap;
+  int? get albumCap => _$args.albumCap;
 
   FutureOr<List<SongEntity>> build({
     int limit = 20,
@@ -633,6 +645,8 @@ abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
     List<WeightedSeed>? weightedSeeds,
     List<String>? excludedSongIds,
     int refreshNonce = 0,
+    int? artistCap,
+    int? albumCap,
   });
   @$mustCallSuper
   @override
@@ -655,6 +669,8 @@ abstract class _$Recommendations extends $AsyncNotifier<List<SongEntity>> {
         weightedSeeds: _$args.weightedSeeds,
         excludedSongIds: _$args.excludedSongIds,
         refreshNonce: _$args.refreshNonce,
+        artistCap: _$args.artistCap,
+        albumCap: _$args.albumCap,
       ),
     );
   }

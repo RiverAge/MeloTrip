@@ -39,7 +39,7 @@ final class ForYouRecommendationRefreshProvider
 }
 
 String _$forYouRecommendationRefreshHash() =>
-    r'49d45f814ca7fa5627e100a3fbad6b47f4e86e25';
+    r'bb1ef30b05173b587ed571ded85501018fa488d3';
 
 abstract class _$ForYouRecommendationRefresh
     extends $AsyncNotifier<ForYouRecommendationRefreshState> {
@@ -138,4 +138,4 @@ final class ForYouRecommendationsProvider
 }
 
 String _$forYouRecommendationsHash() =>
-    r'2a9fe3feace4dfc50150eaa4be77a056889d22c0';
+    r'0acdc7c26a5a4bddbcd9e2d837e2a60ffcf2aba9';

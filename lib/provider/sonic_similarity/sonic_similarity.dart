@@ -270,6 +270,8 @@ class Recommendations extends _$Recommendations {
     List<WeightedSeed>? weightedSeeds,
     List<String>? excludedSongIds,
     int refreshNonce = 0,
+    int? artistCap,
+    int? albumCap,
   }) async {
     if (limit <= 0) {
       return const <SongEntity>[];
@@ -333,9 +335,19 @@ class Recommendations extends _$Recommendations {
       );
     }
 
+    // Diversity caps: null falls back to the defaults (strict 2, relaxed 3).
+    // Callers that want tighter diversity (e.g. For You) pass artistCap: 1.
+    // The relaxed cap is derived as strict + 1 so a tighter strict also
+    // tightens the fallback.
+    final strictArtist = artistCap ?? 2;
+    final strictAlbum = albumCap ?? 2;
     final recommendations = _rankRecommendationCandidates(
       candidatesById.values,
       limit: limit,
+      strictArtistCap: strictArtist,
+      strictAlbumCap: strictAlbum,
+      relaxedArtistCap: strictArtist + 1,
+      relaxedAlbumCap: strictAlbum + 1,
     );
 
     if (recommendations.isNotEmpty) {
@@ -404,6 +416,10 @@ void _mergeRecommendationCandidate(
 List<SongEntity> _rankRecommendationCandidates(
   Iterable<_RecommendationCandidate> candidates, {
   required int limit,
+  int strictArtistCap = 2,
+  int strictAlbumCap = 2,
+  int relaxedArtistCap = 3,
+  int relaxedAlbumCap = 3,
 }) {
   final sorted = candidates.toList()
     ..sort((a, b) {
@@ -413,23 +429,42 @@ List<SongEntity> _rankRecommendationCandidates(
       return b.score.compareTo(a.score);
     });
 
+  // Strict pass: enforce tight diversity caps.
+  final artistCount = <String, int>{};
+  final albumCount = <String, int>{};
+  final seenIds = <String>{};
   final strict = _selectByDiversityCaps(
     sorted,
     limit: limit,
-    artistCap: 2,
-    albumCap: 2,
+    artistCap: strictArtistCap,
+    albumCap: strictAlbumCap,
+    initialArtistCount: artistCount,
+    initialAlbumCount: albumCount,
+    initialSeenIds: seenIds,
   );
+
+  // _selectByDiversityCaps mutates the maps/sets it receives via the
+  // _tryAddRecommendation calls, so artistCount/albumCount/seenIds now reflect
+  // the strict selections. If strict already filled the limit, we are done.
   if (strict.length >= limit) {
     return strict;
   }
 
-  final relaxed = _selectByDiversityCaps(
+  // Relaxed pass: keep strict selections and only fill the remaining slots
+  // with looser caps. Counts carry over so a capped artist stays capped.
+  // (Previously this re-ran over the whole list and discarded strict results,
+  //  which could let through artists already at their strict cap.)
+  final remaining = limit - strict.length;
+  final fill = _selectByDiversityCaps(
     sorted,
-    limit: limit,
-    artistCap: 3,
-    albumCap: 3,
+    limit: remaining,
+    artistCap: relaxedArtistCap,
+    albumCap: relaxedAlbumCap,
+    initialArtistCount: artistCount,
+    initialAlbumCount: albumCount,
+    initialSeenIds: seenIds,
   );
-  return relaxed;
+  return [...strict, ...fill];
 }
 
 List<SongEntity> _selectByDiversityCaps(
@@ -437,11 +472,16 @@ List<SongEntity> _selectByDiversityCaps(
   required int limit,
   required int artistCap,
   required int albumCap,
+  Map<String, int>? initialArtistCount,
+  Map<String, int>? initialAlbumCount,
+  Set<String>? initialSeenIds,
 }) {
   final result = <SongEntity>[];
-  final seenIds = <String>{};
-  final artistCount = <String, int>{};
-  final albumCount = <String, int>{};
+  // Operate directly on the provided maps/sets (no copy) so callers can read
+  // back the accumulated counts across multiple passes (strict → relaxed).
+  final seenIds = initialSeenIds ?? <String>{};
+  final artistCount = initialArtistCount ?? <String, int>{};
+  final albumCount = initialAlbumCount ?? <String, int>{};
 
   for (final candidate in candidates) {
     if (result.length >= limit) break;
@@ -496,11 +536,17 @@ bool _tryAddRecommendation({
     return false;
   }
 
-  final artistId = song.artistId ?? song.artist;
-  final albumId = song.albumId ?? song.album;
+  // Artist: fall back to name, then to a sentinel so songs with missing
+  // artist metadata still count against the cap instead of bypassing it.
+  final artistKey = song.artistId ?? song.artist ?? '__unknown_artist__';
+  // Album: only enforce a cap when we actually have an album identifier.
+  // Songs with no album info cannot be meaningfully grouped, so treating
+  // them all as one shared "unknown album" would wrongly cap unrelated songs
+  // together; better to skip the album cap for them.
+  final albumKey = song.albumId ?? song.album;
 
-  final artistPenalty = artistCount[artistId] ?? 0;
-  final albumPenalty = albumCount[albumId] ?? 0;
+  final artistPenalty = artistCount[artistKey] ?? 0;
+  final albumPenalty = albumKey == null ? 0 : (albumCount[albumKey] ?? 0);
 
   if (artistPenalty >= artistCap || albumPenalty >= albumCap) {
     return false;
@@ -508,11 +554,9 @@ bool _tryAddRecommendation({
 
   recommendations.add(song);
   seenIds.add(id);
-  if (artistId != null) {
-    artistCount[artistId] = (artistCount[artistId] ?? 0) + 1;
-  }
-  if (albumId != null) {
-    albumCount[albumId] = (albumCount[albumId] ?? 0) + 1;
+  artistCount[artistKey] = artistPenalty + 1;
+  if (albumKey != null) {
+    albumCount[albumKey] = albumPenalty + 1;
   }
   return true;
 }
