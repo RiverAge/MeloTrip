@@ -1,23 +1,40 @@
-part of '../home_page.dart';
+import 'package:flutter/material.dart';
 
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
+/// Shared section header for desktop shelves.
+///
+/// Renders a bold title (optionally prefixed with an icon) on the left and a
+/// trailing button group on the right. Trailing buttons are conditionally
+/// rendered based on whether their callback is non-null:
+/// view-all → play-all → refresh → scroll-back → scroll-forward.
+class DesktopShelfHeader extends StatelessWidget {
+  const DesktopShelfHeader({
+    super.key,
     required this.title,
+    this.icon,
     this.onRefresh,
     this.refreshTooltip,
     this.isRefreshing = false,
     this.onViewAll,
     this.viewAllTooltip,
+    this.onPlayAll,
+    this.playAllTooltip,
     this.onScrollBack,
     this.onScrollForward,
   });
 
   final String title;
+  final IconData? icon;
+
   final VoidCallback? onRefresh;
   final String? refreshTooltip;
   final bool isRefreshing;
+
   final VoidCallback? onViewAll;
   final String? viewAllTooltip;
+
+  final VoidCallback? onPlayAll;
+  final String? playAllTooltip;
+
   final VoidCallback? onScrollBack;
   final VoidCallback? onScrollForward;
 
@@ -28,6 +45,14 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 15),
       child: Row(
         children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              size: 20,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+          ],
           Expanded(
             child: Text(
               title,
@@ -44,15 +69,23 @@ class _SectionHeader extends StatelessWidget {
           const Spacer(),
           const SizedBox(width: 10),
           if (onViewAll != null) ...[
-            _ScrollButton(
+            DesktopScrollButton(
               icon: Icons.open_in_full_rounded,
               onPressed: onViewAll,
               tooltip: viewAllTooltip,
             ),
             const SizedBox(width: 8),
           ],
+          if (onPlayAll != null) ...[
+            DesktopScrollButton(
+              icon: Icons.play_arrow_rounded,
+              onPressed: isRefreshing ? null : onPlayAll,
+              tooltip: playAllTooltip,
+            ),
+            const SizedBox(width: 8),
+          ],
           if (onRefresh != null) ...[
-            _ScrollButton(
+            DesktopScrollButton(
               icon: Icons.refresh_rounded,
               onPressed: isRefreshing ? null : onRefresh,
               tooltip: refreshTooltip,
@@ -61,23 +94,32 @@ class _SectionHeader extends StatelessWidget {
             ),
             const SizedBox(width: 8),
           ],
-          _ScrollButton(
-            icon: Icons.arrow_back_ios_new_rounded,
-            onPressed: onScrollBack,
-          ),
-          const SizedBox(width: 8),
-          _ScrollButton(
-            icon: Icons.arrow_forward_ios_rounded,
-            onPressed: onScrollForward,
-          ),
+          if (onScrollBack != null) ...[
+            DesktopScrollButton(
+              icon: Icons.arrow_back_ios_new_rounded,
+              onPressed: onScrollBack,
+            ),
+            const SizedBox(width: 8),
+          ],
+          if (onScrollForward != null)
+            DesktopScrollButton(
+              icon: Icons.arrow_forward_ios_rounded,
+              onPressed: onScrollForward,
+            ),
         ],
       ),
     );
   }
 }
 
-class _ScrollButton extends StatelessWidget {
-  const _ScrollButton({
+/// Compact icon button used by [DesktopShelfHeader] for trailing actions.
+///
+/// Supports a [quiet] variant (transparent background with subtle hover
+/// feedback) and an inline [isLoading] state that swaps the icon for a small
+/// spinner.
+class DesktopScrollButton extends StatelessWidget {
+  const DesktopScrollButton({
+    super.key,
     required this.icon,
     this.onPressed,
     this.tooltip,
@@ -128,25 +170,28 @@ class _ScrollButton extends StatelessWidget {
             ),
     );
   }
-}
 
-ButtonStyle _quietIconButtonStyle(ThemeData theme, {required bool isLoading}) {
-  return ButtonStyle(
-    backgroundColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12);
-      }
-      if (states.contains(WidgetState.hovered) ||
-          states.contains(WidgetState.focused) ||
-          isLoading) {
-        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.08);
-      }
-      return null;
-    }),
-    shape: WidgetStateProperty.all(
-      RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-    ),
-    padding: WidgetStateProperty.all(const EdgeInsets.all(6)),
-    minimumSize: WidgetStateProperty.all(const Size(24, 24)),
-  );
+  static ButtonStyle _quietIconButtonStyle(
+    ThemeData theme, {
+    required bool isLoading,
+  }) {
+    return ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) {
+          return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12);
+        }
+        if (states.contains(WidgetState.hovered) ||
+            states.contains(WidgetState.focused) ||
+            isLoading) {
+          return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.08);
+        }
+        return null;
+      }),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      ),
+      padding: WidgetStateProperty.all(const EdgeInsets.all(6)),
+      minimumSize: WidgetStateProperty.all(const Size(24, 24)),
+    );
+  }
 }

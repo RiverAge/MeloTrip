@@ -102,7 +102,7 @@ class _DesktopAlbumSectionState extends ConsumerState<_DesktopAlbumSection> {
           return Column(
             crossAxisAlignment: .start,
             children: [
-              _SectionHeader(
+              DesktopShelfHeader(
                 title: widget.title,
                 onScrollBack: _canScrollBack ? _onScrollBack : null,
                 onScrollForward: _canScrollForward ? _onScrollForward : null,
@@ -116,8 +116,9 @@ class _DesktopAlbumSectionState extends ConsumerState<_DesktopAlbumSection> {
                       size: _DesktopAlbumSection._fetchSize,
                     ),
                   ),
-                  loading: (_, _) => const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  loading: (_, _) => _DesktopAlbumCardSkeleton(
+                    cardWidth: cardWidth,
+                    cardGap: cardGap,
                   ),
                   empty: (_, _) => const SizedBox.shrink(),
                   builder: (context, data, _) {
@@ -152,6 +153,52 @@ class _DesktopAlbumSectionState extends ConsumerState<_DesktopAlbumSection> {
           );
         },
       ),
+    );
+  }
+}
+
+class _DesktopAlbumCardSkeleton extends StatelessWidget {
+  const _DesktopAlbumCardSkeleton({
+    required this.cardWidth,
+    required this.cardGap,
+  });
+
+  final double cardWidth;
+  final double cardGap;
+
+  static const int _cardCount = 5;
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer(
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: _cardCount,
+        separatorBuilder: (_, _) => SizedBox(width: cardGap),
+        itemBuilder: (_, _) => SizedBox(
+          width: cardWidth,
+          child: const _DesktopAlbumCardSkeletonItem(),
+        ),
+      ),
+    );
+  }
+}
+
+class _DesktopAlbumCardSkeletonItem extends StatelessWidget {
+  const _DesktopAlbumCardSkeletonItem();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: .start,
+      children: [
+        AspectRatio(aspectRatio: 1, child: ShimmerBox(borderRadius: 5)),
+        SizedBox(height: 12),
+        ShimmerBox(height: 14, borderRadius: 4),
+        SizedBox(height: 6),
+        ShimmerBox(width: 90, height: 12, borderRadius: 4),
+      ],
     );
   }
 }

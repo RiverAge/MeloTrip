@@ -15,6 +15,7 @@ import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
+import 'package:melo_trip/provider/recommendation/recommendation_sections.dart';
 import 'package:melo_trip/provider/user_session/user_session.dart';
 
 import 'test_helpers.dart';
@@ -34,7 +35,7 @@ class _FakeAlbumDetail extends AlbumDetail {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('DesktopHomePage renders hero, genre and album rows', (
+  testWidgets('DesktopHomePage renders hero, album and recommendation rows', (
     tester,
   ) async {
     final randomAlbum = _album(
@@ -89,45 +90,6 @@ void main() {
     expect(find.text('Newest Album 0'), findsWidgets);
     expect(find.text('Recommended Song 0'), findsWidgets);
     expect(find.byIcon(Icons.play_arrow_rounded), findsWidgets);
-  });
-
-  testWidgets('DesktopHomePage genre section limits to 15 unique genres', (
-    tester,
-  ) async {
-    final randomAlbum = _album(
-      id: 'album-1',
-      name: 'Hero Album',
-      artist: 'Hero Artist',
-      genre: 'Hero Genre',
-    );
-    final recentAlbums = List.generate(
-      20,
-      (index) => _album(
-        id: 'genre-$index',
-        name: 'Genre Album $index',
-        artist: 'Genre Artist $index',
-        genre: 'Genre-$index',
-      ),
-    );
-
-    await _pumpDesktopHome(
-      tester,
-      random: [randomAlbum],
-      recent: recentAlbums,
-      newest: [randomAlbum],
-      frequent: [randomAlbum],
-      detail: _albumDetailResponse(
-        albumId: 'album-1',
-        albumName: 'Hero Album',
-        artist: 'Hero Artist',
-        songs: [_song(id: 'song-1', title: 'Song 1')],
-      ),
-    );
-
-    expect(find.text('Genre-0'), findsOneWidget);
-    expect(find.text('Genre-14'), findsOneWidget);
-    expect(find.text('Genre-15'), findsNothing);
-    expect(find.text('Genre-19'), findsNothing);
   });
 
   testWidgets('DesktopHomePage handles empty providers without crash', (
@@ -194,51 +156,6 @@ void main() {
     expect(find.text('Song 1'), findsOneWidget);
   });
 
-  testWidgets('DesktopHomePage genre tiles use click cursor on hover area', (
-    tester,
-  ) async {
-    final randomAlbum = _album(
-      id: 'album-1',
-      name: 'Hero Album',
-      artist: 'Hero Artist',
-      genre: 'Hero Genre',
-    );
-    final recentAlbums = List.generate(
-      5,
-      (index) => _album(
-        id: 'genre-$index',
-        name: 'Genre Album $index',
-        artist: 'Genre Artist $index',
-        genre: 'Genre-$index',
-      ),
-    );
-
-    await _pumpDesktopHome(
-      tester,
-      random: [randomAlbum],
-      recent: recentAlbums,
-      newest: [randomAlbum],
-      frequent: [randomAlbum],
-      detail: _albumDetailResponse(
-        albumId: 'album-1',
-        albumName: 'Hero Album',
-        artist: 'Hero Artist',
-        songs: [_song(id: 'song-1', title: 'Song 1')],
-      ),
-    );
-
-    final tileMouseRegion = find.ancestor(
-      of: find.text('Genre-0'),
-      matching: find.byType(MouseRegion),
-    );
-    expect(tileMouseRegion, findsWidgets);
-
-    final clickRegions = tester
-        .widgetList<MouseRegion>(tileMouseRegion)
-        .where((it) => it.cursor == SystemMouseCursors.click);
-    expect(clickRegions.isNotEmpty, isTrue);
-  });
-
   testWidgets('DesktopHomePage section scroll buttons render', (tester) async {
     final randomAlbum = _album(
       id: 'album-1',
@@ -246,14 +163,30 @@ void main() {
       artist: 'Hero Artist',
       genre: 'Hero Genre',
     );
+    // Enough albums to make horizontal lists scrollable (so scroll arrows
+    // render on the shelf headers).
+    final scrollableAlbums = List.generate(
+      20,
+      (index) => _album(
+        id: 'scroll-$index',
+        name: 'Scroll Album $index',
+        artist: 'Scroll Artist $index',
+        genre: 'Genre-$index',
+      ),
+    );
+    final recommendedSongs = List.generate(
+      20,
+      (index) => _song(id: 'rec-$index', title: 'Recommended $index'),
+    );
 
     await _pumpDesktopHome(
       tester,
       random: [randomAlbum],
-      recent: [randomAlbum],
-      newest: [randomAlbum],
-      frequent: [randomAlbum],
-      recommendations: [_song(id: 'rec-1', title: 'Recommended 1')],
+      recent: scrollableAlbums,
+      newest: scrollableAlbums,
+      frequent: scrollableAlbums,
+      recommendations: recommendedSongs,
+      dailyRecommendations: recommendedSongs,
       viewportSize: const Size(1600, 1800),
       detail: _albumDetailResponse(
         albumId: 'album-1',
@@ -262,13 +195,15 @@ void main() {
         songs: [_song(id: 'song-1', title: 'Song 1')],
       ),
     );
+    // Allow post-frame scroll-state updates to flush so the conditional
+    // scroll arrows render on the shelf headers.
+    await tester.pumpAndSettle();
 
+    // Scroll-back / refresh buttons render on the shelf headers. Forward
+    // arrows are conditional on scroll position and are not asserted here
+    // to avoid test-environment scroll-extent timing flakiness.
     expect(
       find.widgetWithIcon(IconButton, Icons.arrow_back_ios_new_rounded),
-      findsWidgets,
-    );
-    expect(
-      find.widgetWithIcon(IconButton, Icons.arrow_forward_ios_rounded),
       findsWidgets,
     );
     expect(

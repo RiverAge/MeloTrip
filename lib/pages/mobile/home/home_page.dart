@@ -16,12 +16,14 @@ import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/endof_data.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
+import 'package:melo_trip/widget/shimmer.dart';
 
 part 'parts/top_search_bar.dart';
 part 'parts/albums.dart';
 part 'parts/albums_view_all_page.dart';
 part 'parts/for_you_placeholder.dart';
 part 'parts/for_you_recommendations.dart';
+part 'parts/for_you_recommendations_skeleton.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

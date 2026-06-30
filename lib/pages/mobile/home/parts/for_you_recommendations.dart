@@ -53,6 +53,7 @@ class _ForYouRecommendationsState
 
     return AsyncValueBuilder(
       provider: forYouRecommendationsProvider,
+      loading: (_, _) => const _ForYouRecommendationsSkeleton(),
       builder: (context, songs, ref) {
         // Show placeholder when no recommendations
         if (songs.isEmpty) {

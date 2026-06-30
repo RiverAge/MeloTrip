@@ -1,12 +1,9 @@
-import 'dart:ui' show PointerDeviceKind;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
-import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
-import 'package:melo_trip/pages/desktop/shared/desktop_song_more_button.dart';
+import 'package:melo_trip/pages/desktop/shared/desktop_recommendation_shelf.dart';
 import 'package:melo_trip/pages/desktop/similar_songs/similar_songs_page.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
@@ -34,6 +31,29 @@ class _DesktopRecommendationPageState
     final l10n = AppLocalizations.of(context)!;
     final bottomPadding = MediaQuery.paddingOf(context).bottom + 96;
 
+    final forYou = ref.watch(forYouRecommendationsProvider);
+    final forYouSongs = forYou.asData?.value ?? const <SongEntity>[];
+    final forYouRefreshing = forYou.isLoading && forYouSongs.isNotEmpty;
+
+    final daily = ref.watch(
+      dailyRecommendationsProvider(refreshNonce: _dailyRefreshNonce),
+    );
+    final dailySongs = daily.asData?.value ?? const <SongEntity>[];
+    final dailyRefreshing = daily.isLoading && dailySongs.isNotEmpty;
+
+    final favorite = ref.watch(
+      favoriteBasedRecommendationsProvider(refreshNonce: _favoriteRefreshNonce),
+    );
+    final favoriteSongs = favorite.asData?.value ?? const <SongEntity>[];
+    final favoriteRefreshing = favorite.isLoading && favoriteSongs.isNotEmpty;
+
+    final playlist = ref.watch(
+      playlistBasedRecommendationsProvider(refreshNonce: _playlistRefreshNonce),
+    );
+    final playlistSongs = playlist.asData?.value ?? const <SongEntity>[];
+    final playlistRefreshing =
+        playlist.isLoading && playlistSongs.isNotEmpty;
+
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -49,68 +69,77 @@ class _DesktopRecommendationPageState
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 28),
           sliver: SliverToBoxAdapter(
-            child: _RecommendationShelf(
+            child: DesktopRecommendationShelf(
               title: l10n.guessYouLike,
               icon: Icons.auto_awesome_rounded,
-              songs: ref.watch(forYouRecommendationsProvider),
-              onRefresh: (songs) {
-                if (songs.isEmpty) {
+              songs: forYou,
+              isRefreshing: forYouRefreshing,
+              onRefresh: () {
+                if (forYouSongs.isEmpty) {
                   ref.invalidate(forYouRecommendationsProvider);
                   return;
                 }
                 ref
                     .read(forYouRecommendationRefreshProvider.notifier)
-                    .requestRefresh(songs);
+                    .requestRefresh(forYouSongs);
               },
+              onPlayAll: () => _playAll(forYouSongs),
+              showMoreButton: true,
             ),
           ),
         ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 28),
           sliver: SliverToBoxAdapter(
-            child: _RecommendationShelf(
+            child: DesktopRecommendationShelf(
               title: l10n.recommendedToday,
               icon: Icons.today_rounded,
-              songs: ref.watch(
-                dailyRecommendationsProvider(refreshNonce: _dailyRefreshNonce),
-              ),
-              onRefresh: (_) => setState(() => _dailyRefreshNonce++),
+              songs: daily,
+              isRefreshing: dailyRefreshing,
+              onRefresh: () => setState(() => _dailyRefreshNonce++),
+              onPlayAll: () => _playAll(dailySongs),
+              showMoreButton: true,
             ),
           ),
         ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 28),
           sliver: SliverToBoxAdapter(
-            child: _RecommendationShelf(
+            child: DesktopRecommendationShelf(
               title: l10n.favoriteRecommendations,
               icon: Icons.favorite_border_rounded,
-              songs: ref.watch(
-                favoriteBasedRecommendationsProvider(
-                  refreshNonce: _favoriteRefreshNonce,
-                ),
-              ),
-              onRefresh: (_) => setState(() => _favoriteRefreshNonce++),
+              songs: favorite,
+              isRefreshing: favoriteRefreshing,
+              onRefresh: () => setState(() => _favoriteRefreshNonce++),
+              onPlayAll: () => _playAll(favoriteSongs),
+              showMoreButton: true,
             ),
           ),
         ),
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 28),
           sliver: SliverToBoxAdapter(
-            child: _RecommendationShelf(
+            child: DesktopRecommendationShelf(
               title: l10n.playlistRecommendations,
               icon: Icons.queue_music_rounded,
-              songs: ref.watch(
-                playlistBasedRecommendationsProvider(
-                  refreshNonce: _playlistRefreshNonce,
-                ),
-              ),
-              onRefresh: (_) => setState(() => _playlistRefreshNonce++),
+              songs: playlist,
+              isRefreshing: playlistRefreshing,
+              onRefresh: () => setState(() => _playlistRefreshNonce++),
+              onPlayAll: () => _playAll(playlistSongs),
+              showMoreButton: true,
             ),
           ),
         ),
         SliverToBoxAdapter(child: SizedBox(height: bottomPadding)),
       ],
     );
+  }
+
+  Future<void> _playAll(List<SongEntity> songs) async {
+    if (songs.isEmpty) return;
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    await player?.setPlaylist(songs: songs, initialId: songs.firstOrNull?.id);
+    await player?.play();
   }
 }
 
@@ -351,333 +380,5 @@ class _CurrentSongActionButtons extends ConsumerWidget {
       initialId: radioQueue.firstOrNull?.id,
     );
     await player?.play();
-  }
-}
-
-class _RecommendationShelf extends ConsumerStatefulWidget {
-  const _RecommendationShelf({
-    required this.title,
-    required this.icon,
-    required this.songs,
-    this.onRefresh,
-  });
-
-  final String title;
-  final IconData icon;
-  final AsyncValue<List<SongEntity>> songs;
-  final ValueChanged<List<SongEntity>>? onRefresh;
-
-  @override
-  ConsumerState<_RecommendationShelf> createState() =>
-      _RecommendationShelfState();
-}
-
-class _RecommendationShelfState extends ConsumerState<_RecommendationShelf> {
-  late final ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final songs = widget.songs.asData?.value ?? const <SongEntity>[];
-
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        _RecommendationShelfHeader(
-          title: widget.title,
-          icon: widget.icon,
-          onPlayAll: songs.isEmpty ? null : () => _playAll(songs),
-          onRefresh: widget.onRefresh == null
-              ? null
-              : () => widget.onRefresh!(songs),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 236,
-          child: widget.songs.when(
-            loading: () =>
-                const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-            error: (_, _) =>
-                _RecommendationEmptyState(message: l10n.noRecommendations),
-            data: (items) {
-              if (items.isEmpty) {
-                return _RecommendationEmptyState(
-                  message: l10n.noRecommendations,
-                );
-              }
-              return ScrollConfiguration(
-                behavior: const _DesktopRecommendationScrollBehavior(),
-                child: ListView.separated(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: items.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: 14),
-                  itemBuilder: (_, index) {
-                    return _RecommendationSongCard(song: items[index]);
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _playAll(List<SongEntity> songs) async {
-    if (songs.isEmpty) return;
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    await player?.setPlaylist(songs: songs, initialId: songs.firstOrNull?.id);
-    await player?.play();
-  }
-}
-
-class _RecommendationShelfHeader extends StatelessWidget {
-  const _RecommendationShelfHeader({
-    required this.title,
-    required this.icon,
-    this.onPlayAll,
-    this.onRefresh,
-  });
-
-  final String title;
-  final IconData icon;
-  final VoidCallback? onPlayAll;
-  final VoidCallback? onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-    return Row(
-      children: [
-        Icon(icon, size: 20, color: theme.colorScheme.primary),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: .ellipsis,
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: .w800),
-          ),
-        ),
-        const SizedBox(width: 8),
-        IconButton(
-          onPressed: onPlayAll,
-          tooltip: l10n.play,
-          icon: const Icon(Icons.play_arrow_rounded),
-          iconSize: 18,
-          style: IconButton.styleFrom(
-            backgroundColor: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: onPlayAll == null ? .22 : .5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        IconButton(
-          onPressed: onRefresh,
-          tooltip: l10n.refreshRecommendations,
-          icon: const Icon(Icons.refresh_rounded),
-          iconSize: 18,
-          style: _quietRecommendationIconButtonStyle(theme),
-        ),
-      ],
-    );
-  }
-}
-
-ButtonStyle _quietRecommendationIconButtonStyle(ThemeData theme) {
-  return ButtonStyle(
-    foregroundColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.disabled)) {
-        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.38);
-      }
-      return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.68);
-    }),
-    backgroundColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12);
-      }
-      if (states.contains(WidgetState.hovered) ||
-          states.contains(WidgetState.focused)) {
-        return theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.08);
-      }
-      return null;
-    }),
-    shape: WidgetStateProperty.all(
-      RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-    ),
-  );
-}
-
-class _DesktopRecommendationScrollBehavior extends MaterialScrollBehavior {
-  const _DesktopRecommendationScrollBehavior();
-
-  @override
-  Set<PointerDeviceKind> get dragDevices => {...super.dragDevices, .mouse};
-}
-
-class _RecommendationEmptyState extends StatelessWidget {
-  const _RecommendationEmptyState({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Align(
-      alignment: .topLeft,
-      child: Text(
-        message,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: .72),
-        ),
-      ),
-    );
-  }
-}
-
-class _RecommendationSongCard extends ConsumerStatefulWidget {
-  const _RecommendationSongCard({required this.song});
-
-  final SongEntity song;
-
-  @override
-  ConsumerState<_RecommendationSongCard> createState() =>
-      _RecommendationSongCardState();
-}
-
-class _RecommendationSongCardState
-    extends ConsumerState<_RecommendationSongCard> {
-  bool _isHovering = false;
-
-  Future<void> _playSong() async {
-    final player = await ref.read(appPlayerHandlerProvider.future);
-    await player?.insertAndPlay(widget.song);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-    final title = widget.song.title ?? l10n.noTitle;
-    final artist = widget.song.displayArtist ?? widget.song.artist ?? '';
-
-    return SizedBox(
-      width: 156,
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _isHovering = true),
-        onExit: (_) => setState(() => _isHovering = false),
-        cursor: SystemMouseCursors.click,
-        child: InkWell(
-          onTap: _playSong,
-          borderRadius: BorderRadius.circular(6),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              AspectRatio(
-                aspectRatio: 1,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: theme.shadowColor.withValues(alpha: .14),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: ArtworkImage(
-                          id:
-                              widget.song.coverArt ??
-                              widget.song.albumId ??
-                              widget.song.id,
-                          fit: .cover,
-                          size: 360,
-                        ),
-                      ),
-                    ),
-                    AnimatedOpacity(
-                      opacity: _isHovering ? 1 : 0,
-                      duration: DesktopMotionTokens.fast,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.scrim.withValues(alpha: .42),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Center(
-                          child: FilledButton(
-                            onPressed: _playSong,
-                            style: FilledButton.styleFrom(
-                              backgroundColor: theme.colorScheme.surface
-                                  .withValues(alpha: .96),
-                              foregroundColor: theme.colorScheme.onSurface,
-                              shape: const CircleBorder(),
-                              padding: const EdgeInsets.all(10),
-                              minimumSize: const Size(42, 42),
-                            ),
-                            child: const Icon(
-                              Icons.play_arrow_rounded,
-                              size: 24,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 1,
-                      overflow: .ellipsis,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: .w700,
-                      ),
-                    ),
-                  ),
-                  DesktopSongMoreButton(song: widget.song, iconSize: 16),
-                ],
-              ),
-              if (artist.trim().isNotEmpty)
-                Text(
-                  artist,
-                  maxLines: 1,
-                  overflow: .ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: .68,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

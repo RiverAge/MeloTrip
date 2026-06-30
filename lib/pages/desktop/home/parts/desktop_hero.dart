@@ -26,15 +26,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
       loading: (context, _) => LayoutBuilder(
         builder: (context, constraints) {
           final heroHeight = _heroHeight(context, constraints);
-          return ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: heroHeight,
-              maxHeight: heroHeight,
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          );
+          return _DesktopHeroSkeleton(heroHeight: heroHeight);
         },
       ),
       builder: (context, data, _) {
@@ -162,6 +154,69 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
           },
         );
       },
+    );
+  }
+}
+
+/// Skeleton placeholder matching the real Hero layout (cover + title + artist
+/// + meta lines) so loading state does not collapse the section height.
+class _DesktopHeroSkeleton extends StatelessWidget {
+  const _DesktopHeroSkeleton({required this.heroHeight});
+
+  final double heroHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    final coverSize = (heroHeight * 0.64).clamp(140.0, 200.0);
+    final coverGap = (heroHeight * 0.14).clamp(20.0, 40.0);
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: heroHeight,
+        maxHeight: heroHeight,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Shimmer(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+            child: Row(
+              children: [
+                SizedBox.square(
+                  dimension: coverSize,
+                  child: const ShimmerBox(borderRadius: 8),
+                ),
+                SizedBox(width: coverGap),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .start,
+                    children: [
+                      ShimmerBox(
+                        width: coverSize * 0.7,
+                        height: 32,
+                        borderRadius: 6,
+                      ),
+                      const SizedBox(height: 12),
+                      ShimmerBox(
+                        width: coverSize * 0.45,
+                        height: 20,
+                        borderRadius: 4,
+                      ),
+                      const SizedBox(height: 6),
+                      ShimmerBox(
+                        width: coverSize * 0.3,
+                        height: 16,
+                        borderRadius: 4,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
