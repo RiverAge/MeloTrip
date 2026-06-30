@@ -205,27 +205,37 @@ class _SongCard extends StatelessWidget {
                   children: [
                     AspectRatio(
                       aspectRatio: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withValues(
-                                alpha: 0.05,
-                              ),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.shadow.withValues(
+                                    alpha: 0.05,
+                                  ),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: ArtworkImage(
-                            fit: .cover,
-                            id: song.coverArt ?? song.albumId,
-                            size: 300,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: ArtworkImage(
+                                fit: .cover,
+                                id: song.coverArt ?? song.albumId,
+                                size: 300,
+                              ),
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            top: 4,
+                            right: 4,
+                            child: _MoreButton(songId: song.id),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -258,6 +268,44 @@ class _SongCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Compact "more" button overlaid on a recommendation card cover.
+///
+/// Opens the standard song control sheet (favorite / play next / add to queue
+/// / add to playlist / similar radio), so a single entry point surfaces the
+/// full set of song actions without adding multiple buttons to the card.
+class _MoreButton extends StatelessWidget {
+  const _MoreButton({required this.songId});
+
+  final String? songId;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Tooltip(
+      message: AppLocalizations.of(context)!.moreActions,
+      child: Material(
+        color: theme.colorScheme.scrim.withValues(alpha: 0.45),
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: songId == null || songId!.isEmpty
+              ? null
+              : () => showSongControlSheet(context, songId),
+          child: SizedBox(
+            width: 26,
+            height: 26,
+            child: Icon(
+              Icons.more_horiz_rounded,
+              size: 16,
+              color: theme.colorScheme.onPrimary.withValues(alpha: 0.95),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -801,6 +801,12 @@ abstract class AppLocalizations {
   /// **'Play Next'**
   String get playNext;
 
+  /// tooltip for a button that opens a menu/sheet of song actions
+  ///
+  /// In en, this message translates to:
+  /// **'More Actions'**
+  String get moreActions;
+
   /// Add to user play queue
   ///
   /// In en, this message translates to:

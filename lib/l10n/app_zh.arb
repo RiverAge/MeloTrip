@@ -139,6 +139,7 @@
 
     "playQueue": "播放队列",
     "playNext": "下一首播放",
+    "moreActions": "更多操作",
     "addToPlayQueue": "加到播放队列",
     "clearPlayQueue": "清空播放队列",
     "removeFromPlayQueue": "移出播放队列",

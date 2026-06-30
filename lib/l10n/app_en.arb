@@ -507,6 +507,10 @@
   "@playNext": {
     "description": "add this song to play queue after current song is played"
   },
+  "moreActions": "More Actions",
+  "@moreActions": {
+    "description": "tooltip for a button that opens a menu/sheet of song actions"
+  },
 
   "addToPlayQueue": "Add Queue",
   "@addToPlayQueue": {

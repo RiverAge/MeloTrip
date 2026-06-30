@@ -35,6 +35,11 @@ class _DesktopRecommendationSongCardState
     await player?.insertAndPlay(widget.song);
   }
 
+  Future<void> _addToNext() async {
+    final player = await ref.read(appPlayerHandlerProvider.future);
+    await player?.insertToNext(widget.song);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -87,17 +92,33 @@ class _DesktopRecommendationSongCardState
                         borderRadius: BorderRadius.circular(radius),
                       ),
                       child: Center(
-                        child: FilledButton(
-                          onPressed: _playSong,
-                          style: FilledButton.styleFrom(
-                            backgroundColor: theme.colorScheme.surface
-                                .withValues(alpha: .96),
-                            foregroundColor: theme.colorScheme.onSurface,
-                            shape: const CircleBorder(),
-                            padding: const EdgeInsets.all(10),
-                            minimumSize: const Size(42, 42),
-                          ),
-                          child: const Icon(Icons.play_arrow_rounded, size: 24),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _HoverCircleButton(
+                              icon: Icons.not_started_outlined,
+                              size: 36,
+                              iconSize: 20,
+                              tooltip: l10n.playNext,
+                              onPressed: _addToNext,
+                            ),
+                            const SizedBox(width: 8),
+                            FilledButton(
+                              onPressed: _playSong,
+                              style: FilledButton.styleFrom(
+                                backgroundColor: theme.colorScheme.surface
+                                    .withValues(alpha: .96),
+                                foregroundColor: theme.colorScheme.onSurface,
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(10),
+                                minimumSize: const Size(42, 42),
+                              ),
+                              child: const Icon(
+                                Icons.play_arrow_rounded,
+                                size: 24,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -126,6 +147,52 @@ class _DesktopRecommendationSongCardState
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Circular hover-overlay action button for recommendation song cards.
+///
+/// Mirrors the visual style of the play button (surface background, onSurface
+/// foreground) so secondary actions like "add to next" read as siblings of the
+/// primary play action.
+class _HoverCircleButton extends StatelessWidget {
+  const _HoverCircleButton({
+    required this.icon,
+    required this.size,
+    required this.tooltip,
+    required this.onPressed,
+    this.iconSize,
+  });
+
+  final IconData icon;
+  final double size;
+  final String tooltip;
+  final VoidCallback onPressed;
+  final double? iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: theme.colorScheme.surface.withValues(alpha: .96),
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onPressed,
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Icon(
+              icon,
+              size: iconSize ?? size * 0.55,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
         ),
       ),
     );

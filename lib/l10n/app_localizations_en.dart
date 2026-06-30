@@ -363,6 +363,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playNext => 'Play Next';
 
   @override
+  String get moreActions => 'More Actions';
+
+  @override
   String get addToPlayQueue => 'Add Queue';
 
   @override
