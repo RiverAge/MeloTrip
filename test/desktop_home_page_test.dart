@@ -15,7 +15,6 @@ import 'package:melo_trip/provider/album/album_detail.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
-import 'package:melo_trip/provider/recommendation/recommendation_sections.dart';
 import 'package:melo_trip/provider/user_session/user_session.dart';
 
 import 'test_helpers.dart';
@@ -186,7 +185,6 @@ void main() {
       newest: scrollableAlbums,
       frequent: scrollableAlbums,
       recommendations: recommendedSongs,
-      dailyRecommendations: recommendedSongs,
       viewportSize: const Size(1600, 1800),
       detail: _albumDetailResponse(
         albumId: 'album-1',
@@ -199,11 +197,11 @@ void main() {
     // scroll arrows render on the shelf headers.
     await tester.pumpAndSettle();
 
-    // Scroll-back / refresh buttons render on the shelf headers. Forward
-    // arrows are conditional on scroll position and are not asserted here
-    // to avoid test-environment scroll-extent timing flakiness.
+    // Refresh buttons always render on recommendation shelves. Forward arrows
+    // render when a list is scrollable from its initial position. Back arrows
+    // are skipped since the lists start at offset 0 (cannot scroll back yet).
     expect(
-      find.widgetWithIcon(IconButton, Icons.arrow_back_ios_new_rounded),
+      find.widgetWithIcon(IconButton, Icons.arrow_forward_ios_rounded),
       findsWidgets,
     );
     expect(

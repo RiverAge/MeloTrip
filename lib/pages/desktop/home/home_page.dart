@@ -12,7 +12,6 @@ import 'package:melo_trip/pages/shared/player/playback_background.dart';
 import 'package:melo_trip/provider/album/albums.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/provider/recommendation/for_you_recommendations.dart';
-import 'package:melo_trip/provider/recommendation/recommendation_sections.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/provider_value_builder.dart';
 import 'package:melo_trip/widget/shimmer.dart';
@@ -28,8 +27,6 @@ class DesktopHomePage extends ConsumerStatefulWidget {
 }
 
 class _DesktopHomePageState extends ConsumerState<DesktopHomePage> {
-  int _dailyRefreshNonce = 0;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -38,12 +35,6 @@ class _DesktopHomePageState extends ConsumerState<DesktopHomePage> {
     final forYou = ref.watch(forYouRecommendationsProvider);
     final forYouSongs = forYou.asData?.value ?? const <SongEntity>[];
     final forYouRefreshing = forYou.isLoading && forYouSongs.isNotEmpty;
-
-    final daily = ref.watch(
-      dailyRecommendationsProvider(refreshNonce: _dailyRefreshNonce),
-    );
-    final dailySongs = daily.asData?.value ?? const <SongEntity>[];
-    final dailyRefreshing = daily.isLoading && dailySongs.isNotEmpty;
 
     return CustomScrollView(
       slivers: [
@@ -78,22 +69,6 @@ class _DesktopHomePageState extends ConsumerState<DesktopHomePage> {
               onViewAll: () =>
                   Navigator.of(context).pushNamed('/recommendations'),
               onPlayAll: () => _playAll(forYouSongs),
-              showScrollArrows: true,
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
-          sliver: SliverToBoxAdapter(
-            child: DesktopRecommendationShelf(
-              title: l10n.recommendedToday,
-              icon: Icons.today_rounded,
-              songs: daily,
-              isRefreshing: dailyRefreshing,
-              onRefresh: () => setState(() => _dailyRefreshNonce++),
-              onViewAll: () =>
-                  Navigator.of(context).pushNamed('/recommendations'),
-              onPlayAll: () => _playAll(dailySongs),
               showScrollArrows: true,
             ),
           ),

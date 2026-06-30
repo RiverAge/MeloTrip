@@ -54,7 +54,6 @@ Future<void> _pumpDesktopHome(
   required List<AlbumEntity> newest,
   required List<AlbumEntity> frequent,
   List<SongEntity> recommendations = const <SongEntity>[],
-  List<SongEntity> dailyRecommendations = const <SongEntity>[],
   Size viewportSize = const Size(1600, 1000),
   required SubsonicResponse detail,
 }) async {
@@ -73,9 +72,6 @@ Future<void> _pumpDesktopHome(
         forYouRecommendationsProvider.overrideWith(
           (_) async => recommendations,
         ),
-        dailyRecommendationsProvider(
-          refreshNonce: 0,
-        ).overrideWith((_) async => dailyRecommendations),
         albumListProvider(
           AlbumListQuery(type: AlbumListType.random.name),
         ).overrideWith((_) async => Result.ok(random)),
