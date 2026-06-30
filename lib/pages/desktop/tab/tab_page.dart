@@ -21,7 +21,6 @@ import 'package:melo_trip/pages/desktop/library/genre_detail_page.dart';
 import 'package:melo_trip/model/response/genre/genre.dart';
 import 'package:melo_trip/pages/desktop/player/full_player_page.dart';
 import 'package:melo_trip/pages/desktop/playlist/playlist_detail_page.dart';
-import 'package:melo_trip/pages/desktop/recommendation/recommendation_page.dart';
 import 'package:melo_trip/pages/desktop/settings/settings_page.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_song_more_button.dart';
@@ -139,8 +138,6 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
         return '/genres';
       case 7:
         return '/folders';
-      case 8:
-        return '/recommendations';
       default:
         return '/';
     }
@@ -172,9 +169,6 @@ class _DesktopTabPageState extends ConsumerState<DesktopTabPage>
         break;
       case '/folders':
         page = const DesktopFoldersPage();
-        break;
-      case '/recommendations':
-        page = const DesktopRecommendationPage();
         break;
       case '/genre_detail':
         final arg = settings.arguments;

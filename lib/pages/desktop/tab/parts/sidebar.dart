@@ -32,12 +32,6 @@ class _DesktopSidebar extends ConsumerWidget {
         onTap: () => onSelected(0),
       ),
       _SidebarNavItem(
-        index: 8,
-        title: l10n.recommendations,
-        icon: Icons.auto_awesome_rounded,
-        onTap: () => onSelected(8),
-      ),
-      _SidebarNavItem(
         index: 2,
         title: l10n.myFavorites,
         icon: Icons.favorite_outline_rounded,

@@ -33,7 +33,6 @@ class DesktopRecommendationShelf extends ConsumerStatefulWidget {
     this.onPlayAll,
     this.playAllTooltip,
     this.showScrollArrows = false,
-    this.showMoreButton = false,
   });
 
   final String title;
@@ -53,9 +52,6 @@ class DesktopRecommendationShelf extends ConsumerStatefulWidget {
   /// When true, render scroll-back / scroll-forward arrows on the header bound
   /// to the internal controller. Set false for pages that don't want arrows.
   final bool showScrollArrows;
-
-  /// Forwarded to each [DesktopRecommendationSongCard].
-  final bool showMoreButton;
 
   @override
   ConsumerState<DesktopRecommendationShelf> createState() =>
@@ -212,7 +208,6 @@ class _DesktopRecommendationShelfState
                           constraints: BoxConstraints(maxWidth: cardWidth),
                           child: DesktopRecommendationSongCard(
                             song: songs[index],
-                            showMoreButton: widget.showMoreButton,
                           ),
                         ),
                       ),

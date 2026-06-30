@@ -4,26 +4,21 @@ import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/desktop/shared/desktop_motion_tokens.dart';
-import 'package:melo_trip/pages/desktop/shared/desktop_song_more_button.dart';
 import 'package:melo_trip/provider/app/player.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 
 /// Shared recommendation song card for desktop shelves.
 ///
-/// Merges the former home and recommendation-page card variants into one
-/// component. [showMoreButton] toggles the trailing [DesktopSongMoreButton]
-/// (used by the recommendation page); [borderRadius] controls the cover
-/// rounding (defaults to 6 to match album cards).
+/// [borderRadius] controls the cover rounding (defaults to 6 to match album
+/// cards).
 class DesktopRecommendationSongCard extends ConsumerStatefulWidget {
   const DesktopRecommendationSongCard({
     super.key,
     required this.song,
-    this.showMoreButton = false,
     this.borderRadius = 6,
   });
 
   final SongEntity song;
-  final bool showMoreButton;
   final double borderRadius;
 
   @override
@@ -111,24 +106,14 @@ class _DesktopRecommendationSongCardState
               ),
             ),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: .ellipsis,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: .w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                if (widget.showMoreButton) ...[
-                  const SizedBox(width: 6),
-                  DesktopSongMoreButton(song: widget.song, iconSize: 16),
-                ],
-              ],
+            Text(
+              title,
+              maxLines: 1,
+              overflow: .ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: .w700,
+                fontSize: 14,
+              ),
             ),
             const SizedBox(height: 2),
             Text(

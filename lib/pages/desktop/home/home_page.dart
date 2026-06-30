@@ -66,8 +66,6 @@ class _DesktopHomePageState extends ConsumerState<DesktopHomePage> {
                   : () => ref
                       .read(forYouRecommendationRefreshProvider.notifier)
                       .requestRefresh(forYouSongs),
-              onViewAll: () =>
-                  Navigator.of(context).pushNamed('/recommendations'),
               onPlayAll: () => _playAll(forYouSongs),
               showScrollArrows: true,
             ),
