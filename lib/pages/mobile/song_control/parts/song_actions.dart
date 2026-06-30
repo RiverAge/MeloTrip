@@ -1,6 +1,6 @@
 part of '../song_control.dart';
 
-class _SongActions extends StatelessWidget {
+class _SongActions extends StatefulWidget {
   const _SongActions({
     required this.song,
     required this.onToggleFavorite,
@@ -11,9 +11,17 @@ class _SongActions extends StatelessWidget {
   final void Function() onAddToPlaylist;
 
   @override
+  State<_SongActions> createState() => _SongActionsState();
+}
+
+class _SongActionsState extends State<_SongActions> {
+  bool _moreExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final song = widget.song;
     final isStarred = song.starred != null;
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
@@ -39,7 +47,8 @@ class _SongActions extends StatelessWidget {
             child: AsyncValueBuilder(
               provider: appPlayerHandlerProvider,
               builder: (context, player, _) {
-                final actions = <Widget>[
+                // Primary row: Play, Play Next (conditional), Favorite, More.
+                final primary = <Widget>[
                   AsyncStreamBuilder(
                     provider: player.playingStream,
                     builder: (_, playing) {
@@ -61,19 +70,6 @@ class _SongActions extends StatelessWidget {
                       );
                     },
                   ),
-                  _ActionButton(
-                    icon: isStarred
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    iconColor: isStarred ? theme.colorScheme.error : null,
-                    label: isStarred ? l10n.unfavorite : l10n.favorite,
-                    onPressed: onToggleFavorite,
-                  ),
-                  _ActionButton(
-                    icon: Icons.library_add_check_outlined,
-                    label: l10n.addToPlaylist,
-                    onPressed: onAddToPlaylist,
-                  ),
                   if (!isCurrent && !isNext)
                     _ActionButton(
                       icon: Icons.not_started_outlined,
@@ -82,6 +78,27 @@ class _SongActions extends StatelessWidget {
                         player.insertToNext(song);
                       },
                     ),
+                  _ActionButton(
+                    icon: isStarred
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    iconColor: isStarred ? theme.colorScheme.error : null,
+                    label: isStarred ? l10n.unfavorite : l10n.favorite,
+                    onPressed: widget.onToggleFavorite,
+                  ),
+                  _ActionButton(
+                    icon: _moreExpanded
+                        ? Icons.expand_less_rounded
+                        : Icons.more_horiz_rounded,
+                    label: l10n.moreActions,
+                    onPressed: () {
+                      setState(() => _moreExpanded = !_moreExpanded);
+                    },
+                  ),
+                ];
+
+                // Secondary row (expanded): queue / playlist / radio / similar.
+                final secondary = <Widget>[
                   if (indexOfSong == -1)
                     _ActionButton(
                       icon: Icons.playlist_add_outlined,
@@ -90,63 +107,21 @@ class _SongActions extends StatelessWidget {
                         player.insertToEnd(song);
                       },
                     ),
-                  if (indexOfSong != -1 && !isCurrent)
-                    _ActionButton(
-                      icon: Icons.playlist_remove_outlined,
-                      label: l10n.removeFromPlayQueue,
-                      onPressed: () {
-                        player.removeQueueItemAt(indexOfSong);
-                      },
-                    ),
+                  _ActionButton(
+                    icon: Icons.library_add_check_outlined,
+                    label: l10n.addToPlaylist,
+                    onPressed: widget.onAddToPlaylist,
+                  ),
                   _ActionButton(
                     icon: Icons.radio_outlined,
                     label: l10n.similarRadio,
-                    onPressed: () async {
-                      final radioQueueNotifier = ref.read(
-                        radioQueueProvider.notifier,
-                      );
-                      await radioQueueNotifier.startRadio(song);
-                      final radioQueue = ref.read(radioQueueProvider);
-
-                      // Check if seed song was not analyzed
-                      if (radioQueueNotifier.isSeedSongUnanalyzed) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(l10n.songNotAnalyzedForRadio),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                        return;
-                      }
-
-                      if (radioQueue.isNotEmpty) {
-                        await player.setPlaylist(
-                          songs: radioQueue,
-                          initialId: radioQueue.first.id,
-                        );
-                        await player.play();
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(l10n.radioPlaying),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      } else {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(l10n.noSongsFoundForRadio),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      }
-                    },
+                    onPressed: () => _startSimilarRadio(
+                      context: context,
+                      ref: ref,
+                      player: player,
+                      song: song,
+                      l10n: l10n,
+                    ),
                   ),
                   _ActionButton(
                     icon: Icons.graphic_eq_outlined,
@@ -162,15 +137,94 @@ class _SongActions extends StatelessWidget {
                       );
                     },
                   ),
+                  if (indexOfSong != -1 && !isCurrent)
+                    _ActionButton(
+                      icon: Icons.playlist_remove_outlined,
+                      label: l10n.removeFromPlayQueue,
+                      onPressed: () {
+                        player.removeQueueItemAt(indexOfSong);
+                      },
+                    ),
                 ];
 
-                return _CenteredActionStrip(children: actions);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _CenteredActionStrip(children: primary),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      child: _moreExpanded && secondary.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 4,
+                                runSpacing: 4,
+                                children: secondary,
+                              ),
+                            )
+                          : const SizedBox(width: double.infinity, height: 0),
+                    ),
+                  ],
+                );
               },
             ),
           ),
         );
       },
     );
+  }
+
+  Future<void> _startSimilarRadio({
+    required BuildContext context,
+    required WidgetRef ref,
+    required AppPlayer player,
+    required SongEntity song,
+    required AppLocalizations l10n,
+  }) async {
+    final radioQueueNotifier = ref.read(radioQueueProvider.notifier);
+    await radioQueueNotifier.startRadio(song);
+    final radioQueue = ref.read(radioQueueProvider);
+
+    // Check if seed song was not analyzed
+    if (radioQueueNotifier.isSeedSongUnanalyzed) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.songNotAnalyzedForRadio),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    if (radioQueue.isNotEmpty) {
+      await player.setPlaylist(
+        songs: radioQueue,
+        initialId: radioQueue.first.id,
+      );
+      await player.play();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.radioPlaying),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.noSongsFoundForRadio),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 }
 
