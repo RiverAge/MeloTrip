@@ -88,7 +88,7 @@ class _AlbumHoverOverlay extends StatelessWidget {
                     background: secondaryButtonBackground,
                     foreground: overlayForeground,
                   ),
-                  const SizedBox(width: 12),
+                  const Spacer(),
                   _ActionCircle(
                     onPressed: onPlayAlbum,
                     icon: Icons.play_arrow_rounded,
@@ -96,7 +96,7 @@ class _AlbumHoverOverlay extends StatelessWidget {
                     background: mainButtonBackground,
                     foreground: mainButtonForeground,
                   ),
-                  const SizedBox(width: 12),
+                  const Spacer(),
                   _ActionCircle(
                     onPressed: onAddAlbumToQueue,
                     icon: Icons.skip_next_rounded,
