@@ -114,7 +114,10 @@ class SonicPath extends _$SonicPath {
 class RecentRecommendationHistory extends _$RecentRecommendationHistory {
   @override
   Future<List<String>> build() async {
-    final config = await ref.watch(sessionConfigProvider.future);
+    // Read once with ref.read (not watch): subscribing to sessionConfig would
+    // rebuild this provider whenever setRecommendRefreshState updates the
+    // session, and record()/requestRefresh() both call that — a rebuild loop.
+    final config = await ref.read(sessionConfigProvider.future);
     return parseRecommendRefreshState(config?.recommendRefreshState).recentIds;
   }
 

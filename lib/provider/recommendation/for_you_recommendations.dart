@@ -22,7 +22,10 @@ class ForYouRecommendationRefreshState {
 class ForYouRecommendationRefresh extends _$ForYouRecommendationRefresh {
   @override
   Future<ForYouRecommendationRefreshState> build() async {
-    final config = await ref.watch(sessionConfigProvider.future);
+    // Read once with ref.read (not watch): subscribing to sessionConfig would
+    // rebuild this provider whenever setRecommendRefreshState updates the
+    // session, and requestRefresh() calls that — a rebuild loop.
+    final config = await ref.read(sessionConfigProvider.future);
     final excludedSongIds =
         parseRecommendRefreshState(config?.recommendRefreshState)
             .excludedSongIds;
