@@ -147,7 +147,10 @@ class _ArtistDetailContent extends StatelessWidget {
                 crossAxisCount: 5,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 24,
-                childAspectRatio: 0.75,
+                // 0.72 leaves enough vertical room for the cover (1:1) plus the
+                // title/artist meta block on narrow windows; 0.75 overflowed
+                // by a few pixels when album names wrapped.
+                childAspectRatio: 0.72,
               ),
             ),
           ),

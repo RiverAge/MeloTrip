@@ -31,11 +31,15 @@ class _TopSeachBar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  AppLocalizations.of(context)!.searchHint,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: .5,
+                Expanded(
+                  child: Text(
+                    AppLocalizations.of(context)!.searchHint,
+                    maxLines: 1,
+                    overflow: .ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: .5,
+                      ),
                     ),
                   ),
                 ),

@@ -108,7 +108,7 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                                     children: [
                                       Text(
                                         album.name ?? '-',
-                                        maxLines: 2,
+                                        maxLines: 1,
                                         overflow: .ellipsis,
                                         style: theme.textTheme.displaySmall
                                             ?.copyWith(
@@ -120,6 +120,8 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                                       const SizedBox(height: 12),
                                       Text(
                                         album.artist ?? '-',
+                                        maxLines: 1,
+                                        overflow: .ellipsis,
                                         style: theme.textTheme.headlineSmall
                                             ?.copyWith(
                                               color: textColor.withValues(
@@ -131,6 +133,8 @@ class _DesktopHeroState extends ConsumerState<_DesktopHero> {
                                       const SizedBox(height: 6),
                                       Text(
                                         '${album.genre ?? ""} - ${album.year ?? ""}',
+                                        maxLines: 1,
+                                        overflow: .ellipsis,
                                         style: theme.textTheme.titleMedium
                                             ?.copyWith(
                                               color: textColor.withValues(

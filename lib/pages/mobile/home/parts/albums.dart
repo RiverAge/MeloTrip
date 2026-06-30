@@ -2,7 +2,7 @@ part of '../home_page.dart';
 
 enum AlbumLayout { horizontal, grid, tile }
 
-const double _albumGridChildAspectRatio = 0.76;
+const double _albumGridChildAspectRatio = 0.72;
 
 class _Albums extends StatelessWidget {
   const _Albums({
@@ -29,12 +29,16 @@ class _Albums extends StatelessWidget {
           child: Row(
             mainAxisAlignment: .spaceBetween,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: .w900,
-                  letterSpacing: -0.5,
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: .w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
               if (layout != AlbumLayout.horizontal && onViewAll != null)
