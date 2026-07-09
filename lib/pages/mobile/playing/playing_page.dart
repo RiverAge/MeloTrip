@@ -44,9 +44,9 @@ class PlayingPage extends StatelessWidget {
             ? null
             : playQueue.songs[playQueue.index];
         final effictiveArtist = current?.artists ?? [];
-        final effectiveDisplayArtist = effictiveArtist.length > 1
-            ? '${effictiveArtist.first.name}'
-            : current?.displayArtist;
+        // 1~2 个艺术家：直接用服务端拼好的 displayArtist（如 "汪苏泷 • 徐良"）。
+        // 3+ 个：走下方 "> 2" 分支，显示前两个 + "...等N位艺术家"。
+        final effectiveDisplayArtist = current?.displayArtist;
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
