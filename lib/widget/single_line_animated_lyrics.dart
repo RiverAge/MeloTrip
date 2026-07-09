@@ -168,7 +168,7 @@ class _TweenAnimationBuilder extends StatelessWidget {
     );
   }
 
-  /// 当前行内容：有 [cueLine] 时渲染逐字 Text.rich，否则整行 Text。
+  /// 当前行内容：有 [cueLine] 时渲染逐字"从左到右扫过"效果，否则整行 Text。
   Widget _currentLineContent(BuildContext context) {
     final cueLine = this.cueLine;
     if (cueLine == null || cueLine.cue == null || cueLine.cue!.isEmpty) {
@@ -180,26 +180,29 @@ class _TweenAnimationBuilder extends StatelessWidget {
     }
 
     final cues = cueLine.cue!;
-    final progress = cueProgressByStartMs(cues: cues, positionMs: positionMs);
+    final sweep = cueLineSweepFraction(cues: cues, positionMs: positionMs);
     final colorScheme = Theme.of(context).colorScheme;
     final inactive = colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = colorScheme.primary;
 
-    final spans = <InlineSpan>[
-      for (var i = 0; i < cues.length; i++)
-        TextSpan(
-          text: cues[i].value ?? '',
-          style: TextStyle(
-            color: Color.lerp(inactive, active, progress[i]),
-            fontWeight: progress[i] > 0.5 ? .bold : .normal,
-          ),
-        ),
-    ];
+    final softness = (0.06).clamp(0.0, sweep < 1.0 ? (1.0 - sweep) * 0.5 : 0.0);
+    final leftStop = (sweep - softness).clamp(0.0, 1.0);
+    final rightStop = (sweep + softness).clamp(0.0, 1.0);
 
-    return Text.rich(
-      TextSpan(children: spans),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+    return ShaderMask(
+      shaderCallback: (bounds) => LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [active, active, inactive, inactive],
+        stops: [0.0, leftStop, rightStop, 1.0],
+      ).createShader(bounds),
+      blendMode: BlendMode.srcIn,
+      child: Text(
+        currentLine.value ?? '',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 }

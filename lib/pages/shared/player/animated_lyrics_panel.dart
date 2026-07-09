@@ -297,32 +297,40 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
 
   Widget _karaokeText(int positionMs) {
     final cues = _cueLine.cue ?? const <Cue>[];
-    final progress = cueProgressByStartMs(cues: cues, positionMs: positionMs);
+    final sweep = cueLineSweepFraction(cues: cues, positionMs: positionMs);
     final inactive = widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = widget.colorScheme.primary;
 
-    final spans = <InlineSpan>[];
-    for (var i = 0; i < cues.length; i++) {
-      final p = progress[i];
-      spans.add(
-        TextSpan(
-          text: cues[i].value ?? '',
-          style: TextStyle(
-            fontSize: widget.primaryFontSize,
-            height: 1.5,
-            color: Color.lerp(inactive, active, p),
-            fontWeight: p > 0.5 ? .bold : .normal,
-          ),
-        ),
-      );
-    }
+    // ShaderMask 在整行文本上叠一条水平渐变：左段(已唱)=active，右段(未唱)
+    // =inactive，分界点 = sweep。给分界留一点羽化宽度，避免硬切像剪刀；
+    // 羽化随字号缩放，字越大过渡越柔。
+    final softness = (0.06).clamp(0.0, sweep < 1.0 ? (1.0 - sweep) * 0.5 : 0.0);
+    final split = sweep;
+    final leftStop = (split - softness).clamp(0.0, 1.0);
+    final rightStop = (split + softness).clamp(0.0, 1.0);
 
-    final content = Text.rich(
-      TextSpan(children: spans),
+    final text = Text(
+      widget.line.value ?? '',
       textAlign: widget.textAlign,
+      style: TextStyle(
+        fontSize: widget.primaryFontSize,
+        height: 1.5,
+        fontWeight: FontWeight.bold,
+      ),
     );
 
-    // 非当前行（理论上 _karaoke 已为 false）仍套一层模糊以防边界。
+    final content = ShaderMask(
+      shaderCallback: (bounds) => LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [active, active, inactive, inactive],
+        stops: [0.0, leftStop, rightStop, 1.0],
+      ).createShader(bounds),
+      blendMode: BlendMode.srcIn,
+      child: text,
+    );
+
+    // 非当前行（理论上 _karaoke 已为 false）仍套一层缩放。
     return Transform.scale(scale: 1 + widget.activeScaleDelta, child: content);
   }
 
