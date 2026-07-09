@@ -269,10 +269,10 @@ packages:
     dependency: "direct main"
     description:
       name: desktop_lyrics
-      sha256: "9a6b71aa9bad33e4fc89aec6c48f702676d24d3b5f0012ee78fd9be371d524cd"
+      sha256: d039e659fde59b223b4ebd1b51eac04e61fae9944c8326783406b328ff587c2f
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.7"
+    version: "0.0.8"
   dio:
     dependency: "direct main"
     description:
