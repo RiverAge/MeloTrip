@@ -298,25 +298,39 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
   Widget _karaokeText(int positionMs) {
     final cues = _cueLine.cue ?? const <Cue>[];
     final sweep = cueLineSweepFraction(cues: cues, positionMs: positionMs);
+    // 每字放大因子：正在唱的字鼓起到 1.06，已唱/未唱回落到 0.96，拉开层次。
+    // 幅度刻意压小，避免逐字字号变化引起整行宽度抖动。
+    final scales = cueScaleByStartMs(
+      cues: cues,
+      positionMs: positionMs,
+      baseline: 0.96,
+      peak: 1.06,
+    );
     final inactive = widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = widget.colorScheme.primary;
 
-    // ShaderMask 在整行文本上叠一条水平渐变：左段(已唱)=active，右段(未唱)
-    // =inactive，分界点 = sweep。给分界留一点羽化宽度，避免硬切像剪刀；
-    // 羽化随字号缩放，字越大过渡越柔。
+    // 颜色仍由整行 ShaderMask 统一管（span 不设 color），保证左→右扫过分界
+    // 不被 per-span 颜色打乱。字号 per-span 变化提供体量感。
     final softness = (0.06).clamp(0.0, sweep < 1.0 ? (1.0 - sweep) * 0.5 : 0.0);
-    final split = sweep;
-    final leftStop = (split - softness).clamp(0.0, 1.0);
-    final rightStop = (split + softness).clamp(0.0, 1.0);
+    final leftStop = (sweep - softness).clamp(0.0, 1.0);
+    final rightStop = (sweep + softness).clamp(0.0, 1.0);
 
-    final text = Text(
-      widget.line.value ?? '',
-      textAlign: widget.textAlign,
-      style: TextStyle(
-        fontSize: widget.primaryFontSize,
-        height: 1.5,
-        fontWeight: FontWeight.bold,
+    final text = Text.rich(
+      TextSpan(
+        // 不设 color，由 ShaderMask 着色。
+        children: [
+          for (var i = 0; i < cues.length; i++)
+            TextSpan(
+              text: cues[i].value ?? '',
+              style: TextStyle(
+                fontSize: widget.primaryFontSize * scales[i],
+                height: 1.5,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        ],
       ),
+      textAlign: widget.textAlign,
     );
 
     final content = ShaderMask(

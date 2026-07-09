@@ -177,4 +177,73 @@ void main() {
       expect(cueLineSweepFraction(cues: nullCues, positionMs: 150), closeTo(0.5, 1e-9));
     });
   });
+
+  group('cueScaleByStartMs', () {
+    final cues = const [
+      Cue(start: 0, end: 100, value: 'a'),
+      Cue(start: 100, end: 200, value: 'b'),
+    ];
+
+    test('empty cues => empty list', () {
+      expect(cueScaleByStartMs(cues: const [], positionMs: 0), const <double>[]);
+    });
+
+    test('before start => baseline for all', () {
+      final s = cueScaleByStartMs(
+        cues: cues,
+        positionMs: -10,
+        baseline: 0.96,
+        peak: 1.06,
+      );
+      expect(s.length, 2);
+      expect(s[0], closeTo(0.96, 1e-9));
+      expect(s[1], closeTo(0.96, 1e-9));
+    });
+
+    test('first cue at peak (mid) => peak, others baseline', () {
+      // 进度 0.5 → |2*0.5-1|=0 → peak。
+      final s = cueScaleByStartMs(
+        cues: cues,
+        positionMs: 50,
+        baseline: 0.96,
+        peak: 1.06,
+      );
+      expect(s[0], closeTo(1.06, 1e-9));
+      expect(s[1], closeTo(0.96, 1e-9));
+    });
+
+    test('cue done => baseline', () {
+      final s = cueScaleByStartMs(
+        cues: cues,
+        positionMs: 100,
+        baseline: 0.96,
+        peak: 1.06,
+      );
+      // 第1字进度1.0 → |2*1-1|=1 → baseline。
+      expect(s[0], closeTo(0.96, 1e-9));
+      expect(s[1], closeTo(0.96, 1e-9));
+    });
+
+    test('second cue mid => peak', () {
+      final s = cueScaleByStartMs(
+        cues: cues,
+        positionMs: 150,
+        baseline: 0.96,
+        peak: 1.06,
+      );
+      expect(s[0], closeTo(0.96, 1e-9));
+      expect(s[1], closeTo(1.06, 1e-9));
+    });
+
+    test('after all => baseline', () {
+      final s = cueScaleByStartMs(
+        cues: cues,
+        positionMs: 500,
+        baseline: 0.96,
+        peak: 1.06,
+      );
+      expect(s[0], closeTo(0.96, 1e-9));
+      expect(s[1], closeTo(0.96, 1e-9));
+    });
+  });
 }

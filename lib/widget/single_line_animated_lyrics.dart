@@ -181,6 +181,12 @@ class _TweenAnimationBuilder extends StatelessWidget {
 
     final cues = cueLine.cue!;
     final sweep = cueLineSweepFraction(cues: cues, positionMs: positionMs);
+    final scales = cueScaleByStartMs(
+      cues: cues,
+      positionMs: positionMs,
+      baseline: 0.96,
+      peak: 1.06,
+    );
     final colorScheme = Theme.of(context).colorScheme;
     final inactive = colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = colorScheme.primary;
@@ -197,11 +203,21 @@ class _TweenAnimationBuilder extends StatelessWidget {
         stops: [0.0, leftStop, rightStop, 1.0],
       ).createShader(bounds),
       blendMode: BlendMode.srcIn,
-      child: Text(
-        currentLine.value ?? '',
+      child: Text.rich(
+        TextSpan(
+          children: [
+            for (var i = 0; i < cues.length; i++)
+              TextSpan(
+                text: cues[i].value ?? '',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14 * scales[i],
+                ),
+              ),
+          ],
+        ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }

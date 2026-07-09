@@ -53,6 +53,29 @@ List<double> cueProgressByStartMs({
   ];
 }
 
+/// 返回每个 [Cue] 在 [positionMs] 时刻的"放大因子"，用于逐字渲染时给
+/// 正在唱的字一点体量感（脉冲式鼓起再回落）。
+///
+/// 单个 cue 的因子由其进度 [0,1] 经钟形曲线映射：进度 0/1 时回到基线，
+/// 进度 0.5（正在唱）时达到峰值 [peak]。这样已唱完与未唱的字为基线，只有
+/// 正在扫的那个字鼓起，呈现呼吸感而不突兀。
+///
+/// [baseline] 是已唱/未唱字的字号基准（相对主字号，如 0.95 让暗字略小，
+/// 拉开层次）；[peak] 是正在唱的字的峰值（如 1.1）。
+List<double> cueScaleByStartMs({
+  required List<Cue> cues,
+  required int positionMs,
+  double baseline = 0.95,
+  double peak = 1.1,
+}) {
+  if (cues.isEmpty) return const [];
+  final progress = cueProgressByStartMs(cues: cues, positionMs: positionMs);
+  return [
+    for (final p in progress)
+      baseline + (peak - baseline) * (1.0 - (2.0 * p - 1.0).abs()),
+  ];
+}
+
 /// 返回整行在 [positionMs] 时刻的已唱宽度比例（0.0–1.0），用于驱动逐字
 /// "从左到右扫过"的渲染分界。
 ///
