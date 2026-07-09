@@ -11,9 +11,11 @@ class SingleLineAnimatedLyrics extends ConsumerStatefulWidget {
   const SingleLineAnimatedLyrics({
     super.key,
     required this.lyricsLines,
+    this.cueLinesByStart,
     this.crossAxisAlignment = .start,
   });
   final List<Line> lyricsLines;
+  final Map<int, CueLine>? cueLinesByStart;
   final CrossAxisAlignment crossAxisAlignment;
   @override
   ConsumerState<SingleLineAnimatedLyrics> createState() =>
@@ -23,8 +25,9 @@ class SingleLineAnimatedLyrics extends ConsumerStatefulWidget {
 class _SingleLineAnimatedLyrics
     extends ConsumerState<SingleLineAnimatedLyrics> {
   int _currentLineIdx = -1;
-  StreamSubscription<Duration>? _positionStream;
   Duration _animationDuration = Duration.zero;
+  StreamSubscription<Duration>? _positionStream;
+  int _positionMs = 0;
 
   @override
   void initState() {
@@ -39,9 +42,11 @@ class _SingleLineAnimatedLyrics
   }
 
   void _setPositionListener() async {
+    if (_positionStream != null) return;
     final player = await ref.read(appPlayerHandlerProvider.future);
     if (!mounted) return;
     _positionStream = player?.positionStream.listen((position) {
+      _positionMs = position.inMilliseconds;
       _lyricsOfLine(widget.lyricsLines, position);
     });
   }
@@ -59,6 +64,13 @@ class _SingleLineAnimatedLyrics
             : Duration(milliseconds: 500);
         _currentLineIdx = currentLineIdx;
       });
+    } else {
+      final start = lines[currentLineIdx].start;
+      final cueLine = start == null ? null : widget.cueLinesByStart?[start];
+      if (cueLine != null) {
+        // 同一行内随位置推进逐字色变。
+        setState(() {});
+      }
     }
   }
 
@@ -68,12 +80,17 @@ class _SingleLineAnimatedLyrics
     if (_currentLineIdx == -1 || lyricsLines.isEmpty) {
       return SizedBox.shrink();
     }
+    final currentStart = lyricsLines[_currentLineIdx].start;
+    final cueLine =
+        currentStart == null ? null : widget.cueLinesByStart?[currentStart];
     return _TweenAnimationBuilder(
       key: ValueKey(_currentLineIdx),
       animationDuration: _animationDuration,
       crossAxisAlignment: widget.crossAxisAlignment,
       currentLine: lyricsLines[_currentLineIdx],
       prevLine: lyricsLines[_currentLineIdx == 0 ? 0 : _currentLineIdx - 1],
+      cueLine: cueLine,
+      positionMs: _positionMs,
     );
   }
 }
@@ -85,12 +102,16 @@ class _TweenAnimationBuilder extends StatelessWidget {
     required this.prevLine,
     required this.animationDuration,
     required this.crossAxisAlignment,
+    required this.cueLine,
+    required this.positionMs,
   });
 
   final Line currentLine;
   final Line prevLine;
   final Duration animationDuration;
   final CrossAxisAlignment crossAxisAlignment;
+  final CueLine? cueLine;
+  final int positionMs;
 
   static const height = 35.0;
 
@@ -115,19 +136,11 @@ class _TweenAnimationBuilder extends StatelessWidget {
                     mainAxisAlignment: .center,
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
-                      // 偏爱歌词同一个时间轴三行
-                      for (final (index, line)
-                          in (prevLine.value?.take(2) ?? []).indexed)
-                        Opacity(
-                          opacity: index == 0 ? 1 : 0.5,
-                          child: Text(
-                            line,
-                            maxLines: 1,
-                            style: (prevLine.value ?? []).length > 1
-                                ? TextStyle(fontSize: [12.0, 10.0][index])
-                                : null,
-                          ),
-                        ),
+                      Text(
+                        prevLine.value ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),
@@ -143,19 +156,7 @@ class _TweenAnimationBuilder extends StatelessWidget {
                     mainAxisAlignment: .center,
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
-                      for (final (index, line)
-                          // 偏爱歌词同一个时间轴三行
-                          in (currentLine.value?.take(2) ?? []).indexed)
-                        Opacity(
-                          opacity: index == 0 ? 1 : 0.5,
-                          child: Text(
-                            line,
-                            maxLines: 1,
-                            style: (currentLine.value ?? []).length > 1
-                                ? TextStyle(fontSize: [12.0, 10.0][index])
-                                : null,
-                          ),
-                        ),
+                      _currentLineContent(context),
                     ],
                   ),
                 ),
@@ -164,6 +165,41 @@ class _TweenAnimationBuilder extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  /// 当前行内容：有 [cueLine] 时渲染逐字 Text.rich，否则整行 Text。
+  Widget _currentLineContent(BuildContext context) {
+    final cueLine = this.cueLine;
+    if (cueLine == null || cueLine.cue == null || cueLine.cue!.isEmpty) {
+      return Text(
+        currentLine.value ?? '',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+
+    final cues = cueLine.cue!;
+    final progress = cueProgressByStartMs(cues: cues, positionMs: positionMs);
+    final colorScheme = Theme.of(context).colorScheme;
+    final inactive = colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
+    final active = colorScheme.primary;
+
+    final spans = <InlineSpan>[
+      for (var i = 0; i < cues.length; i++)
+        TextSpan(
+          text: cues[i].value ?? '',
+          style: TextStyle(
+            color: Color.lerp(inactive, active, progress[i]),
+            fontWeight: progress[i] > 0.5 ? .bold : .normal,
+          ),
+        ),
+    ];
+
+    return Text.rich(
+      TextSpan(children: spans),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

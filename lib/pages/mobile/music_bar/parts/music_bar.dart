@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/pages/mobile/playing/playing_page.dart';
 import 'package:melo_trip/pages/shared/player/play_queue_panel.dart';
 import 'package:melo_trip/provider/lyrics/lyrics.dart';
@@ -102,19 +104,27 @@ class _MusicBarState extends State<MusicBar> {
                       if (lyricsResult.isErr) {
                         return const SizedBox.shrink();
                       }
-                      final lines = lyricsResult
+                      final structured = lyricsResult
                           .data
                           ?.subsonicResponse
                           ?.lyricsList
                           ?.structuredLyrics
-                          ?.firstOrNull
-                          ?.line;
+                          ?.firstOrNull;
+                      final lines = structured?.line;
 
                       if (lines == null) {
                         return SizedBox.shrink();
                       }
 
-                      return SingleLineAnimatedLyrics(lyricsLines: lines);
+                      final cueMap = <int, CueLine>{
+                        for (final c in leadCueLines(structured))
+                          if (c.start != null) c.start!: c,
+                      };
+
+                      return SingleLineAnimatedLyrics(
+                        lyricsLines: lines,
+                        cueLinesByStart: cueMap,
+                      );
                     },
                   ),
                   trailing: LayoutBuilder(

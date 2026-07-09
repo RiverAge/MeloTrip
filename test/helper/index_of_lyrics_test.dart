@@ -5,7 +5,7 @@ import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 void main() {
   group('indexOfLyrics', () {
     Line createLine(int startMs) {
-      return Line(start: startMs, value: ['Lyric $startMs']);
+      return Line(start: startMs, value: 'Lyric $startMs');
     }
 
     test('returns correct index for position in middle of lyrics', () {

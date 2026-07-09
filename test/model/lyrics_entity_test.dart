@@ -9,7 +9,7 @@ void main() {
       final line = Line.fromJson(json);
 
       expect(line.start, 1000);
-      expect(line.value, ['Test lyric line']);
+      expect(line.value, 'Test lyric line');
     });
 
     test('parses line with empty value', () {
@@ -18,7 +18,7 @@ void main() {
       final line = Line.fromJson(json);
 
       expect(line.start, 2000);
-      expect(line.value, ['']);
+      expect(line.value, '');
     });
   });
 
@@ -49,6 +49,47 @@ void main() {
       expect(lyric.line?.last.start, 2000);
     });
 
+    test('parses enhanced fields (cueLine/agents/kind)', () {
+      final json = {
+        'kind': 'main',
+        'lang': 'zh-hans',
+        'synced': true,
+        'line': [
+          {'start': 12802, 'value': '你若离去 后会无期'},
+        ],
+        'agents': [
+          {'id': 'v1', 'role': 'main', 'name': '徐良'},
+          {'id': 'v2', 'role': 'voice'},
+        ],
+        'cueLine': [
+          {
+            'index': 0,
+            'start': 12802,
+            'end': 15654,
+            'value': '你若离去 后会无期',
+            'agentId': 'v1',
+            'cue': [
+              {'start': 12802, 'end': 13266, 'byteStart': 0, 'byteEnd': 2, 'value': '你'},
+              {'start': 13266, 'end': 13443, 'byteStart': 3, 'byteEnd': 5, 'value': '若'},
+            ],
+          },
+        ],
+      };
+
+      final lyric = StructuredLyric.fromJson(json);
+
+      expect(lyric.kind, 'main');
+      expect(lyric.agents, isNotNull);
+      expect(lyric.agents!.first.id, 'v1');
+      expect(lyric.agents!.first.role, 'main');
+      expect(lyric.cueLine, isNotNull);
+      expect(lyric.cueLine!.first.start, 12802);
+      expect(lyric.cueLine!.first.end, 15654);
+      expect(lyric.cueLine!.first.agentId, 'v1');
+      expect(lyric.cueLine!.first.cue!.first.value, '你');
+      expect(lyric.cueLine!.first.cue!.last.value, '若');
+    });
+
     test('parses lyric with null optional fields', () {
       final json = <String, dynamic>{'line': []};
 
@@ -59,6 +100,9 @@ void main() {
       expect(lyric.lang, isNull);
       expect(lyric.offset, isNull);
       expect(lyric.synced, isNull);
+      expect(lyric.cueLine, isNull);
+      expect(lyric.agents, isNull);
+      expect(lyric.kind, isNull);
     });
   });
 
@@ -94,67 +138,6 @@ void main() {
       final entity = LyricsListEntity.fromJson(json);
 
       expect(entity.structuredLyrics, isNull);
-    });
-  });
-
-  group('LinesConvert', () {
-    test('converts lines and merges duplicates', () {
-      final converter = const LinesConvert();
-      final json = [
-        {'start': 1000, 'value': 'Line 1'},
-        {'start': 2000, 'value': 'Line 2'},
-        {'start': 1000, 'value': 'Line 1 continued'},
-      ];
-
-      final lines = converter.fromJson(json);
-
-      expect(lines.length, 2);
-      expect(lines.first.start, 1000);
-      expect(lines.first.value, ['Line 1', 'Line 1 continued']);
-      expect(lines.last.start, 2000);
-      expect(lines.last.value, ['Line 2']);
-    });
-
-    test('skips lines with null or empty value', () {
-      final converter = const LinesConvert();
-      final json = [
-        {'start': 1000, 'value': 'Valid line'},
-        {'start': 2000, 'value': null},
-        {'start': 3000, 'value': ''},
-      ];
-
-      final lines = converter.fromJson(json);
-
-      expect(lines.length, 1);
-      expect(lines.first.start, 1000);
-    });
-
-    test('converts lines back to JSON', () {
-      final converter = const LinesConvert();
-      final lines = [
-        const Line(start: 1000, value: ['Line 1']),
-        const Line(start: 2000, value: ['Line 2']),
-      ];
-
-      final json = converter.toJson(lines);
-
-      expect(json.length, 2);
-      expect(json.first['start'], 1000);
-      expect(json.last['start'], 2000);
-    });
-  });
-
-  group('LineValueConvert', () {
-    test('converts string to list', () {
-      final converter = const LineValueConvert();
-      final result = converter.fromJson('Test value');
-      expect(result, ['Test value']);
-    });
-
-    test('converts list back to string', () {
-      final converter = const LineValueConvert();
-      final result = converter.toJson(['Line 1', 'Line 2']);
-      expect(result, 'Line 1\nLine 2');
     });
   });
 }

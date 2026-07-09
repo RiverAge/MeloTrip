@@ -17,86 +17,57 @@ abstract class StructuredLyric with _$StructuredLyric {
   const factory StructuredLyric({
     String? displayArtist,
     String? displayTitle,
+    String? kind,
     String? lang,
-    @LinesConvert() List<Line>? line,
+    List<Line>? line,
+    List<Agent>? agents,
+    List<CueLine>? cueLine,
     int? offset,
     bool? synced,
   }) = _StructuredLyric;
 
   factory StructuredLyric.fromJson(Map<String, dynamic> json) =>
       _$StructuredLyricFromJson(json);
-
-  // factory StructuredLyric.fromJson(Map<String, dynamic> json) {
-  //   // 检查 line 字段是否为 List，并进行类型过滤
-  //   final rawLines =
-  //       (json['line'] as List<dynamic>? ?? [])
-  //           .whereType<Map<String, dynamic>>(); // 确保类型安全
-  //   final List<Map> mergedMap = [];
-
-  //   for (var item in rawLines) {
-  //     final idx = mergedMap.indexWhere((e) => e['start'] == item['start']);
-  //     if (idx == -1) {
-  //       mergedMap.add(item);
-  //     } else {
-  //       mergedMap[idx]['value'] = '${mergedMap[idx]['value']} ${item['value']}';
-  //     }
-  //   }
-
-  //   return _$StructuredLyricFromJson({...json, 'line': mergedMap});
-  // }
 }
 
 @freezed
 abstract class Line with _$Line {
-  const factory Line({int? start, @LineValueConvert() List<String>? value}) =
-      _Line;
+  const factory Line({int? start, String? value}) = _Line;
 
   factory Line.fromJson(Map<String, dynamic> json) => _$LineFromJson(json);
 }
 
-class LineValueConvert implements JsonConverter<List<String>, String> {
-  const LineValueConvert();
+@freezed
+abstract class Cue with _$Cue {
+  const factory Cue({
+    int? start,
+    int? end,
+    int? byteStart,
+    int? byteEnd,
+    String? value,
+  }) = _Cue;
 
-  @override
-  List<String> fromJson(String json) {
-    return [json];
-  }
-
-  @override
-  String toJson(List<String> object) {
-    return object.join('\n');
-  }
+  factory Cue.fromJson(Map<String, dynamic> json) => _$CueFromJson(json);
 }
 
-class LinesConvert implements JsonConverter<List<Line>, List<dynamic>> {
-  const LinesConvert();
+@freezed
+abstract class CueLine with _$CueLine {
+  const factory CueLine({
+    int? index,
+    int? start,
+    int? end,
+    String? value,
+    String? agentId,
+    List<Cue>? cue,
+  }) = _CueLine;
 
-  @override
-  List<Line> fromJson(List<dynamic> json) {
-    // 检查 line 字段是否为 List，并进行类型过滤
-    final rawLines = json.whereType<Map<String, dynamic>>(); // 确保类型安全
-    final List<Line> mergedMap = [];
+  factory CueLine.fromJson(Map<String, dynamic> json) =>
+      _$CueLineFromJson(json);
+}
 
-    for (var item in rawLines) {
-      if (item['value'] == null || item['value'] == '') {
-        continue;
-      }
-      final idx = mergedMap.indexWhere((e) => e.start == item['start']);
-      if (idx == -1) {
-        mergedMap.add(Line.fromJson(item));
-      } else {
-        mergedMap[idx] = Line(
-          start: mergedMap[idx].start,
-          value: List<String>.from(mergedMap[idx].value ?? [])
-            ..add(item['value']),
-        );
-      }
-    }
-    return mergedMap;
-  }
+@freezed
+abstract class Agent with _$Agent {
+  const factory Agent({String? id, String? role, String? name}) = _Agent;
 
-  @override
-  List<Map> toJson(List<Line> lines) {
-    return lines.map((e) => e.toJson()).toList();
-  }
+  factory Agent.fromJson(Map<String, dynamic> json) => _$AgentFromJson(json);
 }

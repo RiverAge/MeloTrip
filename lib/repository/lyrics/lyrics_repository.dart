@@ -17,7 +17,10 @@ class LyricsRepository {
     final api = await _readApi();
     final res = await api.get<Map<String, dynamic>>(
       '/rest/getLyricsBySongId',
-      queryParameters: <String, dynamic>{'id': songId},
+      queryParameters: <String, dynamic>{
+        'id': songId,
+        'enhanced': 'true',
+      },
     );
 
     return parseSubsonicResponseOrThrow(

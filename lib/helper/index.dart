@@ -1,4 +1,5 @@
 export 'index_of_lyrics.dart';
+export 'lyrics_cue.dart';
 export 'lyrics_timeline.dart';
 
 // part 'build_subsonic_url.dart';

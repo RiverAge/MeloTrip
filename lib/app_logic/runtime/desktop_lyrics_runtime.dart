@@ -73,7 +73,7 @@ class DesktopLyricsRuntime {
       unawaited(
         desktopLyrics.render(
           DesktopLyricsFrame.line(
-            currentLine: lyricsLines?.firstOrNull?.value?.firstOrNull ?? '',
+            currentLine: lyricsLines?.firstOrNull?.value ?? '',
           ),
         ),
       );
@@ -90,9 +90,9 @@ class DesktopLyricsRuntime {
         return;
       }
 
-      final line = lines[idx].value?.firstOrNull;
+      final line = lines[idx].value;
       currentLyricsIndex = idx;
-      if (line == null) {
+      if (line == null || line.isEmpty) {
         return;
       }
 

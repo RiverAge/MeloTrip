@@ -22,22 +22,25 @@ class _AnimtedLyrics extends StatelessWidget {
               child: Text(AppLocalizations.of(context)!.noLyricsFound),
             );
           }
-          final lines =
-              lyricsResult
-                  .data
-                  ?.subsonicResponse
-                  ?.lyricsList
-                  ?.structuredLyrics
-                  ?.firstOrNull
-                  ?.line ??
-              [];
+          final structured = lyricsResult
+              .data
+              ?.subsonicResponse
+              ?.lyricsList
+              ?.structuredLyrics
+              ?.firstOrNull;
+          final lines = structured?.line ?? [];
           if (lines.isEmpty) {
             return Center(
               child: Text(AppLocalizations.of(context)!.noLyricsFound),
             );
           }
+          final cueMap = <int, CueLine>{
+            for (final c in leadCueLines(structured))
+              if (c.start != null) c.start!: c,
+          };
           return AnimatedLyricsPanel(
             lyricsLines: lines,
+            cueLinesByStart: cueMap,
             textAlign: .center,
             crossAxisAlignment: .center,
             itemPadding: const EdgeInsets.symmetric(

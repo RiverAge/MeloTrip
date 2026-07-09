@@ -24,15 +24,14 @@ class _DesktopLyrics extends ConsumerWidget {
             ),
           );
         }
-        final lines =
+        final structured =
             lyricsResult
                 .data
                 ?.subsonicResponse
                 ?.lyricsList
                 ?.structuredLyrics
-                ?.firstOrNull
-                ?.line ??
-            [];
+                ?.firstOrNull;
+        final lines = structured?.line ?? [];
         if (lines.isEmpty) {
           return Center(
             child: Text(
@@ -44,8 +43,13 @@ class _DesktopLyrics extends ConsumerWidget {
             ),
           );
         }
+        final cueMap = <int, CueLine>{
+          for (final c in leadCueLines(structured))
+            if (c.start != null) c.start!: c,
+        };
         return AnimatedLyricsPanel(
           lyricsLines: lines,
+          cueLinesByStart: cueMap,
           textAlign: .left,
           crossAxisAlignment: .start,
           itemPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),

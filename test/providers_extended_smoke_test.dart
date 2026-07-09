@@ -185,11 +185,13 @@ void main() {
     expect(result?.isOk, isTrue);
     final merged = result?.data?.subsonicResponse?.lyricsList?.structuredLyrics;
     expect(merged, isNotNull);
-    expect(merged!.length, 1);
-    expect(merged.first.lang, 'NetEase');
+    // 新 merge 不合并、不按 ori/zho/latn 打分：选第一条 main（无 enhanced 时
+    // kind 缺失视为 main）置首，其余条目原序保留。多语言各自独立。
+    expect(merged!.length, 4);
+    expect(merged.first.lang, 'ori-NetEase');
     expect(merged.first.line, hasLength(2));
-    expect(merged.first.line!.first.value, ['Hello', 'CN-1']);
-    expect(merged.first.line!.last.value, ['World', 'CN-2']);
+    expect(merged.first.line!.first.value, 'Hello');
+    expect(merged.first.line!.last.value, 'World');
   });
 
   test('searchProvider parses payload and empty query returns null', () async {

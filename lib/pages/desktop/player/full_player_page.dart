@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:melo_trip/model/response/lyrics/lyrics.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/pages/shared/player/animated_lyrics_panel.dart';
 import 'package:melo_trip/pages/shared/player/playback_media_meta_badge.dart';

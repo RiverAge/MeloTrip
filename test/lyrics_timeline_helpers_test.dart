@@ -117,9 +117,9 @@ void main() {
   group('indexOfLyrics wrapper', () {
     test('maps Line.start list and delegates index lookup', () {
       final lyrics = const [
-        Line(start: 1000, value: ['a']),
-        Line(start: 2000, value: ['b']),
-        Line(start: 3000, value: ['c']),
+        Line(start: 1000, value: 'a'),
+        Line(start: 2000, value: 'b'),
+        Line(start: 3000, value: 'c'),
       ];
 
       expect(
@@ -129,6 +129,44 @@ void main() {
         ),
         1,
       );
+    });
+  });
+
+  group('cueProgressByStartMs', () {
+    test('returns empty for empty cues', () {
+      expect(
+        cueProgressByStartMs(cues: const [], positionMs: 1000),
+        const <double>[],
+      );
+    });
+
+    test('returns 0 before cue start and 1 after cue end', () {
+      const cues = [
+        Cue(start: 1000, end: 2000, value: 'a'),
+        Cue(start: 2000, end: 3000, value: 'b'),
+      ];
+
+      expect(cueProgressByStartMs(cues: cues, positionMs: 500),
+          [0.0, 0.0]);
+      expect(cueProgressByStartMs(cues: cues, positionMs: 4000),
+          [1.0, 1.0]);
+    });
+
+    test('computes mid-cue progress', () {
+      const cues = [
+        Cue(start: 1000, end: 2000, value: 'a'),
+      ];
+      expect(
+        cueProgressByStartMs(cues: cues, positionMs: 1500),
+        [closeTo(0.5, 0.0001)],
+      );
+    });
+
+    test('handles cue with null end (uses start as denominator floor)', () {
+      const cues = [Cue(start: 1000, end: null, value: 'a')];
+      // end == null → 分母 clamp 到 1，position>=start 后即满 1.0
+      expect(cueProgressByStartMs(cues: cues, positionMs: 1500), [1.0]);
+      expect(cueProgressByStartMs(cues: cues, positionMs: 500), [0.0]);
     });
   });
 }

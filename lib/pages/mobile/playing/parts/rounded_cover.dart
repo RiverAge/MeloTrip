@@ -38,20 +38,25 @@ class _RoundedCover extends StatelessWidget {
                 if (lyricsResult.isErr) {
                   return const SizedBox.shrink();
                 }
-                final lyricsLines = lyricsResult
+                final structured = lyricsResult
                     .data
                     ?.subsonicResponse
                     ?.lyricsList
                     ?.structuredLyrics
-                    ?.firstOrNull
-                    ?.line;
+                    ?.firstOrNull;
+                final lyricsLines = structured?.line;
                 if (lyricsLines == null) {
                   return const SizedBox.shrink();
                 }
+                final cueMap = <int, CueLine>{
+                  for (final c in leadCueLines(structured))
+                    if (c.start != null) c.start!: c,
+                };
                 return SizedBox(
                   height: 40,
                   child: SingleLineAnimatedLyrics(
                     lyricsLines: lyricsLines,
+                    cueLinesByStart: cueMap,
                     crossAxisAlignment: .center,
                   ),
                 );

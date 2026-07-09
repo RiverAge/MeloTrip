@@ -133,9 +133,13 @@ void main() {
       final merged =
           result.data?.subsonicResponse?.lyricsList?.structuredLyrics;
       expect(merged, isNotNull);
-      expect(merged, hasLength(1));
-      expect(merged!.first.lang, 'NetEase');
-      expect(merged.first.line!.first.value, ['Hello', 'CN-1']);
+      // 新 merge 不合并多语言：选 main（无 enhanced 时 kind 缺失视为 main）的
+      // 第一条置首，翻译条目保留在后。
+      expect(merged, hasLength(2));
+      expect(merged!.first.lang, 'ori-NetEase');
+      expect(merged.first.line!.first.value, 'Hello');
+      expect(merged.last.lang, 'zho-NetEase');
+      expect(merged.last.line!.first.value, 'CN-1');
     });
   });
 }
