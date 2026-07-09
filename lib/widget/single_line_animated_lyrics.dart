@@ -181,12 +181,8 @@ class _TweenAnimationBuilder extends StatelessWidget {
 
     final cues = cueLine.cue!;
     final sweep = cueLineSweepFraction(cues: cues, positionMs: positionMs);
-    final scales = cueScaleByStartMs(
-      cues: cues,
-      positionMs: positionMs,
-      baseline: 0.96,
-      peak: 1.06,
-    );
+    // 已唱字加粗、未唱 normal；不用 per-span fontSize 放大（会改变字宽致左右抖）。
+    final progress = cueProgressByStartMs(cues: cues, positionMs: positionMs);
     final colorScheme = Theme.of(context).colorScheme;
     final inactive = colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = colorScheme.primary;
@@ -210,20 +206,16 @@ class _TweenAnimationBuilder extends StatelessWidget {
               TextSpan(
                 text: cues[i].value ?? '',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14 * scales[i],
+                  fontWeight: progress[i] > 0
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                  fontSize: 14,
                 ),
               ),
           ],
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        // 锁死行高，per-span 字号放大不撑动单行预览的高度/基线。
-        strutStyle: const StrutStyle(
-          fontSize: 14,
-          height: 1.5,
-          forceStrutHeight: true,
-        ),
       ),
     );
   }
