@@ -185,9 +185,22 @@ class _TweenAnimationBuilder extends StatelessWidget {
     final inactive = colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = colorScheme.primary;
 
-    final softness = (0.06).clamp(0.0, sweep < 1.0 ? (1.0 - sweep) * 0.5 : 0.0);
-    final leftStop = (sweep - softness).clamp(0.0, 1.0);
-    final rightStop = (sweep + softness).clamp(0.0, 1.0);
+    // sweep 触端时钉死分界，避免羽化 softness 让端点附近漏出对侧颜色
+    // （前奏 sweep=0 时首字被 active 污染即此 bug）。见 animated_lyrics_panel
+    // 同名逻辑的注释。
+    double leftStop;
+    double rightStop;
+    if (sweep <= 0.0) {
+      leftStop = 0.0;
+      rightStop = 0.0;
+    } else if (sweep >= 1.0) {
+      leftStop = 1.0;
+      rightStop = 1.0;
+    } else {
+      final softness = (0.06).clamp(0.0, (1.0 - sweep) * 0.5);
+      leftStop = (sweep - softness).clamp(0.0, 1.0);
+      rightStop = (sweep + softness).clamp(0.0, 1.0);
+    }
 
     return ShaderMask(
       shaderCallback: (bounds) => LinearGradient(

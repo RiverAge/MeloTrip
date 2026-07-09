@@ -325,12 +325,27 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
     final active = widget.colorScheme.primary;
 
     // ShaderMask 在整行文本上叠一条水平渐变：左段(已唱)=active，右段(未唱)
-    // =inactive，分界点 = sweep。给分界留一点羽化宽度，避免硬切像剪刀；
-    // 羽化随字号缩放，字越大过渡越柔。
-    final softness = (0.06).clamp(0.0, sweep < 1.0 ? (1.0 - sweep) * 0.5 : 0.0);
-    final split = sweep;
-    final leftStop = (split - softness).clamp(0.0, 1.0);
-    final rightStop = (split + softness).clamp(0.0, 1.0);
+    // =inactive，分界点 = sweep。
+    //
+    // 羽化宽度 softness 仅在 0<sweep<1 的中间区域生效，且不得越过端点：
+    // sweep<=0（字未开始，如前奏）时若仍留 softness，leftStop 会被 clamp 到
+    // 0、rightStop>0，渐变退化成"0..0=active, 0..rightStop=active→inactive"，
+    // 整行最左一小段会被 active 污染——前奏时首字【你】就莫名染色就是这个
+    // 原因。故 sweep 触端时强制 softness=0 并把分界钉在端点，确保未唱=全
+    // inactive、已唱完=全 active，不漏色。
+    double leftStop;
+    double rightStop;
+    if (sweep <= 0.0) {
+      leftStop = 0.0;
+      rightStop = 0.0;
+    } else if (sweep >= 1.0) {
+      leftStop = 1.0;
+      rightStop = 1.0;
+    } else {
+      final softness = (0.06).clamp(0.0, (1.0 - sweep) * 0.5);
+      leftStop = (sweep - softness).clamp(0.0, 1.0);
+      rightStop = (sweep + softness).clamp(0.0, 1.0);
+    }
 
     final text = Text(
       widget.line.value ?? '',
