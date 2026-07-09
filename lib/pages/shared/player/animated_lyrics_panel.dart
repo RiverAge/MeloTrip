@@ -298,37 +298,25 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
   Widget _karaokeText(int positionMs) {
     final cues = _cueLine.cue ?? const <Cue>[];
     final sweep = cueLineSweepFraction(cues: cues, positionMs: positionMs);
-    // 每字进度：用于决定 fontWeight（已唱/正在唱 bold，未唱 normal）。
-    // 注意：不再用 per-span fontSize 做放大——字号变化会改变字宽，整行居中时
-    // 宽度逐帧漂移造成左右抖动。CJK 字框由字号决定、与 fontWeight 无关，
-    // 故 bold 不撑宽，既给层次又零宽度变化。
-    final progress = cueProgressByStartMs(cues: cues, positionMs: positionMs);
     final inactive = widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
     final active = widget.colorScheme.primary;
 
-    // 颜色仍由整行 ShaderMask 统一管（span 不设 color），保证左→右扫过分界
-    // 不被 per-span 颜色打乱。
+    // ShaderMask 在整行文本上叠一条水平渐变：左段(已唱)=active，右段(未唱)
+    // =inactive，分界点 = sweep。给分界留一点羽化宽度，避免硬切像剪刀；
+    // 羽化随字号缩放，字越大过渡越柔。
     final softness = (0.06).clamp(0.0, sweep < 1.0 ? (1.0 - sweep) * 0.5 : 0.0);
-    final leftStop = (sweep - softness).clamp(0.0, 1.0);
-    final rightStop = (sweep + softness).clamp(0.0, 1.0);
+    final split = sweep;
+    final leftStop = (split - softness).clamp(0.0, 1.0);
+    final rightStop = (split + softness).clamp(0.0, 1.0);
 
-    final text = Text.rich(
-      TextSpan(
-        // 不设 color，由 ShaderMask 着色。
-        children: [
-          for (var i = 0; i < cues.length; i++)
-            TextSpan(
-              text: cues[i].value ?? '',
-              style: TextStyle(
-                fontSize: widget.primaryFontSize,
-                height: 1.5,
-                // 已开始唱的字加粗，未唱的保持 normal，拉开视觉层次。
-                fontWeight: progress[i] > 0 ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-        ],
-      ),
+    final text = Text(
+      widget.line.value ?? '',
       textAlign: widget.textAlign,
+      style: TextStyle(
+        fontSize: widget.primaryFontSize,
+        height: 1.5,
+        fontWeight: FontWeight.bold,
+      ),
     );
 
     final content = ShaderMask(
@@ -342,7 +330,7 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
       child: text,
     );
 
-    // 整行微缩放（paint 层，不触发布局）提供当前行的体量感。
+    // 非当前行（理论上 _karaoke 已为 false）仍套一层缩放。
     return Transform.scale(scale: 1 + widget.activeScaleDelta, child: content);
   }
 
