@@ -298,8 +298,9 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
     );
   }
 
-  /// 逐字渲染：Text.rich，每个 cue 的颜色按毫秒进度 lerp。
-  /// 渲染相位以指数趋近 [_targetFraction]，提供 60fps 平滑且单调推进。
+  /// 逐字渲染：整行 Text 套 ShaderMask 做左→右颜色扫过，分界由已唱宽度
+  /// 比例 [cueLineSweepFraction] 决定。渲染相位以指数趋近 [_targetFraction]，
+  /// 提供 60fps 平滑且单调推进。
   Widget _buildKaraoke() {
     return AnimatedBuilder(
       animation: Listenable.merge([_controller!, widget.positionMs]),
