@@ -43,10 +43,7 @@ class _DesktopLyrics extends ConsumerWidget {
             ),
           );
         }
-        final cueMap = <int, CueLine>{
-          for (final c in leadCueLines(structured))
-            if (c.start != null) c.start!: c,
-        };
+        final cueMap = cueLinesByStart(structured);
         return AnimatedLyricsPanel(
           lyricsLines: lines,
           cueLinesByStart: cueMap,

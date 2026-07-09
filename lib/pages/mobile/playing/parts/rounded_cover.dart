@@ -48,10 +48,7 @@ class _RoundedCover extends StatelessWidget {
                 if (lyricsLines == null) {
                   return const SizedBox.shrink();
                 }
-                final cueMap = <int, CueLine>{
-                  for (final c in leadCueLines(structured))
-                    if (c.start != null) c.start!: c,
-                };
+                final cueMap = cueLinesByStart(structured);
                 return SizedBox(
                   height: 40,
                   child: SingleLineAnimatedLyrics(

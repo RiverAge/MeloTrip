@@ -34,10 +34,7 @@ class _AnimtedLyrics extends StatelessWidget {
               child: Text(AppLocalizations.of(context)!.noLyricsFound),
             );
           }
-          final cueMap = <int, CueLine>{
-            for (final c in leadCueLines(structured))
-              if (c.start != null) c.start!: c,
-          };
+          final cueMap = cueLinesByStart(structured);
           return AnimatedLyricsPanel(
             lyricsLines: lines,
             cueLinesByStart: cueMap,
