@@ -10,7 +10,11 @@ Widget buildUpdateSubtitleWidget(
       buildUpdateSubtitle(context, state),
       maxLines: 2,
       overflow: .ellipsis,
-      style: theme.textTheme.bodySmall,
+      // 等宽数字：百分比/字节/速度数字逐位对齐，配合 padLeft 后整行宽度
+      // 恒定，下载过程中文本不再左右抖动。
+      style: theme.textTheme.bodySmall?.copyWith(
+        fontFeatures: const [FontFeature.tabularFigures()],
+      ),
     ),
   ];
 
@@ -51,15 +55,22 @@ String buildUpdateSubtitle(BuildContext context, UpdateFlowState state) {
     return l10n.updateStageOpeningInstaller;
   }
   if (state.isUpdating) {
-    final String percent = '${state.downloadProgressPercent.toStringAsFixed(0)}%';
-    final String size =
-        '${formatUpdateBytes(state.downloadedBytes)}/${formatUpdateBytes(state.totalBytes)}';
+    // 三段都做固定宽度对齐，整行字符数恒定，下载过程中不再左右抖动：
+    //  - 百分比 padLeft 到 3 位再加 "%"（"  9%" / " 12%" / "100%"）
+    //  - 大小段左右各自 padLeft 到同宽（"3M/25M" 这种短串也补齐）
+    //  - 速度段永远占槽：有速度显示 "1.2M/s"，无速度用等宽空格填齐，
+    //    避免 "/s" 段时有时无造成的整行宽度跳变
+    final String percent =
+        '${state.downloadProgressPercent.toStringAsFixed(0).padLeft(3)}%';
+    final String downloaded = _formatUpdateBytesFixed(state.downloadedBytes);
+    final String totalStr = _formatUpdateBytesFixed(state.totalBytes);
+    // downloaded 左对齐补到与 totalStr 同宽，整段 "已下/总量" 宽度恒定。
+    final String downloadedPadded = downloaded.padLeft(totalStr.length);
+    final String size = '$downloadedPadded/$totalStr';
     final String speed = state.downloadBytesPerSecond > 0
-        ? '${formatUpdateBytes(state.downloadBytesPerSecond.round())}/s'
-        : '';
-    final List<String> parts = <String>[percent, size, speed]
-      ..removeWhere((String item) => item.isEmpty);
-    return parts.join(' | ');
+        ? _formatUpdateSpeedFixed(state.downloadBytesPerSecond)
+        : ''.padLeft(_speedSlotWidth);
+    return '$percent | $size | $speed';
   }
   if (state.checkError != null) {
     return l10n.updateCheckFailedInline;
@@ -89,4 +100,31 @@ String formatUpdateBytes(int bytes) {
     return '${(bytes / kb).toStringAsFixed(0)}K';
   }
   return '${bytes}B';
+}
+
+/// 速度槽固定宽度（字符数）。按 "999.9K/s" 计 = 8，覆盖百 K 量级速度
+/// （小数点前 3 位 + 小数 + 单位 + "/s"）。无速度时用等宽空格填齐这一槽，
+/// 避免 "/s" 段时有时无导致整行宽度跳变。
+const int _speedSlotWidth = 8;
+
+/// 字节量固定宽度格式化，与 [formatUpdateBytes] 同口径（无小数），
+/// 但保证 "0B" / "3M" / "25M" 这类短串也能 padLeft 对齐。
+String _formatUpdateBytesFixed(int bytes) {
+  return formatUpdateBytes(bytes);
+}
+
+/// 下载速度格式化：带 1 位小数（"1.2M/s"），并 padLeft 到 [_speedSlotWidth]。
+/// 带 1 位小数比整数更能反映速度变化、且不会因 1.x→2 的整数跳变而抖。
+String _formatUpdateSpeedFixed(double bytesPerSecond) {
+  const double kb = 1024.0;
+  const double mb = kb * 1024;
+  String value;
+  if (bytesPerSecond >= mb) {
+    value = '${(bytesPerSecond / mb).toStringAsFixed(1)}M';
+  } else if (bytesPerSecond >= kb) {
+    value = '${(bytesPerSecond / kb).toStringAsFixed(1)}K';
+  } else {
+    value = '${bytesPerSecond.toStringAsFixed(0)}B';
+  }
+  return '${value.padLeft(_speedSlotWidth - 2)}/s';
 }

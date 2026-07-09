@@ -21,6 +21,10 @@ class _DownloadProgressTracker {
   DateTime? _lastTickAt;
   DateTime? _lastUiTickAt;
   double _speedBytesPerSecond = 0;
+  // 速度归零缓冲：网络一卡会让瞬时速度掉到 0，UI 上 "/s" 段随之闪烁。
+  // 只有连续 _stallTicks 次采样都拿不到正向 delta 才认定为真正停滞。
+  int _stallTicks = 0;
+  static const int _stallTicksLimit = 3;
 
   _DownloadProgressSnapshot? compute({
     required int received,
@@ -32,9 +36,11 @@ class _DownloadProgressTracker {
     final DateTime now = DateTime.now();
     _updateSpeed(now: now, received: received);
 
+    // UI 刷新节流：500ms 一次（约 2Hz），人眼感知为"在动"而非"在抖"。
+    // 仅当百分比几乎没变化时才压制；进度真在走就让它通过，避免进度条卡顿。
     final bool shouldThrottle =
         _lastUiTickAt != null &&
-        now.difference(_lastUiTickAt!).inMilliseconds < 300 &&
+        now.difference(_lastUiTickAt!).inMilliseconds < 500 &&
         (percent - currentUiPercent).abs() < 0.2;
     if (shouldThrottle) {
       return null;
@@ -54,11 +60,22 @@ class _DownloadProgressTracker {
     if (_lastTickAt != null) {
       final int deltaMs = now.difference(_lastTickAt!).inMilliseconds;
       final int deltaBytes = received - _lastReceivedBytes;
-      if (deltaMs > 0 && deltaBytes >= 0) {
+      if (deltaMs > 0 && deltaBytes > 0) {
         final double instantSpeed = deltaBytes / (deltaMs / 1000);
+        // 低通滤波：0.85/0.15，比 0.75/0.25 更抗尖刺，UI 数字不会忽大忽小。
         _speedBytesPerSecond = _speedBytesPerSecond <= 0
             ? instantSpeed
-            : _speedBytesPerSecond * 0.75 + instantSpeed * 0.25;
+            : _speedBytesPerSecond * 0.85 + instantSpeed * 0.15;
+        _stallTicks = 0;
+      } else if (deltaBytes <= 0) {
+        // 本采样窗口无增量。先衰减已记录速度而非立刻归零，连续多帧无增量才清零，
+        // 避免 "/s" 段在速度正常波动时反复出现/消失。
+        _stallTicks++;
+        if (_stallTicks >= _stallTicksLimit) {
+          _speedBytesPerSecond = 0;
+        } else {
+          _speedBytesPerSecond *= 0.5;
+        }
       }
     }
     _lastTickAt = now;
