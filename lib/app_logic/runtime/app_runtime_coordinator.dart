@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_logic/runtime/desktop_lyrics_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_media_resolver_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_preferences_runtime.dart';
-import 'package:melo_trip/app_logic/runtime/player_scrobble_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/player_playback_report_runtime.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/provider/app/error.dart';
 import 'package:melo_trip/provider/app/player.dart';
@@ -17,18 +17,18 @@ class AppRuntimeCoordinatorBindings {
     this.playerPreferencesBindings,
     this.errorSubscription,
     this.desktopLyricsBindings,
-    this.playerScrobbleBindings,
+    this.playerPlaybackReportBindings,
   });
 
   final PlayerPreferencesRuntimeBindings? playerPreferencesBindings;
   final StreamSubscription<String>? errorSubscription;
   final DesktopLyricsRuntimeBindings? desktopLyricsBindings;
-  final PlayerScrobbleRuntimeBindings? playerScrobbleBindings;
+  final PlayerPlaybackReportRuntimeBindings? playerPlaybackReportBindings;
 
   Future<void> cancel() async {
     await playerPreferencesBindings?.cancel();
     await errorSubscription?.cancel();
-    await playerScrobbleBindings?.cancel();
+    await playerPlaybackReportBindings?.cancel();
     await desktopLyricsBindings?.cancel();
   }
 }
@@ -50,8 +50,8 @@ class AppRuntimeCoordinator {
     final playerPreferencesBindings = await ref
         .read(playerPreferencesRuntimeProvider)
         .attach(ref);
-    final playerScrobbleBindings = await ref
-        .read(playerScrobbleRuntimeProvider)
+    final playerPlaybackReportBindings = await ref
+        .read(playerPlaybackReportRuntimeProvider)
         .attach(ref);
 
     final AppPlayer? player = await ref.read(appPlayerHandlerProvider.future);
@@ -76,7 +76,7 @@ class AppRuntimeCoordinator {
       playerPreferencesBindings: playerPreferencesBindings,
       errorSubscription: errorSubscription,
       desktopLyricsBindings: desktopLyricsBindings,
-      playerScrobbleBindings: playerScrobbleBindings,
+      playerPlaybackReportBindings: playerPlaybackReportBindings,
     );
   }
 }

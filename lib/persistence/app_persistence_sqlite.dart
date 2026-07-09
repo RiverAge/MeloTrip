@@ -60,7 +60,7 @@ class SqliteAppPersistence implements AppPersistence {
         if (oldVersion < 5) {
           await db.execute('DROP TABLE IF EXISTS server_capability');
           // Drop deprecated play_history table (never read/written, replaced by
-          // server-side scrobble + recommend_refresh_state in user_config).
+          // server-side playback report + recommend_refresh_state in user_config).
           await db.execute('DROP TABLE IF EXISTS play_history');
         }
       },

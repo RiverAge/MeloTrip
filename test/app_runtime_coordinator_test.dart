@@ -8,7 +8,7 @@ import 'package:melo_trip/app_logic/runtime/app_runtime_coordinator.dart';
 import 'package:melo_trip/app_logic/runtime/desktop_lyrics_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_media_resolver_runtime.dart';
 import 'package:melo_trip/app_logic/runtime/player_preferences_runtime.dart';
-import 'package:melo_trip/app_logic/runtime/player_scrobble_runtime.dart';
+import 'package:melo_trip/app_logic/runtime/player_playback_report_runtime.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/provider/app/error.dart';
@@ -62,15 +62,15 @@ class _FakePlayerPreferencesRuntime extends PlayerPreferencesRuntime {
   }
 }
 
-class _FakeScrobbleRuntime extends PlayerScrobbleRuntime {
+class _FakePlaybackReportRuntime extends PlayerPlaybackReportRuntime {
   int attachCalls = 0;
 
   @override
-  Future<PlayerScrobbleRuntimeBindings?> attach(WidgetRef ref) async {
+  Future<PlayerPlaybackReportRuntimeBindings?> attach(WidgetRef ref) async {
     attachCalls++;
-    return PlayerScrobbleRuntimeBindings(
-      subscription: Stream<(PlayQueue, bool)>.empty().listen((_) {}),
-      cancelTimer: () {},
+    return PlayerPlaybackReportRuntimeBindings(
+      queuePlayingSubscription: Stream<(PlayQueue, bool)>.empty().listen((_) {}),
+      keepAliveTimer: null,
     );
   }
 }
@@ -110,7 +110,7 @@ void main() {
     (tester) async {
       final mediaResolverRuntime = _FakeMediaResolverRuntime();
       final playerPreferencesRuntime = _FakePlayerPreferencesRuntime();
-      final scrobbleRuntime = _FakeScrobbleRuntime();
+      final playbackReportRuntime = _FakePlaybackReportRuntime();
       final desktopLyricsRuntime = _FakeDesktopLyricsRuntime();
       final errorController = StreamController<String>.broadcast();
       addTearDown(errorController.close);
@@ -124,7 +124,9 @@ void main() {
           playerPreferencesRuntimeProvider.overrideWithValue(
             playerPreferencesRuntime,
           ),
-          playerScrobbleRuntimeProvider.overrideWithValue(scrobbleRuntime),
+          playerPlaybackReportRuntimeProvider.overrideWithValue(
+            playbackReportRuntime,
+          ),
           desktopLyricsRuntimeProvider.overrideWithValue(desktopLyricsRuntime),
           appPlayerHandlerProvider.overrideWith(
             () => _FakeAppPlayerHandler(_FakeAppPlayer()),
@@ -142,7 +144,7 @@ void main() {
 
       expect(mediaResolverRuntime.attachCalls, 1);
       expect(playerPreferencesRuntime.attachCalls, 1);
-      expect(scrobbleRuntime.attachCalls, 1);
+      expect(playbackReportRuntime.attachCalls, 1);
       expect(desktopLyricsRuntime.attachCalls, 1);
     },
     variant: const TargetPlatformVariant(<TargetPlatform>{
@@ -165,7 +167,9 @@ void main() {
         playerPreferencesRuntimeProvider.overrideWithValue(
           _FakePlayerPreferencesRuntime(),
         ),
-        playerScrobbleRuntimeProvider.overrideWithValue(_FakeScrobbleRuntime()),
+        playerPlaybackReportRuntimeProvider.overrideWithValue(
+          _FakePlaybackReportRuntime(),
+        ),
         desktopLyricsRuntimeProvider.overrideWithValue(
           _FakeDesktopLyricsRuntime(),
         ),

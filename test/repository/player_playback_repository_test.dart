@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melo_trip/repository/scrobble/player_scrobble_repository.dart';
+import 'package:melo_trip/repository/playback/player_playback_repository.dart';
 
 void main() {
-  group('PlayerScrobbleRepository', () {
+  group('PlayerPlaybackRepository', () {
     late ProviderContainer container;
     late _MockApiAdapter mockAdapter;
 
@@ -15,8 +15,8 @@ void main() {
       mockAdapter = _MockApiAdapter();
       container = ProviderContainer(
         overrides: [
-          playerScrobbleRepositoryProvider.overrideWith((ref) {
-            return PlayerScrobbleRepository(
+          playerPlaybackRepositoryProvider.overrideWith((ref) {
+            return PlayerPlaybackRepository(
               () async => _createMockDio(mockAdapter),
             );
           }),
@@ -28,23 +28,42 @@ void main() {
       container.dispose();
     });
 
-    test('tryScrobble sends expected query parameters', () async {
+    test('tryReportPlayback sends expected query parameters', () async {
       mockAdapter.setResponse({
         'subsonic-response': {'status': 'ok'},
       });
 
-      final repository = container.read(playerScrobbleRepositoryProvider);
-      final result = await repository.tryScrobble(
-        songId: 'song-1',
-        submission: true,
-        time: 1234567890,
+      final repository = container.read(playerPlaybackRepositoryProvider);
+      final result = await repository.tryReportPlayback(
+        mediaId: 'song-1',
+        positionMs: 5000,
+        state: PlaybackState.playing,
       );
 
       expect(result.isOk, isTrue);
-      expect(mockAdapter.lastRequest?.path, '/rest/scrobble');
-      expect(mockAdapter.lastRequest?.queryParameters['id'], 'song-1');
-      expect(mockAdapter.lastRequest?.queryParameters['submission'], true);
-      expect(mockAdapter.lastRequest?.queryParameters['time'], 1234567890);
+      expect(mockAdapter.lastRequest?.path, '/rest/reportPlayback');
+      expect(mockAdapter.lastRequest?.queryParameters['mediaId'], 'song-1');
+      expect(mockAdapter.lastRequest?.queryParameters['mediaType'], 'song');
+      expect(mockAdapter.lastRequest?.queryParameters['positionMs'], 5000);
+      expect(mockAdapter.lastRequest?.queryParameters['state'], 'playing');
+      expect(mockAdapter.lastRequest?.queryParameters['playbackRate'], 1.0);
+      expect(mockAdapter.lastRequest?.queryParameters['ignoreScrobble'], false);
+    });
+
+    test('tryReportPlayback serializes stopped state', () async {
+      mockAdapter.setResponse({
+        'subsonic-response': {'status': 'ok'},
+      });
+
+      final repository = container.read(playerPlaybackRepositoryProvider);
+      final result = await repository.tryReportPlayback(
+        mediaId: 'song-2',
+        positionMs: 12000,
+        state: PlaybackState.stopped,
+      );
+
+      expect(result.isOk, isTrue);
+      expect(mockAdapter.lastRequest?.queryParameters['state'], 'stopped');
     });
 
     test('trySavePlayQueue keeps repeated id query form', () async {
@@ -52,7 +71,7 @@ void main() {
         'subsonic-response': {'status': 'ok'},
       });
 
-      final repository = container.read(playerScrobbleRepositoryProvider);
+      final repository = container.read(playerPlaybackRepositoryProvider);
       final result = await repository.trySavePlayQueue(
         songIds: const ['song-1', 'song-2'],
         currentSongId: 'song-2',
@@ -70,7 +89,7 @@ void main() {
         'subsonic-response': {'status': 'ok'},
       });
 
-      final repository = container.read(playerScrobbleRepositoryProvider);
+      final repository = container.read(playerPlaybackRepositoryProvider);
       final result = await repository.trySavePlayQueue(songIds: const []);
 
       expect(result.isOk, isTrue);
