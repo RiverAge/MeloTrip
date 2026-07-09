@@ -214,9 +214,31 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
 
   CueLine get _cueLine => widget.cueLine!;
 
-  int get _lineStart => _cueLine.start ?? widget.line.start ?? 0;
-  int get _lineEnd => _cueLine.end ?? _lineStart;
-  int get _lineSpan => (_lineEnd - _lineStart).clamp(1, 10000);
+  List<Cue> get _cues => _cueLine.cue ?? const <Cue>[];
+
+  // 逐字进度的起止时间用首尾 cue 的真实时间，而非 cueLine.start/end。
+  // cueLine.end 可能含行尾停顿（远晚于最后一个字唱完），cueLine.start 可能
+  // 早于第一个字——用行时间作分母会导致：字唱完后进度仍慢慢爬向 1.0（"还在
+  // 走"），或行已开始但首字未唱时进度已提前推进（"提前走"）。用 cue 边界则
+  // position 到达首字 start 时 fraction=0，到达末字 end 时 fraction=1.0，
+  // 精确贴合人声。无 cue 时回退行时间。
+  int get _lineStart {
+    if (_cues.isNotEmpty) {
+      final first = _cues.first.start;
+      if (first != null) return first;
+    }
+    return _cueLine.start ?? widget.line.start ?? 0;
+  }
+
+  int get _lineEnd {
+    if (_cues.isNotEmpty) {
+      final last = _cues.last.end ?? _cues.last.start;
+      if (last != null) return last;
+    }
+    return _cueLine.end ?? _lineStart;
+  }
+
+  int get _lineSpan => (_lineEnd - _lineStart).clamp(1, 1 << 30);
 
   @override
   void initState() {
