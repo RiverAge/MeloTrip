@@ -465,11 +465,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noLyricsFound => '无歌词';
 
   @override
-  String lyricsSource(String source) {
-    return '歌词 $source';
-  }
-
-  @override
   String get albumHeaderSongs => '歌曲';
 
   @override
@@ -1272,11 +1267,6 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get noLyricsFound => '无歌词';
-
-  @override
-  String lyricsSource(String source) {
-    return '歌词 $source';
-  }
 
   @override
   String get albumHeaderSongs => '歌曲';

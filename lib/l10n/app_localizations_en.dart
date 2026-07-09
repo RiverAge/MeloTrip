@@ -466,11 +466,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noLyricsFound => 'No Lyrics Found';
 
   @override
-  String lyricsSource(String source) {
-    return 'Lyrics $source';
-  }
-
-  @override
   String get albumHeaderSongs => 'Songs';
 
   @override

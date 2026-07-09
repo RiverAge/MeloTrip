@@ -196,15 +196,6 @@
     "cn": "中国",
 
     "noLyricsFound": "无歌词",
-    "lyricsSource": "歌词 {source}",
-    "@lyricsSource": {
-      "placeholders": {
-        "source": {
-          "type": "String",
-          "example": "NETEASE"
-        }
-      }
-    },
     "unknownError": "未知错误",
     "globalErrorNetwork": "网络连接失败，请检查网络后重试。",
     "globalErrorUnauthorized": "认证失败，请重新登录。",

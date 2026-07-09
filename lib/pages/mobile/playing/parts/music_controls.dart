@@ -26,7 +26,6 @@ class _MusicControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final color = Theme.of(context).colorScheme.onSurfaceVariant;
     return AsyncValueBuilder(
       provider: appPlayerHandlerProvider,
       builder: (context, player, _) {
@@ -38,55 +37,6 @@ class _MusicControls extends StatelessWidget {
             return Row(
               mainAxisAlignment: .center,
               children: [
-                AsyncValueBuilder(
-                  provider: lyricsProvider(current?.id),
-                  loading: (_, _) => const SizedBox.shrink(),
-                  builder: (_, lyricsResult, _) {
-                    if (lyricsResult.isErr) {
-                      return const SizedBox.shrink();
-                    }
-                    final structuredLyrics =
-                        lyricsResult
-                            .data
-                            ?.subsonicResponse
-                            ?.lyricsList
-                            ?.structuredLyrics ??
-                        [];
-                    if (structuredLyrics.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
-                    final sourceLabel = switch (structuredLyrics.first.lang) {
-                      'NetEase' => 'NETEASE',
-                      'AM' => 'APPLE',
-                      _ => 'DEFAULT',
-                    };
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 1,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0.5, color: color),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        l10n.lyricsSource(sourceLabel),
-                        style: TextStyle(
-                          height: 1.0,
-                          fontSize: 12,
-                          fontWeight: .bold,
-                          color: color,
-                        ),
-                        textHeightBehavior: const TextHeightBehavior(
-                          applyHeightToFirstAscent: false,
-                          applyHeightToLastDescent: false,
-                          leadingDistribution: TextLeadingDistribution.even,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(width: 10),
                 IconButton(
                   onPressed: () {
                     final messenger = ScaffoldMessenger.of(context);
