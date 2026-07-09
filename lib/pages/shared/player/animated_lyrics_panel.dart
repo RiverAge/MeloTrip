@@ -331,6 +331,13 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
         ],
       ),
       textAlign: widget.textAlign,
+      // 锁死行高：以基准字号决定行框，per-span 字号放大只在该行框内向上溢出，
+      // 不撑高整行——否则扫过某字时行高跳变，下方行被推下造成抖动。
+      strutStyle: StrutStyle(
+        fontSize: widget.primaryFontSize,
+        height: 1.5,
+        forceStrutHeight: true,
+      ),
     );
 
     final content = ShaderMask(

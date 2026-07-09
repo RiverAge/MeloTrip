@@ -218,6 +218,12 @@ class _TweenAnimationBuilder extends StatelessWidget {
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
+        // 锁死行高，per-span 字号放大不撑动单行预览的高度/基线。
+        strutStyle: const StrutStyle(
+          fontSize: 14,
+          height: 1.5,
+          forceStrutHeight: true,
+        ),
       ),
     );
   }
