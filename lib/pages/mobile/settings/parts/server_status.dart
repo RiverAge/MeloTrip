@@ -50,7 +50,7 @@ class _ServerStatus extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.commit),
                       title: Text(l10n.version),
-                      subtitle: Text(data?.subsonicResponse?.version ?? ''),
+                      subtitle: Text(data?.subsonicResponse?.serverVersion ?? ''),
                     ),
                     ListTile(
                       leading: Icon(Icons.music_note),
