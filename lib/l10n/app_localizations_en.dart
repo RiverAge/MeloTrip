@@ -266,6 +266,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get songMetaSize => 'Size';
 
   @override
+  String get songMetaCredits => 'Credits';
+
+  @override
+  String get songMetaRoleComposer => 'Composer';
+
+  @override
+  String get songMetaRoleLyricist => 'Lyricist';
+
+  @override
+  String get songMetaRoleConductor => 'Conductor';
+
+  @override
+  String get songMetaRoleArranger => 'Arranger';
+
+  @override
+  String get songMetaRoleProducer => 'Producer';
+
+  @override
+  String get songMetaRoleDirector => 'Director';
+
+  @override
+  String get songMetaRoleEngineer => 'Engineer';
+
+  @override
+  String get songMetaRoleMixer => 'Mixer';
+
+  @override
+  String get songMetaRoleRemixer => 'Remixer';
+
+  @override
+  String get songMetaRoleDjMixer => 'DJ Mixer';
+
+  @override
+  String get songMetaRolePerformer => 'Performer';
+
+  @override
   String get favorite => 'Favorite';
 
   @override

@@ -609,6 +609,78 @@ abstract class AppLocalizations {
   /// **'Size'**
   String get songMetaSize;
 
+  /// Credits section title for song participants
+  ///
+  /// In en, this message translates to:
+  /// **'Credits'**
+  String get songMetaCredits;
+
+  /// Composer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Composer'**
+  String get songMetaRoleComposer;
+
+  /// Lyricist credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Lyricist'**
+  String get songMetaRoleLyricist;
+
+  /// Conductor credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Conductor'**
+  String get songMetaRoleConductor;
+
+  /// Arranger credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Arranger'**
+  String get songMetaRoleArranger;
+
+  /// Producer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Producer'**
+  String get songMetaRoleProducer;
+
+  /// Director credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Director'**
+  String get songMetaRoleDirector;
+
+  /// Engineer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Engineer'**
+  String get songMetaRoleEngineer;
+
+  /// Mixer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Mixer'**
+  String get songMetaRoleMixer;
+
+  /// Remixer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Remixer'**
+  String get songMetaRoleRemixer;
+
+  /// DJ Mixer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'DJ Mixer'**
+  String get songMetaRoleDjMixer;
+
+  /// Performer credit role
+  ///
+  /// In en, this message translates to:
+  /// **'Performer'**
+  String get songMetaRolePerformer;
+
   /// Favorite A song or artist or album
   ///
   /// In en, this message translates to:

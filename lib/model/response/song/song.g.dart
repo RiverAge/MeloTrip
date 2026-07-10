@@ -59,7 +59,9 @@ _SongEntity _$SongEntityFromJson(Map<String, dynamic> json) => _SongEntity(
       .toList(),
   displayAlbumArtist: json['displayAlbumArtist'] as String?,
   contributors: (json['contributors'] as List<dynamic>?)
-      ?.map((e) => ContributorEntity.fromJson(e as Map<String, dynamic>))
+      ?.map(
+        (e) => const ContributorConverter().fromJson(e as Map<String, dynamic>),
+      )
       .toList(),
   displayComposer: json['displayComposer'] as String?,
   explicitStatus: json['explicitStatus'] as String?,
@@ -106,7 +108,9 @@ Map<String, dynamic> _$SongEntityToJson(_SongEntity instance) =>
       'displayArtist': instance.displayArtist,
       'albumArtists': instance.albumArtists,
       'displayAlbumArtist': instance.displayAlbumArtist,
-      'contributors': instance.contributors,
+      'contributors': instance.contributors
+          ?.map(const ContributorConverter().toJson)
+          .toList(),
       'displayComposer': instance.displayComposer,
       'explicitStatus': instance.explicitStatus,
     };
@@ -122,12 +126,19 @@ Map<String, dynamic> _$ParticipateEntityToJson(_ParticipateEntity instance) =>
 
 _ContributorEntity _$ContributorEntityFromJson(Map<String, dynamic> json) =>
     _ContributorEntity(
+      role: json['role'] as String?,
+      subRole: json['subRole'] as String?,
       id: json['id'] as String?,
       name: json['name'] as String?,
     );
 
 Map<String, dynamic> _$ContributorEntityToJson(_ContributorEntity instance) =>
-    <String, dynamic>{'id': instance.id, 'name': instance.name};
+    <String, dynamic>{
+      'role': instance.role,
+      'subRole': instance.subRole,
+      'id': instance.id,
+      'name': instance.name,
+    };
 
 _GenreElement _$GenreElementFromJson(Map<String, dynamic> json) =>
     _GenreElement(name: json['name'] as String?);

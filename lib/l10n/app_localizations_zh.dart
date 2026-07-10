@@ -266,6 +266,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get songMetaSize => '大小';
 
   @override
+  String get songMetaCredits => '制作人员';
+
+  @override
+  String get songMetaRoleComposer => '作曲';
+
+  @override
+  String get songMetaRoleLyricist => '作词';
+
+  @override
+  String get songMetaRoleConductor => '指挥';
+
+  @override
+  String get songMetaRoleArranger => '编曲';
+
+  @override
+  String get songMetaRoleProducer => '制作人';
+
+  @override
+  String get songMetaRoleDirector => '导演';
+
+  @override
+  String get songMetaRoleEngineer => '工程师';
+
+  @override
+  String get songMetaRoleMixer => '混音';
+
+  @override
+  String get songMetaRoleRemixer => '混音师';
+
+  @override
+  String get songMetaRoleDjMixer => 'DJ混音';
+
+  @override
+  String get songMetaRolePerformer => '演奏';
+
+  @override
   String get favorite => '收藏';
 
   @override
@@ -1068,6 +1104,42 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get songMetaSize => '大小';
+
+  @override
+  String get songMetaCredits => '制作人员';
+
+  @override
+  String get songMetaRoleComposer => '作曲';
+
+  @override
+  String get songMetaRoleLyricist => '作词';
+
+  @override
+  String get songMetaRoleConductor => '指挥';
+
+  @override
+  String get songMetaRoleArranger => '编曲';
+
+  @override
+  String get songMetaRoleProducer => '制作人';
+
+  @override
+  String get songMetaRoleDirector => '导演';
+
+  @override
+  String get songMetaRoleEngineer => '工程师';
+
+  @override
+  String get songMetaRoleMixer => '混音';
+
+  @override
+  String get songMetaRoleRemixer => '混音师';
+
+  @override
+  String get songMetaRoleDjMixer => 'DJ混音';
+
+  @override
+  String get songMetaRolePerformer => '演奏';
 
   @override
   String get favorite => '收藏';

@@ -39,6 +39,10 @@ class _SongMeta extends StatelessWidget {
       );
     }
 
+    for (final row in _creditsRows(l10n, song.contributors)) {
+      addMetaRow(row);
+    }
+
     addMetaRow(
       _MetaItem(
         icon: Icons.album_outlined,
@@ -182,5 +186,80 @@ class _MetaSeparator extends StatelessWidget {
         ).colorScheme.outlineVariant.withValues(alpha: 0.42),
       ),
     );
+  }
+}
+
+/// Build one `_MetaItem` row per contributor role, with composers shown first.
+///
+/// Each row's value joins all participants of that role with ' / '. Performer
+/// rows embed the sub-role (e.g. "Guitar: John") when present. Roles without a
+/// known label fall back to a title-cased role string.
+List<Widget> _creditsRows(
+  AppLocalizations l10n,
+  List<ContributorEntity>? contributors,
+) {
+  final byRole = <String, List<ContributorEntity>>{};
+  for (final c in contributors ?? const <ContributorEntity>[]) {
+    final role = c.role?.trim();
+    if (role == null || role.isEmpty) continue;
+    final name = c.name?.trim();
+    if (name == null || name.isEmpty) continue;
+    (byRole[role] ??= <ContributorEntity>[]).add(c);
+  }
+  if (byRole.isEmpty) return const <Widget>[];
+
+  final roles = byRole.keys.toList()
+    ..sort((a, b) {
+      // Composer first, then alphabetical for stable ordering.
+      if (a == 'composer' && b != 'composer') return -1;
+      if (b == 'composer' && a != 'composer') return 1;
+      return a.compareTo(b);
+    });
+
+  return roles.map((role) {
+    final participants = byRole[role]!;
+    final value = participants
+        .map((c) {
+          final name = c.name!.trim();
+          final subRole = c.subRole?.trim();
+          return subRole == null || subRole.isEmpty
+              ? name
+              : '$subRole: $name';
+        })
+        .join(' / ');
+    return _MetaItem(
+      icon: Icons.person_pin_rounded,
+      label: _roleLabel(l10n, role),
+      value: value,
+    );
+  }).toList();
+}
+
+String _roleLabel(AppLocalizations l10n, String role) {
+  switch (role) {
+    case 'composer':
+      return l10n.songMetaRoleComposer;
+    case 'lyricist':
+      return l10n.songMetaRoleLyricist;
+    case 'conductor':
+      return l10n.songMetaRoleConductor;
+    case 'arranger':
+      return l10n.songMetaRoleArranger;
+    case 'producer':
+      return l10n.songMetaRoleProducer;
+    case 'director':
+      return l10n.songMetaRoleDirector;
+    case 'engineer':
+      return l10n.songMetaRoleEngineer;
+    case 'mixer':
+      return l10n.songMetaRoleMixer;
+    case 'remixer':
+      return l10n.songMetaRoleRemixer;
+    case 'djmixer':
+      return l10n.songMetaRoleDjMixer;
+    case 'performer':
+      return l10n.songMetaRolePerformer;
+    default:
+      return role[0].toUpperCase() + role.substring(1);
   }
 }

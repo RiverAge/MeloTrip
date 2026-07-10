@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SongEntity {
 
- String? get id; String? get parent; bool? get isDir; String? get title; String? get album; String? get artist; int? get track; int? get year; String? get coverArt; int? get size; String? get contentType; String? get suffix; DateTime? get starred; int? get duration; int? get bitRate; String? get path; int? get discNumber; DateTime? get created; String? get albumId; String? get artistId; String? get type; int? get userRating; bool? get isVideo; int? get bpm; String? get comment; String? get sortName; String? get mediaType; String? get musicBrainzId; List<GenreElement>? get genres; ReplayGain? get replayGain; int? get channelCount; String? get genre; int? get samplingRate; int? get bitDepth; List<String>? get moods; List<ParticipateEntity>? get artists; String? get displayArtist; List<ParticipateEntity>? get albumArtists; String? get displayAlbumArtist; List<ContributorEntity>? get contributors; String? get displayComposer; String? get explicitStatus;
+ String? get id; String? get parent; bool? get isDir; String? get title; String? get album; String? get artist; int? get track; int? get year; String? get coverArt; int? get size; String? get contentType; String? get suffix; DateTime? get starred; int? get duration; int? get bitRate; String? get path; int? get discNumber; DateTime? get created; String? get albumId; String? get artistId; String? get type; int? get userRating; bool? get isVideo; int? get bpm; String? get comment; String? get sortName; String? get mediaType; String? get musicBrainzId; List<GenreElement>? get genres; ReplayGain? get replayGain; int? get channelCount; String? get genre; int? get samplingRate; int? get bitDepth; List<String>? get moods; List<ParticipateEntity>? get artists; String? get displayArtist; List<ParticipateEntity>? get albumArtists; String? get displayAlbumArtist;@ContributorConverter() List<ContributorEntity>? get contributors; String? get displayComposer; String? get explicitStatus;
 /// Create a copy of SongEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SongEntityCopyWith<$Res>  {
   factory $SongEntityCopyWith(SongEntity value, $Res Function(SongEntity) _then) = _$SongEntityCopyWithImpl;
 @useResult
 $Res call({
- String? id, String? parent, bool? isDir, String? title, String? album, String? artist, int? track, int? year, String? coverArt, int? size, String? contentType, String? suffix, DateTime? starred, int? duration, int? bitRate, String? path, int? discNumber, DateTime? created, String? albumId, String? artistId, String? type, int? userRating, bool? isVideo, int? bpm, String? comment, String? sortName, String? mediaType, String? musicBrainzId, List<GenreElement>? genres, ReplayGain? replayGain, int? channelCount, String? genre, int? samplingRate, int? bitDepth, List<String>? moods, List<ParticipateEntity>? artists, String? displayArtist, List<ParticipateEntity>? albumArtists, String? displayAlbumArtist, List<ContributorEntity>? contributors, String? displayComposer, String? explicitStatus
+ String? id, String? parent, bool? isDir, String? title, String? album, String? artist, int? track, int? year, String? coverArt, int? size, String? contentType, String? suffix, DateTime? starred, int? duration, int? bitRate, String? path, int? discNumber, DateTime? created, String? albumId, String? artistId, String? type, int? userRating, bool? isVideo, int? bpm, String? comment, String? sortName, String? mediaType, String? musicBrainzId, List<GenreElement>? genres, ReplayGain? replayGain, int? channelCount, String? genre, int? samplingRate, int? bitDepth, List<String>? moods, List<ParticipateEntity>? artists, String? displayArtist, List<ParticipateEntity>? albumArtists, String? displayAlbumArtist,@ContributorConverter() List<ContributorEntity>? contributors, String? displayComposer, String? explicitStatus
 });
 
 
@@ -206,7 +206,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? parent,  bool? isDir,  String? title,  String? album,  String? artist,  int? track,  int? year,  String? coverArt,  int? size,  String? contentType,  String? suffix,  DateTime? starred,  int? duration,  int? bitRate,  String? path,  int? discNumber,  DateTime? created,  String? albumId,  String? artistId,  String? type,  int? userRating,  bool? isVideo,  int? bpm,  String? comment,  String? sortName,  String? mediaType,  String? musicBrainzId,  List<GenreElement>? genres,  ReplayGain? replayGain,  int? channelCount,  String? genre,  int? samplingRate,  int? bitDepth,  List<String>? moods,  List<ParticipateEntity>? artists,  String? displayArtist,  List<ParticipateEntity>? albumArtists,  String? displayAlbumArtist,  List<ContributorEntity>? contributors,  String? displayComposer,  String? explicitStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? parent,  bool? isDir,  String? title,  String? album,  String? artist,  int? track,  int? year,  String? coverArt,  int? size,  String? contentType,  String? suffix,  DateTime? starred,  int? duration,  int? bitRate,  String? path,  int? discNumber,  DateTime? created,  String? albumId,  String? artistId,  String? type,  int? userRating,  bool? isVideo,  int? bpm,  String? comment,  String? sortName,  String? mediaType,  String? musicBrainzId,  List<GenreElement>? genres,  ReplayGain? replayGain,  int? channelCount,  String? genre,  int? samplingRate,  int? bitDepth,  List<String>? moods,  List<ParticipateEntity>? artists,  String? displayArtist,  List<ParticipateEntity>? albumArtists,  String? displayAlbumArtist, @ContributorConverter()  List<ContributorEntity>? contributors,  String? displayComposer,  String? explicitStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SongEntity() when $default != null:
 return $default(_that.id,_that.parent,_that.isDir,_that.title,_that.album,_that.artist,_that.track,_that.year,_that.coverArt,_that.size,_that.contentType,_that.suffix,_that.starred,_that.duration,_that.bitRate,_that.path,_that.discNumber,_that.created,_that.albumId,_that.artistId,_that.type,_that.userRating,_that.isVideo,_that.bpm,_that.comment,_that.sortName,_that.mediaType,_that.musicBrainzId,_that.genres,_that.replayGain,_that.channelCount,_that.genre,_that.samplingRate,_that.bitDepth,_that.moods,_that.artists,_that.displayArtist,_that.albumArtists,_that.displayAlbumArtist,_that.contributors,_that.displayComposer,_that.explicitStatus);case _:
@@ -227,7 +227,7 @@ return $default(_that.id,_that.parent,_that.isDir,_that.title,_that.album,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? parent,  bool? isDir,  String? title,  String? album,  String? artist,  int? track,  int? year,  String? coverArt,  int? size,  String? contentType,  String? suffix,  DateTime? starred,  int? duration,  int? bitRate,  String? path,  int? discNumber,  DateTime? created,  String? albumId,  String? artistId,  String? type,  int? userRating,  bool? isVideo,  int? bpm,  String? comment,  String? sortName,  String? mediaType,  String? musicBrainzId,  List<GenreElement>? genres,  ReplayGain? replayGain,  int? channelCount,  String? genre,  int? samplingRate,  int? bitDepth,  List<String>? moods,  List<ParticipateEntity>? artists,  String? displayArtist,  List<ParticipateEntity>? albumArtists,  String? displayAlbumArtist,  List<ContributorEntity>? contributors,  String? displayComposer,  String? explicitStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? parent,  bool? isDir,  String? title,  String? album,  String? artist,  int? track,  int? year,  String? coverArt,  int? size,  String? contentType,  String? suffix,  DateTime? starred,  int? duration,  int? bitRate,  String? path,  int? discNumber,  DateTime? created,  String? albumId,  String? artistId,  String? type,  int? userRating,  bool? isVideo,  int? bpm,  String? comment,  String? sortName,  String? mediaType,  String? musicBrainzId,  List<GenreElement>? genres,  ReplayGain? replayGain,  int? channelCount,  String? genre,  int? samplingRate,  int? bitDepth,  List<String>? moods,  List<ParticipateEntity>? artists,  String? displayArtist,  List<ParticipateEntity>? albumArtists,  String? displayAlbumArtist, @ContributorConverter()  List<ContributorEntity>? contributors,  String? displayComposer,  String? explicitStatus)  $default,) {final _that = this;
 switch (_that) {
 case _SongEntity():
 return $default(_that.id,_that.parent,_that.isDir,_that.title,_that.album,_that.artist,_that.track,_that.year,_that.coverArt,_that.size,_that.contentType,_that.suffix,_that.starred,_that.duration,_that.bitRate,_that.path,_that.discNumber,_that.created,_that.albumId,_that.artistId,_that.type,_that.userRating,_that.isVideo,_that.bpm,_that.comment,_that.sortName,_that.mediaType,_that.musicBrainzId,_that.genres,_that.replayGain,_that.channelCount,_that.genre,_that.samplingRate,_that.bitDepth,_that.moods,_that.artists,_that.displayArtist,_that.albumArtists,_that.displayAlbumArtist,_that.contributors,_that.displayComposer,_that.explicitStatus);case _:
@@ -247,7 +247,7 @@ return $default(_that.id,_that.parent,_that.isDir,_that.title,_that.album,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? parent,  bool? isDir,  String? title,  String? album,  String? artist,  int? track,  int? year,  String? coverArt,  int? size,  String? contentType,  String? suffix,  DateTime? starred,  int? duration,  int? bitRate,  String? path,  int? discNumber,  DateTime? created,  String? albumId,  String? artistId,  String? type,  int? userRating,  bool? isVideo,  int? bpm,  String? comment,  String? sortName,  String? mediaType,  String? musicBrainzId,  List<GenreElement>? genres,  ReplayGain? replayGain,  int? channelCount,  String? genre,  int? samplingRate,  int? bitDepth,  List<String>? moods,  List<ParticipateEntity>? artists,  String? displayArtist,  List<ParticipateEntity>? albumArtists,  String? displayAlbumArtist,  List<ContributorEntity>? contributors,  String? displayComposer,  String? explicitStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? parent,  bool? isDir,  String? title,  String? album,  String? artist,  int? track,  int? year,  String? coverArt,  int? size,  String? contentType,  String? suffix,  DateTime? starred,  int? duration,  int? bitRate,  String? path,  int? discNumber,  DateTime? created,  String? albumId,  String? artistId,  String? type,  int? userRating,  bool? isVideo,  int? bpm,  String? comment,  String? sortName,  String? mediaType,  String? musicBrainzId,  List<GenreElement>? genres,  ReplayGain? replayGain,  int? channelCount,  String? genre,  int? samplingRate,  int? bitDepth,  List<String>? moods,  List<ParticipateEntity>? artists,  String? displayArtist,  List<ParticipateEntity>? albumArtists,  String? displayAlbumArtist, @ContributorConverter()  List<ContributorEntity>? contributors,  String? displayComposer,  String? explicitStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _SongEntity() when $default != null:
 return $default(_that.id,_that.parent,_that.isDir,_that.title,_that.album,_that.artist,_that.track,_that.year,_that.coverArt,_that.size,_that.contentType,_that.suffix,_that.starred,_that.duration,_that.bitRate,_that.path,_that.discNumber,_that.created,_that.albumId,_that.artistId,_that.type,_that.userRating,_that.isVideo,_that.bpm,_that.comment,_that.sortName,_that.mediaType,_that.musicBrainzId,_that.genres,_that.replayGain,_that.channelCount,_that.genre,_that.samplingRate,_that.bitDepth,_that.moods,_that.artists,_that.displayArtist,_that.albumArtists,_that.displayAlbumArtist,_that.contributors,_that.displayComposer,_that.explicitStatus);case _:
@@ -262,7 +262,7 @@ return $default(_that.id,_that.parent,_that.isDir,_that.title,_that.album,_that.
 @JsonSerializable()
 
 class _SongEntity implements SongEntity {
-  const _SongEntity({this.id, this.parent, this.isDir, this.title, this.album, this.artist, this.track, this.year, this.coverArt, this.size, this.contentType, this.suffix, this.starred, this.duration, this.bitRate, this.path, this.discNumber, this.created, this.albumId, this.artistId, this.type, this.userRating, this.isVideo, this.bpm, this.comment, this.sortName, this.mediaType, this.musicBrainzId, final  List<GenreElement>? genres, this.replayGain, this.channelCount, this.genre, this.samplingRate, this.bitDepth, final  List<String>? moods, final  List<ParticipateEntity>? artists, this.displayArtist, final  List<ParticipateEntity>? albumArtists, this.displayAlbumArtist, final  List<ContributorEntity>? contributors, this.displayComposer, this.explicitStatus}): _genres = genres,_moods = moods,_artists = artists,_albumArtists = albumArtists,_contributors = contributors;
+  const _SongEntity({this.id, this.parent, this.isDir, this.title, this.album, this.artist, this.track, this.year, this.coverArt, this.size, this.contentType, this.suffix, this.starred, this.duration, this.bitRate, this.path, this.discNumber, this.created, this.albumId, this.artistId, this.type, this.userRating, this.isVideo, this.bpm, this.comment, this.sortName, this.mediaType, this.musicBrainzId, final  List<GenreElement>? genres, this.replayGain, this.channelCount, this.genre, this.samplingRate, this.bitDepth, final  List<String>? moods, final  List<ParticipateEntity>? artists, this.displayArtist, final  List<ParticipateEntity>? albumArtists, this.displayAlbumArtist, @ContributorConverter() final  List<ContributorEntity>? contributors, this.displayComposer, this.explicitStatus}): _genres = genres,_moods = moods,_artists = artists,_albumArtists = albumArtists,_contributors = contributors;
   factory _SongEntity.fromJson(Map<String, dynamic> json) => _$SongEntityFromJson(json);
 
 @override final  String? id;
@@ -337,7 +337,7 @@ class _SongEntity implements SongEntity {
 
 @override final  String? displayAlbumArtist;
  final  List<ContributorEntity>? _contributors;
-@override List<ContributorEntity>? get contributors {
+@override@ContributorConverter() List<ContributorEntity>? get contributors {
   final value = _contributors;
   if (value == null) return null;
   if (_contributors is EqualUnmodifiableListView) return _contributors;
@@ -381,7 +381,7 @@ abstract mixin class _$SongEntityCopyWith<$Res> implements $SongEntityCopyWith<$
   factory _$SongEntityCopyWith(_SongEntity value, $Res Function(_SongEntity) _then) = __$SongEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String? parent, bool? isDir, String? title, String? album, String? artist, int? track, int? year, String? coverArt, int? size, String? contentType, String? suffix, DateTime? starred, int? duration, int? bitRate, String? path, int? discNumber, DateTime? created, String? albumId, String? artistId, String? type, int? userRating, bool? isVideo, int? bpm, String? comment, String? sortName, String? mediaType, String? musicBrainzId, List<GenreElement>? genres, ReplayGain? replayGain, int? channelCount, String? genre, int? samplingRate, int? bitDepth, List<String>? moods, List<ParticipateEntity>? artists, String? displayArtist, List<ParticipateEntity>? albumArtists, String? displayAlbumArtist, List<ContributorEntity>? contributors, String? displayComposer, String? explicitStatus
+ String? id, String? parent, bool? isDir, String? title, String? album, String? artist, int? track, int? year, String? coverArt, int? size, String? contentType, String? suffix, DateTime? starred, int? duration, int? bitRate, String? path, int? discNumber, DateTime? created, String? albumId, String? artistId, String? type, int? userRating, bool? isVideo, int? bpm, String? comment, String? sortName, String? mediaType, String? musicBrainzId, List<GenreElement>? genres, ReplayGain? replayGain, int? channelCount, String? genre, int? samplingRate, int? bitDepth, List<String>? moods, List<ParticipateEntity>? artists, String? displayArtist, List<ParticipateEntity>? albumArtists, String? displayAlbumArtist,@ContributorConverter() List<ContributorEntity>? contributors, String? displayComposer, String? explicitStatus
 });
 
 
@@ -731,7 +731,7 @@ as String?,
 /// @nodoc
 mixin _$ContributorEntity {
 
- String? get id; String? get name;
+ String? get role; String? get subRole; String? get id; String? get name;
 /// Create a copy of ContributorEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -744,16 +744,16 @@ $ContributorEntityCopyWith<ContributorEntity> get copyWith => _$ContributorEntit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContributorEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContributorEntity&&(identical(other.role, role) || other.role == role)&&(identical(other.subRole, subRole) || other.subRole == subRole)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,role,subRole,id,name);
 
 @override
 String toString() {
-  return 'ContributorEntity(id: $id, name: $name)';
+  return 'ContributorEntity(role: $role, subRole: $subRole, id: $id, name: $name)';
 }
 
 
@@ -764,7 +764,7 @@ abstract mixin class $ContributorEntityCopyWith<$Res>  {
   factory $ContributorEntityCopyWith(ContributorEntity value, $Res Function(ContributorEntity) _then) = _$ContributorEntityCopyWithImpl;
 @useResult
 $Res call({
- String? id, String? name
+ String? role, String? subRole, String? id, String? name
 });
 
 
@@ -781,9 +781,11 @@ class _$ContributorEntityCopyWithImpl<$Res>
 
 /// Create a copy of ContributorEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? role = freezed,Object? subRole = freezed,Object? id = freezed,Object? name = freezed,}) {
   return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,subRole: freezed == subRole ? _self.subRole : subRole // ignore: cast_nullable_to_non_nullable
+as String?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -870,10 +872,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? role,  String? subRole,  String? id,  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ContributorEntity() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.role,_that.subRole,_that.id,_that.name);case _:
   return orElse();
 
 }
@@ -891,10 +893,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? role,  String? subRole,  String? id,  String? name)  $default,) {final _that = this;
 switch (_that) {
 case _ContributorEntity():
-return $default(_that.id,_that.name);case _:
+return $default(_that.role,_that.subRole,_that.id,_that.name);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -911,10 +913,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? role,  String? subRole,  String? id,  String? name)?  $default,) {final _that = this;
 switch (_that) {
 case _ContributorEntity() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.role,_that.subRole,_that.id,_that.name);case _:
   return null;
 
 }
@@ -926,9 +928,11 @@ return $default(_that.id,_that.name);case _:
 @JsonSerializable()
 
 class _ContributorEntity implements ContributorEntity {
-  const _ContributorEntity({this.id, this.name});
+  const _ContributorEntity({this.role, this.subRole, this.id, this.name});
   factory _ContributorEntity.fromJson(Map<String, dynamic> json) => _$ContributorEntityFromJson(json);
 
+@override final  String? role;
+@override final  String? subRole;
 @override final  String? id;
 @override final  String? name;
 
@@ -945,16 +949,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContributorEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContributorEntity&&(identical(other.role, role) || other.role == role)&&(identical(other.subRole, subRole) || other.subRole == subRole)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,role,subRole,id,name);
 
 @override
 String toString() {
-  return 'ContributorEntity(id: $id, name: $name)';
+  return 'ContributorEntity(role: $role, subRole: $subRole, id: $id, name: $name)';
 }
 
 
@@ -965,7 +969,7 @@ abstract mixin class _$ContributorEntityCopyWith<$Res> implements $ContributorEn
   factory _$ContributorEntityCopyWith(_ContributorEntity value, $Res Function(_ContributorEntity) _then) = __$ContributorEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String? name
+ String? role, String? subRole, String? id, String? name
 });
 
 
@@ -982,9 +986,11 @@ class __$ContributorEntityCopyWithImpl<$Res>
 
 /// Create a copy of ContributorEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? role = freezed,Object? subRole = freezed,Object? id = freezed,Object? name = freezed,}) {
   return _then(_ContributorEntity(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,subRole: freezed == subRole ? _self.subRole : subRole // ignore: cast_nullable_to_non_nullable
+as String?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

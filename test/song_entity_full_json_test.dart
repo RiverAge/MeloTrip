@@ -50,7 +50,15 @@ void main() {
       ],
       'displayAlbumArtist': 'Album Artist',
       'contributors': [
-        {'id': 'c1', 'name': 'Composer'},
+        {
+          'role': 'composer',
+          'artist': {'id': 'c1', 'name': 'Composer'},
+        },
+        {
+          'role': 'performer',
+          'subRole': 'Guitar',
+          'artist': {'id': 'p1', 'name': 'Performer'},
+        },
       ],
       'displayComposer': 'Composer',
       'explicitStatus': 'clean',
@@ -62,7 +70,17 @@ void main() {
     expect(song.replayGain?.trackPeak, 1);
     expect(song.artists?.single.id, 'ar1');
     expect(song.albumArtists?.single.id, 'aar1');
-    expect(song.contributors?.single.id, 'c1');
+    expect(song.contributors?.length, 2);
+    final composer = song.contributors?[0];
+    expect(composer?.role, 'composer');
+    expect(composer?.id, 'c1');
+    expect(composer?.name, 'Composer');
+    expect(composer?.subRole, isNull);
+    final performer = song.contributors?[1];
+    expect(performer?.role, 'performer');
+    expect(performer?.subRole, 'Guitar');
+    expect(performer?.id, 'p1');
+    expect(performer?.name, 'Performer');
     expect(song.explicitStatus, 'clean');
 
     final json = song.toJson();
@@ -70,5 +88,10 @@ void main() {
     expect(json['genres'], isA<List<dynamic>>());
     expect(json['artists'], isA<List<dynamic>>());
     expect(json['contributors'], isA<List<dynamic>>());
+    final composerOut =
+        (json['contributors'] as List<dynamic>).first as Map<String, dynamic>;
+    expect(composerOut['role'], 'composer');
+    expect(composerOut['artist'], isA<Map<String, dynamic>>());
+    expect((composerOut['artist'] as Map<String, dynamic>)['id'], 'c1');
   });
 }

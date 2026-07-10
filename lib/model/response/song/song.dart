@@ -45,7 +45,7 @@ abstract class SongEntity with _$SongEntity {
     String? displayArtist,
     List<ParticipateEntity>? albumArtists,
     String? displayAlbumArtist,
-    List<ContributorEntity>? contributors,
+    @ContributorConverter() List<ContributorEntity>? contributors,
     String? displayComposer,
     String? explicitStatus,
   }) = _SongEntity;
@@ -63,12 +63,51 @@ abstract class ParticipateEntity with _$ParticipateEntity {
       _$ParticipateEntityFromJson(json);
 }
 
+/// A non-artist participant on a track (composer, lyricist, performer, ...).
+///
+/// Mirrors the OpenSubsonic `contributor` object as served by Navidrome:
+/// `{ role, subRole?, artist: { id, name } }`. The nested `artist` is flattened
+/// onto this entity via [ContributorConverter] so callers can read
+/// `id`/`name` directly.
 @freezed
 abstract class ContributorEntity with _$ContributorEntity {
-  const factory ContributorEntity({String? id, String? name}) =
-      _ContributorEntity;
+  const factory ContributorEntity({
+    String? role,
+    String? subRole,
+    String? id,
+    String? name,
+  }) = _ContributorEntity;
+
   factory ContributorEntity.fromJson(Map<String, Object?> json) =>
       _$ContributorEntityFromJson(json);
+}
+
+/// Converts between Navidrome's nested OpenSubsonic `contributor` shape
+/// `{ role, subRole?, artist: { id, name } }` and the flat [ContributorEntity].
+class ContributorConverter
+    implements JsonConverter<ContributorEntity, Map<String, dynamic>> {
+  const ContributorConverter();
+
+  @override
+  ContributorEntity fromJson(Map<String, dynamic> json) {
+    final artist = json['artist'];
+    final artistMap = artist is Map<String, dynamic>
+        ? artist
+        : const <String, dynamic>{};
+    return ContributorEntity(
+      role: json['role'] as String?,
+      subRole: json['subRole'] as String?,
+      id: artistMap['id'] as String?,
+      name: artistMap['name'] as String?,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson(ContributorEntity object) => <String, dynamic>{
+        'role': object.role,
+        'subRole': object.subRole,
+        'artist': {'id': object.id, 'name': object.name},
+      };
 }
 
 @freezed

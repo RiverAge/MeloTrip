@@ -377,6 +377,54 @@
    "@songMetaSize": {
      "description": "Size of song meta data"
    },
+   "songMetaCredits": "Credits",
+   "@songMetaCredits": {
+     "description": "Credits section title for song participants"
+   },
+   "songMetaRoleComposer": "Composer",
+   "@songMetaRoleComposer": {
+     "description": "Composer credit role"
+   },
+   "songMetaRoleLyricist": "Lyricist",
+   "@songMetaRoleLyricist": {
+     "description": "Lyricist credit role"
+   },
+   "songMetaRoleConductor": "Conductor",
+   "@songMetaRoleConductor": {
+     "description": "Conductor credit role"
+   },
+   "songMetaRoleArranger": "Arranger",
+   "@songMetaRoleArranger": {
+     "description": "Arranger credit role"
+   },
+   "songMetaRoleProducer": "Producer",
+   "@songMetaRoleProducer": {
+     "description": "Producer credit role"
+   },
+   "songMetaRoleDirector": "Director",
+   "@songMetaRoleDirector": {
+     "description": "Director credit role"
+   },
+   "songMetaRoleEngineer": "Engineer",
+   "@songMetaRoleEngineer": {
+     "description": "Engineer credit role"
+   },
+   "songMetaRoleMixer": "Mixer",
+   "@songMetaRoleMixer": {
+     "description": "Mixer credit role"
+   },
+   "songMetaRoleRemixer": "Remixer",
+   "@songMetaRoleRemixer": {
+     "description": "Remixer credit role"
+   },
+   "songMetaRoleDjMixer": "DJ Mixer",
+   "@songMetaRoleDjMixer": {
+     "description": "DJ Mixer credit role"
+   },
+   "songMetaRolePerformer": "Performer",
+   "@songMetaRolePerformer": {
+     "description": "Performer credit role"
+   },
 
   "favorite": "Favorite",
   "@favorite": {
