@@ -286,7 +286,9 @@ class _FolderEntryArtwork extends StatelessWidget {
                 child: IconButton(
                   icon: Icon(
                     Icons.play_arrow_rounded,
-                    color: theme.colorScheme.onPrimary,
+                    // 底是 scrim(黑)半透明蒙版，前景固定浅色而非 onPrimary，
+                    // 避免深色主题亮 seed 下深字黑底发灰。
+                    color: Colors.white,
                   ),
                   onPressed: onPlayPressed,
                   style: IconButton.styleFrom(

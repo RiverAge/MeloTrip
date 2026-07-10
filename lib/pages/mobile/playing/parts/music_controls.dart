@@ -11,7 +11,10 @@ class _MusicControls extends StatelessWidget {
       content: Text(
         text,
         textAlign: .center,
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        // 背景恒为 scrim（纯黑半透明，不随明暗/主题色变化），故文字固定用
+        // 浅色，而非跟随主题色的 onPrimary——否则深色主题下亮 seed 会让
+        // onPrimary 变深，深字黑底对比塌掉、发灰难读。
+        style: TextStyle(color: Colors.white.withValues(alpha: 222 / 255)),
       ),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(bottom: bottom, left: padding, right: padding),

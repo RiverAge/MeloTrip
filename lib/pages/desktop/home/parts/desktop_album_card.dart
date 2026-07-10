@@ -184,12 +184,11 @@ class _DesktopAlbumCardState extends ConsumerState<DesktopAlbumCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final overlayBackground = theme.colorScheme.scrim.withValues(alpha: .48);
-    final overlayForeground = theme.colorScheme.onPrimary.withValues(
-      alpha: .94,
-    );
-    final overlayForegroundMuted = theme.colorScheme.onPrimary.withValues(
-      alpha: .82,
-    );
+    // 浮层叠在封面图上，底色主力是 scrim（黑）半透明。前景固定用浅色而非
+    // 跟随主题色的 onPrimary——深色主题下亮 seed 会让 onPrimary 变深，
+    // 深字盖在暗封面/scrim 上对比塌掉、发灰难读。固定白系对暗底永远高对比。
+    final overlayForeground = Colors.white.withValues(alpha: .94);
+    final overlayForegroundMuted = Colors.white.withValues(alpha: .82);
     final mainButtonBackground = theme.colorScheme.surface.withValues(
       alpha: .96,
     );
