@@ -39,10 +39,6 @@ class _SongMeta extends StatelessWidget {
       );
     }
 
-    for (final row in _creditsRows(l10n, song.contributors)) {
-      addMetaRow(row);
-    }
-
     addMetaRow(
       _MetaItem(
         icon: Icons.album_outlined,
@@ -58,6 +54,17 @@ class _SongMeta extends StatelessWidget {
           icon: Icons.gesture_rounded,
           label: l10n.songMetaGenre,
           value: song.genre!,
+        ),
+      );
+    }
+
+    final creditsValue = _creditsValue(l10n, song.contributors);
+    if (creditsValue != null) {
+      addMetaRow(
+        _MetaItem(
+          icon: Icons.person_pin_rounded,
+          label: l10n.songMetaCredits,
+          value: creditsValue,
         ),
       );
     }
@@ -144,7 +151,7 @@ class _MetaItem extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  maxLines: 2,
+                  maxLines: 8,
                   overflow: .ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurface,
@@ -189,50 +196,61 @@ class _MetaSeparator extends StatelessWidget {
   }
 }
 
-/// Build one `_MetaItem` row per contributor role, with composers shown first.
+/// Aggregate contributors into one multi-line string keyed by person.
 ///
-/// Each row's value joins all participants of that role with ' / '. Performer
-/// rows embed the sub-role (e.g. "Guitar: John") when present. Roles without a
-/// known label fall back to a title-cased role string.
-List<Widget> _creditsRows(
+/// Mirrors the credit source's own design (see AppleMusicDecrypt
+/// `src/credits.py`): credits are authored per-person, so we pivot the flat
+/// `role -> [artist]` list Navidrome returns back into `person -> [roles]`.
+/// Each person gets one line: `name — role1 · role2 · ...`, joined across
+/// people by newlines. The performer's English `subRole` is intentionally
+/// ignored — it duplicates the role tags and only carries English labels.
+///
+/// Roles are de-duplicated per person and ordered by [_roleRank] (composer
+/// first, then the canonical [_roleLabel] switch order; unknown roles sink to
+/// the end). People keep the order of their first appearance in
+/// `contributors`.
+String? _creditsValue(
   AppLocalizations l10n,
   List<ContributorEntity>? contributors,
 ) {
-  final byRole = <String, List<ContributorEntity>>{};
+  final byPerson = <String, List<String>>{};
   for (final c in contributors ?? const <ContributorEntity>[]) {
-    final role = c.role?.trim();
-    if (role == null || role.isEmpty) continue;
     final name = c.name?.trim();
     if (name == null || name.isEmpty) continue;
-    (byRole[role] ??= <ContributorEntity>[]).add(c);
+    final role = c.role?.trim();
+    if (role == null || role.isEmpty) continue;
+    final roles = byPerson.putIfAbsent(name, () => <String>[]);
+    if (!roles.contains(role)) roles.add(role);
   }
-  if (byRole.isEmpty) return const <Widget>[];
+  if (byPerson.isEmpty) return null;
 
-  final roles = byRole.keys.toList()
-    ..sort((a, b) {
-      // Composer first, then alphabetical for stable ordering.
-      if (a == 'composer' && b != 'composer') return -1;
-      if (b == 'composer' && a != 'composer') return 1;
-      return a.compareTo(b);
-    });
+  return byPerson.entries.map((entry) {
+    final roles = List<String>.of(entry.value)
+      ..sort((a, b) => _roleRank(a).compareTo(_roleRank(b)));
+    final rolesStr = roles.map((r) => _roleLabel(l10n, r)).join(' · ');
+    return '${entry.key} — $rolesStr';
+  }).join('\n');
+}
 
-  return roles.map((role) {
-    final participants = byRole[role]!;
-    final value = participants
-        .map((c) {
-          final name = c.name!.trim();
-          final subRole = c.subRole?.trim();
-          return subRole == null || subRole.isEmpty
-              ? name
-              : '$subRole: $name';
-        })
-        .join(' / ');
-    return _MetaItem(
-      icon: Icons.person_pin_rounded,
-      label: _roleLabel(l10n, role),
-      value: value,
-    );
-  }).toList();
+/// Display priority for a contributor role: composer/lyricist first, then the
+/// rest by their canonical [_roleLabel] switch order. Unknown roles sink to
+/// the end while keeping stable relative order (same rank → 0).
+int _roleRank(String role) {
+  const order = [
+    'composer',
+    'lyricist',
+    'conductor',
+    'arranger',
+    'producer',
+    'director',
+    'engineer',
+    'mixer',
+    'remixer',
+    'djmixer',
+    'performer',
+  ];
+  final i = order.indexOf(role);
+  return i < 0 ? order.length : i;
 }
 
 String _roleLabel(AppLocalizations l10n, String role) {

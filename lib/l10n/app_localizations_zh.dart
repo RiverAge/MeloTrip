@@ -299,7 +299,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get songMetaRoleDjMixer => 'DJ混音';
 
   @override
-  String get songMetaRolePerformer => '演奏';
+  String get songMetaRolePerformer => '演唱';
 
   @override
   String get favorite => '收藏';
@@ -1139,7 +1139,7 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get songMetaRoleDjMixer => 'DJ混音';
 
   @override
-  String get songMetaRolePerformer => '演奏';
+  String get songMetaRolePerformer => '演唱';
 
   @override
   String get favorite => '收藏';
