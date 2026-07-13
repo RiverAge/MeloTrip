@@ -254,12 +254,14 @@ class UpdateFlowController extends _$UpdateFlowController {
       packagePath,
       updaterStrings: updaterStrings,
     );
-    // 不需要宿主退出的安装（如移动端调系统安装器）此刻已交由系统接管，
-    // 可安全删除下载包。需要宿主退出的（桌面替换式更新）包文件留给
-    // 外部 updater 进程，由 installPendingPackage 或下次 checkForUpdate 清理。
-    if (!_service.requiresHostExitForInstall) {
-      await _service.deleteDownloadedPackage(update);
-    }
+    // 注意：此处不删除下载包。
+    // - 桌面端（requiresHostExitForInstall）包文件留给外部 updater 进程，
+    //   由 installPendingPackage 在替换式更新完成后清理。
+    // - 移动端（Android）installApk 仅发出系统安装 Intent 后即返回，
+    //   用户尚未确认安装、系统 PackageInstaller 尚未读取 APK。
+    //   此刻删除会导致 PackageInstaller 报 ENOENT。下载包文件名固定
+    //   （app-release.apk / melotrip-*.zip），下次下载同名覆盖，不会累积，
+    //   故移动端无需主动清理。
   }
 
   void _maybeMarkReadyToInstall() {
