@@ -38,6 +38,9 @@ class ArtistDetailPage extends StatelessWidget {
                 snap: false,
                 stretch: true,
                 expandedHeight: width / 2,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                elevation: 0,
+                scrolledUnderElevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   stretchModes: [
                     StretchMode.zoomBackground,
@@ -46,10 +49,50 @@ class ArtistDetailPage extends StatelessWidget {
                   ],
                   collapseMode: .parallax,
                   title: Text(artist.name ?? ''),
-                  background: ArtworkImage(
-                    id: artist.coverArt,
-                    size: 5000,
-                    fit: .cover,
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // 背景封面图
+                      ArtworkImage(
+                        id: artist.coverArt,
+                        size: 5000,
+                        fit: .cover,
+                      ),
+                      // 渐变遮罩，确保标题可读
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.4),
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.5),
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
+                          ),
+                        ),
+                      ),
+                      // 底部渐变过渡到页面背景
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Theme.of(context).colorScheme.surface.withValues(alpha: 1.0),
+                                Theme.of(context).colorScheme.surface.withValues(alpha: 0.0),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

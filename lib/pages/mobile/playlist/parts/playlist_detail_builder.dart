@@ -10,30 +10,17 @@ class _PlaylistDetailBuilder extends StatelessWidget {
     if (playlistId == null) return;
     ref
         .read(playlistDetailProvider(playlistId).notifier)
-        .modify(
-          songIndexToRemove: songIndexToRemove,
-        );
+        .modify(songIndexToRemove: songIndexToRemove);
   }
 
   @override
   Widget build(BuildContext context) {
-    // 本 builder 在 [CustomScrollView] 的 slivers 列表里直接作为一员，故
-    // 每条返回路径都必须是 Sliver（否则 RenderViewport 会因收到 RenderBox
-    // 子节点抛 "expected a child of type RenderSliver"）。数据路径直接返回
-    // [_buildList] 里的 [SliverList]（不要包 SliverToBoxAdapter——SliverList
-    // 本身就是 RenderSliver）；仅 loading / error 这类 Box 状态才包成
-    // SliverToBoxAdapter 以满足 viewport 类型约束。
     return AsyncValueBuilder(
       provider: appPlayerHandlerProvider,
       loading: (_, _) => const SliverToBoxAdapter(child: SizedBox.shrink()),
-      // player 未就绪（data == null）时 AsyncValueBuilder 默认返回 NoData
-      // （RenderBox）。本 builder 在 slivers 列表里，故同样包成 Sliver。
       empty: (_, _) => const SliverToBoxAdapter(child: NoData()),
       builder: (context, player, _) {
         return PlayQueueBuilder(
-          // playQueueStream 首帧（waiting）时回到这里。本 builder 在
-          // slivers 列表里，故占位也必须是 Sliver：包成空的
-          // SliverToBoxAdapter，避免把 RenderBox 塞进 viewport。
           loadingBuilder: (ctx, _) =>
               const SliverToBoxAdapter(child: SizedBox.shrink()),
           builder: (context, playQueue, ref) {
@@ -70,76 +57,171 @@ class _PlaylistDetailBuilder extends StatelessWidget {
     required String? currentSongId,
     required bool isPlaying,
   }) {
-    return SliverList.separated(
-      separatorBuilder: (context, _) => const Divider(),
-      itemCount: playlist.entry?.length,
-      itemBuilder: (_, idx) {
-        final song = playlist.entry?[idx];
-        final isCurrentPlaying = currentSongId == song?.id && isPlaying;
-        return ListTile(
-          onTap: () {
-            if (song == null) return;
-            player.playOrToggleFromSongTap(song);
-          },
-          horizontalTitleGap: 2,
-          selected: isCurrentPlaying,
-          leading: Row(
-            mainAxisSize: .min,
-            children: [
-              Text(
-                (idx + 1).toString(),
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontStyle: .italic,
-                  fontWeight: .bold,
-                ),
-              ),
-              Container(
-                width: 40,
-                height: 40,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                clipBehavior: .antiAlias,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-                child: ArtworkImage(id: song?.id),
-              ),
-            ],
-          ),
-          title: Row(
-            children: [
-              isCurrentPlaying
-                  ? SizedBox(
-                      width: 30,
-                      child: Image.asset(
-                        'images/playing.gif',
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              Expanded(child: Text(song?.title ?? '')),
-            ],
-          ),
-          subtitle: Text(
-            '${song?.artist} ${durationFormatter(song?.duration)}',
-          ),
-          trailing: Row(
-            mainAxisSize: .min,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.delete_outline_outlined),
-                onPressed: () => _onDeleteSong(idx, ref),
-              ),
-              IconButton(
-                icon: const Icon(Icons.more_horiz_rounded),
-                onPressed: () => showSongControlSheet(context, song?.id),
-              ),
-            ],
-          ),
-        );
-      },
+    final songs = playlist.entry;
+    if (songs == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverList.separated(
+        separatorBuilder: (context, _) => const SizedBox(height: 4),
+        itemCount: songs.length,
+        itemBuilder: (_, idx) {
+          final song = songs[idx];
+          final isCurrentPlaying = currentSongId == song.id && isPlaying;
+
+          return _SongTile(
+            song: song,
+            index: idx,
+            isCurrentPlaying: isCurrentPlaying,
+            onTap: () => player.playOrToggleFromSongTap(song),
+            onDelete: () => _onDeleteSong(idx, ref),
+            onMore: () => showSongControlSheet(context, song.id),
+          );
+        },
+      ),
     );
   }
 }
 
+/// 歌曲列表项 - 卡片式设计
+class _SongTile extends StatelessWidget {
+  const _SongTile({
+    required this.song,
+    required this.index,
+    required this.isCurrentPlaying,
+    required this.onTap,
+    required this.onDelete,
+    required this.onMore,
+  });
 
+  final dynamic song;
+  final int index;
+  final bool isCurrentPlaying;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+  final VoidCallback onMore;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Material(
+      color: isCurrentPlaying
+          ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+          : colorScheme.surface,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            children: [
+              // 序号或播放指示器（斜体）
+              SizedBox(
+                width: 32,
+                child: isCurrentPlaying
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: Image.asset(
+                          'images/playing.gif',
+                          color: colorScheme.primary,
+                        ),
+                      )
+                    : Text(
+                        '${index + 1}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FontStyle.italic,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+              ),
+              const SizedBox(width: 10),
+              // 歌曲封面
+              Container(
+                width: 48,
+                height: 48,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: colorScheme.surfaceContainerHighest,
+                ),
+                child: ArtworkImage(
+                  id: song.id,
+                  size: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 12),
+              // 歌曲信息
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      song.title ?? l10n.unknownError,
+                      style: TextStyle(
+                        fontWeight: isCurrentPlaying
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        fontSize: 14,
+                        color: isCurrentPlaying
+                            ? colorScheme.primary
+                            : colorScheme.onSurface,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${song.artist ?? l10n.unknownError} · ${durationFormatter(song.duration)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              // 操作按钮
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete_outline_outlined,
+                      size: 18,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    onPressed: onDelete,
+                    splashRadius: 20,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.more_vert_rounded,
+                      size: 18,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    onPressed: onMore,
+                    splashRadius: 20,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
