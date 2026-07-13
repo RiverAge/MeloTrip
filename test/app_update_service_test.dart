@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/update/app_update_service.dart';
+import 'package:melo_trip/update/github_release_parser.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -159,6 +160,186 @@ void main() {
     expect(result.currentVersionCode, 2013);
     expect(result.remote?.versionCode, 2014);
     expect(result.hasUpdate, isTrue);
+  });
+
+  // Android split-per-abi：本机是 arm64-v8a split（versionCode 已被 Flutter 加过
+  // 偏移，如 4027），manifest 的 abis 子映射记录每个 split 自己的 versionCode。
+  // 客户端应选 arm64 split 小包、用 split 的 versionCode 比对，不再因偏移错位。
+  test('checkForUpdate selects arm64 split via abis and compares its versionCode', () async {
+    debugDefaultTargetPlatformOverride = .android;
+    addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+    });
+    PackageInfo.setMockInitialValues(
+      appName: 'MeloTrip',
+      packageName: 'com.riverage.melotrip',
+      version: '1.0.27',
+      buildNumber: '4027', // arm64 split 的真实 versionCode（含偏移）
+      buildSignature: '',
+    );
+
+    const manifestUrl = 'https://example.com/update.json';
+    final adapter = _RouteJsonAdapter(<String, Map<String, dynamic>>{
+      manifestUrl: <String, dynamic>{
+        'versionName': '1.0.28',
+        'versionCode': 2028, // universal 的，不应被用来比对
+        'platforms': <String, dynamic>{
+          'android': <String, dynamic>{
+            'packageType': 'apk',
+            'assetName': 'app-release.apk',
+            'downloadUrl': 'https://example.com/app-release.apk',
+            'sha256': 'universal-sha',
+            'fileSize': 85993881,
+            'versionCode': 2028,
+            'abis': <String, dynamic>{
+              'arm64-v8a': <String, dynamic>{
+                'assetName': 'app-arm64-v8a-release.apk',
+                'downloadUrl': 'https://example.com/app-arm64-v8a-release.apk',
+                'sha256': 'arm64-sha',
+                'fileSize': 25395213,
+                'versionCode': 4028,
+              },
+              'armeabi-v7a': <String, dynamic>{
+                'assetName': 'app-armeabi-v7a-release.apk',
+                'downloadUrl': 'https://example.com/app-armeabi-v7a-release.apk',
+                'sha256': 'armv7-sha',
+                'fileSize': 21993881,
+                'versionCode': 3028,
+              },
+            },
+          },
+        },
+      },
+    });
+    final dio = Dio()..httpClientAdapter = adapter;
+    final service = AppUpdateService(
+      manifestUrl: manifestUrl,
+      dio: dio,
+      installerGateway: const _FakeGateway(abi: 'arm64-v8a'),
+    );
+
+    final result = await service.checkForUpdate();
+
+    expect(result.currentVersionCode, 4027);
+    // 选了 arm64 split 的 versionCode，不是 universal 的 2028。
+    expect(result.remote?.versionCode, 4028);
+    expect(result.hasUpdate, isTrue);
+    expect(
+      result.remote?.downloadUrl,
+      'https://example.com/app-arm64-v8a-release.apk',
+    );
+    expect(result.remote?.sha256, 'arm64-sha');
+    expect(result.remote?.fileSize, 25395213);
+  });
+
+  // 本机 ABI 在 manifest 的 abis 里找不到（如 x86 模拟器，但只发了 arm split）。
+  // 应退回 platform 级 universal 条目。
+  test('checkForUpdate falls back to universal when abi not in abis', () async {
+    debugDefaultTargetPlatformOverride = .android;
+    addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+    });
+    PackageInfo.setMockInitialValues(
+      appName: 'MeloTrip',
+      packageName: 'com.riverage.melotrip',
+      version: '1.0.27',
+      buildNumber: '6027', // x86_64 split 的 versionCode
+      buildSignature: '',
+    );
+
+    const manifestUrl = 'https://example.com/update.json';
+    final adapter = _RouteJsonAdapter(<String, Map<String, dynamic>>{
+      manifestUrl: <String, dynamic>{
+        'versionName': '1.0.28',
+        'versionCode': 2028,
+        'platforms': <String, dynamic>{
+          'android': <String, dynamic>{
+            'packageType': 'apk',
+            'assetName': 'app-release.apk',
+            'downloadUrl': 'https://example.com/app-release.apk',
+            'sha256': 'universal-sha',
+            'fileSize': 85993881,
+            'versionCode': 2028,
+            'abis': <String, dynamic>{
+              'arm64-v8a': <String, dynamic>{
+                'assetName': 'app-arm64-v8a-release.apk',
+                'downloadUrl': 'https://example.com/app-arm64-v8a-release.apk',
+                'sha256': 'arm64-sha',
+                'fileSize': 25395213,
+                'versionCode': 4028,
+              },
+            },
+          },
+        },
+      },
+    });
+    final dio = Dio()..httpClientAdapter = adapter;
+    final service = AppUpdateService(
+      manifestUrl: manifestUrl,
+      dio: dio,
+      // 本机是 x86_64，manifest 只发了 arm64 split → 退 universal。
+      installerGateway: const _FakeGateway(abi: 'x86_64'),
+    );
+
+    final result = await service.checkForUpdate();
+
+    expect(result.remote?.downloadUrl, 'https://example.com/app-release.apk');
+    expect(result.remote?.sha256, 'universal-sha');
+    expect(result.remote?.fileSize, 85993881);
+  });
+
+  // split-per-abi 在 GitHub API 分支（metadata 文本块）也能正确选 arm64 包。
+  test('GitHub release parser selects arm64 split asset', () async {
+    const apiUrl = 'https://example.com/latest';
+    final adapter = _RouteJsonAdapter(<String, Map<String, dynamic>>{
+      apiUrl: <String, dynamic>{
+        'tag_name': 'v1.0.28',
+        'body': '''
+<!-- MELOTRIP_UPDATE_METADATA
+versionName=1.0.28
+versionCode=2028
+asset.android.apk=app-release.apk
+versionCode.android.apk=2028
+sha256.android.apk=universal-sha
+size.android.apk=85993881
+asset.android.apk.arm64-v8a=app-arm64-v8a-release.apk
+versionCode.android.apk.arm64-v8a=4028
+sha256.android.apk.arm64-v8a=arm64-sha
+size.android.apk.arm64-v8a=25395213
+MELOTRIP_UPDATE_METADATA -->
+''',
+        'assets': <Map<String, dynamic>>[
+          <String, dynamic>{
+            'name': 'app-arm64-v8a-release.apk',
+            'browser_download_url':
+                'https://example.com/app-arm64-v8a-release.apk',
+            'size': 25395213,
+          },
+          <String, dynamic>{
+            'name': 'app-release.apk',
+            'browser_download_url': 'https://example.com/app-release.apk',
+            'size': 85993881,
+          },
+        ],
+      },
+    });
+    final dio = Dio()..httpClientAdapter = adapter;
+    final response = await dio.get<dynamic>(apiUrl);
+    final json = response.data is String
+        ? jsonDecode(response.data as String) as Map<String, dynamic>
+        : response.data as Map<String, dynamic>;
+
+    final parser = GitHubReleaseParser();
+    final parsed = parser.parseRelease(
+      releaseJson: json,
+      platform: 'android',
+      packageType: 'apk.arm64-v8a',
+    );
+
+    expect(parsed.downloadUrl, 'https://example.com/app-arm64-v8a-release.apk');
+    expect(parsed.sha256, 'arm64-sha');
+    expect(parsed.fileSize, 25395213);
+    expect(parsed.versionCode, 4028);
   });
 
   test('checkForUpdate falls back to GitHub API when manifest fails', () async {
@@ -419,15 +600,20 @@ class _FakeGateway extends UpdateInstallerGateway {
     this.supported = false,
     this.permission = false,
     this.requiresHostExitForInstall = false,
+    this.abi,
   });
 
   final bool supported;
   final bool permission;
+  final String? abi;
   @override
   final bool requiresHostExitForInstall;
 
   @override
   bool get isSupported => supported;
+
+  @override
+  Future<String?> get deviceAbi async => abi;
 
   @override
   Future<bool> canRequestInstallPermission() async => permission;
@@ -488,6 +674,9 @@ class _RecordingGateway extends UpdateInstallerGateway {
 
   @override
   bool get requiresHostExitForInstall => false;
+
+  @override
+  Future<String?> get deviceAbi async => null;
 
   @override
   Future<bool> canRequestInstallPermission() async => true;

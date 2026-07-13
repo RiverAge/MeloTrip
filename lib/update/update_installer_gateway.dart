@@ -25,6 +25,11 @@ abstract class UpdateInstallerGateway {
 
   bool get requiresHostExitForInstall;
 
+  /// 当前设备首选 ABI（仅 Android 有意义，如 "arm64-v8a" / "armeabi-v7a" /
+  /// "x86_64"）。用于从 split-per-abi 产物里选对应包，避免下载含全套 .so 的
+  /// universal 大包。桌面 / 未知平台返回 null。
+  Future<String?> get deviceAbi;
+
   Future<bool> canRequestInstallPermission();
 
   Future<void> openInstallPermissionSettings();
@@ -43,6 +48,9 @@ class _AndroidUpdateInstallerGateway extends UpdateInstallerGateway {
 
   @override
   bool get requiresHostExitForInstall => false;
+
+  @override
+  Future<String?> get deviceAbi => UpdateInstaller.getDeviceAbi();
 
   @override
   Future<bool> canRequestInstallPermission() async {
@@ -77,6 +85,9 @@ class _WindowsBundleUpdateInstallerGateway extends UpdateInstallerGateway {
   bool get requiresHostExitForInstall => true;
 
   @override
+  Future<String?> get deviceAbi async => null;
+
+  @override
   Future<bool> canRequestInstallPermission() async => true;
 
   @override
@@ -107,6 +118,9 @@ class _NoopUpdateInstallerGateway extends UpdateInstallerGateway {
 
   @override
   bool get requiresHostExitForInstall => false;
+
+  @override
+  Future<String?> get deviceAbi async => null;
 
   @override
   Future<bool> canRequestInstallPermission() async => false;

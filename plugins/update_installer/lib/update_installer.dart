@@ -65,6 +65,18 @@ class UpdateInstaller {
     'com.meme.melotrip/update',
   );
 
+  static Future<String?> getDeviceAbi() async {
+    if (!Platform.isAndroid) {
+      return null;
+    }
+    final result = await _channel.invokeMethod<String>('getDeviceAbi');
+    final abi = result?.trim();
+    if (abi == null || abi.isEmpty) {
+      return null;
+    }
+    return abi;
+  }
+
   static Future<bool> canRequestPackageInstalls() async {
     final result =
         await _channel.invokeMethod<bool>('canRequestPackageInstalls');

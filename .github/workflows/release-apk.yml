@@ -56,12 +56,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # 只构建 universal 包，不构建 split-per-abi。
-          # 原因：Flutter 的 --split-per-abi 会给每个 ABI 不同的 versionCode
-          #（按 ABI 加偏移，如 arm64-v8a +2000），而 update.json 只记录一个
-          # versionCode。两者错位会导致 split 包用户的 versionCode 与 update.json
-          # 对不上，错误地显示"已是最新"收不到更新。统一只用 universal 包，
-          # versionCode 单一，更新判断对所有用户可靠。
+          # split-per-abi：产出 arm64-v8a / armeabi-v7a / x86_64 三个小包，
+          # 文件名 app-<abi>-release.apk。每个包体积小（约 25M），大陆走 proxy
+          # 下载快；客户端按本机 ABI 选对应包。
+          # 再单独构一次 universal（app-release.apk）作兜底，给查不到 ABI 的
+          # 设备 / 模拟器。versionCode 由各包 aapt 实读，写到 metadata 对应行，
+          # 客户端按"当前装包的 versionCode"比对，彻底解决 split 包 versionCode
+          # 错位（旧 bug：update.json 只记一个 versionCode，与 split 包的偏移
+          # versionCode 对不上，导致"已是最新"收不到更新）。
+          flutter build apk --release --split-per-abi
           flutter build apk --release
 
       - name: Generate Android metadata fragment
@@ -69,7 +72,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          apk_path="build/app/outputs/flutter-apk/app-release.apk"
           app_version="$(awk '/^version:/{print $2; exit}' pubspec.yaml | tr -d '\r')"
           version_core="${app_version%%+*}"
           build_number="0"
@@ -77,22 +79,48 @@ jobs:
             build_number="${app_version#*+}"
           fi
           aapt_path="$(find "${ANDROID_HOME}/build-tools" -name aapt -type f | sort -V | tail -n 1)"
-          apk_version_code="$("${aapt_path}" dump badging "$apk_path" | sed -n "s/.*versionCode='\([^']*\)'.*/\1/p")"
-          if [[ -z "$apk_version_code" ]]; then
-            apk_version_code="${build_number}"
-          fi
 
-          sha256="$(sha256sum "$apk_path" | awk '{print $1}')"
-          size="$(stat -c%s "$apk_path")"
-
-          cat > android-metadata.txt <<EOF
-          versionName=${version_core}
-          versionCode=${apk_version_code}
-          asset.android.apk=app-release.apk
-          versionCode.android.apk=${apk_version_code}
+          emit_apk_meta() {
+            local apk_path="$1"
+            local abi="$2"
+            local suffix="$3"   # 用于 metadata key，如 ".arm64-v8a" 或 ""(universal)
+            if [[ ! -f "$apk_path" ]]; then
+              echo "WARN: $apk_path not found, skipping" >&2
+              return
+            fi
+            local version_code="$("${aapt_path}" dump badging "$apk_path" | sed -n "s/.*versionCode='\([^']*\)'.*/\1/p" | head -n1)"
+            if [[ -z "$version_code" ]]; then
+              version_code="${build_number}"
+            fi
+            local sha256="$(sha256sum "$apk_path" | awk '{print $1}')"
+            local size="$(stat -c%s "$apk_path")"
+            local asset_name="$(basename "$apk_path")"
+            # 顶层 versionCode/assetName/size/sha256 用 universal（兜底）；
+            # 每个 ABI 再单独记一组带 .<abi> 后缀的行。
+            if [[ -z "$suffix" ]]; then
+              cat >> android-metadata.txt <<EOF
+          versionCode=${version_code}
+          asset.android.apk=${asset_name}
           sha256.android.apk=${sha256}
           size.android.apk=${size}
           EOF
+            else
+              cat >> android-metadata.txt <<EOF
+          asset.android.apk${suffix}=${asset_name}
+          versionCode.android.apk${suffix}=${version_code}
+          sha256.android.apk${suffix}=${sha256}
+          size.android.apk${suffix}=${size}
+          EOF
+            fi
+          }
+
+          cat > android-metadata.txt <<EOF
+          versionName=${version_core}
+          EOF
+          emit_apk_meta "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk" "arm64-v8a" ".arm64-v8a"
+          emit_apk_meta "build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk" "armeabi-v7a" ".armeabi-v7a"
+          emit_apk_meta "build/app/outputs/flutter-apk/app-x86_64-release.apk" "x86_64" ".x86_64"
+          emit_apk_meta "build/app/outputs/flutter-apk/app-release.apk" "" ""
 
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v4
@@ -341,37 +369,67 @@ jobs:
               "https://gh.idayer.com/",
           )
 
+          # split-per-abi 产出的 ABI 后缀（key 形如 apk.arm64-v8a）。
+          # 含点且第二段命中此处者，归到 platforms[platform]["abis"][abi]；
+          # 否则（纯 apk / zip / tar.gz）归 platform 顶层（universal 兜底）。
+          KNOWN_ABIS = {"arm64-v8a", "armeabi-v7a", "x86_64"}
+
+          def split_platform_pkg(platform_key):
+              """返回 (platform, package_type, abi_or_None)。"""
+              platform, rest = platform_key.split(".", 1)
+              if "." in rest:
+                  pkg_type, abi = rest.split(".", 1)
+                  if abi in KNOWN_ABIS:
+                      return platform, pkg_type, abi
+              return platform, rest, None
+
+          def build_mirrors(github_url):
+              mirrors = [f"{prefix}{github_url}" for prefix in MIRROR_PREFIXES]
+              mirrors.append(github_url)
+              return mirrors
+
+          def get_platform(platform):
+              platforms.setdefault(platform, {})
+              return platforms[platform]
+
+          def get_abi(platform, abi):
+              p = get_platform(platform)
+              abis = p.setdefault("abis", {})
+              return abis.setdefault(abi, {})
+
+          # 第一遍：asset.* 行确定结构骨架（packageType/assetName/downloadUrl/mirrors）
           for key, asset_name in metadata.items():
               if not key.startswith("asset."):
                   continue
-              platform_key = key[len("asset."):]
-              platform, package_type = platform_key.split(".", 1)
+              platform, package_type, abi = split_platform_pkg(
+                  key[len("asset."):]
+              )
               github_url = (
                   f"https://github.com/{repository}/releases/download/"
                   f"{tag_name}/{asset_name}"
               )
-              mirrors = [f"{prefix}{github_url}" for prefix in MIRROR_PREFIXES]
-              mirrors.append(github_url)
-              platforms[platform] = {
-                  "packageType": package_type,
-                  "assetName": asset_name,
-                  "downloadUrl": github_url,
-                  "mirrors": mirrors,
-              }
+              entry = get_abi(platform, abi) if abi else get_platform(platform)
+              entry["packageType"] = package_type
+              entry["assetName"] = asset_name
+              entry["downloadUrl"] = github_url
+              entry["mirrors"] = build_mirrors(github_url)
 
+          # 第二遍：sha256/size/versionCode 行，按同样规则落到对应 entry。
+          PREFIX_HANDLERS = (
+              ("sha256.", "sha256", str),
+              ("size.", "fileSize", int),
+              ("versionCode.", "versionCode", int),
+          )
           for key, value in metadata.items():
-              if key.startswith("sha256."):
-                  platform_key = key[len("sha256."):]
-                  platform, _ = platform_key.split(".", 1)
-                  platforms.setdefault(platform, {})["sha256"] = value
-              elif key.startswith("size."):
-                  platform_key = key[len("size."):]
-                  platform, _ = platform_key.split(".", 1)
-                  platforms.setdefault(platform, {})["fileSize"] = int(value)
-              elif key.startswith("versionCode."):
-                  platform_key = key[len("versionCode."):]
-                  platform, _ = platform_key.split(".", 1)
-                  platforms.setdefault(platform, {})["versionCode"] = int(value)
+              for prefix, field, caster in PREFIX_HANDLERS:
+                  if not key.startswith(prefix):
+                      continue
+                  platform, _pkg, abi = split_platform_pkg(
+                      key[len(prefix):]
+                  )
+                  entry = get_abi(platform, abi) if abi else get_platform(platform)
+                  entry[field] = caster(value)
+                  break
 
           manifest = {
               "schemaVersion": 1,

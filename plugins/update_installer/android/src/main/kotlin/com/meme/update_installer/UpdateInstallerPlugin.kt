@@ -23,6 +23,13 @@ class UpdateInstallerPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     when (call.method) {
+      "getDeviceAbi" -> {
+        // Build.SUPPORTED_ABIS[0] 是系统首选 ABI，与 split-per-abi 产出的
+        // arm64-v8a / armeabi-v7a / x86_64 包名一一对应。
+        val abis = Build.SUPPORTED_ABIS
+        result.success(if (abis.isNotEmpty()) abis[0] else "")
+      }
+
       "canRequestPackageInstalls" -> {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
           result.success(true)

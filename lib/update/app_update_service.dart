@@ -41,6 +41,7 @@ class AppUpdateService {
   bool get requiresHostExitForInstall =>
       _installerGateway.requiresHostExitForInstall;
 
+  /// 用于下载文件名扩展等场景的基础包类型（apk/zip/tar.gz），不含 ABI。
   String get expectedPackageType => _defaultPackageType();
 
   Future<bool> canRequestInstallPermission() {
@@ -121,12 +122,17 @@ class AppUpdateService {
   Future<AppUpdateCheckResult> checkForUpdate() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final currentVersionCode = int.tryParse(packageInfo.buildNumber) ?? 0;
+    // Android 上带 ABI 选 split 包（如 apk.arm64-v8a），避免下载 universal 大包；
+    // 拿不到 ABI 时退回基础类型，由 parser 选 universal 兜底条目。
+    final packageType = await _expectedPackageTypeForCheck();
     ParsedUpdateInfo parsedInfo;
     try {
-      parsedInfo = await _fetchManifestUpdateInfo();
+      parsedInfo = await _fetchManifestUpdateInfo(packageType: packageType);
     } catch (manifestError) {
       try {
-        parsedInfo = await _fetchGitHubReleaseUpdateInfo();
+        parsedInfo = await _fetchGitHubReleaseUpdateInfo(
+          packageType: packageType,
+        );
       } catch (apiError) {
         throw StateError(
           'Update check failed. '
@@ -160,7 +166,9 @@ class AppUpdateService {
     );
   }
 
-  Future<ParsedUpdateInfo> _fetchManifestUpdateInfo() async {
+  Future<ParsedUpdateInfo> _fetchManifestUpdateInfo({
+    required String packageType,
+  }) async {
     final payload = await _getJsonMap(
       manifestUrl,
       headers: const <String, String>{
@@ -171,11 +179,13 @@ class AppUpdateService {
     return _manifestParser.parseManifest(
       manifestJson: payload,
       platform: _currentPlatformName(),
-      packageType: expectedPackageType,
+      packageType: packageType,
     );
   }
 
-  Future<ParsedUpdateInfo> _fetchGitHubReleaseUpdateInfo() async {
+  Future<ParsedUpdateInfo> _fetchGitHubReleaseUpdateInfo({
+    required String packageType,
+  }) async {
     final payload = await _getJsonMap(
       checkUrl,
       headers: const <String, String>{
@@ -186,7 +196,7 @@ class AppUpdateService {
     return _releaseParser.parseRelease(
       releaseJson: payload,
       platform: _currentPlatformName(),
-      packageType: expectedPackageType,
+      packageType: packageType,
     );
   }
 
@@ -293,6 +303,21 @@ class AppUpdateService {
       return extension.substring(1);
     }
     return extension;
+  }
+
+  /// 用于检查更新时的包类型：Android 上拼成本机 ABI（如 `apk.arm64-v8a`），
+  /// 让 parser 从 split-per-abi 产物里选对应包；拿不到 ABI 或非 Android 时
+  /// 返回基础类型（`apk`/`zip`/...），由 parser 选 universal 兜底。
+  Future<String> _expectedPackageTypeForCheck() async {
+    final base = _defaultPackageType();
+    if (base != 'apk') {
+      return base;
+    }
+    final abi = await _installerGateway.deviceAbi;
+    if (abi == null || abi.isEmpty) {
+      return base;
+    }
+    return 'apk.$abi';
   }
 
   String _currentPlatformName() {

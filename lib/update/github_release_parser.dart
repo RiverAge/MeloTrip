@@ -104,6 +104,10 @@ class GitHubReleaseParser {
   }
 
   /// Returns the default asset name for a platform and package type.
+  ///
+  /// [packageType] 对 Android 可能是 `apk.<abi>`（如 `apk.arm64-v8a`），
+  /// 对应 split-per-abi 产物 `app-<abi>-release.apk`；纯 `apk` 对应 universal
+  /// `app-release.apk`。其余平台 [packageType] 不含点（zip/tar.gz）。
   String _defaultAssetName(String platform, String packageType) {
     switch (platform) {
       case 'windows':
@@ -113,7 +117,15 @@ class GitHubReleaseParser {
       case 'macos':
         return 'melotrip-macos.zip';
       case 'android':
-        return 'app-release.apk';
+        if (packageType == 'apk') {
+          return 'app-release.apk';
+        }
+        // apk.<abi> → app-<abi>-release.apk
+        if (packageType.startsWith('apk.')) {
+          final abi = packageType.substring('apk.'.length);
+          return 'app-$abi-release.apk';
+        }
+        return 'app-release.$packageType';
       default:
         return 'app-release.$packageType';
     }
