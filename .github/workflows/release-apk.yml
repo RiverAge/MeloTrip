@@ -331,18 +331,31 @@ jobs:
           version_code = int(metadata["versionCode"])
           platforms = {}
 
+          # 大陆加速镜像前缀。GitHub 直链放最后兜底。
+          # 这些公益 proxy 会随时下线/被拉黑，客户端逐个尝试 + 兜底，
+          # 不影响最终拿到正确包（SHA-256 校验兜底）。
+          MIRROR_PREFIXES = (
+              "https://gh-proxy.com/",
+              "https://ghproxy.net/",
+              "https://gh.idayer.com/",
+          )
+
           for key, asset_name in metadata.items():
               if not key.startswith("asset."):
                   continue
               platform_key = key[len("asset."):]
               platform, package_type = platform_key.split(".", 1)
+              github_url = (
+                  f"https://github.com/{repository}/releases/download/"
+                  f"{tag_name}/{asset_name}"
+              )
+              mirrors = [f"{prefix}{github_url}" for prefix in MIRROR_PREFIXES]
+              mirrors.append(github_url)
               platforms[platform] = {
                   "packageType": package_type,
                   "assetName": asset_name,
-                  "downloadUrl": (
-                      f"https://github.com/{repository}/releases/download/"
-                      f"{tag_name}/{asset_name}"
-                  ),
+                  "downloadUrl": github_url,
+                  "mirrors": mirrors,
               }
 
           for key, value in metadata.items():

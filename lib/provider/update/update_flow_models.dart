@@ -18,6 +18,7 @@ class UpdateFlowState {
     this.currentVersionName,
     this.currentVersionCode,
     this.checkError,
+    this.downloadMirrorHint,
   });
 
   final bool hasChecked;
@@ -36,6 +37,9 @@ class UpdateFlowState {
   final String? currentVersionName;
   final int? currentVersionCode;
   final String? checkError;
+  /// 当前下载镜像提示文案（如"正在尝试备用镜像 2/4"），切换镜像时更新，
+  /// 下载结束清空。null 表示不提示（单链或首次尝试）。
+  final String? downloadMirrorHint;
 
   UpdateFlowState copyWith({
     bool? hasChecked,
@@ -59,6 +63,8 @@ class UpdateFlowState {
     int? currentVersionCode,
     String? checkError,
     bool clearCheckError = false,
+    String? downloadMirrorHint,
+    bool clearDownloadMirrorHint = false,
   }) {
     return UpdateFlowState(
       hasChecked: hasChecked ?? this.hasChecked,
@@ -87,6 +93,9 @@ class UpdateFlowState {
       currentVersionName: currentVersionName ?? this.currentVersionName,
       currentVersionCode: currentVersionCode ?? this.currentVersionCode,
       checkError: clearCheckError ? null : checkError ?? this.checkError,
+      downloadMirrorHint: clearDownloadMirrorHint
+          ? null
+          : downloadMirrorHint ?? this.downloadMirrorHint,
     );
   }
 }

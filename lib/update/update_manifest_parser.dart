@@ -54,6 +54,7 @@ class UpdateManifestParser {
         (platformPayload['fileSize'] as num?)?.toInt() ??
         (platformPayload['size'] as num?)?.toInt() ??
         0;
+    final mirrors = _readMirrors(platformPayload, fallbackUrl: downloadUrl);
 
     return ParsedUpdateInfo(
       versionName: versionName,
@@ -62,7 +63,27 @@ class UpdateManifestParser {
       fileSize: fileSize,
       downloadUrl: downloadUrl,
       changelog: manifestJson['changelog'] as String? ?? '',
+      mirrors: mirrors,
     );
+  }
+
+  /// 读取镜像列表。优先取 `mirrors` 数组（过滤空串）；
+  /// 为空时退化为 `[downloadUrl]`，保证下游统一按列表处理。
+  List<String> _readMirrors(
+    Map<String, dynamic> platformPayload, {
+    required String fallbackUrl,
+  }) {
+    final raw = platformPayload['mirrors'];
+    if (raw is List<dynamic>) {
+      final list = raw
+          .whereType<String>()
+          .map((s) => s.trim())
+          .where((s) => s.isNotEmpty)
+          .toList(growable: false);
+      if (list.isNotEmpty) return list;
+    }
+    if (fallbackUrl.isNotEmpty) return <String>[fallbackUrl];
+    return const <String>[];
   }
 
   String _readDownloadUrl({

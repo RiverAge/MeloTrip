@@ -145,6 +145,7 @@ class AppUpdateService {
       fileSize: parsedInfo.fileSize,
       downloadUrl: parsedInfo.downloadUrl,
       changelog: parsedInfo.changelog,
+      mirrors: parsedInfo.mirrors,
     );
 
     if (remote.versionCode <= 0 || remote.downloadUrl.isEmpty) {
@@ -214,11 +215,13 @@ class AppUpdateService {
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
+    void Function(int mirrorIndex, int total)? onMirrorChanged,
   }) {
     return downloadAndVerifyPackage(
       update: update,
       onProgress: onProgress,
       onStageChanged: onStageChanged,
+      onMirrorChanged: onMirrorChanged,
     );
   }
 
@@ -226,6 +229,7 @@ class AppUpdateService {
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
+    void Function(int mirrorIndex, int total)? onMirrorChanged,
   }) {
     if (update.downloadUrl.isEmpty) {
       throw StateError('Download URL is empty.');
@@ -235,6 +239,7 @@ class AppUpdateService {
       update: update,
       onProgress: onProgress,
       onStageChanged: onStageChanged,
+      onMirrorChanged: onMirrorChanged,
     );
   }
 
@@ -242,11 +247,13 @@ class AppUpdateService {
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
+    void Function(int mirrorIndex, int total)? onMirrorChanged,
   }) async {
     final file = await downloadAndVerifyPackage(
       update: update,
       onProgress: onProgress,
       onStageChanged: onStageChanged,
+      onMirrorChanged: onMirrorChanged,
     );
     return file.path;
   }

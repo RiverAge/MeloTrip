@@ -14,6 +14,11 @@ _AppUpdateInfo _$AppUpdateInfoFromJson(Map<String, dynamic> json) =>
       fileSize: (json['fileSize'] as num).toInt(),
       downloadUrl: json['downloadUrl'] as String,
       changelog: json['changelog'] as String,
+      mirrors:
+          (json['mirrors'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
     );
 
 Map<String, dynamic> _$AppUpdateInfoToJson(_AppUpdateInfo instance) =>
@@ -24,4 +29,5 @@ Map<String, dynamic> _$AppUpdateInfoToJson(_AppUpdateInfo instance) =>
       'fileSize': instance.fileSize,
       'downloadUrl': instance.downloadUrl,
       'changelog': instance.changelog,
+      'mirrors': instance.mirrors,
     };

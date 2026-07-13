@@ -12,6 +12,9 @@ abstract class AppUpdateInfo with _$AppUpdateInfo {
     required int fileSize,
     required String downloadUrl,
     required String changelog,
+    /// 备用下载镜像列表。客户端按序逐个尝试，失败/校验不过自动切下一个。
+    /// 为空时退化成单链下载（用 downloadUrl）。GitHub 直链通常放最后兜底。
+    @Default(<String>[]) final List<String> mirrors,
   }) = _AppUpdateInfo;
 
   factory AppUpdateInfo.fromJson(Map<String, dynamic> json) =>

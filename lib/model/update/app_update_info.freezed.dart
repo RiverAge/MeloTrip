@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppUpdateInfo {
 
- String get versionName; int get versionCode; String get sha256; int get fileSize; String get downloadUrl; String get changelog;
+ String get versionName; int get versionCode; String get sha256; int get fileSize; String get downloadUrl; String get changelog;/// 备用下载镜像列表。客户端按序逐个尝试，失败/校验不过自动切下一个。
+/// 为空时退化成单链下载（用 downloadUrl）。GitHub 直链通常放最后兜底。
+ List<String> get mirrors;
 /// Create a copy of AppUpdateInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +30,16 @@ $AppUpdateInfoCopyWith<AppUpdateInfo> get copyWith => _$AppUpdateInfoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppUpdateInfo&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.changelog, changelog) || other.changelog == changelog));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppUpdateInfo&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.changelog, changelog) || other.changelog == changelog)&&const DeepCollectionEquality().equals(other.mirrors, mirrors));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,versionName,versionCode,sha256,fileSize,downloadUrl,changelog);
+int get hashCode => Object.hash(runtimeType,versionName,versionCode,sha256,fileSize,downloadUrl,changelog,const DeepCollectionEquality().hash(mirrors));
 
 @override
 String toString() {
-  return 'AppUpdateInfo(versionName: $versionName, versionCode: $versionCode, sha256: $sha256, fileSize: $fileSize, downloadUrl: $downloadUrl, changelog: $changelog)';
+  return 'AppUpdateInfo(versionName: $versionName, versionCode: $versionCode, sha256: $sha256, fileSize: $fileSize, downloadUrl: $downloadUrl, changelog: $changelog, mirrors: $mirrors)';
 }
 
 
@@ -48,7 +50,7 @@ abstract mixin class $AppUpdateInfoCopyWith<$Res>  {
   factory $AppUpdateInfoCopyWith(AppUpdateInfo value, $Res Function(AppUpdateInfo) _then) = _$AppUpdateInfoCopyWithImpl;
 @useResult
 $Res call({
- String versionName, int versionCode, String sha256, int fileSize, String downloadUrl, String changelog
+ String versionName, int versionCode, String sha256, int fileSize, String downloadUrl, String changelog, List<String> mirrors
 });
 
 
@@ -65,7 +67,7 @@ class _$AppUpdateInfoCopyWithImpl<$Res>
 
 /// Create a copy of AppUpdateInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? versionName = null,Object? versionCode = null,Object? sha256 = null,Object? fileSize = null,Object? downloadUrl = null,Object? changelog = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? versionName = null,Object? versionCode = null,Object? sha256 = null,Object? fileSize = null,Object? downloadUrl = null,Object? changelog = null,Object? mirrors = null,}) {
   return _then(_self.copyWith(
 versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
 as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
@@ -73,7 +75,8 @@ as int,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_t
 as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
 as int,downloadUrl: null == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
 as String,changelog: null == changelog ? _self.changelog : changelog // ignore: cast_nullable_to_non_nullable
-as String,
+as String,mirrors: null == mirrors ? _self.mirrors : mirrors // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String sha256,  int fileSize,  String downloadUrl,  String changelog)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String sha256,  int fileSize,  String downloadUrl,  String changelog,  List<String> mirrors)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppUpdateInfo() when $default != null:
-return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,_that.downloadUrl,_that.changelog);case _:
+return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,_that.downloadUrl,_that.changelog,_that.mirrors);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String sha256,  int fileSize,  String downloadUrl,  String changelog)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String sha256,  int fileSize,  String downloadUrl,  String changelog,  List<String> mirrors)  $default,) {final _that = this;
 switch (_that) {
 case _AppUpdateInfo():
-return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,_that.downloadUrl,_that.changelog);case _:
+return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,_that.downloadUrl,_that.changelog,_that.mirrors);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String sha256,  int fileSize,  String downloadUrl,  String changelog)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String sha256,  int fileSize,  String downloadUrl,  String changelog,  List<String> mirrors)?  $default,) {final _that = this;
 switch (_that) {
 case _AppUpdateInfo() when $default != null:
-return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,_that.downloadUrl,_that.changelog);case _:
+return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,_that.downloadUrl,_that.changelog,_that.mirrors);case _:
   return null;
 
 }
@@ -214,7 +217,7 @@ return $default(_that.versionName,_that.versionCode,_that.sha256,_that.fileSize,
 @JsonSerializable()
 
 class _AppUpdateInfo implements AppUpdateInfo {
-  const _AppUpdateInfo({required this.versionName, required this.versionCode, required this.sha256, required this.fileSize, required this.downloadUrl, required this.changelog});
+  const _AppUpdateInfo({required this.versionName, required this.versionCode, required this.sha256, required this.fileSize, required this.downloadUrl, required this.changelog, final  List<String> mirrors = const <String>[]}): _mirrors = mirrors;
   factory _AppUpdateInfo.fromJson(Map<String, dynamic> json) => _$AppUpdateInfoFromJson(json);
 
 @override final  String versionName;
@@ -223,6 +226,17 @@ class _AppUpdateInfo implements AppUpdateInfo {
 @override final  int fileSize;
 @override final  String downloadUrl;
 @override final  String changelog;
+/// 备用下载镜像列表。客户端按序逐个尝试，失败/校验不过自动切下一个。
+/// 为空时退化成单链下载（用 downloadUrl）。GitHub 直链通常放最后兜底。
+ final  List<String> _mirrors;
+/// 备用下载镜像列表。客户端按序逐个尝试，失败/校验不过自动切下一个。
+/// 为空时退化成单链下载（用 downloadUrl）。GitHub 直链通常放最后兜底。
+@override@JsonKey() List<String> get mirrors {
+  if (_mirrors is EqualUnmodifiableListView) return _mirrors;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_mirrors);
+}
+
 
 /// Create a copy of AppUpdateInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppUpdateInfo&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.changelog, changelog) || other.changelog == changelog));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppUpdateInfo&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.sha256, sha256) || other.sha256 == sha256)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.changelog, changelog) || other.changelog == changelog)&&const DeepCollectionEquality().equals(other._mirrors, _mirrors));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,versionName,versionCode,sha256,fileSize,downloadUrl,changelog);
+int get hashCode => Object.hash(runtimeType,versionName,versionCode,sha256,fileSize,downloadUrl,changelog,const DeepCollectionEquality().hash(_mirrors));
 
 @override
 String toString() {
-  return 'AppUpdateInfo(versionName: $versionName, versionCode: $versionCode, sha256: $sha256, fileSize: $fileSize, downloadUrl: $downloadUrl, changelog: $changelog)';
+  return 'AppUpdateInfo(versionName: $versionName, versionCode: $versionCode, sha256: $sha256, fileSize: $fileSize, downloadUrl: $downloadUrl, changelog: $changelog, mirrors: $mirrors)';
 }
 
 
@@ -257,7 +271,7 @@ abstract mixin class _$AppUpdateInfoCopyWith<$Res> implements $AppUpdateInfoCopy
   factory _$AppUpdateInfoCopyWith(_AppUpdateInfo value, $Res Function(_AppUpdateInfo) _then) = __$AppUpdateInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String versionName, int versionCode, String sha256, int fileSize, String downloadUrl, String changelog
+ String versionName, int versionCode, String sha256, int fileSize, String downloadUrl, String changelog, List<String> mirrors
 });
 
 
@@ -274,7 +288,7 @@ class __$AppUpdateInfoCopyWithImpl<$Res>
 
 /// Create a copy of AppUpdateInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? versionName = null,Object? versionCode = null,Object? sha256 = null,Object? fileSize = null,Object? downloadUrl = null,Object? changelog = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? versionName = null,Object? versionCode = null,Object? sha256 = null,Object? fileSize = null,Object? downloadUrl = null,Object? changelog = null,Object? mirrors = null,}) {
   return _then(_AppUpdateInfo(
 versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
 as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
@@ -282,7 +296,8 @@ as int,sha256: null == sha256 ? _self.sha256 : sha256 // ignore: cast_nullable_t
 as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
 as int,downloadUrl: null == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
 as String,changelog: null == changelog ? _self.changelog : changelog // ignore: cast_nullable_to_non_nullable
-as String,
+as String,mirrors: null == mirrors ? _self._mirrors : mirrors // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

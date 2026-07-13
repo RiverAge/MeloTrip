@@ -60,6 +60,7 @@ class _FakeUpdateService extends AppUpdateService {
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
+    void Function(int mirrorIndex, int total)? onMirrorChanged,
   }) async {
     if (downloadDelay > Duration.zero) {
       await Future<void>.delayed(downloadDelay);

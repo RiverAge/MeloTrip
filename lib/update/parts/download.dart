@@ -16,40 +16,73 @@ extension AppUpdateServiceDownloadInternal on AppUpdateService {
     required AppUpdateInfo update,
     void Function(int received, int total, double progress)? onProgress,
     void Function(UpdateDownloadStage stage)? onStageChanged,
+    void Function(int mirrorIndex, int total)? onMirrorChanged,
   }) async {
     final dir = await getTemporaryDirectory();
     final filePath = p.join(dir.path, _buildDownloadFileName(update));
     final file = File(filePath);
 
+    // 候选下载源：优先 mirrors，否则退化为 downloadUrl 单链。
+    final urls = update.mirrors.isNotEmpty
+        ? update.mirrors
+        : <String>[update.downloadUrl];
+
     onStageChanged?.call(UpdateDownloadStage.downloading);
-    await _downloadWithResume(
-      url: update.downloadUrl,
-      file: file,
-      expectedSize: update.fileSize,
-      onProgress: onProgress,
-    );
 
-    final length = await file.length();
-    if (length <= 0) {
-      throw StateError('Downloaded file is empty.');
-    }
-    if (update.fileSize > 0 && length != update.fileSize) {
-      throw StateError(
-        'File size mismatch. expected=${update.fileSize}, actual=$length',
-      );
-    }
-
-    onStageChanged?.call(UpdateDownloadStage.verifying);
-    final checksum = update.sha256.trim().toLowerCase();
-    if (checksum.isNotEmpty) {
-      final digest = await sha256.bind(file.openRead()).first;
-      final actual = digest.toString().toLowerCase();
-      if (actual != checksum) {
-        throw StateError('SHA256 mismatch. expected=$checksum, actual=$actual');
+    final errors = <String>[];
+    for (var i = 0; i < urls.length; i++) {
+      final url = urls[i];
+      onMirrorChanged?.call(i, urls.length);
+      try {
+        // 仅在切换到后续 mirror 时清掉前一个 mirror 的半成品。
+        // 首个 mirror 保留本地半成品，以便复用 Range 续传（同一 URL 的断点）；
+        // 后续 mirror 跨源，断点不通用且 proxy 多不支持 Range，从干净开始。
+        if (i > 0 && await file.exists()) {
+          await file.delete();
+        }
+        await _downloadWithResume(
+          url: url,
+          file: file,
+          expectedSize: update.fileSize,
+          onProgress: onProgress,
+        );
+        final verified = await _verifyDownloadedFile(file: file, update: update);
+        if (verified) {
+          onStageChanged?.call(UpdateDownloadStage.verifying);
+          return file;
+        }
+        // 校验失败：当作该 mirror 失败，删文件切下一个。
+        if (await file.exists()) {
+          await file.delete();
+        }
+        errors.add('$url: checksum mismatch');
+      } catch (e) {
+        // 下载异常（连接失败/超时/Range 不可续等）。
+        if (await file.exists()) {
+          await file.delete();
+        }
+        errors.add('$url: $e');
       }
     }
 
-    return file;
+    throw StateError('All download mirrors failed:\n${errors.join('\n')}');
+  }
+
+  /// 校验已下载文件：非空、大小匹配（有声明时）、SHA-256 匹配（有声明时）。
+  /// 任一不过返回 false（让外层切下一个 mirror）。
+  Future<bool> _verifyDownloadedFile({
+    required File file,
+    required AppUpdateInfo update,
+  }) async {
+    final length = await file.length();
+    if (length <= 0) return false;
+    if (update.fileSize > 0 && length != update.fileSize) return false;
+
+    final checksum = update.sha256.trim().toLowerCase();
+    if (checksum.isEmpty) return true;
+
+    final digest = await sha256.bind(file.openRead()).first;
+    return digest.toString().toLowerCase() == checksum;
   }
 
   /// 带 HTTP Range 断点续传的下载。

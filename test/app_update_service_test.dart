@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -350,6 +351,145 @@ MELOTRIP_UPDATE_METADATA -->
     // 全量覆盖后内容正确，没有 append 造成的重复。
     expect(await result.readAsBytes(), equals(full));
   });
+
+  test('downloadAndVerifyPackage switches mirror when first fails', () async {
+    _setUpdateTestPlatform();
+    _useMockPathProvider();
+    final full = List<int>.generate(100, (i) => i);
+    const failUrl = 'https://fail.example.com/pkg.zip';
+    const okUrl = 'https://ok.example.com/pkg.zip';
+    final adapter = _MultiMirrorAdapter(
+      bytes: full,
+      behaviors: {
+        failUrl: _MirrorBehavior.fail,
+        okUrl: _MirrorBehavior.normal,
+      },
+    );
+    final dio = Dio()..httpClientAdapter = adapter;
+
+    final service = AppUpdateService(
+      manifestUrl: 'https://example.com/update.json',
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/pkg.zip');
+    if (await file.exists()) await file.delete();
+    addTearDown(() async {
+      if (await file.exists()) await file.delete();
+    });
+
+    const update = AppUpdateInfo(
+      versionName: '1.0.2',
+      versionCode: 3,
+      sha256: '',
+      fileSize: 100,
+      downloadUrl: failUrl,
+      mirrors: <String>[failUrl, okUrl],
+      changelog: '',
+    );
+
+    final result = await service.downloadAndVerifyPackage(update: update);
+    // 第一个 mirror 失败，自动切到第二个，内容正确。
+    expect(await result.readAsBytes(), equals(full));
+    expect(adapter.behaviors.containsKey(failUrl), isTrue);
+  });
+
+  test('downloadAndVerifyPackage skips mirror with checksum mismatch', () async {
+    _setUpdateTestPlatform();
+    _useMockPathProvider();
+    final full = List<int>.generate(100, (i) => i);
+    // 计算 full 的真实 sha256，让 okUrl 通过校验，tamperUrl 失败。
+    final expectedSha = sha256.convert(full).toString();
+    const tamperUrl = 'https://tamper.example.com/pkg.zip';
+    const okUrl = 'https://ok.example.com/pkg.zip';
+    final adapter = _MultiMirrorAdapter(
+      bytes: full,
+      behaviors: {
+        tamperUrl: _MirrorBehavior.tamper,
+        okUrl: _MirrorBehavior.normal,
+      },
+    );
+    final dio = Dio()..httpClientAdapter = adapter;
+
+    final service = AppUpdateService(
+      manifestUrl: 'https://example.com/update.json',
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/pkg.zip');
+    if (await file.exists()) await file.delete();
+    addTearDown(() async {
+      if (await file.exists()) await file.delete();
+    });
+
+    const update = AppUpdateInfo(
+      versionName: '1.0.2',
+      versionCode: 3,
+      sha256: '', // 运行时填充，见下
+      fileSize: 100,
+      downloadUrl: tamperUrl,
+      mirrors: <String>[tamperUrl, okUrl],
+      changelog: '',
+    );
+
+    // AppUpdateInfo 是不可变的 const；用 copyWith 注入运行时 sha。
+    final updateWithSha = update.copyWith(sha256: expectedSha);
+    final result = await service.downloadAndVerifyPackage(
+      update: updateWithSha,
+    );
+    // 篡改 mirror 被 SHA 校验挡下，切到正常 mirror，内容正确。
+    expect(await result.readAsBytes(), equals(full));
+  });
+
+  test('downloadAndVerifyPackage throws when all mirrors fail', () async {
+    _setUpdateTestPlatform();
+    _useMockPathProvider();
+    final full = List<int>.generate(100, (i) => i);
+    const failUrl1 = 'https://fail1.example.com/pkg.zip';
+    const failUrl2 = 'https://fail2.example.com/pkg.zip';
+    final adapter = _MultiMirrorAdapter(
+      bytes: full,
+      behaviors: {
+        failUrl1: _MirrorBehavior.fail,
+        failUrl2: _MirrorBehavior.fail,
+      },
+    );
+    final dio = Dio()..httpClientAdapter = adapter;
+
+    final service = AppUpdateService(
+      manifestUrl: 'https://example.com/update.json',
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/pkg.zip');
+    if (await file.exists()) await file.delete();
+    addTearDown(() async {
+      if (await file.exists()) await file.delete();
+    });
+
+    const update = AppUpdateInfo(
+      versionName: '1.0.2',
+      versionCode: 3,
+      sha256: '',
+      fileSize: 100,
+      downloadUrl: failUrl1,
+      mirrors: <String>[failUrl1, failUrl2],
+      changelog: '',
+    );
+
+    await expectLater(
+      service.downloadAndVerifyPackage(update: update),
+      throwsA(isA<StateError>()),
+    );
+    // 全部失败时不应残留半成品文件。
+    expect(await file.exists(), isFalse);
+  });
 }
 
 void _setUpdateTestPlatform() {
@@ -536,4 +676,81 @@ class _MockPathProvider extends PathProviderPlatform {
 
 void _useMockPathProvider() {
   PathProviderPlatform.instance = _MockPathProvider();
+}
+
+/// 多镜像测试用 adapter：按 URL 路由，每个 URL 独立配置行为。
+enum _MirrorBehavior { normal, fail, tamper }
+
+class _MultiMirrorAdapter implements HttpClientAdapter {
+  _MultiMirrorAdapter({
+    required this.bytes,
+    required this.behaviors,
+  });
+
+  /// 正确的完整字节内容（normal/tamper 都基于它）。
+  final List<int> bytes;
+  /// URL -> 行为。未列出的 URL 视为 404。
+  final Map<String, _MirrorBehavior> behaviors;
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final url = options.uri.toString();
+    final behavior = behaviors[url];
+    if (behavior == null) {
+      return ResponseBody.fromBytes(
+        utf8.encode('not found'),
+        404,
+        headers: {Headers.contentTypeHeader: <String>['text/plain']},
+      );
+    }
+
+    switch (behavior) {
+      case _MirrorBehavior.fail:
+        return ResponseBody.fromBytes(
+          utf8.encode('server error'),
+          500,
+          headers: {Headers.contentTypeHeader: <String>['text/plain']},
+        );
+      case _MirrorBehavior.tamper:
+        // 返回篡改内容（首字节翻转），长度相同但 SHA 不符。
+        final tampered = List<int>.from(bytes);
+        if (tampered.isNotEmpty) {
+          tampered[0] = (tampered[0] ^ 0xFF) & 0xFF;
+        }
+        return _body(tampered, 200, total: tampered.length);
+      case _MirrorBehavior.normal:
+        // 支持 Range 续传：带 Range 回 206 切片，否则 200 全量。
+        final range = options.headers['Range'] as String?;
+        if (range == null) {
+          return _body(bytes, 200, total: bytes.length);
+        }
+        final startMatch = RegExp(r'bytes=(\d+)-').firstMatch(range);
+        final start = startMatch != null ? int.parse(startMatch.group(1)!) : 0;
+        final slice = start < bytes.length ? bytes.sublist(start) : <int>[];
+        return _body(slice, 206, total: bytes.length, start: start);
+    }
+  }
+
+  ResponseBody _body(
+    List<int> data,
+    int status, {
+    required int total,
+    int start = 0,
+  }) {
+    final headers = <String, List<String>>{
+      Headers.contentLengthHeader: <String>['${data.length}'],
+      Headers.contentTypeHeader: <String>['application/octet-stream'],
+    };
+    if (status == 206) {
+      headers['Content-Range'] = <String>['bytes $start-${total - 1}/$total'];
+    }
+    return ResponseBody.fromBytes(data, status, headers: headers);
+  }
 }

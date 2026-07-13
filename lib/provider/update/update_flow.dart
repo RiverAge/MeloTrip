@@ -109,6 +109,17 @@ class UpdateFlowController extends _$UpdateFlowController {
           }
           _applyProgressSnapshot(snapshot, fallbackTotalBytes: update.fileSize);
         },
+        onMirrorChanged: (int index, int total) {
+          if (!ref.mounted) return;
+          // 仅从第 2 个镜像起提示（首个镜像不提示，避免噪音）。
+          if (index <= 0) {
+            state = state.copyWith(clearDownloadMirrorHint: true);
+            return;
+          }
+          state = state.copyWith(
+            downloadMirrorHint: '正在尝试备用镜像 ${index + 1}/$total',
+          );
+        },
       );
       if (!ref.mounted) return null;
       _markDownloadCompleted(update);
@@ -177,6 +188,7 @@ class UpdateFlowController extends _$UpdateFlowController {
       clearPendingVersion: true,
       availableUpdate: update,
       clearCheckError: true,
+      clearDownloadMirrorHint: true,
     );
   }
 
@@ -271,6 +283,7 @@ class UpdateFlowController extends _$UpdateFlowController {
       clearEtaSeconds: true,
       clearPendingPackagePath: !keepPendingInstall,
       clearPendingVersion: !keepPendingInstall,
+      clearDownloadMirrorHint: true,
     );
   }
 }
