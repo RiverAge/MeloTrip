@@ -10,6 +10,7 @@ class _FakeUpdateService extends AppUpdateService {
     this.downloadError,
     this.downloadDelay = Duration.zero,
     this.checkError,
+    this.progressTicks,
   }) : super(checkUrl: 'https://example.com/check');
 
   final AppUpdateCheckResult? checkResult;
@@ -20,6 +21,10 @@ class _FakeUpdateService extends AppUpdateService {
   final Object? downloadError;
   final Duration downloadDelay;
   final Object? checkError;
+  // 可选的进度回调序列：(累计已接收字节, 距上一拍的间隔)。
+  // 注入它可在 downloadAndInstall 路径里驱动 _DownloadProgressTracker，
+  // 验证滑动窗口速度行为。若为 null，则用默认的单次 50% 回调。
+  final List<(int, Duration)>? progressTicks;
 
   bool openInstallSettingsCalled = false;
   bool installCalled = false;
@@ -63,7 +68,18 @@ class _FakeUpdateService extends AppUpdateService {
       throw downloadError!;
     }
     onStageChanged?.call(UpdateDownloadStage.downloading);
-    onProgress?.call(update.fileSize ~/ 2, update.fileSize, 0.5);
+    if (progressTicks != null) {
+      for (final (bytes, gap) in progressTicks!) {
+        await Future<void>.delayed(gap);
+        if (onProgress == null) break;
+        final double p = update.fileSize > 0
+            ? (bytes / update.fileSize).clamp(0.0, 1.0)
+            : 0.0;
+        onProgress(bytes, update.fileSize, p);
+      }
+    } else {
+      onProgress?.call(update.fileSize ~/ 2, update.fileSize, 0.5);
+    }
     onStageChanged?.call(UpdateDownloadStage.verifying);
 
     final Directory dir = await Directory.systemTemp.createTemp(
@@ -72,6 +88,11 @@ class _FakeUpdateService extends AppUpdateService {
     final File file = File('${dir.path}/app.zip');
     await file.writeAsBytes(<int>[1, 2, 3, 4]);
     return file;
+  }
+
+  @override
+  Future<void> deleteDownloadedPackage(AppUpdateInfo? update) async {
+    // 测试不触真实文件系统；安装后清理由 controller 调用，此处空实现。
   }
 
   @override

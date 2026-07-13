@@ -146,6 +146,9 @@ class UpdateFlowController extends _$UpdateFlowController {
         packagePath,
         updaterStrings: updaterStrings,
       );
+      // 安装流程结束（桌面端替换式更新由外部进程接管）：删除已下载包，
+      // 避免临时目录里累积旧版本安装包。
+      await _service.deleteDownloadedPackage(state.availableUpdate);
       return null;
     } catch (err) {
       return '$err';
@@ -239,6 +242,12 @@ class UpdateFlowController extends _$UpdateFlowController {
       packagePath,
       updaterStrings: updaterStrings,
     );
+    // 不需要宿主退出的安装（如移动端调系统安装器）此刻已交由系统接管，
+    // 可安全删除下载包。需要宿主退出的（桌面替换式更新）包文件留给
+    // 外部 updater 进程，由 installPendingPackage 或下次 checkForUpdate 清理。
+    if (!_service.requiresHostExitForInstall) {
+      await _service.deleteDownloadedPackage(update);
+    }
   }
 
   void _maybeMarkReadyToInstall() {

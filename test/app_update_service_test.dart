@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melo_trip/update/app_update_service.dart';
 import 'package:melo_trip/update/update_installer_gateway.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:update_installer/update_installer.dart';
 
 void main() {
@@ -256,6 +258,98 @@ MELOTRIP_UPDATE_METADATA -->
     expect(gateway.installedPath, file.path);
     expect(gateway.receivedUpdaterStrings?.windowTitle, 'Updater');
   });
+
+  test('downloadAndVerifyPackage resumes from partial file via Range', () async {
+    _setUpdateTestPlatform();
+    _useMockPathProvider();
+    // 远端"文件"是 0..99 共 100 字节。预先写好前 40 字节作为半成品，
+    // 期望下载时带上 Range: bytes=40- 并只取剩余 60 字节 append。
+    final full = List<int>.generate(100, (i) => i);
+    final adapter = _RangeBytesAdapter(
+      url: 'https://example.com/pkg.zip',
+      bytes: full,
+    );
+    final dio = Dio()..httpClientAdapter = adapter;
+
+    final service = AppUpdateService(
+      manifestUrl: 'https://example.com/update.json',
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    // 准备半成品文件：写入前 40 字节，复刻断点续传的本地状态。
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/pkg.zip');
+    if (await file.exists()) {
+      await file.delete();
+    }
+    await file.writeAsBytes(full.sublist(0, 40));
+    addTearDown(() async {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    });
+
+    const update = AppUpdateInfo(
+      versionName: '1.0.2',
+      versionCode: 3,
+      sha256: '',
+      fileSize: 100,
+      downloadUrl: 'https://example.com/pkg.zip',
+      changelog: '',
+    );
+
+    final result = await service.downloadAndVerifyPackage(update: update);
+
+    expect(await result.length(), 100);
+    expect(await result.readAsBytes(), equals(full));
+    // 关键：发起了带 Range 的请求，且起始字节正是 40。
+    expect(adapter.rangeRequests, contains('bytes=40-'));
+  });
+
+  test('downloadAndVerifyPackage falls back to full download on 200', () async {
+    _setUpdateTestPlatform();
+    _useMockPathProvider();
+    // 服务器忽略 Range、回 200 给全量。本地半成品应被覆盖重下。
+    final full = List<int>.generate(100, (i) => i);
+    final adapter = _RangeBytesAdapter(
+      url: 'https://example.com/pkg.zip',
+      bytes: full,
+      ignoreRange: true, // 始终返回 200 + 全量
+    );
+    final dio = Dio()..httpClientAdapter = adapter;
+
+    final service = AppUpdateService(
+      manifestUrl: 'https://example.com/update.json',
+      dio: dio,
+      installerGateway: const _FakeGateway(),
+    );
+
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/pkg.zip');
+    if (await file.exists()) {
+      await file.delete();
+    }
+    await file.writeAsBytes(full.sublist(0, 40)); // 脏的半成品
+    addTearDown(() async {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    });
+
+    const update = AppUpdateInfo(
+      versionName: '1.0.2',
+      versionCode: 3,
+      sha256: '',
+      fileSize: 100,
+      downloadUrl: 'https://example.com/pkg.zip',
+      changelog: '',
+    );
+
+    final result = await service.downloadAndVerifyPackage(update: update);
+    // 全量覆盖后内容正确，没有 append 造成的重复。
+    expect(await result.readAsBytes(), equals(full));
+  });
 }
 
 void _setUpdateTestPlatform() {
@@ -361,4 +455,85 @@ class _RecordingGateway extends UpdateInstallerGateway {
 
   @override
   Future<void> openInstallPermissionSettings() async {}
+}
+
+/// 支持断点续传的二进制 adapter：带 Range 头的请求回 206 + 对应切片；
+/// [ignoreRange]=true 时一律回 200 + 全量（模拟服务器不支持续传）。
+class _RangeBytesAdapter implements HttpClientAdapter {
+  _RangeBytesAdapter({
+    required this.url,
+    required this.bytes,
+    this.ignoreRange = false,
+  });
+
+  final String url;
+  final List<int> bytes;
+  final bool ignoreRange;
+  final List<String> rangeRequests = [];
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    if (options.uri.toString() != url) {
+      return ResponseBody.fromBytes(
+        utf8.encode('not found'),
+        404,
+        headers: {Headers.contentTypeHeader: <String>['text/plain']},
+      );
+    }
+
+    final range = options.headers['Range'] as String?;
+    if (range != null) {
+      rangeRequests.add(range);
+    }
+
+    if (ignoreRange || range == null) {
+      return _body(bytes, 200, total: bytes.length);
+    }
+
+    final startMatch = RegExp(r'bytes=(\d+)-').firstMatch(range);
+    final start = startMatch != null ? int.parse(startMatch.group(1)!) : 0;
+    final slice = start < bytes.length ? bytes.sublist(start) : <int>[];
+    return _body(slice, 206, total: bytes.length, start: start);
+  }
+
+  ResponseBody _body(
+    List<int> data,
+    int status, {
+    required int total,
+    int start = 0,
+  }) {
+    final headers = <String, List<String>>{
+      Headers.contentLengthHeader: <String>['${data.length}'],
+      Headers.contentTypeHeader: <String>['application/octet-stream'],
+    };
+    if (status == 206) {
+      headers['Content-Range'] = <String>['bytes $start-${total - 1}/$total'];
+    }
+    return ResponseBody.fromBytes(data, status, headers: headers);
+  }
+}
+
+/// 把临时目录指向系统 temp 的 mock，避免依赖原生 path_provider 插件。
+class _MockPathProvider extends PathProviderPlatform {
+  @override
+  Future<String?> getTemporaryPath() async => Directory.systemTemp.path;
+
+  @override
+  Future<String?> getApplicationSupportPath() async =>
+      Directory.systemTemp.path;
+
+  @override
+  Future<String?> getApplicationDocumentsPath() async =>
+      Directory.systemTemp.path;
+}
+
+void _useMockPathProvider() {
+  PathProviderPlatform.instance = _MockPathProvider();
 }

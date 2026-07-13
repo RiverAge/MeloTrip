@@ -16,6 +16,8 @@ import 'package:update_installer/update_installer.dart';
 
 export 'package:melo_trip/model/update/app_update_info.dart';
 
+part 'parts/download.dart';
+
 class AppUpdateService {
   AppUpdateService({
     this.manifestUrl =
@@ -249,58 +251,9 @@ class AppUpdateService {
     return file.path;
   }
 
-  Future<File> _downloadAndVerifyPackage({
-    required AppUpdateInfo update,
-    void Function(int received, int total, double progress)? onProgress,
-    void Function(UpdateDownloadStage stage)? onStageChanged,
-  }) async {
-    final dir = await getTemporaryDirectory();
-    final filePath = p.join(dir.path, _buildDownloadFileName(update));
-    final file = File(filePath);
-    if (await file.exists()) {
-      await file.delete();
-    }
-
-    onStageChanged?.call(UpdateDownloadStage.downloading);
-    await _dio.download(
-      update.downloadUrl,
-      filePath,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: const {'User-Agent': 'MeloTrip-App', 'Accept': '*/*'},
-      ),
-      onReceiveProgress: (received, total) {
-        final effectiveTotal = total > 0 ? total : update.fileSize;
-        if (effectiveTotal <= 0) {
-          onProgress?.call(received, 0, 0);
-          return;
-        }
-        final progress = (received / effectiveTotal).clamp(0, 1).toDouble();
-        onProgress?.call(received, effectiveTotal, progress);
-      },
-    );
-
-    final length = await file.length();
-    if (length <= 0) {
-      throw StateError('Downloaded file is empty.');
-    }
-    if (update.fileSize > 0 && length != update.fileSize) {
-      throw StateError(
-        'File size mismatch. expected=${update.fileSize}, actual=$length',
-      );
-    }
-
-    onStageChanged?.call(UpdateDownloadStage.verifying);
-    final checksum = update.sha256.trim().toLowerCase();
-    if (checksum.isNotEmpty) {
-      final digest = await sha256.bind(file.openRead()).first;
-      final actual = digest.toString().toLowerCase();
-      if (actual != checksum) {
-        throw StateError('SHA256 mismatch. expected=$checksum, actual=$actual');
-      }
-    }
-
-    return file;
+  /// 删除已下载的安装包（安装成功后 / 重新检查更新时清理）。
+  Future<void> deleteDownloadedPackage(AppUpdateInfo? update) {
+    return _deleteDownloadedPackage(update);
   }
 
   String _buildDownloadFileName(AppUpdateInfo update) {
