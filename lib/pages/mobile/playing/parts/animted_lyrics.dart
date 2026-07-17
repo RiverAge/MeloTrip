@@ -22,12 +22,12 @@ class _AnimtedLyrics extends StatelessWidget {
               child: Text(AppLocalizations.of(context)!.noLyricsFound),
             );
           }
-          final structured = lyricsResult
+          final structuredList = lyricsResult
               .data
               ?.subsonicResponse
               ?.lyricsList
-              ?.structuredLyrics
-              ?.firstOrNull;
+              ?.structuredLyrics;
+          final structured = structuredList?.firstOrNull;
           final lines = structured?.line ?? [];
           if (lines.isEmpty) {
             return Center(
@@ -35,9 +35,14 @@ class _AnimtedLyrics extends StatelessWidget {
             );
           }
           final cueMap = cueLinesByStart(structured);
+          final translationMap = translationLinesByStart(structuredList);
+          final transliterationMap =
+              transliterationLinesByStart(structuredList);
           return AnimatedLyricsPanel(
             lyricsLines: lines,
             cueLinesByStart: cueMap,
+            translationByStart: translationMap,
+            transliterationByStart: transliterationMap,
             textAlign: .center,
             crossAxisAlignment: .center,
             itemPadding: const EdgeInsets.symmetric(

@@ -13,6 +13,8 @@ class AnimatedLyricsPanel extends ConsumerStatefulWidget {
     super.key,
     required this.lyricsLines,
     this.cueLinesByStart,
+    this.translationByStart,
+    this.transliterationByStart,
     this.textAlign = .center,
     this.crossAxisAlignment = .center,
     this.itemPadding = const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -30,6 +32,10 @@ class AnimatedLyricsPanel extends ConsumerStatefulWidget {
 
   final List<Line> lyricsLines;
   final Map<int, CueLine>? cueLinesByStart;
+  /// 译文行按主行 start 索引；主行无对应译文时不渲染译文。
+  final Map<int, Line>? translationByStart;
+  /// 注音行按主行 start 索引；主行无对应注音时不渲染注音。
+  final Map<int, Line>? transliterationByStart;
   final TextAlign textAlign;
   final CrossAxisAlignment crossAxisAlignment;
   final EdgeInsets itemPadding;
@@ -151,6 +157,8 @@ class _AnimatedLyricsPanelState extends ConsumerState<AnimatedLyricsPanel> {
         key: GlobalObjectKey(line.start ?? ''),
         line: line,
         cueLine: cueLine,
+        translationLine: widget.translationByStart?[line.start],
+        transliterationLine: widget.transliterationByStart?[line.start],
         isActive: _currentIndex == idx,
         positionMs: _positionMs,
         colorScheme: colorScheme,
@@ -173,6 +181,8 @@ class _AnimatedLyricsItem extends StatefulWidget {
     super.key,
     required this.line,
     required this.cueLine,
+    required this.translationLine,
+    required this.transliterationLine,
     required this.isActive,
     required this.positionMs,
     required this.colorScheme,
@@ -187,6 +197,10 @@ class _AnimatedLyricsItem extends StatefulWidget {
 
   final Line line;
   final CueLine? cueLine;
+  /// 主行对应的译文（可空：标题行通常无译文）。
+  final Line? translationLine;
+  /// 主行对应的注音（可空：多数歌曲无注音条目）。
+  final Line? transliterationLine;
   final bool isActive;
   final ValueNotifier<int> positionMs;
   final ColorScheme colorScheme;
@@ -292,9 +306,59 @@ class _AnimatedLyricsItemState extends State<_AnimatedLyricsItem>
     final text = widget.line.value ?? '';
     if (text.isEmpty) return const SizedBox.shrink();
 
+    final main = _karaoke ? _buildKaraoke() : _buildStatic();
+    final translation = _buildSecondary(widget.translationLine, dim: false);
+    final transliteration =
+        _buildSecondary(widget.transliterationLine, dim: true);
+    if (translation == null && transliteration == null) {
+      return Padding(padding: widget.itemPadding, child: main);
+    }
     return Padding(
       padding: widget.itemPadding,
-      child: _karaoke ? _buildKaraoke() : _buildStatic(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: switch (widget.textAlign) {
+          TextAlign.left || TextAlign.start => CrossAxisAlignment.start,
+          TextAlign.right || TextAlign.end => CrossAxisAlignment.end,
+          _ => CrossAxisAlignment.center,
+        },
+        children: [
+          main,
+          ?translation,
+          ?transliteration,
+        ],
+      ),
+    );
+  }
+
+  /// 译文/注音行。字号用 [secondaryFontSize]（比主行小一档），颜色取弱化的
+  /// `onSurfaceVariant`，与主行的逐字高亮（`primary` 大字扫光）形成层级区分，
+  /// 不参与逐字扫光，仅随行切换淡入淡出。注音比译文再降一档透明度。
+  /// 非当前行整体再降透明度，避免抢夺主行焦点。
+  Widget? _buildSecondary(Line? line, {required bool dim}) {
+    final value = line?.value;
+    if (value == null || value.isEmpty) return null;
+    final base = widget.colorScheme.onSurfaceVariant;
+    final color = base.withValues(alpha: widget.isActive ? (dim ? 0.55 : 0.75) : (dim ? 0.3 : 0.45));
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: TweenAnimationBuilder<double>(
+        duration: widget.itemAnimationDuration,
+        curve: Curves.easeOutCubic,
+        tween: Tween(end: widget.isActive ? 1 : 0),
+        builder: (context, value, _) => Opacity(
+          opacity: 0.5 + 0.5 * value,
+          child: Text(
+            line!.value ?? '',
+            textAlign: widget.textAlign,
+            style: TextStyle(
+              fontSize: widget.secondaryFontSize,
+              height: 1.4,
+              color: color,
+            ),
+          ),
+        ),
+      ),
     );
   }
 

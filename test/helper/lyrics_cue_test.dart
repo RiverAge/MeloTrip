@@ -80,4 +80,63 @@ void main() {
       expect(cueLinesByStart(s), {100: isA<CueLine>()});
     });
   });
+
+  group('translationLinesByStart / transliterationLinesByStart', () {
+    final main = const StructuredLyric(
+      kind: 'main',
+      lang: 'und',
+      line: [Line(start: 0, value: 'title'), Line(start: 100, value: 'line')],
+    );
+    final translation = const StructuredLyric(
+      kind: 'translation',
+      lang: 'zh-hans',
+      // 译文 start 是原文 start 的子集：标题行(0)无译文。
+      line: [Line(start: 100, value: '译文')],
+    );
+    final transliteration = const StructuredLyric(
+      kind: 'transliteration',
+      lang: 'zh-Latn-pinyin',
+      line: [Line(start: 100, value: 'pinyin'), Line(start: 200, value: 'p2')],
+    );
+
+    test('returns empty map for null/empty list', () {
+      expect(translationLinesByStart(null), const <int, Line>{});
+      expect(translationLinesByStart(const []), const <int, Line>{});
+      expect(transliterationLinesByStart(null), const <int, Line>{});
+    });
+
+    test('indexes only the requested kind, keyed by start', () {
+      final all = [main, translation, transliteration];
+      expect(translationLinesByStart(all), {100: isA<Line>()});
+      expect(translationLinesByStart(all)[100]?.value, '译文');
+      expect(transliterationLinesByStart(all).length, 2);
+      expect(transliterationLinesByStart(all)[200]?.value, 'p2');
+    });
+
+    test('misses lines that the main row does not have', () {
+      // 主行无 start=200，但注音有——注音 map 仍保留该条目，
+      // 渲染时按主行 start 查表自然查不到 200，故不显示，不报错。
+      final all = [main, transliteration];
+      expect(transliterationLinesByStart(all)[0], isNull);
+      expect(transliterationLinesByStart(all)[200]?.value, 'p2');
+    });
+
+    test('keeps first when same start appears in multiple kind-matched lines', () {
+      final dup = const StructuredLyric(
+        kind: 'translation',
+        lang: 'zh-hans',
+        line: [Line(start: 100, value: 'first'), Line(start: 100, value: 'second')],
+      );
+      expect(translationLinesByStart([dup])[100]?.value, 'first');
+    });
+
+    test('skips lines with null start', () {
+      final withNull = const StructuredLyric(
+        kind: 'translation',
+        lang: 'zh-hans',
+        line: [Line(start: null, value: 'x'), Line(start: 100, value: 'y')],
+      );
+      expect(translationLinesByStart([withNull]), {100: isA<Line>()});
+    });
+  });
 }

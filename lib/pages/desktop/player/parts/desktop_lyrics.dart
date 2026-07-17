@@ -24,13 +24,13 @@ class _DesktopLyrics extends ConsumerWidget {
             ),
           );
         }
-        final structured =
+        final structuredList =
             lyricsResult
                 .data
                 ?.subsonicResponse
                 ?.lyricsList
-                ?.structuredLyrics
-                ?.firstOrNull;
+                ?.structuredLyrics;
+        final structured = structuredList?.firstOrNull;
         final lines = structured?.line ?? [];
         if (lines.isEmpty) {
           return Center(
@@ -44,9 +44,14 @@ class _DesktopLyrics extends ConsumerWidget {
           );
         }
         final cueMap = cueLinesByStart(structured);
+        final translationMap = translationLinesByStart(structuredList);
+        final transliterationMap =
+            transliterationLinesByStart(structuredList);
         return AnimatedLyricsPanel(
           lyricsLines: lines,
           cueLinesByStart: cueMap,
+          translationByStart: translationMap,
+          transliterationByStart: transliterationMap,
           textAlign: .left,
           crossAxisAlignment: .start,
           itemPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),

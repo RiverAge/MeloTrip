@@ -36,3 +36,35 @@ Map<int, CueLine> cueLinesByStart(StructuredLyric? lyric) {
   }
   return map;
 }
+
+/// 从一组 [StructuredLyric] 中按 [kind] 选条目，按行起始时间（毫秒）索引其
+/// `line`，供译文/注音按行配对查表。译文/注音条目的行 `start` 是原文行
+/// `start` 的子集（标题行通常无译文），缺失行查表返回 null，渲染时自然跳过。
+///
+/// kind 取 OpenSubsonic 规范值：`translation`（译文）、`transliteration`
+///（注音/拼音）。条目可能缺失（如这首歌没有注音），此时返回空 map。
+Map<int, Line> linesByStartForKind(
+  List<StructuredLyric>? all,
+  String kind,
+) {
+  if (all == null || all.isEmpty) return const <int, Line>{};
+  final map = <int, Line>{};
+  for (final s in all) {
+    if (s.kind != kind) continue;
+    for (final line in s.line ?? const <Line>[]) {
+      final start = line.start;
+      if (start == null) continue;
+      // 同 start 多条译文条目：保留首条，避免后到者覆盖。
+      map.putIfAbsent(start, () => line);
+    }
+  }
+  return map;
+}
+
+/// 译文行（kind == 'translation'）按 start 索引。
+Map<int, Line> translationLinesByStart(List<StructuredLyric>? all) =>
+    linesByStartForKind(all, 'translation');
+
+/// 注音行（kind == 'transliteration'）按 start 索引。
+Map<int, Line> transliterationLinesByStart(List<StructuredLyric>? all) =>
+    linesByStartForKind(all, 'transliteration');
