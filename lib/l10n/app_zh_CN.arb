@@ -316,6 +316,36 @@
             }
         }
     },
+    "updateAvailableWithSize": "\u5f53\u524d\u7248\u672c {currentName} \u2192 \u65b0\u7248\u672c {newName} \u00b7 {size}",
+    "@updateAvailableWithSize": {
+        "placeholders": {
+            "currentName": {
+                "type": "String",
+                "example": "1.0.29"
+            },
+            "newName": {
+                "type": "String",
+                "example": "1.0.30"
+            },
+            "size": {
+                "type": "String",
+                "example": "25M"
+            }
+        }
+    },
+    "updateDownloadingVersion": "{currentName} \u2192 {newName}",
+    "@updateDownloadingVersion": {
+        "placeholders": {
+            "currentName": {
+                "type": "String",
+                "example": "1.0.29"
+            },
+            "newName": {
+                "type": "String",
+                "example": "1.0.30"
+            }
+        }
+    },
     "updateAlreadyLatestInline": "\u5f53\u524d\u7248\u672c {versionName} ({versionCode}) \u5df2\u662f\u6700\u65b0\u7248\u672c",
     "@updateAlreadyLatestInline": {
         "placeholders": {

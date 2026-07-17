@@ -55,27 +55,30 @@ String buildUpdateSubtitle(BuildContext context, UpdateFlowState state) {
     return l10n.updateStageOpeningInstaller;
   }
   if (state.isUpdating) {
-    // 三段都做固定宽度对齐，整行字符数恒定，下载过程中不再左右抖动：
-    //  - 百分比 padLeft 到 3 位再加 "%"（"  9%" / " 12%" / "100%"）
-    //  - 大小段左右各自 padLeft 到同宽（"3M/25M" 这种短串也补齐）
-    //  - 速度段永远占槽：有速度显示 "1.2M/s"，无速度用等宽空格填齐，
-    //    避免 "/s" 段时有时无造成的整行宽度跳变
-    final String percent =
-        '${state.downloadProgressPercent.toStringAsFixed(0).padLeft(3)}%';
-    final String downloaded = _formatUpdateBytesFixed(state.downloadedBytes);
-    final String totalStr = _formatUpdateBytesFixed(state.totalBytes);
-    // downloaded 左对齐补到与 totalStr 同宽，整段 "已下/总量" 宽度恒定。
-    final String downloadedPadded = downloaded.padLeft(totalStr.length);
-    final String size = '$downloadedPadded/$totalStr';
-    final String speed = state.downloadBytesPerSecond > 0
-        ? _formatUpdateSpeedFixed(state.downloadBytesPerSecond)
-        : ''.padLeft(_speedSlotWidth);
-    return '$percent | $size | $speed';
+    // 下载中：首行版本对照（当前→新），次行进度。版本行守卫当前/新版本
+    // 都已知——缺任一则只输出进度行（保持长度恒定回退，兼容旧测试）。
+    final String progressLine = _buildDownloadProgressLine(state);
+    final String? current = state.currentVersionName;
+    final String? newName = state.availableUpdate?.versionName;
+    if (current != null && newName != null) {
+      return '${l10n.updateDownloadingVersion(current, newName)}\n$progressLine';
+    }
+    return progressLine;
   }
   if (state.checkError != null) {
     return l10n.updateCheckFailedInline;
   }
   if (state.availableUpdate case final AppUpdateInfo update) {
+    // 有更新可用（未下载）：显示 当前→新 · 包大小。当前版本未知时退化为
+    // 旧的"发现新版本 vX"。
+    final String? current = state.currentVersionName;
+    if (current != null) {
+      return l10n.updateAvailableWithSize(
+        current,
+        update.versionName,
+        formatUpdateBytes(update.fileSize),
+      );
+    }
     return l10n.updateAvailableInline(update.versionName);
   }
   if (state.hasChecked &&
@@ -100,6 +103,26 @@ String formatUpdateBytes(int bytes) {
     return '${(bytes / kb).toStringAsFixed(0)}K';
   }
   return '${bytes}B';
+}
+
+/// 下载进度行：百分比 | 已下/总量 | 速度。三段固定宽度对齐，整行字符数
+/// 恒定，下载过程中不左右抖动：
+///  - 百分比 padLeft 到 3 位再加 "%"（"  9%" / " 12%" / "100%"）
+///  - 大小段左右各自 padLeft 到同宽（"3M/25M" 这种短串也补齐）
+///  - 速度段永远占槽：有速度显示 "1.2M/s"，无速度用等宽空格填齐，
+///    避免 "/s" 段时有时无造成的整行宽度跳变
+String _buildDownloadProgressLine(UpdateFlowState state) {
+  final String percent =
+      '${state.downloadProgressPercent.toStringAsFixed(0).padLeft(3)}%';
+  final String downloaded = _formatUpdateBytesFixed(state.downloadedBytes);
+  final String totalStr = _formatUpdateBytesFixed(state.totalBytes);
+  // downloaded 左对齐补到与 totalStr 同宽，整段 "已下/总量" 宽度恒定。
+  final String downloadedPadded = downloaded.padLeft(totalStr.length);
+  final String size = '$downloadedPadded/$totalStr';
+  final String speed = state.downloadBytesPerSecond > 0
+      ? _formatUpdateSpeedFixed(state.downloadBytesPerSecond)
+      : ''.padLeft(_speedSlotWidth);
+  return '$percent | $size | $speed';
 }
 
 /// 速度槽固定宽度（字符数）。按 "999.9K/s" 计 = 8，覆盖百 K 量级速度

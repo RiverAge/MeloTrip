@@ -112,11 +112,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                   leading: const Icon(Icons.system_update_alt),
                   title: Text(l10n.checkForUpdates),
                   subtitle: buildUpdateSubtitleWidget(context, updateState),
+                  // 点击区分区：有更新时整行不可点，下载只由右侧"立即更新"
+                  // 按钮触发（与桌面端一致），避免点副标题/标题意外开始下载；
+                  // 无更新且未在忙时，整行点 = 手动检查更新。
                   onTap: (updateState.isChecking || updateState.isUpdating)
                       ? null
                       : updateState.availableUpdate != null
-                      ? () => _startNativeUpdate(updateState.availableUpdate!)
-                      : null,
+                      ? null
+                      : _triggerManualCheck,
                   trailing: (updateState.isChecking || updateState.isUpdating)
                       ? const SizedBox(
                           width: 18,
@@ -124,13 +127,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : updateState.availableUpdate != null
-                      ? Text(
-                          l10n.updateNow,
-                          style: Theme.of(context).textTheme.labelLarge
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: .w700,
-                              ),
+                      ? _UpdateNowButton(
+                          label: l10n.updateNow,
+                          onTap: () =>
+                              _startNativeUpdate(updateState.availableUpdate!),
                         )
                       : null,
                 ),
@@ -160,6 +160,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
     );
     try {
       await controller.checkForUpdate(silent: true);
+    } catch (_) {}
+  }
+
+  Future<void> _triggerManualCheck() async {
+    final UpdateFlowController controller = ref.read(
+      updateFlowControllerProvider.notifier,
+    );
+    try {
+      await controller.checkForUpdate();
     } catch (_) {}
   }
 
@@ -228,6 +237,33 @@ class _SettingsPageState extends ConsumerState<SettingsPage>
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 更新 tile 右侧"立即更新"按钮。tile 整行 onTap 为 null（有更新时整行不可
+/// 点），下载入口收敛到本按钮，避免点副标题/标题误触发下载。
+class _UpdateNowButton extends StatelessWidget {
+  const _UpdateNowButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: .w700,
+          ),
+        ),
       ),
     );
   }

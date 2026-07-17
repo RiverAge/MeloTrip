@@ -839,6 +839,38 @@
          }
       }
    },
+   "updateAvailableWithSize": "Current {currentName} → New {newName} · {size}",
+   "@updateAvailableWithSize": {
+      "description": "Inline status when a new update is available, showing current vs new version and package size",
+      "placeholders": {
+         "currentName": {
+            "type": "String",
+            "example": "1.0.29"
+         },
+         "newName": {
+            "type": "String",
+            "example": "1.0.30"
+         },
+         "size": {
+            "type": "String",
+            "example": "25M"
+         }
+      }
+   },
+   "updateDownloadingVersion": "{currentName} → {newName}",
+   "@updateDownloadingVersion": {
+      "description": "Version transition line shown above the download progress row while updating",
+      "placeholders": {
+         "currentName": {
+            "type": "String",
+            "example": "1.0.29"
+         },
+         "newName": {
+            "type": "String",
+            "example": "1.0.30"
+         }
+      }
+   },
    "updateAlreadyLatestInline": "Current version {versionName} ({versionCode}) is up to date",
    "@updateAlreadyLatestInline": {
       "description": "Inline status shown when the current app version is already up to date",

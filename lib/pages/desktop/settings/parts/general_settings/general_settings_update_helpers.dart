@@ -133,21 +133,30 @@ extension _GeneralSettingsUpdateHelpers on _GeneralSettingsState {
       return l10n.updateStageOpeningInstaller;
     }
     if (state.isUpdating) {
-      final String percent =
-          '${state.downloadProgressPercent.toStringAsFixed(0)}%';
-      final String size =
-          '${_formatBytes(state.downloadedBytes)}/${_formatBytes(state.totalBytes)}';
-      final String speed = state.downloadBytesPerSecond > 0
-          ? '${_formatBytes(state.downloadBytesPerSecond.round())}/s'
-          : '';
-      final List<String> parts = <String>[percent, size, speed]
-        ..removeWhere((String item) => item.isEmpty);
-      return parts.join(' | ');
+      // 下载中：首行版本对照（当前→新），次行进度。版本行守卫当前/新版本
+      // 都已知——缺任一则只输出进度行。
+      final String progressLine = _buildDownloadProgressLine(state);
+      final String? current = state.currentVersionName;
+      final String? newName = state.availableUpdate?.versionName;
+      if (current != null && newName != null) {
+        return '${l10n.updateDownloadingVersion(current, newName)}\n$progressLine';
+      }
+      return progressLine;
     }
     if (state.checkError != null) {
       return l10n.updateCheckFailedInline;
     }
     if (state.availableUpdate case final AppUpdateInfo update) {
+      // 有更新可用（未下载）：当前→新 · 包大小。当前版本未知时退化为旧的
+      // "发现新版本 vX"。
+      final String? current = state.currentVersionName;
+      if (current != null) {
+        return l10n.updateAvailableWithSize(
+          current,
+          update.versionName,
+          _formatBytes(update.fileSize),
+        );
+      }
       return l10n.updateAvailableInline(update.versionName);
     }
     if (state.hasChecked &&
@@ -159,6 +168,19 @@ extension _GeneralSettingsUpdateHelpers on _GeneralSettingsState {
       );
     }
     return l10n.checkForUpdates;
+  }
+
+  String _buildDownloadProgressLine(UpdateFlowState state) {
+    final String percent =
+        '${state.downloadProgressPercent.toStringAsFixed(0)}%';
+    final String size =
+        '${_formatBytes(state.downloadedBytes)}/${_formatBytes(state.totalBytes)}';
+    final String speed = state.downloadBytesPerSecond > 0
+        ? '${_formatBytes(state.downloadBytesPerSecond.round())}/s'
+        : '';
+    final List<String> parts = <String>[percent, size, speed]
+      ..removeWhere((String item) => item.isEmpty);
+    return parts.join(' | ');
   }
 
   String _formatBytes(int bytes) {

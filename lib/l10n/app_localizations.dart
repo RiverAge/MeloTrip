@@ -1179,6 +1179,22 @@ abstract class AppLocalizations {
   /// **'New version v{versionName} is available'**
   String updateAvailableInline(String versionName);
 
+  /// Inline status when a new update is available, showing current vs new version and package size
+  ///
+  /// In en, this message translates to:
+  /// **'Current {currentName} → New {newName} · {size}'**
+  String updateAvailableWithSize(
+    String currentName,
+    String newName,
+    String size,
+  );
+
+  /// Version transition line shown above the download progress row while updating
+  ///
+  /// In en, this message translates to:
+  /// **'{currentName} → {newName}'**
+  String updateDownloadingVersion(String currentName, String newName);
+
   /// Inline status shown when the current app version is already up to date
   ///
   /// In en, this message translates to:

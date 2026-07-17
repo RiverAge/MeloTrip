@@ -569,6 +569,20 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String updateAvailableWithSize(
+    String currentName,
+    String newName,
+    String size,
+  ) {
+    return '当前版本 $currentName → 新版本 $newName · $size';
+  }
+
+  @override
+  String updateDownloadingVersion(String currentName, String newName) {
+    return '$currentName → $newName';
+  }
+
+  @override
   String updateAlreadyLatestInline(String versionName, int versionCode) {
     return '当前版本 $versionName ($versionCode) 已是最新版本';
   }
@@ -1406,6 +1420,20 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   @override
   String updateAvailableInline(String versionName) {
     return '发现新版本 v$versionName';
+  }
+
+  @override
+  String updateAvailableWithSize(
+    String currentName,
+    String newName,
+    String size,
+  ) {
+    return '当前版本 $currentName → 新版本 $newName · $size';
+  }
+
+  @override
+  String updateDownloadingVersion(String currentName, String newName) {
+    return '$currentName → $newName';
   }
 
   @override

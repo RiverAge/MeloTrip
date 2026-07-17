@@ -570,6 +570,20 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String updateAvailableWithSize(
+    String currentName,
+    String newName,
+    String size,
+  ) {
+    return 'Current $currentName → New $newName · $size';
+  }
+
+  @override
+  String updateDownloadingVersion(String currentName, String newName) {
+    return '$currentName → $newName';
+  }
+
+  @override
   String updateAlreadyLatestInline(String versionName, int versionCode) {
     return 'Current version $versionName ($versionCode) is up to date';
   }
