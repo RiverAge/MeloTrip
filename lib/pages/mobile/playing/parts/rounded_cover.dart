@@ -45,17 +45,16 @@ class _RoundedCover extends StatelessWidget {
                     ?.structuredLyrics
                     ?.firstOrNull;
                 final lyricsLines = structured?.line;
-                if (lyricsLines == null) {
-                  return const SizedBox.shrink();
-                }
-                final cueMap = cueLinesByStart(structured);
+                // 始终预留固定高度，避免歌词从无到有加载时封面被 Spacer 顶上去。
                 return SizedBox(
                   height: 40,
-                  child: SingleLineAnimatedLyrics(
-                    lyricsLines: lyricsLines,
-                    cueLinesByStart: cueMap,
-                    crossAxisAlignment: .center,
-                  ),
+                  child: lyricsLines == null
+                      ? const SizedBox.shrink()
+                      : SingleLineAnimatedLyrics(
+                          lyricsLines: lyricsLines,
+                          cueLinesByStart: cueLinesByStart(structured),
+                          crossAxisAlignment: .center,
+                        ),
                 );
               },
             ),
