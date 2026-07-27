@@ -19,6 +19,13 @@ part 'parts/play_queue_search.dart';
 
 enum PlayQueuePanelVariant { mobile, desktop }
 
+/// Visual style of the inline play-queue search field.
+enum PlayQueueSearchStyle {
+  /// Input merged into the header pill button group, expanding to fill the
+  /// row when active (hiding the title and the mode/shuffle/clear buttons).
+  headerInline,
+}
+
 @visibleForTesting
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
 showAutoClosingSnackBar(
@@ -65,12 +72,14 @@ class PlayQueuePanel extends ConsumerStatefulWidget {
     this.onClose,
     this.closeAfterClear = false,
     this.closeOnSelection = false,
+    this.searchStyle = PlayQueueSearchStyle.headerInline,
   });
 
   final PlayQueuePanelVariant variant;
   final VoidCallback? onClose;
   final bool closeAfterClear;
   final bool closeOnSelection;
+  final PlayQueueSearchStyle searchStyle;
 
   @override
   ConsumerState<PlayQueuePanel> createState() => _PlayQueuePanelState();
@@ -125,12 +134,9 @@ class _PlayQueuePanelState extends ConsumerState<PlayQueuePanel> {
               onClose: widget.onClose,
               searchExpanded: _searchExpanded,
               onToggleSearch: _toggleSearch,
+              searchStyle: widget.searchStyle,
+              searchController: _searchController,
             ),
-            if (_searchExpanded)
-              _PlayQueueSearchField(
-                controller: _searchController,
-                variant: widget.variant,
-              ),
             Expanded(
               child: PlayQueueBuilder(
                 builder: (_, playQueue, _) {

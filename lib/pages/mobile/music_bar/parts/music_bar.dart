@@ -41,7 +41,9 @@ class _MusicBarState extends State<MusicBar> {
       ),
       builder: (context) => FractionallySizedBox(
         heightFactor: 0.6,
-        child: _BottomSheetPlayQueue(),
+        child: const _BottomSheetPlayQueue(
+          searchStyle: PlayQueueSearchStyle.headerInline,
+        ),
       ),
     );
   }

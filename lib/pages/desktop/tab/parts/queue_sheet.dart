@@ -1,7 +1,11 @@
 part of '../tab_page.dart';
 
 class _DesktopQueueSheet extends ConsumerWidget {
-  const _DesktopQueueSheet();
+  const _DesktopQueueSheet({
+    this.searchStyle = PlayQueueSearchStyle.headerInline,
+  });
+
+  final PlayQueueSearchStyle searchStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,6 +40,7 @@ class _DesktopQueueSheet extends ConsumerWidget {
               variant: PlayQueuePanelVariant.desktop,
               onClose: () => Navigator.of(context).pop(),
               closeOnSelection: true,
+              searchStyle: searchStyle,
             ),
           ),
         ),

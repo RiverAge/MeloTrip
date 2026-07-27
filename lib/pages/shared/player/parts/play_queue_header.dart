@@ -8,6 +8,8 @@ class _PlayQueueHeader extends StatelessWidget {
     this.onClose,
     required this.searchExpanded,
     required this.onToggleSearch,
+    required this.searchStyle,
+    required this.searchController,
   });
 
   final AppPlayer player;
@@ -16,8 +18,12 @@ class _PlayQueueHeader extends StatelessWidget {
   final bool closeAfterClear;
   final bool searchExpanded;
   final VoidCallback onToggleSearch;
+  final PlayQueueSearchStyle searchStyle;
+  final TextEditingController searchController;
 
   bool get _isDesktop => variant == PlayQueuePanelVariant.desktop;
+  bool get isBActive =>
+      searchStyle == PlayQueueSearchStyle.headerInline && searchExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -42,53 +48,193 @@ class _PlayQueueHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: _PlayQueueTitle(variant: variant, player: player),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(
-                alpha: _isDesktop ? 0.88 : 0.92,
+          if (isBActive)
+            // Search active: the pill takes the whole row (title and the
+            // mode/shuffle/clear buttons are hidden inside the pill). The
+            // input is Expanded to fill the pill's leftover width.
+            Expanded(child: _buildPill(context))
+          else ...[
+            Expanded(child: _PlayQueueTitle(variant: variant, player: player)),
+            _buildPill(context),
+            if (_isDesktop)
+              IconButton(
+                onPressed: onClose,
+                icon: const Icon(Icons.close_rounded),
               ),
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(
-                color: colorScheme.outlineVariant.withValues(
-                  alpha: _isDesktop ? 0.28 : 0.22,
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  tooltip: AppLocalizations.of(context)!.searchPlayQueue,
-                  onPressed: onToggleSearch,
-                  icon: Icon(
-                    searchExpanded
-                        ? Icons.search_rounded
-                        : Icons.search_outlined,
-                    color: searchExpanded
-                        ? colorScheme.primary
-                        : null,
-                  ),
-                ),
-                const _PlayQueuePlaylistModeButton(),
-                const _PlayQueueShuffleModeButton(),
-                _ClearQueueButton(
-                  player: player,
-                  closeAfterClear: closeAfterClear,
-                  onClose: onClose,
-                ),
-              ],
-            ),
-          ),
-          if (_isDesktop)
-            IconButton(
-              onPressed: onClose,
-              icon: const Icon(Icons.close_rounded),
-            ),
+          ],
         ],
       ),
+    );
+  }
+
+  /// The pill container holding the search control and the
+  /// mode/shuffle/clear buttons. B variant uses a single toggle button
+  /// that morphs between search and back; the input expands next to it via
+  /// AnimatedSize. While B search is active, the mode/shuffle/clear buttons
+  /// are hidden so the input gets the full pill width.
+  Widget _buildPill(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final isB = searchStyle == PlayQueueSearchStyle.headerInline;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withValues(
+          alpha: _isDesktop ? 0.88 : 0.92,
+        ),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(
+            alpha: _isDesktop ? 0.28 : 0.22,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: isBActive ? .max : .min,
+        children: [
+          if (isB)
+            _PlayQueueHeaderInlineSearch(
+              controller: searchController,
+              variant: variant,
+              expanded: searchExpanded,
+            )
+          else
+            IconButton(
+              tooltip: l10n.searchPlayQueue,
+              onPressed: onToggleSearch,
+              icon: Icon(
+                searchExpanded
+                    ? Icons.search_rounded
+                    : Icons.search_outlined,
+                color: searchExpanded ? colorScheme.primary : null,
+              ),
+            ),
+          if (isB)
+            IconButton(
+              tooltip: searchExpanded ? l10n.revoke : l10n.searchPlayQueue,
+              onPressed: onToggleSearch,
+              icon: Icon(
+                searchExpanded
+                    ? Icons.arrow_back_rounded
+                    : Icons.search_outlined,
+                color: searchExpanded
+                    ? colorScheme.primary
+                    : colorScheme.onSurfaceVariant,
+              ),
+            ),
+          if (!isBActive) ...[
+            const _PlayQueuePlaylistModeButton(),
+            const _PlayQueueShuffleModeButton(),
+            _ClearQueueButton(
+              player: player,
+              closeAfterClear: closeAfterClear,
+              onClose: onClose,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// B variant: a compact search input embedded inside the header pill.
+/// Uses [Flexible] with a loose fit + [AnimatedSize] so it can both animate
+/// its width (0 <-> fill) AND expand to fill the pill's leftover width once
+/// the mode/shuffle/clear buttons are hidden. Shares the pill's fill/border
+/// — no independent outline, no underline.
+class _PlayQueueHeaderInlineSearch extends StatelessWidget {
+  const _PlayQueueHeaderInlineSearch({
+    required this.controller,
+    required this.variant,
+    required this.expanded,
+  });
+
+  final TextEditingController controller;
+  final PlayQueuePanelVariant variant;
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Flexible(
+      fit: .loose,
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 240),
+        curve: Curves.easeOutCubic,
+        alignment: Alignment.centerRight,
+        child: SizedBox(
+          // A large target so the loose constraint clamps it to whatever
+          // width is available; 0 when collapsed.
+          width: expanded ? 10000 : 0,
+          child: AnimatedOpacity(
+            opacity: expanded ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 160),
+            child: expanded
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 6, right: 2),
+                    child: ValueListenableBuilder(
+                      valueListenable: controller,
+                      builder: (_, _, _) {
+                        final hasText = controller.text.isNotEmpty;
+                        return TextField(
+                          controller: controller,
+                          autofocus: true,
+                          textInputAction: .search,
+                          style: theme.textTheme.bodySmall,
+                          cursorColor: colorScheme.primary,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            hintText:
+                                AppLocalizations.of(context)!.searchPlayQueue,
+                            hintStyle: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant
+                                  .withValues(alpha: 0.6),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search_rounded,
+                              size: 16,
+                              color: colorScheme.onSurfaceVariant
+                                  .withValues(alpha: 0.7),
+                            ),
+                            prefixIconConstraints: const BoxConstraints(
+                              minWidth: 28,
+                              minHeight: 28,
+                            ),
+                            suffixIcon: hasText
+                                ? IconButton(
+                                    visualDensity: VisualDensity.compact,
+                                    iconSize: 16,
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 24,
+                                      minHeight: 24,
+                                    ),
+                                    icon: const Icon(Icons.close_rounded),
+                                    onPressed: controller.clear,
+                                  )
+                                : null,
+                          suffixIconConstraints: const BoxConstraints(
+                            minWidth: 24,
+                            minHeight: 28,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 8),
+                          isCollapsed: true,
+                          filled: false,
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                      );
+                    },
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
+      ),
+    ),
     );
   }
 }

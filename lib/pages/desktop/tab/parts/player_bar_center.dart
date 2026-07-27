@@ -173,7 +173,9 @@ class _DesktopPlayerBarCenter extends StatelessWidget {
               barrierColor: Theme.of(
                 context,
               ).colorScheme.scrim.withValues(alpha: 0.4),
-              builder: (_) => const _DesktopQueueSheet(),
+              builder: (_) => const _DesktopQueueSheet(
+                searchStyle: PlayQueueSearchStyle.headerInline,
+              ),
             );
           },
           icon: Icon(Icons.playlist_play_rounded, color: iconMutedColor),
