@@ -398,6 +398,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playNext => '下一首播放';
 
   @override
+  String get alreadyPlayNext => '已是下一首播放';
+
+  @override
   String get moreActions => '更多操作';
 
   @override
@@ -1250,6 +1253,9 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get playNext => '下一首播放';
+
+  @override
+  String get alreadyPlayNext => '已是下一首播放';
 
   @override
   String get moreActions => '更多操作';

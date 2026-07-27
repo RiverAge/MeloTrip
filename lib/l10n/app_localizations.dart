@@ -873,6 +873,12 @@ abstract class AppLocalizations {
   /// **'Play Next'**
   String get playNext;
 
+  /// shown when the song is already the next-to-play item and no move is needed
+  ///
+  /// In en, this message translates to:
+  /// **'Already set as next to play'**
+  String get alreadyPlayNext;
+
   /// tooltip for a button that opens a menu/sheet of song actions
   ///
   /// In en, this message translates to:

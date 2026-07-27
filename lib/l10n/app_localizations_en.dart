@@ -399,6 +399,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playNext => 'Play Next';
 
   @override
+  String get alreadyPlayNext => 'Already set as next to play';
+
+  @override
   String get moreActions => 'More Actions';
 
   @override

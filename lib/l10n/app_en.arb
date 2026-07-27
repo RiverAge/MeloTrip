@@ -555,6 +555,10 @@
   "@playNext": {
     "description": "add this song to play queue after current song is played"
   },
+  "alreadyPlayNext": "Already set as next to play",
+  "@alreadyPlayNext": {
+    "description": "shown when the song is already the next-to-play item and no move is needed"
+  },
   "moreActions": "More Actions",
   "@moreActions": {
     "description": "tooltip for a button that opens a menu/sheet of song actions"

@@ -25,15 +25,12 @@ class _SongActionsState extends State<_SongActions> {
     final isStarred = song.starred != null;
     return PlayQueueBuilder(
       builder: (context, playQueue, ref) {
-        final index = playQueue.index;
         final songs = playQueue.songs;
         final current = playQueue.index >= playQueue.songs.length
             ? null
             : playQueue.songs[playQueue.index];
 
         final isCurrent = current?.id == song.id;
-        final isNext =
-            ((index + 1) < songs.length) && songs[index + 1].id == song.id;
 
         final indexOfSong = songs.indexWhere((e) => e.id == song.id);
 
@@ -70,12 +67,24 @@ class _SongActionsState extends State<_SongActions> {
                       );
                     },
                   ),
-                  if (!isCurrent && !isNext)
+                  if (!isCurrent)
                     _ActionButton(
                       icon: Icons.not_started_outlined,
                       label: l10n.playNext,
-                      onPressed: () {
-                        player.insertToNext(song);
+                      onPressed: () async {
+                        final dstIndex = await player.insertToNext(song);
+                        // No move happened when the song was already at the
+                        // next-to-play slot; surface a hint so the tap is not
+                        // perceived as a no-op.
+                        if (indexOfSong != -1 && dstIndex == indexOfSong) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.alreadyPlayNext),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
                       },
                     ),
                   _ActionButton(

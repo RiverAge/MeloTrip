@@ -26,8 +26,14 @@ extension PlayerQueue on AppPlayer {
 
   Future<int> _insertToNextInternal(SongEntity song) async {
     final dstIndex = resolveInsertToNextIndex(playQueue: playQueue, song: song);
-    final isExisting = playQueue.songs.indexWhere((e) => e.id == song.id) != -1;
-    if (isExisting) {
+    final existingIndex = playQueue.songs.indexWhere((e) => e.id == song.id);
+    if (existingIndex != -1) {
+      // Song already in queue: move it to the next-play slot instead of
+      // inserting a duplicate. No-op when it is already at the target slot
+      // (caller may surface an "already next" hint in that case).
+      if (existingIndex != dstIndex) {
+        await _player.move(existingIndex, dstIndex);
+      }
       return dstIndex;
     }
     final effectiveMediaResolver = _mediaResolver;
@@ -72,10 +78,6 @@ int resolveInsertToNextIndex({
   required PlayQueue playQueue,
   required SongEntity song,
 }) {
-  final existingIndex = playQueue.songs.indexWhere((e) => e.id == song.id);
-  if (existingIndex != -1) {
-    return existingIndex;
-  }
   final nextIndex = playQueue.index + 1;
   if (nextIndex < 0) {
     return 0;
