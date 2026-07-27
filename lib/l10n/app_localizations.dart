@@ -867,6 +867,18 @@ abstract class AppLocalizations {
   /// **'Play Queue'**
   String get playQueue;
 
+  /// tooltip for the button that toggles inline search in the play queue panel
+  ///
+  /// In en, this message translates to:
+  /// **'Search queue'**
+  String get searchPlayQueue;
+
+  /// shown when inline search in the play queue yields no matches
+  ///
+  /// In en, this message translates to:
+  /// **'No matching songs'**
+  String get noSearchResults;
+
   /// add this song to play queue after current song is played
   ///
   /// In en, this message translates to:

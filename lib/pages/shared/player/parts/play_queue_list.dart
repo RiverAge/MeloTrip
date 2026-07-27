@@ -6,12 +6,14 @@ class _PlayQueueListView extends ConsumerStatefulWidget {
     required this.player,
     required this.variant,
     required this.closeOnSelection,
+    this.searchQuery = '',
   });
 
   final PlayQueue playQueue;
   final AppPlayer player;
   final PlayQueuePanelVariant variant;
   final bool closeOnSelection;
+  final String searchQuery;
 
   @override
   ConsumerState<_PlayQueueListView> createState() => _PlayQueueListViewState();
@@ -27,6 +29,9 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   }
 
   void _jumpToCurrentSong() {
+    // Skip auto-scroll while filtering: the current song may be filtered out
+    // and the filtered list's offsets don't line up with the full queue.
+    if (widget.searchQuery.isNotEmpty) return;
     if (!_scrollController.hasClients) {
       return;
     }
@@ -56,6 +61,11 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
   }
 
   Widget _buildListView({required bool playing}) {
+    final query = widget.searchQuery;
+    final filteredIndices = query.isEmpty
+        ? null
+        : _matchIndices(widget.playQueue.songs, query);
+    final itemCount = filteredIndices?.length ?? widget.playQueue.songs.length;
     return ListView.builder(
       controller: _scrollController,
       padding: EdgeInsets.fromLTRB(
@@ -65,14 +75,15 @@ class _PlayQueueListViewState extends ConsumerState<_PlayQueueListView> {
         12,
       ),
       itemExtent: 72,
-      itemCount: widget.playQueue.songs.length,
-      itemBuilder: (context, index) {
+      itemCount: itemCount,
+      itemBuilder: (context, viewIndex) {
+        final realIndex = filteredIndices?[viewIndex] ?? viewIndex;
         return _PlayQueueListItem(
           player: widget.player,
           songs: widget.playQueue.songs,
           currentPlayingIndex: widget.playQueue.index,
-          index: index,
-          isCurrentPlaying: playing && widget.playQueue.index == index,
+          index: realIndex,
+          isCurrentPlaying: playing && widget.playQueue.index == realIndex,
           variant: widget.variant,
           closeOnSelection: widget.closeOnSelection,
         );

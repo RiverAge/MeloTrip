@@ -15,6 +15,7 @@ import 'package:melo_trip/widget/provider_value_builder.dart';
 part 'parts/play_queue_header.dart';
 part 'parts/play_queue_controls.dart';
 part 'parts/play_queue_list.dart';
+part 'parts/play_queue_search.dart';
 
 enum PlayQueuePanelVariant { mobile, desktop }
 
@@ -57,7 +58,7 @@ double? computePlayQueueJumpOffset({
   return targetOffset.clamp(0.0, safeMaxOffset).toDouble();
 }
 
-class PlayQueuePanel extends ConsumerWidget {
+class PlayQueuePanel extends ConsumerStatefulWidget {
   const PlayQueuePanel({
     super.key,
     required this.variant,
@@ -71,10 +72,47 @@ class PlayQueuePanel extends ConsumerWidget {
   final bool closeAfterClear;
   final bool closeOnSelection;
 
-  bool get _isDesktop => variant == PlayQueuePanelVariant.desktop;
+  @override
+  ConsumerState<PlayQueuePanel> createState() => _PlayQueuePanelState();
+}
+
+class _PlayQueuePanelState extends ConsumerState<PlayQueuePanel> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _searchExpanded = false;
+  String _searchQuery = '';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase().trim();
+    if (query != _searchQuery) {
+      setState(() => _searchQuery = query);
+    }
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _searchExpanded = !_searchExpanded;
+      if (!_searchExpanded) {
+        _searchController.clear();
+        _searchQuery = '';
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AsyncValueBuilder(
       provider: appPlayerHandlerProvider,
       builder: (context, player, _) {
@@ -82,26 +120,38 @@ class PlayQueuePanel extends ConsumerWidget {
           children: [
             _PlayQueueHeader(
               player: player,
-              variant: variant,
-              onClose: onClose,
-              closeAfterClear: closeAfterClear,
+              variant: widget.variant,
+              closeAfterClear: widget.closeAfterClear,
+              onClose: widget.onClose,
+              searchExpanded: _searchExpanded,
+              onToggleSearch: _toggleSearch,
             ),
+            if (_searchExpanded)
+              _PlayQueueSearchField(
+                controller: _searchController,
+                variant: widget.variant,
+              ),
             Expanded(
               child: PlayQueueBuilder(
                 builder: (_, playQueue, _) {
                   if (playQueue.songs.isEmpty) {
                     return const NoData();
                   }
+                  if (_searchExpanded && _searchQuery.isNotEmpty &&
+                      _matchIndices(playQueue.songs, _searchQuery).isEmpty) {
+                    return _PlayQueueNoMatch();
+                  }
                   return _PlayQueueListView(
                     playQueue: playQueue,
                     player: player,
-                    variant: variant,
-                    closeOnSelection: closeOnSelection,
+                    variant: widget.variant,
+                    closeOnSelection: widget.closeOnSelection,
+                    searchQuery: _searchExpanded ? _searchQuery : '',
                   );
                 },
               ),
             ),
-            if (_isDesktop)
+            if (widget.variant == PlayQueuePanelVariant.desktop)
               Container(
                 height: 1,
                 color: Theme.of(
@@ -113,4 +163,21 @@ class PlayQueuePanel extends ConsumerWidget {
       },
     );
   }
+}
+
+/// Returns the original-queue indices of songs matching [query]
+/// (case-insensitive against title / artist / album).
+List<int> _matchIndices(List<SongEntity> songs, String query) {
+  return songs.indexed
+      .where((e) {
+        final s = e.$2;
+        final title = (s.title ?? '').toLowerCase();
+        final artist = (s.displayArtist ?? s.artist ?? '').toLowerCase();
+        final album = (s.album ?? '').toLowerCase();
+        return title.contains(query) ||
+            artist.contains(query) ||
+            album.contains(query);
+      })
+      .map((e) => e.$1)
+      .toList();
 }

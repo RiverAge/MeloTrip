@@ -150,6 +150,8 @@
 
 
     "playQueue": "播放队列",
+    "searchPlayQueue": "搜索队列",
+    "noSearchResults": "没有匹配的歌曲",
     "playNext": "下一首播放",
     "alreadyPlayNext": "已是下一首播放",
     "moreActions": "更多操作",

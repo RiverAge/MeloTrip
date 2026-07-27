@@ -6,12 +6,16 @@ class _PlayQueueHeader extends StatelessWidget {
     required this.variant,
     required this.closeAfterClear,
     this.onClose,
+    required this.searchExpanded,
+    required this.onToggleSearch,
   });
 
   final AppPlayer player;
   final PlayQueuePanelVariant variant;
   final VoidCallback? onClose;
   final bool closeAfterClear;
+  final bool searchExpanded;
+  final VoidCallback onToggleSearch;
 
   bool get _isDesktop => variant == PlayQueuePanelVariant.desktop;
 
@@ -56,6 +60,18 @@ class _PlayQueueHeader extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                IconButton(
+                  tooltip: AppLocalizations.of(context)!.searchPlayQueue,
+                  onPressed: onToggleSearch,
+                  icon: Icon(
+                    searchExpanded
+                        ? Icons.search_rounded
+                        : Icons.search_outlined,
+                    color: searchExpanded
+                        ? colorScheme.primary
+                        : null,
+                  ),
+                ),
                 const _PlayQueuePlaylistModeButton(),
                 const _PlayQueueShuffleModeButton(),
                 _ClearQueueButton(

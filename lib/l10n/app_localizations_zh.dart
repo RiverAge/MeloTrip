@@ -395,6 +395,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playQueue => '播放队列';
 
   @override
+  String get searchPlayQueue => '搜索队列';
+
+  @override
+  String get noSearchResults => '没有匹配的歌曲';
+
+  @override
   String get playNext => '下一首播放';
 
   @override
@@ -1250,6 +1256,12 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get playQueue => '播放队列';
+
+  @override
+  String get searchPlayQueue => '搜索队列';
+
+  @override
+  String get noSearchResults => '没有匹配的歌曲';
 
   @override
   String get playNext => '下一首播放';

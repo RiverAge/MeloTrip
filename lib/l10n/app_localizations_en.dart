@@ -396,6 +396,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playQueue => 'Play Queue';
 
   @override
+  String get searchPlayQueue => 'Search queue';
+
+  @override
+  String get noSearchResults => 'No matching songs';
+
+  @override
   String get playNext => 'Play Next';
 
   @override

@@ -551,6 +551,14 @@
   "@playQueue": {
      "description": "play queue"
   },
+  "searchPlayQueue": "Search queue",
+  "@searchPlayQueue": {
+    "description": "tooltip for the button that toggles inline search in the play queue panel"
+  },
+  "noSearchResults": "No matching songs",
+  "@noSearchResults": {
+    "description": "shown when inline search in the play queue yields no matches"
+  },
   "playNext": "Play Next",
   "@playNext": {
     "description": "add this song to play queue after current song is played"
