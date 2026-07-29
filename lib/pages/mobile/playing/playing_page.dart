@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:melo_trip/app_player/player.dart';
 import 'package:melo_trip/helper/index.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:melo_trip/pages/mobile/song_control/song_control.dart';
 import 'package:melo_trip/pages/mobile/playlist/add_to_playlist_page.dart';
 import 'package:melo_trip/pages/shared/player/animated_lyrics_panel.dart';
@@ -33,8 +34,26 @@ part 'parts/cover_lyrics_switcher.dart';
 part 'parts/rounded_cover.dart';
 part 'parts/media_meta.dart';
 
-class PlayingPage extends StatelessWidget {
+class PlayingPage extends StatefulWidget {
   const PlayingPage({super.key});
+
+  @override
+  State<PlayingPage> createState() => _PlayingPageState();
+}
+
+class _PlayingPageState extends State<PlayingPage> {
+  @override
+  void initState() {
+    super.initState();
+    // 进入播放页保持屏幕常亮，避免看歌词时自动息屏。
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
