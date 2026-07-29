@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:melo_trip/app_player/player.dart';
+import 'package:melo_trip/helper/app_failure_message.dart';
 import 'package:melo_trip/l10n/app_localizations.dart';
 import 'package:melo_trip/model/player/play_queue.dart';
 import 'package:melo_trip/model/response/song/song.dart';
 import 'package:melo_trip/provider/app/player.dart';
+import 'package:melo_trip/provider/playlist/playlist.dart';
 import 'package:melo_trip/widget/artwork_image.dart';
 import 'package:melo_trip/widget/no_data.dart';
 import 'package:melo_trip/widget/play_queue_builder.dart';
@@ -16,6 +19,7 @@ part 'parts/play_queue_header.dart';
 part 'parts/play_queue_controls.dart';
 part 'parts/play_queue_list.dart';
 part 'parts/play_queue_search.dart';
+part 'parts/play_queue_save_as_playlist.dart';
 
 enum PlayQueuePanelVariant { mobile, desktop }
 

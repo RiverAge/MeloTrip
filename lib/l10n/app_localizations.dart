@@ -957,6 +957,30 @@ abstract class AppLocalizations {
   /// **'Enter comment for playlist...'**
   String get playlistInputCommentHint;
 
+  /// Tooltip and dialog title for saving the play queue as a new playlist
+  ///
+  /// In en, this message translates to:
+  /// **'Save Play Queue as Playlist'**
+  String get savePlayQueueAsPlaylist;
+
+  /// Default name for a playlist created from the play queue, with the current date
+  ///
+  /// In en, this message translates to:
+  /// **'Play Queue {date}'**
+  String savePlayQueueAsPlaylistName(String date);
+
+  /// Snackbar shown after the play queue is saved as a playlist
+  ///
+  /// In en, this message translates to:
+  /// **'Play queue saved as playlist'**
+  String get savePlayQueueAsPlaylistSuccess;
+
+  /// Snackbar shown when the play queue has no songs to save
+  ///
+  /// In en, this message translates to:
+  /// **'Play queue is empty'**
+  String get savePlayQueueAsPlaylistEmpty;
+
   /// is playlist public or not
   ///
   /// In en, this message translates to:

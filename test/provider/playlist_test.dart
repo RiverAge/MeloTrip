@@ -29,7 +29,10 @@ class _MockPlaylistRepository extends PlaylistRepository {
   }
 
   @override
-  Future<SubsonicResponse> createPlaylist(String name) async {
+  Future<SubsonicResponse> createPlaylist(
+    String name, {
+    List<String>? songIds,
+  }) async {
     createCalled = true;
     return _fetchResult!;
   }

@@ -619,6 +619,29 @@
      "description": "Hint text for playlist comment input field"
    },
 
+   "savePlayQueueAsPlaylist": "Save Play Queue as Playlist",
+   "@savePlayQueueAsPlaylist": {
+     "description": "Tooltip and dialog title for saving the play queue as a new playlist"
+   },
+   "savePlayQueueAsPlaylistName": "Play Queue {date}",
+   "@savePlayQueueAsPlaylistName": {
+     "description": "Default name for a playlist created from the play queue, with the current date",
+     "placeholders": {
+       "date": {
+         "type": "String",
+         "example": "2026-07-29"
+       }
+     }
+   },
+   "savePlayQueueAsPlaylistSuccess": "Play queue saved as playlist",
+   "@savePlayQueueAsPlaylistSuccess": {
+     "description": "Snackbar shown after the play queue is saved as a playlist"
+   },
+   "savePlayQueueAsPlaylistEmpty": "Play queue is empty",
+   "@savePlayQueueAsPlaylistEmpty": {
+     "description": "Snackbar shown when the play queue has no songs to save"
+   },
+
     "playlistIsPublic": "Public",
     "@playlistIsPublic": {
       "description": "is playlist public or not"

@@ -167,6 +167,10 @@
     "createNewPlaylist": "新建歌单",
     "playlistInputNameHint": "输入歌单名称",
     "playlistInputCommentHint": "输入备注",
+    "savePlayQueueAsPlaylist": "将播放队列保存为歌单",
+    "savePlayQueueAsPlaylistName": "播放队列 {date}",
+    "savePlayQueueAsPlaylistSuccess": "播放队列已保存为歌单",
+    "savePlayQueueAsPlaylistEmpty": "播放队列为空",
     "playlistIsPublic": "是否公开",
     "playlistDeleteConfirmation": "确定要删除歌单 {name} ?",
     "@playlistDeleteConfirmation": {

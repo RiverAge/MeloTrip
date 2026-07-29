@@ -440,6 +440,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playlistInputCommentHint => '输入备注';
 
   @override
+  String get savePlayQueueAsPlaylist => '将播放队列保存为歌单';
+
+  @override
+  String savePlayQueueAsPlaylistName(String date) {
+    return '播放队列 $date';
+  }
+
+  @override
+  String get savePlayQueueAsPlaylistSuccess => '播放队列已保存为歌单';
+
+  @override
+  String get savePlayQueueAsPlaylistEmpty => '播放队列为空';
+
+  @override
   String get playlistIsPublic => '是否公开';
 
   @override
@@ -1301,6 +1315,20 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get playlistInputCommentHint => '输入备注';
+
+  @override
+  String get savePlayQueueAsPlaylist => '将播放队列保存为歌单';
+
+  @override
+  String savePlayQueueAsPlaylistName(String date) {
+    return '播放队列 $date';
+  }
+
+  @override
+  String get savePlayQueueAsPlaylistSuccess => '播放队列已保存为歌单';
+
+  @override
+  String get savePlayQueueAsPlaylistEmpty => '播放队列为空';
 
   @override
   String get playlistIsPublic => '是否公开';

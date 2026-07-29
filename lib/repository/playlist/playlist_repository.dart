@@ -69,11 +69,20 @@ class PlaylistRepository {
     return runGuarded(() => fetchPlaylistEntityDetail(playlistId));
   }
 
-  Future<SubsonicResponse> createPlaylist(String name) async {
+  Future<SubsonicResponse> createPlaylist(
+    String name, {
+    List<String>? songIds,
+  }) async {
     final api = await _readApi();
+    final queryParameters = <String, dynamic>{'name': name};
+    if (songIds != null && songIds.isNotEmpty) {
+      // Dio serializes a List value as repeated query params
+      // (?songId=a&songId=b), matching the Subsonic `songId` spec.
+      queryParameters['songId'] = songIds;
+    }
     final res = await api.get<Map<String, dynamic>>(
       '/rest/createPlaylist',
-      queryParameters: {'name': name},
+      queryParameters: queryParameters,
     );
     return parseSubsonicResponseOrThrow(
       res.data,
@@ -82,9 +91,10 @@ class PlaylistRepository {
   }
 
   Future<Result<SubsonicResponse, AppFailure>> tryCreatePlaylist(
-    String name,
-  ) {
-    return runGuarded(() => createPlaylist(name));
+    String name, {
+    List<String>? songIds,
+  }) {
+    return runGuarded(() => createPlaylist(name, songIds: songIds));
   }
 
   Future<SubsonicResponse> deletePlaylist(String playlistId) async {

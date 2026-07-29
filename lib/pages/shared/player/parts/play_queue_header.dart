@@ -125,6 +125,7 @@ class _PlayQueueHeader extends StatelessWidget {
           if (!isBActive) ...[
             const _PlayQueuePlaylistModeButton(),
             const _PlayQueueShuffleModeButton(),
+            const _SaveQueueAsPlaylistButton(),
             _ClearQueueButton(
               player: player,
               closeAfterClear: closeAfterClear,

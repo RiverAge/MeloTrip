@@ -13,11 +13,12 @@ class PlaylistActions extends _$PlaylistActions {
   Future<void> build() async {}
 
   Future<Result<SubsonicResponse, AppFailure>?> createPlaylist(
-    String? name,
-  ) async {
+    String? name, {
+    List<String>? songIds,
+  }) async {
     if (name == null) return null;
     final repository = ref.read(playlistRepositoryProvider);
-    final result = await repository.tryCreatePlaylist(name);
+    final result = await repository.tryCreatePlaylist(name, songIds: songIds);
     if (result.isOk) {
       ref.invalidate(playlistsProvider);
     }

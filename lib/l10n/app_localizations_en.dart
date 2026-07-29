@@ -441,6 +441,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playlistInputCommentHint => 'Enter comment for playlist...';
 
   @override
+  String get savePlayQueueAsPlaylist => 'Save Play Queue as Playlist';
+
+  @override
+  String savePlayQueueAsPlaylistName(String date) {
+    return 'Play Queue $date';
+  }
+
+  @override
+  String get savePlayQueueAsPlaylistSuccess => 'Play queue saved as playlist';
+
+  @override
+  String get savePlayQueueAsPlaylistEmpty => 'Play queue is empty';
+
+  @override
   String get playlistIsPublic => 'Public';
 
   @override

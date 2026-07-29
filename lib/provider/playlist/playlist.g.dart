@@ -33,7 +33,7 @@ final class PlaylistActionsProvider
   PlaylistActions create() => PlaylistActions();
 }
 
-String _$playlistActionsHash() => r'57c9ea5a8687083af5911fb014233bed86ea784d';
+String _$playlistActionsHash() => r'727f2ae2e64ae405409f7f28ecdf8b891a9d2882';
 
 abstract class _$PlaylistActions extends $AsyncNotifier<void> {
   FutureOr<void> build();

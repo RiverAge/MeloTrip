@@ -88,7 +88,7 @@ final class UpdateFlowControllerProvider
 }
 
 String _$updateFlowControllerHash() =>
-    r'd76cb65468711a2c139c04410fbaa27a4ed98b26';
+    r'3134147be53db1932867ab21b8972500c5ec8bda';
 
 abstract class _$UpdateFlowController extends $Notifier<UpdateFlowState> {
   UpdateFlowState build();
